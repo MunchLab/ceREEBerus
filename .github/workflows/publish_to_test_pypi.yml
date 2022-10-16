@@ -16,6 +16,7 @@ jobs:
   build-n-publish:
     name: Build and publish python distributions to TestPyPI
     runs-on: ubuntu-latest
+    concurrency: release
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
