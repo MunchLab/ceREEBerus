@@ -5,7 +5,7 @@ requires = ["numpy",
 
 [project]
 name = "ceREEBerus"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
   { name="Danielle Barnes", email="barnesd8@msu.edu" },
 ]
