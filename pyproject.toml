@@ -1,0 +1,29 @@
+[build]
+requires = ["numpy",
+            "networkx",
+            ]
+
+[project]
+name = "ceREEBerus"
+version = "0.0.1"
+authors = [
+  { name="Danielle Barnes", email="barnesd8@msu.edu" },
+]
+description = "Package to do fun things with Reeb graphs"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[tool.setuptools.packages.find]
+where = ["ceREEBerus"]
+
+[tool.setuptools.package-data]
+ceREEBerus = ["data"]
+
+[project.urls]
+repository = "https://github.com/MunchLab/ceREEBerus"
+homepage = "https://github.com/MunchLab/ceREEBerus"
+documentation = "https://github.com/MunchLab/ceREEBerus"
