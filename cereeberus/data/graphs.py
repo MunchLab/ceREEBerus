@@ -1,5 +1,10 @@
-def reeb_torus():
-    """ Reeb graph of a torus
+
+#=================================
+# Construct an example Reeb
+# graph of a simple upright torus
+#=================================
+def torus_graph():
+    """ nx graph input to construct the example Reeb graph of a torus
         Args:
 
         Returns:
@@ -29,6 +34,13 @@ def reeb_torus():
 
     return G
 
+def reeb_torus():
+    '''
+    Returns the Reeb graph of a simple upright torus as a Reeb class. 
+    '''
+    from ..reeb import Reeb
+    return Reeb(torus_graph())
+
 def reeb_torus_no_fx():
     """ Reeb graph of a torus with no function values
         Args:
@@ -56,6 +68,12 @@ def reeb_torus_no_fx():
     G.add_edge(4,5)
 
     return G
+
+#=================================
+# Construct some of Liz's other
+# favorite example Reeb graphs
+#=================================
+
 
 def favorite_0():
     """ Favorite reeb graph #0
