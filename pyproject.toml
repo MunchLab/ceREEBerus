@@ -1,10 +1,7 @@
 [build]
-requires = ["numpy",
-            "networkx",
-            ]
 
 [project]
-name = "ceREEBerus"
+name = "cereeberus"
 version = "0.0.5"
 authors = [
   { name="Danielle Barnes", email="barnesd8@msu.edu" },
@@ -16,12 +13,16 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
+dependencies = ["numpy",
+            "networkx",
+            "matplotlib",
+            ]
 
 [tool.setuptools.packages.find]
-where = ["ceREEBerus"]
+where = ["cereeberus"]
 
 [tool.setuptools.package-data]
-ceREEBerus = ["data"]
+cereeberus = ["data"]
 
 [project.urls]
 repository = "https://github.com/MunchLab/ceREEBerus"

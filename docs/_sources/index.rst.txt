@@ -12,7 +12,8 @@ Table of Contents
    :maxdepth: 4
    :numbered:
 
-   Modules <modules.rst>
+   Example data and graphs <data.rst>
+   Reeb graphs <reeb.rst>
 
 
 Collaborators

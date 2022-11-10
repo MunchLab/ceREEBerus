@@ -6,3 +6,5 @@ Table of Contents
    
    
    Example data and graphs <data.rst>
+
+Reeb Graph <reeb.rst>
