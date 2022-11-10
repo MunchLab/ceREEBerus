@@ -73,9 +73,12 @@
 <span class="sd">    :ivar fx: function values associated with G</span>
 <span class="sd">    :ivar pos: spring layout position calculated from G</span>
 <span class="sd">    :ivar pos_fx: position values corresponding to x = fx and y = y value from pos</span>
+<span class="sd">    :ivar horizontalDrawing: Default to False. If true, fx is drawn as a height function. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">fx</span> <span class="o">=</span> <span class="p">{}):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">fx</span> <span class="o">=</span> <span class="p">{},</span> 
+                        <span class="n">horizontalDrawing</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                        <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">G</span>
         <span class="k">if</span> <span class="n">fx</span> <span class="o">==</span> <span class="p">{}:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fx</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_node_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span><span class="s1">&#39;fx&#39;</span><span class="p">)</span>
@@ -83,17 +86,72 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fx</span> <span class="o">=</span> <span class="n">fx</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fx</span> <span class="o">==</span> <span class="p">{}:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;No function values provided - please provide a function value for each node or update your graph to have the &#39;fx&#39; attribute&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    
-<div class="viewcode-block" id="Reeb.plot_reeb"><a class="viewcode-back" href="../../reeb.html#cereeberus.reeb.Reeb.plot_reeb">[docs]</a>    <span class="k">def</span> <span class="nf">plot_reeb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot; Plot a Reeb Graph given a graph with a position</span>
+
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_node_attributes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span><span class="s2">&quot;pos&quot;</span><span class="p">)</span>
+        <span class="k">if</span>  <span class="n">pos</span> <span class="o">==</span> <span class="p">{}:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalDrawing</span> <span class="o">=</span> <span class="n">horizontalDrawing</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_fx</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">)</span>
+        
+
+
+<div class="viewcode-block" id="Reeb.set_pos_fx"><a class="viewcode-back" href="../../reeb.html#cereeberus.reeb.Reeb.set_pos_fx">[docs]</a>    <span class="k">def</span> <span class="nf">set_pos_fx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resetSpring</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the position data for drawing the Reeb graph. </span>
+<span class="sd">        If self.horizongalDrawing = False, we are drawing the vertices</span>
+<span class="sd">        at locations </span>
+<span class="sd">        (spring_layout_x, functionvalue(v)) </span>
+
+<span class="sd">        Otherwise, we are drawing the points at </span>
+<span class="sd">        (functionvalue(v), spring_layout_x ) </span>
+
+<span class="sd">        resetSpring will make it recalculate the spring layout to overwrite</span>
+<span class="sd">        &quot;&quot;&quot;</span>    
+
+        <span class="k">if</span> <span class="n">resetSpring</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalDrawing</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saving positions to be horizontal&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saving positions to be vertical&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
+
+        
+
+
+<div class="viewcode-block" id="Reeb.plot_reeb"><a class="viewcode-back" href="../../reeb.html#cereeberus.reeb.Reeb.plot_reeb">[docs]</a>    <span class="k">def</span> <span class="nf">plot_reeb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="p">{},</span> 
+                        <span class="n">horizontalDrawing</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                        <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plot a Reeb Graph given a graph with a position.</span>
+<span class="sd">        If no position passed, it will take the spring layout version. </span>
+<span class="sd">        In this case, it will either be drawn vertically or </span>
+<span class="sd">        horizontally, depending on the horizontalDrawing (boolean) </span>
+<span class="sd">        passed in.</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">position</span> <span class="o">==</span> <span class="p">{}:</span>
+        <span class="k">if</span> <span class="n">position</span> <span class="o">==</span> <span class="p">{}:</span> <span class="c1"># the user didn&#39;t pass positions</span>
+
+            <span class="c1"># if the horizontal drawing setting is not the same as </span>
+            <span class="c1"># what is already saved, reset the pos_fx </span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalDrawing</span> <span class="o">!=</span> <span class="n">horizontalDrawing</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalDrawing</span> <span class="o">=</span> <span class="n">horizontalDrawing</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_fx</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>    
+
+            <span class="c1"># then hand over the internally saved positions</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span>
+            
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="n">position</span>
         <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span><span class="p">)</span></div></div>
