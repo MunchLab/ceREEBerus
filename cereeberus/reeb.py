@@ -1,3 +1,4 @@
+import networkx as nx
 class Reeb:
     """ Class for Reeb Graph
 
@@ -6,7 +7,7 @@ class Reeb:
     :ivar pos: spring layout position calculated from G
     :ivar pos_fx: position values corresponding to x = fx and y = y value from pos
     """
-    import networkx as nx
+
     def __init__(self, G, fx = {}):
         self.G = G
         if fx == {}:

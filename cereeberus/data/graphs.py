@@ -42,7 +42,7 @@ def reeb_torus():
     return Reeb(torus_graph())
 
 def reeb_torus_no_fx():
-    """ Reeb graph of a torus with no function values
+    """ Reeb graph of a torus with no function values for testing error messages
         Args:
 
         Returns:
@@ -112,7 +112,7 @@ def favorite_0():
     nx.set_node_attributes(G, dd, 'down_deg')
 
     ud = {0: 0, 1: 1, 2: 1, 3: 2, 4: 0, 5:1, 6:2, 7:1}
-    nx.set_node_attributes(G, dd, 'up_deg')
+    nx.set_node_attributes(G, ud, 'up_deg')
 
     fx = {0: 7, 1: 6, 2: 5, 3: 5, 4: 6, 5: 4, 6: 4, 7:1}
     nx.set_node_attributes(G, fx, 'fx')
