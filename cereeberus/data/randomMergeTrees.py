@@ -4,6 +4,7 @@ Some code to generate random Merge Trees to work with.
 
 import networkx as nx
 import numpy as np
+from ..reeb import Reeb
 
 def randomMerge(n = 10):
     """

@@ -9,8 +9,9 @@ The goal is to get a merge tree class with the following properties.
 """
 
 
-from reeb import Reeb
+from .reeb import Reeb
 import networkx as nx
+import numpy as np
 
 
 def isMerge(T,fx):
@@ -101,7 +102,7 @@ class Merge(Reeb):
                 drawingLocation[otherCoord] = self.pos_fx[i][otherCoord]
                 self.pos_fx[i] = list(drawingLocation)
         else:
-            drawingLocation[otherCoord] = self.pos_fx[self.rootIndex]
+            drawingLocation[otherCoord] = self.pos_fx[self.rootIndex][otherCoord]
             self.pos_fx[self.rootIndex] = list(drawingLocation)
 
 
@@ -111,3 +112,10 @@ class Merge(Reeb):
 #         self.fix_pos_fx()
 
 
+
+if __name__=="__main__":
+    from data.randomMergeTrees import randomMerge
+
+    R = randomMerge(10)
+    M = Merge(R.G, R.fx)
+    M.plot_reeb()
