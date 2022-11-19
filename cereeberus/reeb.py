@@ -1,5 +1,7 @@
 import networkx as nx
 import numpy as np
+from compute import degree
+
 class Reeb:
     """ Class for Reeb Graph
 
@@ -10,7 +12,11 @@ class Reeb:
     """
 
     def __init__(self, G, fx = {}):
-        self.G = G
+        #Convert to MultiGraph to allow for Parallel Edges and Self-Loops
+        if type(G) != 'networkx.classes.multigraph.MultiGraph':
+            self.G = nx.MultiGraph(G)
+        else:
+            self.G = G
         if fx == {}:
             self.fx = nx.get_node_attributes(self.G,'fx')
         else:
@@ -22,72 +28,18 @@ class Reeb:
         for i in range(0,len(self.pos)):
             self.pos_fx[i] = (self.fx[i], self.pos[i][1])
 
+        self.nodes = G.nodes
+        self.edges = G.edges
+
         # compute upper and lower degree of reeb graph
-        self.up_deg = self._up_deg(self.G, self.fx)
-        self.down_deg = self._down_deg(self.G, self.fx)
+        self.up_deg = degree.up_degree(G, self.fx)
+        self.down_deg = degree.down_degree(G, self.fx)
 
-    def _up_deg(self, G, fx = {}):
-        """ Compute Upper Degree of Reeb Graph
+        # adjacency matrix
+        self.adjacency = nx.adjacency_matrix(G)
 
-        Args:
-            G (networx graph): networkx graph to use for reeb graph computation
-
-        Returns:
-            up_deg (dict): dictionary of up degrees by node
-        
-        """
-        n = len(G.nodes)
-        up_adj = np.zeros((n,n))
-
-        for i in range(0,n):
-            for j in range(i,n):
-                if fx[i] < fx[j]:
-                    e = list(G.edges(i))
-                    if (i,j) in e:
-                        up_adj[j,i]+=1
-                if fx[i] > fx[j]:
-                    e = list(G.edges(i))
-                    if (i,j) in e:
-                        up_adj[i,j]+=1
-
-        d = sum(up_adj)
-
-        up_deg = {}
-        for i in range(0,n):
-            up_deg[i] = int(d[i])
-        return up_deg
-
-    def _down_degree(self, G, fx ={ }):
-
-        """ Compute Down Degree of Reeb Graph
-
-        Args:
-            G (networx graph): networkx graph to use for reeb graph computation
-
-        Returns:
-            down_deg (dict): dictionary of down degrees by node
-        
-        """
-        n = len(G.nodes)
-        down_adj = np.zeros((n,n))
-    
-        for i in range(0,n):
-            for j in range(i,n):
-                if fx[i] > fx[j]:
-                    e = list(G.edges(i))
-                    if (i,j) in e:
-                        down_adj[j,i]+=1
-                if fx[i] < fx[j]:
-                    e = list(G.edges(i))
-                    if (i,j) in e:
-                        down_adj[i,j]+=1
-
-        d = sum(down_adj)
-
-        down_deg = {}
-        for i in range(0,n):
-            down_deg[i] = int(d[i])
-        return down_deg
+        # show basic properties of reeb graph
+        self.summary = {'nodes': len(self.nodes), 'edges': len(self.edges)}
 
     def plot_reeb(self, position = {}):
         """ Plot a Reeb Graph given a graph with a position

@@ -12,7 +12,7 @@ def torus_graph():
 
     """
     import networkx as nx
-    G = nx.Graph()
+    G = nx.MultiGraph()
     G.add_node(0,pos=(1,1))
     G.add_node(1,pos=(1,2))
     G.add_edge(0,1)
@@ -29,7 +29,13 @@ def torus_graph():
     G.add_node(5,pos=(1,5))
     G.add_edge(4,5)
 
-    fx = {0: 1, 1: 1, 2: .5, 3: 1.5, 4: 1, 5: 1}
+    dd = {0: 0, 1: 1, 2: 1, 3: 1, 4: 2, 5: 1}
+    nx.set_node_attributes(G, dd, 'down_deg')
+
+    ud = {0: 1, 1: 2, 2: 1, 3: 1, 4: 1, 5: 0}
+    nx.set_node_attributes(G, ud, 'up_deg')
+
+    fx = {0: 1, 1: 2, 2: 3, 3: 3, 4: 4, 5: 5}
     nx.set_node_attributes(G, fx, 'fx')
 
     return G
@@ -41,7 +47,7 @@ def reeb_torus():
     from ..reeb import Reeb
     return Reeb(torus_graph())
 
-def reeb_torus_no_fx():
+def torus_no_fx():
     """ Reeb graph of a torus with no function values for testing error messages
         Args:
 
@@ -50,7 +56,7 @@ def reeb_torus_no_fx():
 
     """
     import networkx as nx
-    G = nx.Graph()
+    G = nx.MultiGraph()
     G.add_node(0,pos=(1,1))
     G.add_node(1,pos=(1,2))
     G.add_edge(0,1)
@@ -75,8 +81,8 @@ def reeb_torus_no_fx():
 #=================================
 
 
-def favorite_0():
-    """ Favorite reeb graph #0
+def dancing_man():
+    """ Dancing Man Graph
         Args:
 
         Returns:
@@ -87,7 +93,7 @@ def favorite_0():
     G = nx.Graph()
     G.add_node(0,pos=(3,7))
     G.add_node(1,pos=(3,6))
-    G.add_edge(0,1)
+    G.add_edge(0,1) 
 
     G.add_node(2,pos=(1,5))
     G.add_edge(1,2)
@@ -118,3 +124,10 @@ def favorite_0():
     nx.set_node_attributes(G, fx, 'fx')
 
     return G
+
+def reeb_dancing_man():
+    '''
+    Returns the Reeb graph of the dancing man as a Reeb class. 
+    '''
+    from ..reeb import Reeb
+    return Reeb(dancing_man())
