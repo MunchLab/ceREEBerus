@@ -20,7 +20,6 @@ jobs:
       - uses: actions/checkout@master
         with:
           ref: 'test_release'
-          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
