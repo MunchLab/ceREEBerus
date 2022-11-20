@@ -17,16 +17,16 @@ def torus_graph():
     G.add_node(1,pos=(1,2))
     G.add_edge(0,1)
 
-    G.add_node(2,pos=(.5, 3))
-    G.add_node(3,pos=(1.5, 3))
+    G.add_node(2,pos=(.5,3))
+    G.add_node(3,pos=(1.5,3))
     G.add_edge(1,2)
     G.add_edge(1,3)
 
-    G.add_node(4,pos=(1, 4))
+    G.add_node(4,pos=(1,4))
     G.add_edge(4,2)
     G.add_edge(4,3)
 
-    G.add_node(5,pos=(1, 5))
+    G.add_node(5,pos=(1,5))
     G.add_edge(4,5)
 
     dd = {0: 0, 1: 1, 2: 1, 3: 1, 4: 2, 5: 1}
@@ -45,7 +45,6 @@ def reeb_torus():
     Returns the Reeb graph of a simple upright torus as a Reeb class. 
     '''
     from ..reeb import Reeb
-    fx = [1, 2, 3, 4, 5, 6]
     return Reeb(torus_graph())
 
 def torus_no_fx():
