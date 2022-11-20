@@ -5,8 +5,6 @@ on:
   # Triggers the workflow on push or pull request events but only for the "test_release" branch
   push:
     branches: [ "test_release" ]
-  pull_request:
-    branches: [ "test_release" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -16,6 +14,7 @@ jobs:
   build-n-publish:
     name: Build and publish python distributions to TestPyPI
     runs-on: ubuntu-latest
+    concurrency: release
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
