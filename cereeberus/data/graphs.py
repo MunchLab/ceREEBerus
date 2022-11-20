@@ -12,9 +12,9 @@ def torus_graph():
 
     """
     import networkx as nx
-    G = nx.MultiGraph()
-    G.add_node(0,pos=(1,1))
-    G.add_node(1,pos=(1,2))
+    G = nx.Graph()
+    G.add_node(0,pos=(1, 1))
+    G.add_node(1,pos=(1, 2))
     G.add_edge(0,1)
 
     G.add_node(2,pos=(.5, 3))
@@ -29,12 +29,6 @@ def torus_graph():
     G.add_node(5,pos=(1, 5))
     G.add_edge(4,5)
 
-    dd = {0: 0, 1: 1, 2: 1, 3: 1, 4: 2, 5: 1}
-    nx.set_node_attributes(G, dd, 'down_deg')
-
-    ud = {0: 1, 1: 2, 2: 1, 3: 1, 4: 1, 5: 0}
-    nx.set_node_attributes(G, ud, 'up_deg')
-
     fx = {0: 1, 1: 2, 2: 3, 3: 3, 4: 4, 5: 5}
     nx.set_node_attributes(G, fx, 'fx')
 
@@ -48,8 +42,8 @@ def reeb_torus():
     fx = [1, 2, 3, 4, 5, 6]
     return Reeb(torus_graph())
 
-def torus_no_fx():
-    """ Reeb graph of a torus with no function values for testing error messages
+def reeb_torus_no_fx():
+    """ Reeb graph of a torus with no function values
         Args:
 
         Returns:
@@ -57,7 +51,7 @@ def torus_no_fx():
 
     """
     import networkx as nx
-    G = nx.MultiGraph()
+    G = nx.Graph()
     G.add_node(0,pos=(1,1))
     G.add_node(1,pos=(1,2))
     G.add_edge(0,1)
@@ -82,8 +76,8 @@ def torus_no_fx():
 #=================================
 
 
-def dancing_man():
-    """ Dancing Man Graph
+def favorite_0():
+    """ Favorite reeb graph #0
         Args:
 
         Returns:
@@ -91,10 +85,10 @@ def dancing_man():
 
     """
     import networkx as nx
-    G = nx.MultiGraph()
+    G = nx.Graph()
     G.add_node(0,pos=(3,7))
     G.add_node(1,pos=(3,6))
-    G.add_edge(0,1) 
+    G.add_edge(0,1)
 
     G.add_node(2,pos=(1,5))
     G.add_edge(1,2)
@@ -119,92 +113,9 @@ def dancing_man():
     nx.set_node_attributes(G, dd, 'down_deg')
 
     ud = {0: 0, 1: 1, 2: 1, 3: 2, 4: 0, 5:1, 6:2, 7:1}
-    nx.set_node_attributes(G, ud, 'up_deg')
+    nx.set_node_attributes(G, dd, 'up_deg')
 
     fx = {0: 7, 1: 6, 2: 5, 3: 5, 4: 6, 5: 4, 6: 4, 7:1}
     nx.set_node_attributes(G, fx, 'fx')
 
     return G
-
-def reeb_dancing_man():
-    '''
-    Returns the Reeb graph of the dancing man as a Reeb class. 
-    '''
-    from ..reeb import Reeb
-    return Reeb(dancing_man())
-
-def simple_loops():
-    """ Simple loops example for plotting loops
-        Args:
-
-        Returns:
-            reeb_graph (networkx graph): reeb graph
-
-    """
-    import networkx as nx
-    G = nx.MultiGraph()
-    G.add_node(0)
-    G.add_node(1)
-    G.add_node(2)
-    G.add_node(3)
-    G.add_edge(0,1) 
-    G.add_edge(0,1)
-    G.add_edge(1,2)
-    G.add_edge(2,3)
-    G.add_edge(2,3)
-
-    dd = {0: 0, 1: 2, 2: 1, 3: 2}
-    nx.set_node_attributes(G, dd, 'down_deg')
-
-    ud = {0: 2, 1: 1, 2: 2, 3: 0}
-    nx.set_node_attributes(G, ud, 'up_deg')
-
-    fx = {0: 0, 1: 1, 2: 2, 3: 3}
-    nx.set_node_attributes(G, fx, 'fx')
-
-    return G
-
-def reeb_simple_loops():
-    '''
-    Returns the Reeb graph of the simple loops example
-    '''
-    from ..reeb import Reeb
-    return Reeb(simple_loops())
-
-def simple_loops_unordered():
-    """ Simple loops example for plotting loops and testing with unordered edges
-        Args:
-
-        Returns:
-            reeb_graph (networkx graph): reeb graph
-
-    """
-    import networkx as nx
-    G = nx.MultiGraph()
-    G.add_node(0)
-    G.add_node(1)
-    G.add_node(2)
-    G.add_node(3)
-    G.add_edge(0,1) 
-    G.add_edge(1,0)
-    G.add_edge(1,2)
-    G.add_edge(2,3)
-    G.add_edge(3,2)
-
-    dd = {0: 0, 1: 2, 2: 1, 3: 2}
-    nx.set_node_attributes(G, dd, 'down_deg')
-
-    ud = {0: 2, 1: 1, 2: 2, 3: 0}
-    nx.set_node_attributes(G, ud, 'up_deg')
-
-    fx = {0: 0, 1: 1, 2: 2, 3: 3}
-    nx.set_node_attributes(G, fx, 'fx')
-
-    return G
-
-def reeb_simple_loops_unordered():
-    '''
-    Returns the Reeb graph of the simple loops example
-    '''
-    from ..reeb import Reeb
-    return Reeb(simple_loops_unordered())
