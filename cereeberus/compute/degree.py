@@ -65,6 +65,21 @@ def down_degree(R, fx ={ }):
         down_deg[i] = int(d[i])
     return down_deg
 
+def line_loop_index(R):
+    edge_list = list(R.edges)
+    n = len(R.edges)
+    loop_index=[]
+    line_index=[]
+    for i in range(0,n):
+        if edge_list[i][2]==1:
+            loop_index.append(edge_list.index(edge_list[i][0:2] + (0,)))
+            loop_index.append(i)
+            line_index.remove(edge_list.index(edge_list[i][0:2] + (0,)))
+        else:
+            line_index.append(i)
+
+    return(line_index, loop_index)
+
 def slope_intercept(pt0, pt1):
     m = (pt0[1] - pt1[1]) / (pt0[0] - pt1[0])
     b = pt0[1] - m * pt0[0]
@@ -93,6 +108,7 @@ def bezier_curve(pt0, midpt, pt1):
 def reeb_plot(R):
     import matplotlib.pyplot as plt
     import matplotlib as mpl
+    import numpy as np
     viridis = mpl.colormaps['viridis'].resampled(16)
     fig, ax = plt.subplots()
 
@@ -112,12 +128,30 @@ def reeb_plot(R):
 
 
     edge_list = list(R.edges)
-    for i in range(0, len(R.edges)):
+    line_index, loop_index = line_loop_index(R)
+    for i in line_index:
         node0 = edge_list[i][0]
         node1 = edge_list[i][1]
-        x_pos = (R.pos[node0][0], R.pos[node1][0])
-        y_pos = (R.pos[node0][1], R.pos[node1][1])
-        ax.plot(x_pos, y_pos, color='grey')
+        x_pos = (R.pos_fx[node0][0], R.pos_fx[node1][0])
+        y_pos = (R.pos_fx[node0][1], R.pos_fx[node1][1])
+        ax.plot(x_pos, y_pos, color='grey', zorder = 0)
+    
+    for i in loop_index:
+        node0 = edge_list[i][0]
+        node1 = edge_list[i][1]
+        xmid = (R.pos_fx[node0][0]+R.pos_fx[node1][0])/2
+        xmid0 = xmid - .5*xmid
+        xmid1 = xmid + .5*xmid
+        ymid = (R.pos_fx[node0][1]+R.pos_fx[node1][1])/2
+        curve = bezier_curve(R.pos_fx[node0], (xmid0, ymid), R.pos_fx[node1])
+        c = np.array(curve)
+        plt.plot(c[:,0], c[:,1], color='grey', zorder = 0)
+        curve = bezier_curve(R.pos_fx[node0], (xmid1, ymid), R.pos_fx[node1])
+        c = np.array(curve)
+        plt.plot(c[:,0], c[:,1], color='grey', zorder = 0)
 
     for i in range(0, len(R.nodes)):
-        ax.scatter(R.pos[i][0], R.pos[i][1], s = 250, color = viridis(colormap[i]))
+        ax.scatter(R.pos_fx[i][0], R.pos_fx[i][1], s = 250, color = viridis(colormap[i]))
+    
+    plt.xlabel('X')
+    plt.ylabel('Y')

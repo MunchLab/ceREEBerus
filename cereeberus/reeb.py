@@ -26,7 +26,7 @@ class Reeb:
         self.pos = nx.spring_layout(self.G)
         self.pos_fx = {}
         for i in range(0,len(self.pos)):
-            self.pos_fx[i] = (self.fx[i], self.pos[i][1])
+            self.pos_fx[i] = (self.pos[i][0], self.fx[i])
 
         self.nodes = G.nodes
         self.edges = G.edges
@@ -41,15 +41,11 @@ class Reeb:
         # show basic properties of reeb graph
         self.summary = {'nodes': len(self.nodes), 'edges': len(self.edges)}
 
-    def plot_reeb(self, position = {}):
-        """ Plot a Reeb Graph given a graph with a position
+    def plot_reeb(self):
+        """ Plot a Reeb Graph
         
         """
-        if position == {}:
-            pos = self.pos_fx
-        else:
-            pos = position
-        nx.draw(self.G, pos = pos)
+        degree.reeb_plot(self)
     
 
 

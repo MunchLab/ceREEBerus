@@ -90,7 +90,7 @@ def dancing_man():
 
     """
     import networkx as nx
-    G = nx.Graph()
+    G = nx.MultiGraph()
     G.add_node(0,pos=(3,7))
     G.add_node(1,pos=(3,6))
     G.add_edge(0,1) 
@@ -131,3 +131,41 @@ def reeb_dancing_man():
     '''
     from ..reeb import Reeb
     return Reeb(dancing_man())
+
+def simple_loops():
+    """ Simple loops example for plotting loops
+        Args:
+
+        Returns:
+            reeb_graph (networkx graph): reeb graph
+
+    """
+    import networkx as nx
+    G = nx.MultiGraph()
+    G.add_node(0)
+    G.add_node(1)
+    G.add_node(2)
+    G.add_node(3)
+    G.add_edge(0,1) 
+    G.add_edge(0,1)
+    G.add_edge(1,2)
+    G.add_edge(2,3)
+    G.add_edge(2,3)
+
+    dd = {0: 0, 1: 2, 2: 1, 3: 2}
+    nx.set_node_attributes(G, dd, 'down_deg')
+
+    ud = {0: 2, 1: 1, 2: 2, 3: 0}
+    nx.set_node_attributes(G, ud, 'up_deg')
+
+    fx = {0: 0, 1: 1, 2: 2, 3: 3}
+    nx.set_node_attributes(G, fx, 'fx')
+
+    return G
+
+def reeb_simple_loops():
+    '''
+    Returns the Reeb graph of the simple loops example
+    '''
+    from ..reeb import Reeb
+    return Reeb(simple_loops())

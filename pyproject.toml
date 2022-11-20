@@ -16,6 +16,7 @@ classifiers = [
 dependencies = ["numpy",
             "networkx",
             "matplotlib",
+            "scipy",
             ]
 
 [tool.setuptools.packages.find]
