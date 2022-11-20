@@ -1,4 +1,8 @@
 import networkx as nx
+import numpy as np
+import cereeberus.compute.degree as degree
+import cereeberus.compute.draw as draw
+
 class Reeb:
     """ Class for Reeb Graph
 
@@ -8,11 +12,14 @@ class Reeb:
     :ivar pos_fx: position values corresponding to x = fx and y = y value from pos
     :ivar horizontalDrawing: Default to False. If true, fx is drawn as a height function. 
     """
-
-    def __init__(self, G, fx = {}, 
+    def __init__(self, G, fx = {},
                         horizontalDrawing = False, 
                         verbose = False):
-        self.G = G
+        #Convert to MultiGraph to allow for Parallel Edges and Self-Loops
+        if type(G) != 'networkx.classes.multigraph.MultiGraph':
+            self.G = nx.MultiGraph(G)
+        else:
+            self.G = G
         if fx == {}:
             self.fx = nx.get_node_attributes(self.G,'fx')
         else:
@@ -88,6 +95,29 @@ class Reeb:
         else:
             pos = position
         nx.draw(self.G, pos = pos)
+        self.pos = nx.spring_layout(self.G)
+        self.pos_fx = {}
+        for i in range(0,len(self.pos)):
+            self.pos_fx[i] = (self.pos[i][0], self.fx[i])
+
+        self.nodes = self.G.nodes
+        self.edges = self.G.edges
+
+        # compute upper and lower degree of reeb graph
+        self.up_deg = degree.up_degree(self.G, self.fx)
+        self.down_deg = degree.down_degree(self.G, self.fx)
+
+        # adjacency matrix
+        #self.adjacency = nx.adjacency_matrix(G)
+
+        # show basic properties of reeb graph
+        self.summary = {'nodes': len(self.nodes), 'edges': len(self.edges)}
+
+    def plot_reeb(self, cp=.5):
+        """ Plot a Reeb Graph
+        
+        """
+        draw.reeb_plot(self, cp)
     
 
 

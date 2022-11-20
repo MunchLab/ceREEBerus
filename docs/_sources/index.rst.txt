@@ -13,6 +13,7 @@ Table of Contents
    :numbered:
 
    Example data and graphs <data.rst>
+   Computations and Plots <compute.rst>
    Reeb graphs <reeb.rst>
 
 
@@ -21,7 +22,8 @@ Collaborators
 
 The code is a compilation of work done by the lab of `Elizabeth Munch <http://www.elizabethmunch.com>`_.  The lead developer for this package is `Danielle Barnes <https://github.com/barnesd8>`_, and other people who have contributed to ceREEBerus include:
 
-- `Danielle Barnes <https://github.com/barnesd8>`_
+- `Elena Wang <https://elenaxwang.com>`_
+
 
 
 
