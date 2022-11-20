@@ -41,11 +41,11 @@ class Reeb:
         # show basic properties of reeb graph
         self.summary = {'nodes': len(self.nodes), 'edges': len(self.edges)}
 
-    def plot_reeb(self):
+    def plot_reeb(self, cp=.5):
         """ Plot a Reeb Graph
         
         """
-        degree.reeb_plot(self)
+        degree.reeb_plot(self, cp)
     
 
 

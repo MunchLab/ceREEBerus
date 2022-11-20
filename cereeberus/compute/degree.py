@@ -105,7 +105,7 @@ def bezier_curve(pt0, midpt, pt1):
         y2 = a2*x2 + b2
     return points
 
-def reeb_plot(R):
+def reeb_plot(R, cp=.5):
     import matplotlib.pyplot as plt
     import matplotlib as mpl
     import numpy as np
@@ -140,8 +140,8 @@ def reeb_plot(R):
         node0 = edge_list[i][0]
         node1 = edge_list[i][1]
         xmid = (R.pos_fx[node0][0]+R.pos_fx[node1][0])/2
-        xmid0 = xmid - .5*xmid
-        xmid1 = xmid + .5*xmid
+        xmid0 = xmid - cp*xmid
+        xmid1 = xmid + cp*xmid
         ymid = (R.pos_fx[node0][1]+R.pos_fx[node1][1])/2
         curve = bezier_curve(R.pos_fx[node0], (xmid0, ymid), R.pos_fx[node1])
         c = np.array(curve)
