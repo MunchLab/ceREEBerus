@@ -1,1 +1,1 @@
-__all__=['graphs', 'shapes']
+__all__=['graphs', 'shapes', 'randomMergeTrees']
