@@ -13,6 +13,7 @@ Table of Contents
    :numbered:
 
    Example data and graphs <data.rst>
+   Computations and Plots <compute.rst>
    Reeb graphs <reeb.rst>
 
 

@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
-from compute import degree
+import cereeberus.compute.degree as degree
+import cereeberus.compute.draw as draw
 
 class Reeb:
     """ Class for Reeb Graph
@@ -36,7 +37,7 @@ class Reeb:
         self.down_deg = degree.down_degree(G, self.fx)
 
         # adjacency matrix
-        self.adjacency = nx.adjacency_matrix(G)
+        #self.adjacency = nx.adjacency_matrix(G)
 
         # show basic properties of reeb graph
         self.summary = {'nodes': len(self.nodes), 'edges': len(self.edges)}
@@ -45,7 +46,7 @@ class Reeb:
         """ Plot a Reeb Graph
         
         """
-        degree.reeb_plot(self, cp)
+        draw.reeb_plot(self, cp)
     
 
 

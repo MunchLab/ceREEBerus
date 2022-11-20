@@ -169,3 +169,41 @@ def reeb_simple_loops():
     '''
     from ..reeb import Reeb
     return Reeb(simple_loops())
+
+def simple_loops_unordered():
+    """ Simple loops example for plotting loops and testing with unordered edges
+        Args:
+
+        Returns:
+            reeb_graph (networkx graph): reeb graph
+
+    """
+    import networkx as nx
+    G = nx.MultiGraph()
+    G.add_node(0)
+    G.add_node(1)
+    G.add_node(2)
+    G.add_node(3)
+    G.add_edge(0,1) 
+    G.add_edge(1,0)
+    G.add_edge(1,2)
+    G.add_edge(2,3)
+    G.add_edge(3,2)
+
+    dd = {0: 0, 1: 2, 2: 1, 3: 2}
+    nx.set_node_attributes(G, dd, 'down_deg')
+
+    ud = {0: 2, 1: 1, 2: 2, 3: 0}
+    nx.set_node_attributes(G, ud, 'up_deg')
+
+    fx = {0: 0, 1: 1, 2: 2, 3: 3}
+    nx.set_node_attributes(G, fx, 'fx')
+
+    return G
+
+def reeb_simple_loops_unordered():
+    '''
+    Returns the Reeb graph of the simple loops example
+    '''
+    from ..reeb import Reeb
+    return Reeb(simple_loops_unordered())
