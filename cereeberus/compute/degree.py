@@ -64,3 +64,42 @@ def down_degree(R, fx ={ }):
     for i in range(0,n):
         down_deg[i] = int(d[i])
     return down_deg
+
+def add_nodes(R, fx):
+    from ..reeb import Reeb
+    r = len(R.edges)
+    e = list(R.edges)
+    c = 0
+    for i in range(0,r):
+        pt0 = e[i][0]
+        pt1 = e[i][1]
+        f0 = R.fx[pt0]
+        f1 = R.fx[pt1]
+        if f0 < fx < f1 or f1 < fx < f0:
+            R.fx[r+c] = fx
+            R.G.add_edge(pt0, r+c)
+            R.G.add_edge(pt1, r+c)
+            R.G.add_node(r+c, fx = fx)
+            R.G.remove_edge(pt0, pt1)
+            c+=1
+    return Reeb(R.G)
+
+def minimal_reeb(R):
+    import networkx as nx
+    from ..reeb import Reeb
+    H = R.G.copy()
+    for i in H.nodes:
+        if R.up_deg[i] == R.down_deg[i] == 1:
+            print('updating edges', i)
+            e = list(H.edges(i))
+            pt0 = e[0][1]
+            pt1 = e[1][1]
+            H.add_edge(pt0, pt1)
+            H.remove_edge(i, pt0)
+            H.remove_edge(i, pt1)
+    for i in R.nodes:
+        if R.up_deg[i] == R.down_deg[i] == 1:
+            print('removing nodes', i)
+            H.remove_node(i)
+    H = nx.convert_node_labels_to_integers(H)
+    return Reeb(H)

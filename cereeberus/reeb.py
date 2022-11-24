@@ -26,11 +26,12 @@ class Reeb:
             raise AttributeError("No function values provided - please provide a function value for each node or update your graph to have the 'fx' attribute")
         self.pos = nx.spring_layout(self.G)
         self.pos_fx = {}
-        for i in range(0,len(self.pos)):
-            self.pos_fx[i] = (self.pos[i][0], self.fx[i])
-
         self.nodes = G.nodes
         self.edges = G.edges
+        for i in self.nodes:
+            self.pos_fx[i] = (self.pos[i][0], self.fx[i])
+
+        
 
         # compute upper and lower degree of reeb graph
         self.up_deg = degree.up_degree(G, self.fx)
@@ -38,6 +39,12 @@ class Reeb:
 
         # adjacency matrix
         #self.adjacency = nx.adjacency_matrix(G)
+        node_properties = {}
+        n = len(self.nodes)
+        for i in self.nodes:
+            node_properties[i] = {'node': i, 'pos': self.pos[i], 'pos_fx': self.pos_fx[i], 'up_deg': self.up_deg[i],
+            'down_deg': self.down_deg[i]}
+        self.node_properties = node_properties
 
         # show basic properties of reeb graph
         self.summary = {'nodes': len(self.nodes), 'edges': len(self.edges)}
@@ -47,6 +54,3 @@ class Reeb:
         
         """
         draw.reeb_plot(self, cp)
-    
-
-
