@@ -70,9 +70,9 @@ def bezier_curve(pt0, midpt, pt1):
         y1 = a1*x1 + b1
         x2 += (pt1[0] - midpt[0])/100
         y2 = a2*x2 + b2
-    return points
+    return points    
 
-def reeb_plot(R, cp=.5):
+def reeb_plot(R, pos, cpx=.1, cpy=.1):
     """Compute bezier curves for plotting two edges between a single set of nodes
     
     Args:
@@ -109,26 +109,28 @@ def reeb_plot(R, cp=.5):
     for i in line_index:
         node0 = edge_list[i][0]
         node1 = edge_list[i][1]
-        x_pos = (R.pos_fx[node0][0], R.pos_fx[node1][0])
-        y_pos = (R.pos_fx[node0][1], R.pos_fx[node1][1])
+        x_pos = (pos[node0][0], pos[node1][0])
+        y_pos = (pos[node0][1], pos[node1][1])
         ax.plot(x_pos, y_pos, color='grey', zorder = 0)
     
     for i in loop_index:
         node0 = edge_list[i][0]
         node1 = edge_list[i][1]
-        xmid = (R.pos_fx[node0][0]+R.pos_fx[node1][0])/2
-        xmid0 = xmid - cp*xmid
-        xmid1 = xmid + cp*xmid
-        ymid = (R.pos_fx[node0][1]+R.pos_fx[node1][1])/2
-        curve = bezier_curve(R.pos_fx[node0], (xmid0, ymid), R.pos_fx[node1])
+        xmid = (pos[node0][0]+pos[node1][0])/2
+        xmid0 = xmid - cpx*xmid
+        xmid1 = xmid + cpx*xmid
+        ymid = (pos[node0][1]+pos[node1][1])/2
+        ymid0 = ymid - cpy*ymid
+        ymid1 = ymid + cpy*ymid
+        curve = bezier_curve(pos[node0], (xmid0, ymid0), pos[node1])
         c = np.array(curve)
         plt.plot(c[:,0], c[:,1], color='grey', zorder = 0)
-        curve = bezier_curve(R.pos_fx[node0], (xmid1, ymid), R.pos_fx[node1])
+        curve = bezier_curve(pos[node0], (xmid1, ymid1), pos[node1])
         c = np.array(curve)
         plt.plot(c[:,0], c[:,1], color='grey', zorder = 0)
 
     for i in range(0, len(R.nodes)):
-        ax.scatter(R.pos_fx[i][0], R.pos_fx[i][1], s = 250, color = viridis(colormap[i]))
+        ax.scatter(pos[i][0], pos[i][1], s = 250, color = viridis(colormap[i]))
     
     plt.xlabel('X')
     plt.ylabel('Y')
