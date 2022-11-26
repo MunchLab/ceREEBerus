@@ -13,23 +13,23 @@ def torus_graph():
     """
     import networkx as nx
     G = nx.Graph()
-    G.add_node(0,pos=(1,1))
-    G.add_node(1,pos=(1,2))
+    G.add_node(0,pos=(1, 1))
+    G.add_node(1,pos=(1, 2))
     G.add_edge(0,1)
 
-    G.add_node(2,pos=(.5,3))
-    G.add_node(3,pos=(1.5,3))
+    G.add_node(2,pos=(.5, 3))
+    G.add_node(3,pos=(1.5, 3))
     G.add_edge(1,2)
     G.add_edge(1,3)
 
-    G.add_node(4,pos=(1,4))
+    G.add_node(4,pos=(1, 4))
     G.add_edge(4,2)
     G.add_edge(4,3)
 
-    G.add_node(5,pos=(1,5))
+    G.add_node(5,pos=(1, 5))
     G.add_edge(4,5)
 
-    fx = {0: 1, 1: 1, 2: .5, 3: 1.5, 4: 1, 5: 1}
+    fx = {0: 1, 1: 2, 2: 3, 3: 3, 4: 4, 5: 5}
     nx.set_node_attributes(G, fx, 'fx')
 
     return G
@@ -39,6 +39,7 @@ def reeb_torus():
     Returns the Reeb graph of a simple upright torus as a Reeb class. 
     '''
     from ..reeb import Reeb
+    fx = [1, 2, 3, 4, 5, 6]
     return Reeb(torus_graph())
 
 def reeb_torus_no_fx():
