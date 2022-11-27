@@ -31,7 +31,9 @@ jobs:
           build
           --user
       - name: Run tests
-        run: make tests
+        run: >-
+          pip install .
+          make tests
       - name: Build a binary wheel and a source tarball
         run: >-
           python -m
