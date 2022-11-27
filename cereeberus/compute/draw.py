@@ -1,3 +1,9 @@
+def dict_to_list(d):
+    l = []
+    for i in d:
+        l.append(d[i])
+    return l
+
 def line_loop_index(R):
     """Determine if edges between two nodes should be lines or loops
     
@@ -90,15 +96,17 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
     fig, ax = plt.subplots()
 
     n = len(R.nodes)
-    fx_sum = 0
     fx_max = 0
     fx_min = 0
-    for i in range(0, n):
-        fx_sum += R.fx[i]
-        fx_max = max(fx_max, R.fx[i])
-        fx_min = min(fx_min, R.fx[i])
+    if type(R.fx) == dict:
+        R.fxl = dict_to_list(R.fx)
+    else:
+        R.fxl = R.fx
+    Rfx = np.array(R.fxl)
+    Rfx = Rfx[np.isfinite(Rfx)]
+    fx_max = Rfx.max()
+    fx_min = Rfx.min()
 
-    fx_mean = fx_sum/n
     colormap = []
     for i in range (0,n):
         colormap.append((R.fx[i]-fx_min)/fx_max)
@@ -131,6 +139,3 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
 
     for i in range(0, len(R.nodes)):
         ax.scatter(pos[i][0], pos[i][1], s = 250, color = viridis(colormap[i]))
-    
-    plt.xlabel('X')
-    plt.ylabel('Y')

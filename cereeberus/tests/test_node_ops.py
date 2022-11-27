@@ -1,8 +1,8 @@
 import unittest
-import cereeberus.data.graphs as graphs
-import cereeberus.compute.degree as degree
+import data.graphs as graphs
+import compute.degree as degree
 
-class TestUpDownDegree(unittest.TestCase):
+class TestNodeOps(unittest.TestCase):
     def test_minimal(self):
         R = graphs.reeb_torus()
         R_min = degree.minimal_reeb(R)

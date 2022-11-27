@@ -1,3 +1,4 @@
+.PHONY: tests
 
 html:
 	# Running sphinx-build to build html files in build folder.
@@ -9,3 +10,7 @@ html:
 
 release:
 	python -m build
+
+tests:
+	# Running unittests
+	@python -m unittest

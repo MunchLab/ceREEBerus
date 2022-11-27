@@ -1,17 +1,17 @@
+
+
 """
 Some code to generate random Merge Trees to work with. 
 """
-
 import networkx as nx
 import numpy as np
-from ..reeb import Reeb
+from reeb.reeb import Reeb
 
 def randomMerge(n = 10):
     """
     Generates a random tree with n nodes + 1 root.
     Function defined is inverted distance from root node. 
     """
-
     # Generate a random tree
     T = nx.random_tree(n)
 

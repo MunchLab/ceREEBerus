@@ -66,7 +66,7 @@ def down_degree(R, fx ={ }):
     return down_deg
 
 def add_nodes(R, fx, x=0):
-    from ..reeb import Reeb
+    from reeb.reeb import Reeb
     r = len(R.edges)
     e = list(R.edges)
     c = 0
@@ -86,7 +86,7 @@ def add_nodes(R, fx, x=0):
 
 def minimal_reeb(R):
     import networkx as nx
-    from ..reeb import Reeb
+    from reeb.reeb import Reeb
     H = R.G.copy()
     for i in H.nodes:
         if R.up_deg[i] == R.down_deg[i] == 1:

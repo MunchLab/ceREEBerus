@@ -8,7 +8,7 @@ The goal is to get a merge tree class with the following properties.
 """
 
 
-from .reeb import Reeb
+from reeb.reeb import Reeb
 import networkx as nx
 import numpy as np
 
@@ -94,7 +94,7 @@ class Merge(Reeb):
         drawingLocation[functionCoord] = self.maxFiniteVal + 3
 
         if self.numComponents >1:
-            for i in roots: #Note this is an array of roots
+            for i in self.rootIndex: #Note this is an array of roots
                 
                 drawingLocation[otherCoord] = self.pos_fx[i][otherCoord]
                 self.pos_fx[i] = list(drawingLocation)
