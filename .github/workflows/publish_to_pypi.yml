@@ -29,8 +29,8 @@ jobs:
           pip install
           build
           --user
-      - name: Run unit tests
-         run: make tests
+      - name: Run tests
+        run: make tests
       - name: Build a binary wheel and a source tarball
         run: >-
           python -m
