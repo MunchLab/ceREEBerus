@@ -2,7 +2,7 @@
 
 [project]
 name = "cereeberus"
-version = "0.0.8"
+version = "0.0.9"
 authors = [
   { name="Danielle Barnes", email="barnesd8@msu.edu" },
 ]
@@ -15,7 +15,7 @@ classifiers = [
 ]
 dependencies = ["numpy",
             "networkx",
-            "matplotlib",
+            "matplotlib==3.6.2",
             ]
 
 [tool.setuptools.packages.find]
