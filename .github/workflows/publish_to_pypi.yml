@@ -13,7 +13,7 @@ on:
 jobs:
   build-n-publish:
     name: Build and publish python distributions to PyPI
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@master
@@ -22,7 +22,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: "3.8.8"
+          python-version: "3.9"
       - name: Install pypa/build
         run: >-
           python -m
