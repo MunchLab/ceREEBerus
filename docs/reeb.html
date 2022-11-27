@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2. Reeb Graph &mdash; ceREEBerus .1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -69,45 +68,7 @@
   <section id="reeb-graph">
 <h1><span class="section-number">2. </span>Reeb Graph<a class="headerlink" href="#reeb-graph" title="Permalink to this headline"></a></h1>
 <p>This is the reeb graph class which is the majority of functionality of the package.  This includes funtionality such as assigning function values to nodes in the Reeb graph and plotting the graph.</p>
-<span class="target" id="module-cereeberus.reeb"></span><dl class="py class">
-<dt class="sig sig-object py" id="cereeberus.reeb.Reeb">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cereeberus.reeb.</span></span><span class="sig-name descname"><span class="pre">Reeb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb.html#Reeb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.Reeb" title="Permalink to this definition"></a></dt>
-<dd><p>Class for Reeb Graph</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>G</strong> – Graph: G</p></li>
-<li><p><strong>fx</strong> – function values associated with G</p></li>
-<li><p><strong>pos</strong> – spring layout position calculated from G</p></li>
-<li><p><strong>pos_fx</strong> – position values corresponding to x = fx and y = y value from pos</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.reeb.Reeb.plot_reeb">
-<span class="sig-name descname"><span class="pre">plot_reeb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb.html#Reeb.plot_reeb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.Reeb.plot_reeb" title="Permalink to this definition"></a></dt>
-<dd><p>Plot a Reeb Graph given a graph with a position.
-If no position passed, it will take the spring layout version.
-In this case, it will either be drawn vertically or
-horizontally, depending on the horizontalDrawing (boolean)
-passed in.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.reeb.Reeb.set_pos_fx">
-<span class="sig-name descname"><span class="pre">set_pos_fx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resetSpring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb.html#Reeb.set_pos_fx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.Reeb.set_pos_fx" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the position data for drawing the Reeb graph.
-If self.horizongalDrawing = False, we are drawing the vertices
-at locations
-(spring_layout_x, functionvalue(v))</p>
-<p>Otherwise, we are drawing the points at
-(functionvalue(v), spring_layout_x )</p>
-<p>resetSpring will make it recalculate the spring layout to overwrite</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
+<span class="target" id="module-cereeberus.reeb"></span></section>
 
 
            </div>
