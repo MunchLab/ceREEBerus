@@ -6,6 +6,7 @@
   <title>cereeberus.data.shapes &mdash; ceREEBerus .1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -37,6 +38,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../data.html">1. Example data and graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reeb.html">2. Reeb graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compute.html">3. Compute</a></li>
 </ul>
 
         </div>
@@ -64,7 +66,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for cereeberus.data.shapes</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="torus"><a class="viewcode-back" href="../../../data.html#cereeberus.data.shapes.torus">[docs]</a><span></span><span class="k">def</span> <span class="nf">torus</span><span class="p">(</span><span class="n">num</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="viewcode-block" id="torus"><a class="viewcode-back" href="../../../data.html#cereeberus.data.shapes.torus">[docs]</a><span class="k">def</span> <span class="nf">torus</span><span class="p">(</span><span class="n">num</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create torus object</span>
 <span class="sd">    </span>
 <span class="sd">        args:</span>
@@ -79,7 +82,6 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
     <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
     <span class="n">U</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>

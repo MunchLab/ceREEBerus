@@ -67,6 +67,8 @@ def down_degree(R, fx ={ }):
     return down_deg
 
 def add_nodes(R, fx, x=0):
+    """ Function to add nodes to a Reeb Graph
+    """
     from cereeberus.reeb.graph import Reeb
     r = len(R.edges)
     e = list(R.edges)
@@ -86,6 +88,8 @@ def add_nodes(R, fx, x=0):
     return Reeb(R.G)
 
 def minimal_reeb(R):
+    """ Function to create minimal Reeb Graph
+    """
     from cereeberus.reeb.graph import Reeb
     H = R.G.copy()
     for i in H.nodes:
