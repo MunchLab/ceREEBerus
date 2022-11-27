@@ -1,6 +1,6 @@
 import unittest
-import reeb.reeb as Reeb
-import data.graphs as graphs
+import cereeberus.reeb.reeb as Reeb
+import cereeberus.data.graphs as graphs
 
 class TestReebClass(unittest.TestCase):
     def test_reeb_load(self):
