@@ -1,5 +1,4 @@
 import unittest
-import cereeberus.compute.degree as degree
 import cereeberus.data.graphs as graphs
 
 class TestUpDownDegree(unittest.TestCase):
