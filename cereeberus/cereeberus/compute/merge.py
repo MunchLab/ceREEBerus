@@ -8,7 +8,7 @@ The goal is to get a merge tree class with the following properties.
 """
 
 
-from reeb.reeb import Reeb
+from cereeberus.reeb.graph import Reeb
 import networkx as nx
 import numpy as np
 
@@ -111,7 +111,7 @@ class Merge(Reeb):
 
 
 if __name__=="__main__":
-    from data.randomMergeTrees import randomMerge
+    from cereeberus.data.randomMergeTrees import randomMerge
 
     R = randomMerge(10)
     M = Merge(R.G, R.fx)

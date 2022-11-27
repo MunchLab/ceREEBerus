@@ -1,3 +1,6 @@
+import numpy as np
+import networkx as nx
+
 def up_degree(R, fx = {}):
     """ Compute Upper Degree of Reeb Graph
 
@@ -9,7 +12,6 @@ def up_degree(R, fx = {}):
     
     """
 
-    import numpy as np
     n = len(R.nodes)
     up_adj = np.zeros((n,n))
 
@@ -43,7 +45,6 @@ def down_degree(R, fx ={ }):
     
     """
 
-    import numpy as np
     n = len(R.nodes)
     down_adj = np.zeros((n,n))
 
@@ -66,7 +67,7 @@ def down_degree(R, fx ={ }):
     return down_deg
 
 def add_nodes(R, fx, x=0):
-    from reeb.reeb import Reeb
+    from cereeberus.reeb.graph import Reeb
     r = len(R.edges)
     e = list(R.edges)
     c = 0
@@ -85,8 +86,7 @@ def add_nodes(R, fx, x=0):
     return Reeb(R.G)
 
 def minimal_reeb(R):
-    import networkx as nx
-    from reeb.reeb import Reeb
+    from cereeberus.reeb.graph import Reeb
     H = R.G.copy()
     for i in H.nodes:
         if R.up_deg[i] == R.down_deg[i] == 1:

@@ -1,3 +1,7 @@
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import numpy as np
+
 def dict_to_list(d):
     l = []
     for i in d:
@@ -89,9 +93,6 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
         plot (Reeb Graph): custom visualization of Reeb Graph
     """
 
-    import matplotlib.pyplot as plt
-    import matplotlib as mpl
-    import numpy as np
     viridis = mpl.colormaps['viridis'].resampled(16)
     fig, ax = plt.subplots()
 

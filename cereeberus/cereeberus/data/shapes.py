@@ -1,3 +1,4 @@
+import numpy as np
 def torus(num = 50):
     """Create torus object
     
@@ -13,7 +14,6 @@ def torus(num = 50):
 
     """
 
-    import numpy as np
     U = np.linspace(0, 2*np.pi, num)
     V = np.linspace(0, 2*np.pi, num)
     U, V = np.meshgrid(U, V)

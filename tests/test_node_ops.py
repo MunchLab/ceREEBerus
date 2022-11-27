@@ -1,6 +1,6 @@
 import unittest
-import data.graphs as graphs
-import compute.degree as degree
+import cereeberus.data.graphs as graphs
+import cereeberus.compute.degree as degree
 
 class TestNodeOps(unittest.TestCase):
     def test_minimal(self):

@@ -3,6 +3,10 @@
 # Construct an example Reeb
 # graph of a simple upright torus
 #=================================
+
+import networkx as nx
+from cereeberus.reeb.graph import Reeb
+
 def torus_graph():
     """ nx graph input to construct the example Reeb graph of a torus
         Args:
@@ -11,7 +15,7 @@ def torus_graph():
             reeb_graph (networkx graph): reeb graph of a torus
 
     """
-    import networkx as nx
+
     G = nx.MultiGraph()
     G.add_node(0,pos=(1, 1))
     G.add_node(1,pos=(1, 2))
@@ -34,13 +38,6 @@ def torus_graph():
 
     return G
 
-def reeb_torus():
-    '''
-    Returns the Reeb graph of a simple upright torus as a Reeb class. 
-    '''
-    from reeb.reeb import Reeb
-    return Reeb(torus_graph())
-
 def reeb_torus_no_fx():
     """ Reeb graph of a torus with no function values
         Args:
@@ -49,7 +46,7 @@ def reeb_torus_no_fx():
             reeb_graph (networkx graph): reeb graph of a torus
 
     """
-    import networkx as nx
+
     G = nx.MultiGraph()
     G.add_node(0,pos=(1,1))
     G.add_node(1,pos=(1,2))
@@ -80,7 +77,7 @@ def dancing_man():
         Returns:
             reeb_graph (networkx graph): reeb graph
     """
-    import networkx as nx
+
     G = nx.MultiGraph()
     G.add_node(0,pos=(3,7))
     G.add_node(1,pos=(3,6))
@@ -116,20 +113,13 @@ def dancing_man():
 
     return G
 
-def reeb_dancing_man():
-    '''
-    Returns the Reeb graph of the dancing man as a Reeb class. 
-    '''
-    from reeb.reeb import Reeb
-    return Reeb(dancing_man())
-
 def simple_loops():
     """ Simple loops example for plotting loops
         Args:
         Returns:
             reeb_graph (networkx graph): reeb graph
     """
-    import networkx as nx
+
     G = nx.MultiGraph()
     G.add_node(0)
     G.add_node(1)
@@ -152,20 +142,13 @@ def simple_loops():
 
     return G
 
-def reeb_simple_loops():
-    '''
-    Returns the Reeb graph of the simple loops example
-    '''
-    from reeb.reeb import Reeb
-    return Reeb(simple_loops())
-
 def simple_loops_unordered():
     """ Simple loops example for plotting loops and testing with unordered edges
         Args:
         Returns:
             reeb_graph (networkx graph): reeb graph
     """
-    import networkx as nx
+
     G = nx.MultiGraph()
     G.add_node(0)
     G.add_node(1)
@@ -188,9 +171,26 @@ def simple_loops_unordered():
 
     return G
 
+def reeb_torus():
+    '''
+    Returns the Reeb graph of a simple upright torus as a Reeb class. 
+    '''
+    return Reeb(torus_graph())
+
+def reeb_dancing_man():
+    '''
+    Returns the Reeb graph of the dancing man as a Reeb class. 
+    '''
+    return Reeb(dancing_man())
+
+def reeb_simple_loops():
+    '''
+    Returns the Reeb graph of the simple loops example
+    '''
+    return Reeb(simple_loops())
+
 def reeb_simple_loops_unordered():
     '''
     Returns the Reeb graph of the simple loops example
     '''
-    from reeb.reeb import Reeb
     return Reeb(simple_loops_unordered())
