@@ -6,6 +6,7 @@
   <title>cereeberus.data.graphs &mdash; ceREEBerus .1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -37,6 +38,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../data.html">1. Example data and graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reeb.html">2. Reeb graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compute.html">3. Compute</a></li>
 </ul>
 
         </div>
@@ -69,6 +71,10 @@
 <span class="c1"># Construct an example Reeb</span>
 <span class="c1"># graph of a simple upright torus</span>
 <span class="c1">#=================================</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>
+
 <div class="viewcode-block" id="torus_graph"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.torus_graph">[docs]</a><span class="k">def</span> <span class="nf">torus_graph</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; nx graph input to construct the example Reeb graph of a torus</span>
 <span class="sd">        Args:</span>
@@ -77,7 +83,7 @@
 <span class="sd">            reeb_graph (networkx graph): reeb graph of a torus</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
     <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiGraph</span><span class="p">()</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
@@ -100,13 +106,6 @@
 
     <span class="k">return</span> <span class="n">G</span></div>
 
-<div class="viewcode-block" id="reeb_torus"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.reeb_torus">[docs]</a><span class="k">def</span> <span class="nf">reeb_torus</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns the Reeb graph of a simple upright torus as a Reeb class. </span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="kn">from</span> <span class="nn">reeb.reeb</span> <span class="kn">import</span> <span class="n">Reeb</span>
-    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">torus_graph</span><span class="p">())</span></div>
-
 <div class="viewcode-block" id="reeb_torus_no_fx"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.reeb_torus_no_fx">[docs]</a><span class="k">def</span> <span class="nf">reeb_torus_no_fx</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Reeb graph of a torus with no function values</span>
 <span class="sd">        Args:</span>
@@ -115,7 +114,7 @@
 <span class="sd">            reeb_graph (networkx graph): reeb graph of a torus</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
     <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiGraph</span><span class="p">()</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
@@ -146,7 +145,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            reeb_graph (networkx graph): reeb graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
     <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiGraph</span><span class="p">()</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
@@ -182,20 +181,13 @@
 
     <span class="k">return</span> <span class="n">G</span></div>
 
-<div class="viewcode-block" id="reeb_dancing_man"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.reeb_dancing_man">[docs]</a><span class="k">def</span> <span class="nf">reeb_dancing_man</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns the Reeb graph of the dancing man as a Reeb class. </span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="kn">from</span> <span class="nn">reeb.reeb</span> <span class="kn">import</span> <span class="n">Reeb</span>
-    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">dancing_man</span><span class="p">())</span></div>
-
 <div class="viewcode-block" id="simple_loops"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.simple_loops">[docs]</a><span class="k">def</span> <span class="nf">simple_loops</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Simple loops example for plotting loops</span>
 <span class="sd">        Args:</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            reeb_graph (networkx graph): reeb graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
     <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiGraph</span><span class="p">()</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -218,20 +210,13 @@
 
     <span class="k">return</span> <span class="n">G</span></div>
 
-<div class="viewcode-block" id="reeb_simple_loops"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.reeb_simple_loops">[docs]</a><span class="k">def</span> <span class="nf">reeb_simple_loops</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns the Reeb graph of the simple loops example</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="kn">from</span> <span class="nn">reeb.reeb</span> <span class="kn">import</span> <span class="n">Reeb</span>
-    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">simple_loops</span><span class="p">())</span></div>
-
 <div class="viewcode-block" id="simple_loops_unordered"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.simple_loops_unordered">[docs]</a><span class="k">def</span> <span class="nf">simple_loops_unordered</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Simple loops example for plotting loops and testing with unordered edges</span>
 <span class="sd">        Args:</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            reeb_graph (networkx graph): reeb graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
     <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiGraph</span><span class="p">()</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -254,11 +239,28 @@
 
     <span class="k">return</span> <span class="n">G</span></div>
 
+<div class="viewcode-block" id="reeb_torus"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.reeb_torus">[docs]</a><span class="k">def</span> <span class="nf">reeb_torus</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the Reeb graph of a simple upright torus as a Reeb class. </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">torus_graph</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="reeb_dancing_man"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.reeb_dancing_man">[docs]</a><span class="k">def</span> <span class="nf">reeb_dancing_man</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the Reeb graph of the dancing man as a Reeb class. </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">dancing_man</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="reeb_simple_loops"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.reeb_simple_loops">[docs]</a><span class="k">def</span> <span class="nf">reeb_simple_loops</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the Reeb graph of the simple loops example</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">simple_loops</span><span class="p">())</span></div>
+
 <div class="viewcode-block" id="reeb_simple_loops_unordered"><a class="viewcode-back" href="../../../data.html#cereeberus.data.graphs.reeb_simple_loops_unordered">[docs]</a><span class="k">def</span> <span class="nf">reeb_simple_loops_unordered</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns the Reeb graph of the simple loops example</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="kn">from</span> <span class="nn">reeb.reeb</span> <span class="kn">import</span> <span class="n">Reeb</span>
     <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">simple_loops_unordered</span><span class="p">())</span></div>
 </pre></div>
 

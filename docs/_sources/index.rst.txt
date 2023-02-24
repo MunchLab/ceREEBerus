@@ -14,6 +14,7 @@ Table of Contents
 
    Example data and graphs <data.rst>
    Reeb graphs <reeb.rst>
+   Compute <compute.rst>
 
 
 Collaborators

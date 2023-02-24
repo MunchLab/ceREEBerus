@@ -5,7 +5,7 @@ Some code to generate random Merge Trees to work with.
 """
 import networkx as nx
 import numpy as np
-from reeb.reeb import Reeb
+from cereeberus.reeb.graph import Reeb
 
 def randomMerge(n = 10):
     """

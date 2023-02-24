@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cereeberus.compute.merge &mdash; ceREEBerus .1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../data.html">1. Example data and graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reeb.html">2. Reeb graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compute.html">3. Compute</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>cereeberus.compute.merge</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cereeberus.compute.merge</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Code started by Liz Nov 2022. </span>
+<span class="sd">The goal is to get a merge tree class with the following properties. </span>
+<span class="sd">- Should accept a Reeb graph class as input. </span>
+<span class="sd">- Needs a check to make sure the input is actually a Reeb graph. In particular, only down forks and a root node with function value `np.inf`. </span>
+<span class="sd">- Has drawing capabilities, in particular can handle that `np.inf` node. </span>
+<span class="sd">- If the Reeb graph passed in isn&#39;t a merge tree, likely I just want to generate the merge tree of the input Reeb graph. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="isMerge"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.merge.isMerge">[docs]</a><span class="k">def</span> <span class="nf">isMerge</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">fx</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function takes in a networkx tree and function, and checks to see if it is a </span>
+<span class="sd">    merge tree. </span>
+<span class="sd">    WARNING: not written yet. Always passes true for the moment. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check that T is a tree</span>
+
+    <span class="c1"># Check that there is only one np.nan (per connected component?)</span>
+
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="ComputeMergeTree"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.merge.ComputeMergeTree">[docs]</a><span class="k">def</span> <span class="nf">ComputeMergeTree</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function takes in a Reeb graph and returns the merge tree of that Reeb graph. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span> </div>
+
+
+<div class="viewcode-block" id="Merge"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.merge.Merge">[docs]</a><span class="k">class</span> <span class="nc">Merge</span><span class="p">(</span><span class="n">Reeb</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class for Merge tree</span>
+<span class="sd">    :ivar T: Graph: T</span>
+<span class="sd">    :ivar fx: function values associated with T</span>
+<span class="sd">    :ivar pos: spring layout position calculated from G</span>
+<span class="sd">    :ivar pos_fx: position values corresponding to x = fx and y = y value from pos</span>
+<span class="sd">    :ivar horizontalDrawing: Default to False. If true, fx is drawn as a height function. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> 
+                    <span class="n">fx</span> <span class="o">=</span> <span class="p">{},</span> 
+                    <span class="n">horizontalDrawing</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                    <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+
+        <span class="c1"># Run a check to see if the tree and </span>
+        <span class="c1"># function actually satisfy the merge</span>
+        <span class="c1"># tree requirements.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">isMerge</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">fx</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;The tree and function you passed in do not satisfy the requirements of a merge tree. &quot;</span><span class="p">)</span>
+
+        <span class="c1"># Set the maximum finite value. Needs to happen before runnning the Reeb init</span>
+        <span class="c1"># because of how I overwrote the set_pos_fx function.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxFiniteVal</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fx</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">fx</span><span class="p">)])</span>
+        
+        <span class="c1"># Do everything from the Reeb graph setup step</span>
+        <span class="n">Reeb</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">fx</span><span class="p">)</span>
+
+        <span class="c1"># Mark the root vertex. If there&#39;s more than one, we&#39;ll store an array of them.</span>
+        <span class="n">roots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">fx</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numComponents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">roots</span><span class="p">)</span>
+
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">numComponents</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rootIndex</span> <span class="o">=</span> <span class="n">roots</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">numComponents</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rootIndex</span> <span class="o">=</span> <span class="n">roots</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;This has no function value at np.inf, so this is not a merge tree satisfying our requirements.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Update position drawing </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fix_pos_fx</span><span class="p">()</span>
+
+
+
+
+
+    <span class="k">def</span> <span class="nf">fix_pos_fx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Update drawing locations to deal with the fact that we have np.inf around.</span>
+
+        <span class="c1"># First, figure out where the inf is that we&#39;ll have to update, based on whether we want horizontal or vertical drawings </span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalDrawing</span><span class="p">:</span>
+            <span class="n">functionCoord</span> <span class="o">=</span> <span class="mi">0</span> 
+            <span class="n">otherCoord</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">functionCoord</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">otherCoord</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">drawingLocation</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span>
+        <span class="n">drawingLocation</span><span class="p">[</span><span class="n">functionCoord</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxFiniteVal</span> <span class="o">+</span> <span class="mi">3</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">numComponents</span> <span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rootIndex</span><span class="p">:</span> <span class="c1">#Note this is an array of roots</span>
+                
+                <span class="n">drawingLocation</span><span class="p">[</span><span class="n">otherCoord</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">otherCoord</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">drawingLocation</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">drawingLocation</span><span class="p">[</span><span class="n">otherCoord</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rootIndex</span><span class="p">][</span><span class="n">otherCoord</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rootIndex</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">drawingLocation</span><span class="p">)</span></div>
+
+
+<span class="c1">#     def set_pos_fx(self,resetSpring = False, verbose = False):</span>
+<span class="c1">#         Reeb.set_pos_fx(self,resetSpring = False, verbose = False)</span>
+
+<span class="c1">#         self.fix_pos_fx()</span>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">cereeberus.data.randomMergeTrees</span> <span class="kn">import</span> <span class="n">randomMerge</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">randomMerge</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">Merge</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
+    <span class="n">M</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

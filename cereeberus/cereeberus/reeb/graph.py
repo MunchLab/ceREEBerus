@@ -1,7 +1,6 @@
 import networkx as nx
-import numpy as np
-import compute.degree as degree
-import compute.draw as draw
+import cereeberus.compute.degree as degree
+import cereeberus.compute.draw as draw
 
 class Reeb:
     """ Class for Reeb Graph
