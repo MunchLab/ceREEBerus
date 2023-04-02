@@ -11,19 +11,39 @@ The goal is to get a merge tree class with the following properties.
 from cereeberus.reeb.graph import Reeb
 import networkx as nx
 import numpy as np
+from cereeberus.compute.degree import up_degree
 
 
 def isMerge(T,fx):
     """
-    This function takes in a networkx tree and function, and checks to see if it is a 
-    merge tree. 
-    WARNING: not written yet. Always passes true for the moment. 
+    This function takes in a networkx tree or reeb graph and function, and checks to see if it is a 
+    merge tree.  This assumes that the root node(s) has/have a function value of np.inf. 
     """
-    # Check that T is a tree
+    import numpy as np
+    import networkx as nx
+    from cereeberus.compute.degree import up_degree
+    from cereeberus.reeb.graph import Reeb
+    
+    if type(T) is nx.classes.multigraph.MultiGraph:
+        node_list = list(T.nodes)
+        up_deg = up_degree(T, fx)
+        for i in node_list:
+            if (up_deg[i]==1 or (fx[i]==np.inf and up_deg[i]==0)) == True:
+                1 == 1
+            else:
+                return False
 
-    # Check that there is only one np.nan (per connected component?)
-
-
+    elif type(T) is Reeb:
+        node_list = list(T.nodes)
+        for i in node_list:
+            if (T.node_properties[i]['up_deg']==1 or (fx[i]==np.inf and T.node_properties[i]['up_deg']==0)) == True:
+                1 == 1
+            else:
+                return False
+    
+    else:
+        raise TypeError('Graph is not a networkx graph or Reeb graph')
+    
     return True
 
 def ComputeMergeTree(R):
