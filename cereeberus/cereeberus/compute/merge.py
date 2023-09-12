@@ -7,12 +7,9 @@ The goal is to get a merge tree class with the following properties.
 - If the Reeb graph passed in isn't a merge tree, likely I just want to generate the merge tree of the input Reeb graph. 
 """
 
-
 from cereeberus.reeb.graph import Reeb
 import networkx as nx
 import numpy as np
-from cereeberus.compute.degree import up_degree
-
 
 def isMerge(T,fx):
     """
@@ -46,11 +43,140 @@ def isMerge(T,fx):
     
     return True
 
-def ComputeMergeTree(R):
+def ComputeMergeTree(R, filtration: tuple[tuple[float,float], tuple[float, float], int], infAdjust: int=None, precision: int=5, size: int=0, verbose: bool=False):
     """
-    This function takes in a Reeb graph and returns the merge tree of that Reeb graph. 
+    main function to build merge tree for a given graph and filtration
     """
-    pass 
+    from cereeberus.compute.degree import remove_isolates
+    from cereeberus.compute.uf import UnionFind
+    from cereeberus.compute.uf import getSortedNodeHeights
+    import networkx as nx
+   
+    Rmt = remove_isolates(R)
+    
+    # digraph for LCA calcs and it's a tree
+    mt = nx.DiGraph()
+    
+    # to handle special indexes post projections (has nodes named >n)
+    if size != 0:
+        uf = UnionFind(size, verbose=verbose)
+    else:
+        uf = UnionFind(Rmt.number_of_nodes(), verbose=verbose)
+        
+    visited = set()
+    numComponents = 0
+    heights = getSortedNodeHeights(Rmt, filtration, precision)
+    if verbose:
+        print(heights)
+    # this is the first node of min height since list
+    topMerge = heights[0][0]
+    
+    for node, height in heights:
+        # track visited nodes (helps deal with equal heights)
+        if verbose:
+            print(f"now processing node{node}, with {numComponents} already found components")
+        visited.add(node)     
+        
+        # check to see if the node has been told it is the endpoint of a previous grouping (the endpoint of an already found edge)
+        # perform find to make sure these groupings are not the same
+        possibleGroups = Rmt.nodes[node].get('groups', [])
+
+        # if this edge has never been told anything, no existing edges
+        # add this node in merge tree as start of a new branch
+        if possibleGroups == []:
+            if verbose:
+                print(f"{node} is unconnected, about to add {numComponents}, {height}")
+            mt.add_node(node, pos=(numComponents, height), height=height)
+            numComponents += 1
+
+        else:
+            # iterate through possible groups via unionFind to determine if this is a merge point or one connected component
+            componentSet = set()
+            for possibleGroup in possibleGroups:
+                componentSet.add(uf.find(possibleGroup))
+
+            componentList = list(componentSet)
+            
+            if verbose:
+                print( f"received {componentList} membership")
+            
+            # if they are all the same group, this node is also part of this group
+            # ignore on merge tree if its part of original graph
+            # place this on if its a key label from the other graph's merge tree
+            if len(componentList) == 1:
+                myRoot = componentList.pop()
+                uf.union(node, myRoot)
+                # only add to merge tree if a special key label point
+                if Rmt.nodes[node].get('projected', False):
+                    if verbose:
+                        print(f"although connected, key label{node}, existing connected to {myRoot}, adding still")
+                    mt.add_node(node, pos=(mt.nodes[myRoot]['pos'][0], height), height=height)
+                    mt.add_edge(node, myRoot)
+                    
+                    # change the root to represent the current head of merge point
+                    if verbose:
+                        print(f"rerooting component {myRoot} to {node}")
+                    uf.rerootComponent(node, node)
+                    
+                    # this point could be a top merge point to infinity root
+                    topMerge = node
+                    
+                else:
+                    # skip if on the same graph
+                    if verbose:
+                        print(f"skipping node{node}, existing connected to {myRoot}")
+            else:
+                # else this node is the merge point, add on merge tree and perform union
+                if verbose:
+                    print(f"about to add {numComponents}, {height}, updating topMerge")
+                
+                topMerge = node
+                
+                mt.add_node(node, pos=(numComponents-len(componentList), height), height=height)
+                
+                for component in componentList:
+                    componentRoot = uf.find(component)
+                    if verbose:
+                        print(f"unioning node{node} and componentRoot of node {componentRoot}")
+                        
+                    # union each component
+                    uf.union(node, componentRoot)
+                    # track on merge tree
+                    mt.add_edge(node, componentRoot)
+
+                    if verbose:
+                        print(f"rerooting {componentRoot} to merge point {node}")
+                        
+                    # change the root to represent the current head of merge point
+                    uf.rerootComponent(node, node)
+                    
+                    numComponents -= 1
+                    
+        # pass along the finalized group to all the edges above
+        myGroup = uf.find(node)
+        for neighbor in nx.all_neighbors(Rmt, node):
+            # lower height neighbors seen before
+            if verbose:
+                print( f"neighbor{neighbor}")
+            if neighbor in visited:
+                if verbose:
+                    print(f"visited{neighbor} already")
+                continue
+
+            # pass new info
+            groups = Rmt.nodes[neighbor].get('groups', [])
+            Rmt.nodes[neighbor]['groups'] = groups + [myGroup]
+        
+    # add final "inf" point, but visualize as max height + 10% of height range unless passed in
+   
+    if infAdjust is None:
+        infAdjust = (heights[-1][1] - heights[0][1] ) * 0.1
+    infHeight = heights[-1][1] + infAdjust
+    mt.add_node('inf', pos=(0, infHeight), height=float('inf'))
+    mt.add_edge('inf', topMerge)
+    
+    return mt
+ 
 
 
 class Merge(Reeb):
@@ -95,14 +221,11 @@ class Merge(Reeb):
         # Update position drawing 
         self.fix_pos_fx()
 
-
-
-
-
     def fix_pos_fx(self):
         # Update drawing locations to deal with the fact that we have np.inf around.
 
         # First, figure out where the inf is that we'll have to update, based on whether we want horizontal or vertical drawings 
+
         if self._horizontalDrawing:
             functionCoord = 0 
             otherCoord = 1
