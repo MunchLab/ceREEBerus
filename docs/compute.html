@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3. Compute Module &mdash; ceREEBerus .1 documentation</title>
+  <title>3. Compute Module &mdash; ceREEBerus .11 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
@@ -15,6 +15,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -68,7 +69,13 @@
            <div itemprop="articleBody">
              
   <section id="module-cereeberus.compute.degree">
-<span id="compute-module"></span><h1><span class="section-number">3. </span>Compute Module<a class="headerlink" href="#module-cereeberus.compute.degree" title="Permalink to this headline"></a></h1>
+<span id="compute-module"></span><h1><span class="section-number">3. </span>Compute Module<a class="headerlink" href="#module-cereeberus.compute.degree" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="cereeberus.compute.degree.add_nodes">
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">add_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/degree.html#add_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.add_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Function to add nodes to a Reeb Graph</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.degree.down_degree">
 <span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">down_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/degree.html#down_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.down_degree" title="Permalink to this definition"></a></dt>
@@ -84,6 +91,18 @@
 <dd class="field-odd"><p>down_deg (dict)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cereeberus.compute.degree.minimal_reeb">
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">minimal_reeb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/degree.html#minimal_reeb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.minimal_reeb" title="Permalink to this definition"></a></dt>
+<dd><p>Function to create minimal Reeb Graph</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cereeberus.compute.degree.remove_isolates">
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">remove_isolates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/degree.html#remove_isolates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.remove_isolates" title="Permalink to this definition"></a></dt>
+<dd><p>Function to remove isolates from Reeb Graph.  Important for computation of Merge Tree</p>
 </dd></dl>
 
 <dl class="py function">
@@ -191,15 +210,9 @@ The goal is to get a merge tree class with the following properties.
 - Needs a check to make sure the input is actually a Reeb graph. In particular, only down forks and a root node with function value <cite>np.inf</cite>.
 - Has drawing capabilities, in particular can handle that <cite>np.inf</cite> node.
 - If the Reeb graph passed in isn’t a merge tree, likely I just want to generate the merge tree of the input Reeb graph.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.merge.ComputeMergeTree">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">ComputeMergeTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#ComputeMergeTree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.ComputeMergeTree" title="Permalink to this definition"></a></dt>
-<dd><p>This function takes in a Reeb graph and returns the merge tree of that Reeb graph.</p>
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="cereeberus.compute.merge.Merge">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">Merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#Merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.Merge" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">Merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#Merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.Merge" title="Permalink to this definition"></a></dt>
 <dd><p>Class for Merge tree
 :ivar T: Graph: T
 :ivar fx: function values associated with T
@@ -209,11 +222,16 @@ The goal is to get a merge tree class with the following properties.
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="cereeberus.compute.merge.computemergetree">
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">computemergetree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infAdjust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#computemergetree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.computemergetree" title="Permalink to this definition"></a></dt>
+<dd><p>main function to build merge tree for a given graph and filtration</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.merge.isMerge">
 <span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">isMerge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#isMerge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.isMerge" title="Permalink to this definition"></a></dt>
-<dd><p>This function takes in a networkx tree and function, and checks to see if it is a
-merge tree.
-WARNING: not written yet. Always passes true for the moment.</p>
+<dd><p>This function takes in a networkx tree or reeb graph and function, and checks to see if it is a
+merge tree.  This assumes that the root node(s) has/have a function value of np.inf.</p>
 </dd></dl>
 
 </section>

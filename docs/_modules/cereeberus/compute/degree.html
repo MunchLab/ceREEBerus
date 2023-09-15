@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cereeberus.compute.degree &mdash; ceREEBerus .1 documentation</title>
+  <title>cereeberus.compute.degree &mdash; ceREEBerus .11 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -134,7 +135,9 @@
         <span class="n">down_deg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">down_deg</span></div>
 
-<span class="k">def</span> <span class="nf">add_nodes</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="add_nodes"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.degree.add_nodes">[docs]</a><span class="k">def</span> <span class="nf">add_nodes</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Function to add nodes to a Reeb Graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>
     <span class="n">r</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
     <span class="n">e</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
@@ -151,9 +154,11 @@
             <span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">r</span><span class="o">+</span><span class="n">c</span><span class="p">,</span> <span class="n">fx</span> <span class="o">=</span> <span class="n">fx</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fx</span><span class="p">))</span>
             <span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">pt0</span><span class="p">,</span> <span class="n">pt1</span><span class="p">)</span>
             <span class="n">c</span><span class="o">+=</span><span class="mi">1</span>
-    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">minimal_reeb</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+<div class="viewcode-block" id="minimal_reeb"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.degree.minimal_reeb">[docs]</a><span class="k">def</span> <span class="nf">minimal_reeb</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Function to create minimal Reeb Graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>
     <span class="n">H</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
@@ -168,7 +173,18 @@
         <span class="k">if</span> <span class="n">R</span><span class="o">.</span><span class="n">up_deg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">R</span><span class="o">.</span><span class="n">down_deg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">H</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="n">H</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">convert_node_labels_to_integers</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">H</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="remove_isolates"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.degree.remove_isolates">[docs]</a><span class="k">def</span> <span class="nf">remove_isolates</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Function to remove isolates from Reeb Graph.  Important for computation of Merge Tree</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">R</span><span class="o">.</span><span class="n">up_deg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">R</span><span class="o">.</span><span class="n">down_deg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">H</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">convert_node_labels_to_integers</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">H</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cereeberus.compute.merge &mdash; ceREEBerus .1 documentation</title>
+  <title>cereeberus.compute.merge &mdash; ceREEBerus .11 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
@@ -14,6 +14,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -75,30 +76,177 @@
 <span class="sd">- If the Reeb graph passed in isn&#39;t a merge tree, likely I just want to generate the merge tree of the input Reeb graph. </span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-
 <span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-
 <div class="viewcode-block" id="isMerge"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.merge.isMerge">[docs]</a><span class="k">def</span> <span class="nf">isMerge</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">fx</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function takes in a networkx tree and function, and checks to see if it is a </span>
-<span class="sd">    merge tree. </span>
-<span class="sd">    WARNING: not written yet. Always passes true for the moment. </span>
+<span class="sd">    This function takes in a networkx tree or reeb graph and function, and checks to see if it is a </span>
+<span class="sd">    merge tree.  This assumes that the root node(s) has/have a function value of np.inf. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Check that T is a tree</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+    <span class="kn">from</span> <span class="nn">cereeberus.compute.degree</span> <span class="kn">import</span> <span class="n">up_degree</span>
+    <span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>
+    
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="ow">is</span> <span class="n">nx</span><span class="o">.</span><span class="n">classes</span><span class="o">.</span><span class="n">multigraph</span><span class="o">.</span><span class="n">MultiGraph</span><span class="p">:</span>
+        <span class="n">node_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="n">up_deg</span> <span class="o">=</span> <span class="n">up_degree</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">fx</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">node_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">up_deg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span> <span class="ow">and</span> <span class="n">up_deg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="mi">1</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="c1"># Check that there is only one np.nan (per connected component?)</span>
-
-
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Reeb</span><span class="p">:</span>
+        <span class="n">node_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">node_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;up_deg&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span> <span class="ow">and</span> <span class="n">T</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;up_deg&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="mi">1</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Graph is not a networkx graph or Reeb graph&#39;</span><span class="p">)</span>
+    
     <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="ComputeMergeTree"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.merge.ComputeMergeTree">[docs]</a><span class="k">def</span> <span class="nf">ComputeMergeTree</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+<div class="viewcode-block" id="computemergetree"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.merge.computemergetree">[docs]</a><span class="k">def</span> <span class="nf">computemergetree</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">filtration</span><span class="p">:</span> <span class="s2">&quot;tuple[tuple[float,float], tuple[float, float], int]&quot;</span><span class="p">,</span> <span class="n">infAdjust</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function takes in a Reeb graph and returns the merge tree of that Reeb graph. </span>
+<span class="sd">    main function to build merge tree for a given graph and filtration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span> </div>
+    <span class="kn">from</span> <span class="nn">cereeberus.compute.degree</span> <span class="kn">import</span> <span class="n">remove_isolates</span>
+    <span class="kn">from</span> <span class="nn">cereeberus.compute.uf</span> <span class="kn">import</span> <span class="n">UnionFind</span>
+    <span class="kn">from</span> <span class="nn">cereeberus.compute.uf</span> <span class="kn">import</span> <span class="n">getSortedNodeHeights</span>
+    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+   
+    <span class="n">Rmt</span> <span class="o">=</span> <span class="n">remove_isolates</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+    
+    <span class="c1"># digraph for LCA calcs and it&#39;s a tree</span>
+    <span class="n">mt</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+    
+    <span class="c1"># to handle special indexes post projections (has nodes named &gt;n)</span>
+    <span class="k">if</span> <span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">uf</span> <span class="o">=</span> <span class="n">UnionFind</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">uf</span> <span class="o">=</span> <span class="n">UnionFind</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Rmt</span><span class="o">.</span><span class="n">nodes</span><span class="p">),</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        
+    <span class="n">visited</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">numComponents</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">heights</span> <span class="o">=</span> <span class="n">getSortedNodeHeights</span><span class="p">(</span><span class="n">Rmt</span><span class="p">,</span> <span class="n">filtration</span><span class="p">,</span> <span class="n">precision</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">heights</span><span class="p">)</span>
+    <span class="c1"># this is the first node of min height since list</span>
+    <span class="n">topMerge</span> <span class="o">=</span> <span class="n">heights</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">height</span> <span class="ow">in</span> <span class="n">heights</span><span class="p">:</span>
+        <span class="c1"># track visited nodes (helps deal with equal heights)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;now processing node</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2">, with </span><span class="si">{</span><span class="n">numComponents</span><span class="si">}</span><span class="s2"> already found components&quot;</span><span class="p">)</span>
+        <span class="n">visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>     
+        
+        <span class="c1"># check to see if the node has been told it is the endpoint of a previous grouping (the endpoint of an already found edge)</span>
+        <span class="c1"># perform find to make sure these groupings are not the same</span>
+        <span class="n">possibleGroups</span> <span class="o">=</span> <span class="n">Rmt</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;groups&#39;</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="c1"># if this edge has never been told anything, no existing edges</span>
+        <span class="c1"># add this node in merge tree as start of a new branch</span>
+        <span class="k">if</span> <span class="n">possibleGroups</span> <span class="o">==</span> <span class="p">[]:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2"> is unconnected, about to add </span><span class="si">{</span><span class="n">numComponents</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">mt</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">numComponents</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+            <span class="n">numComponents</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># iterate through possible groups via unionFind to determine if this is a merge point or one connected component</span>
+            <span class="n">componentSet</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">possibleGroup</span> <span class="ow">in</span> <span class="n">possibleGroups</span><span class="p">:</span>
+                <span class="n">componentSet</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">uf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">possibleGroup</span><span class="p">))</span>
+
+            <span class="n">componentList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">componentSet</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span> <span class="sa">f</span><span class="s2">&quot;received </span><span class="si">{</span><span class="n">componentList</span><span class="si">}</span><span class="s2"> membership&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># if they are all the same group, this node is also part of this group</span>
+            <span class="c1"># ignore on merge tree if its part of original graph</span>
+            <span class="c1"># place this on if its a key label from the other graph&#39;s merge tree</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">componentList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">myRoot</span> <span class="o">=</span> <span class="n">componentList</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">myRoot</span><span class="p">)</span>
+                <span class="c1"># only add to merge tree if a special key label point</span>
+                <span class="k">if</span> <span class="n">Rmt</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;projected&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;although connected, key label</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2">, existing connected to </span><span class="si">{</span><span class="n">myRoot</span><span class="si">}</span><span class="s2">, adding still&quot;</span><span class="p">)</span>
+                    <span class="n">mt</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">myRoot</span><span class="p">][</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">height</span><span class="p">),</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+                    <span class="n">mt</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">myRoot</span><span class="p">)</span>
+                    
+                    <span class="c1"># change the root to represent the current head of merge point</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rerooting component </span><span class="si">{</span><span class="n">myRoot</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">uf</span><span class="o">.</span><span class="n">rerootComponent</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+                    
+                    <span class="c1"># this point could be a top merge point to infinity root</span>
+                    <span class="n">topMerge</span> <span class="o">=</span> <span class="n">node</span>
+                    
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># skip if on the same graph</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;skipping node</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2">, existing connected to </span><span class="si">{</span><span class="n">myRoot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># else this node is the merge point, add on merge tree and perform union</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;about to add </span><span class="si">{</span><span class="n">numComponents</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s2">, updating topMerge&quot;</span><span class="p">)</span>
+                
+                <span class="n">topMerge</span> <span class="o">=</span> <span class="n">node</span>
+                
+                <span class="n">mt</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="n">numComponents</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">componentList</span><span class="p">),</span> <span class="n">height</span><span class="p">),</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+                
+                <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">componentList</span><span class="p">:</span>
+                    <span class="n">componentRoot</span> <span class="o">=</span> <span class="n">uf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unioning node</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2"> and componentRoot of node </span><span class="si">{</span><span class="n">componentRoot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        
+                    <span class="c1"># union each component</span>
+                    <span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">componentRoot</span><span class="p">)</span>
+                    <span class="c1"># track on merge tree</span>
+                    <span class="n">mt</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">componentRoot</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rerooting </span><span class="si">{</span><span class="n">componentRoot</span><span class="si">}</span><span class="s2"> to merge point </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        
+                    <span class="c1"># change the root to represent the current head of merge point</span>
+                    <span class="n">uf</span><span class="o">.</span><span class="n">rerootComponent</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+                    
+                    <span class="n">numComponents</span> <span class="o">-=</span> <span class="mi">1</span>
+                    
+        <span class="c1"># pass along the finalized group to all the edges above</span>
+        <span class="n">myGroup</span> <span class="o">=</span> <span class="n">uf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">Rmt</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+            <span class="c1"># lower height neighbors seen before</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span> <span class="sa">f</span><span class="s2">&quot;neighbor</span><span class="si">{</span><span class="n">neighbor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;visited</span><span class="si">{</span><span class="n">neighbor</span><span class="si">}</span><span class="s2"> already&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># pass new info</span>
+            <span class="n">groups</span> <span class="o">=</span> <span class="n">Rmt</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">neighbor</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;groups&#39;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">Rmt</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">neighbor</span><span class="p">][</span><span class="s1">&#39;groups&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">groups</span> <span class="o">+</span> <span class="p">[</span><span class="n">myGroup</span><span class="p">]</span>
+        
+    <span class="c1"># add final &quot;inf&quot; point, but visualize as max height + 10% of height range unless passed in</span>
+   
+    <span class="k">if</span> <span class="n">infAdjust</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">infAdjust</span> <span class="o">=</span> <span class="p">(</span><span class="n">heights</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">heights</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
+    <span class="n">infHeight</span> <span class="o">=</span> <span class="n">heights</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">infAdjust</span>
+    <span class="n">mt</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">infHeight</span><span class="p">),</span> <span class="n">height</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">))</span>
+    <span class="n">mt</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">,</span> <span class="n">topMerge</span><span class="p">)</span>
+    <span class="c1">#rmt = Reeb(mt)</span>
+    
+    <span class="k">return</span> <span class="n">mt</span></div>
+ 
 
 
 <div class="viewcode-block" id="Merge"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.merge.Merge">[docs]</a><span class="k">class</span> <span class="nc">Merge</span><span class="p">(</span><span class="n">Reeb</span><span class="p">):</span>
@@ -143,14 +291,11 @@
         <span class="c1"># Update position drawing </span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fix_pos_fx</span><span class="p">()</span>
 
-
-
-
-
     <span class="k">def</span> <span class="nf">fix_pos_fx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Update drawing locations to deal with the fact that we have np.inf around.</span>
 
         <span class="c1"># First, figure out where the inf is that we&#39;ll have to update, based on whether we want horizontal or vertical drawings </span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalDrawing</span><span class="p">:</span>
             <span class="n">functionCoord</span> <span class="o">=</span> <span class="mi">0</span> 
             <span class="n">otherCoord</span> <span class="o">=</span> <span class="mi">1</span>
