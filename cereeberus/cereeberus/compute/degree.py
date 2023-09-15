@@ -105,3 +105,14 @@ def minimal_reeb(R):
             H.remove_node(i)
     H = nx.convert_node_labels_to_integers(H)
     return Reeb(H)
+
+def remove_isolates(R):
+    """ Function to remove isolates from Reeb Graph.  Important for computation of Merge Tree
+    """
+    from cereeberus.reeb.graph import Reeb
+    H = R.G.copy()
+    for i in R.nodes:
+        if R.up_deg[i] == R.down_deg[i] == 0:
+            H.remove_node(i)
+    H = nx.convert_node_labels_to_integers(H)
+    return Reeb(H)

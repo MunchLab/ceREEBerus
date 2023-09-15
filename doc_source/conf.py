@@ -12,7 +12,11 @@
 #
 import os
 import sys
+sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__),'..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__),'..', 'cereeberus'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__),'..','..'))
 
 
 # -- Project information -----------------------------------------------------
@@ -21,7 +25,7 @@ project = 'ceREEBerus'
 author = 'Danielle Barnes'
 
 # The full version, including alpha/beta/rc tags
-release = '.1'
+release = '.2'
 
 
 # -- General configuration ---------------------------------------------------
