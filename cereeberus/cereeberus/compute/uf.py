@@ -9,7 +9,7 @@ def signedDistToLine2Pts(pt: tuple, p0: tuple, p1: tuple) -> float:
     '''
     return ((p0[0]-pt[0])*(p1[1]-p0[1]) - (p1[0]-p0[0])*(p0[1]-pt[1])) / math.dist(p0,p1)
 
-def _computeNodeHeights(graph: nx.Graph, filtration: tuple[tuple[float,float], tuple[float, float], int], precision: int=5) -> dict[int, tuple[float,bool]]:
+def _computeNodeHeights(graph: nx.Graph, filtration: "tuple[tuple[float,float], tuple[float, float], int]", precision: int=5) -> "dict[int, tuple[float,bool]]":
     # given a filtration line and direction, compute heights of each node and return as dict of tuple (height, projected)
     
     # defining a line as 2 points and an inversion flag
@@ -30,7 +30,7 @@ def _computeNodeHeights(graph: nx.Graph, filtration: tuple[tuple[float,float], t
     
     return heights
 
-def getSortedNodeHeights(graph: nx.Graph, filtration: tuple[tuple[float,float], tuple[float, float], int], precision: int=5) -> list[tuple[int,float]]:
+def getSortedNodeHeights(graph: nx.Graph, filtration: "tuple[tuple[float,float], tuple[float, float], int]", precision: int=5) -> "list[tuple[int,float]]":
     '''compute heights of each node given filtration line and return as sorted list of node height tuples, rounded to given precision'''
     
     # sorted first by height, then non-projected first

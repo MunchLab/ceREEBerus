@@ -51,6 +51,9 @@ class Reeb:
 
         # show basic properties of reeb graph
         self.summary = {'nodes': len(self.nodes), 'edges': len(self.edges)}
+    
+    def neighbors(self, node):
+        return self.G.neighbors(node)
 
     def set_pos_fx(self, resetSpring = False, verbose = False):
         """

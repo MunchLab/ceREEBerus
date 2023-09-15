@@ -25,7 +25,7 @@ project = 'ceREEBerus'
 author = 'Danielle Barnes'
 
 # The full version, including alpha/beta/rc tags
-release = '.1'
+release = '.2'
 
 
 # -- General configuration ---------------------------------------------------

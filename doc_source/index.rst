@@ -1,7 +1,7 @@
 ceREEBerus: Reeb Graph Computations in Python
 =================================================
 
-.. image:: images/torus.gif
+.. image:: images/juggling_man.gif
   :width: 600 px
 
 

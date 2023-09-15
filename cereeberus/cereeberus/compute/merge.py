@@ -43,7 +43,7 @@ def isMerge(T,fx):
     
     return True
 
-def ComputeMergeTree(R, filtration: tuple[tuple[float,float], tuple[float, float], int], infAdjust: int=None, precision: int=5, size: int=0, verbose: bool=False):
+def computemergetree(R, filtration: "tuple[tuple[float,float], tuple[float, float], int]", infAdjust: int=None, precision: int=5, size: int=0, verbose: bool=False):
     """
     main function to build merge tree for a given graph and filtration
     """
@@ -61,7 +61,7 @@ def ComputeMergeTree(R, filtration: tuple[tuple[float,float], tuple[float, float
     if size != 0:
         uf = UnionFind(size, verbose=verbose)
     else:
-        uf = UnionFind(Rmt.number_of_nodes(), verbose=verbose)
+        uf = UnionFind(len(Rmt.nodes), verbose=verbose)
         
     visited = set()
     numComponents = 0
@@ -154,7 +154,7 @@ def ComputeMergeTree(R, filtration: tuple[tuple[float,float], tuple[float, float
                     
         # pass along the finalized group to all the edges above
         myGroup = uf.find(node)
-        for neighbor in nx.all_neighbors(Rmt, node):
+        for neighbor in Rmt.neighbors(node):
             # lower height neighbors seen before
             if verbose:
                 print( f"neighbor{neighbor}")
@@ -174,6 +174,7 @@ def ComputeMergeTree(R, filtration: tuple[tuple[float,float], tuple[float, float
     infHeight = heights[-1][1] + infAdjust
     mt.add_node('inf', pos=(0, infHeight), height=float('inf'))
     mt.add_edge('inf', topMerge)
+    #rmt = Reeb(mt)
     
     return mt
  

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3. Compute Module &mdash; ceREEBerus .1 documentation</title>
+  <title>3. Compute Module &mdash; ceREEBerus .2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
@@ -202,6 +202,36 @@
 </p>
 </dd>
 </dl>
+</dd></dl>
+
+<span class="target" id="module-cereeberus.compute.merge"></span><p>Code started by Liz Nov 2022.
+The goal is to get a merge tree class with the following properties.
+- Should accept a Reeb graph class as input.
+- Needs a check to make sure the input is actually a Reeb graph. In particular, only down forks and a root node with function value <cite>np.inf</cite>.
+- Has drawing capabilities, in particular can handle that <cite>np.inf</cite> node.
+- If the Reeb graph passed in isn’t a merge tree, likely I just want to generate the merge tree of the input Reeb graph.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cereeberus.compute.merge.Merge">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">Merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#Merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.Merge" title="Permalink to this definition"></a></dt>
+<dd><p>Class for Merge tree
+:ivar T: Graph: T
+:ivar fx: function values associated with T
+:ivar pos: spring layout position calculated from G
+:ivar pos_fx: position values corresponding to x = fx and y = y value from pos
+:ivar horizontalDrawing: Default to False. If true, fx is drawn as a height function.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cereeberus.compute.merge.computemergetree">
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">computemergetree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infAdjust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#computemergetree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.computemergetree" title="Permalink to this definition"></a></dt>
+<dd><p>main function to build merge tree for a given graph and filtration</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cereeberus.compute.merge.isMerge">
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">isMerge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#isMerge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.isMerge" title="Permalink to this definition"></a></dt>
+<dd><p>This function takes in a networkx tree or reeb graph and function, and checks to see if it is a
+merge tree.  This assumes that the root node(s) has/have a function value of np.inf.</p>
 </dd></dl>
 
 </section>
