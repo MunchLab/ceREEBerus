@@ -43,9 +43,20 @@ def isMerge(T,fx):
     
     return True
 
-def computemergetree(R, filtration: "tuple[tuple[float,float], tuple[float, float], int]", infAdjust: int=None, precision: int=5, size: int=0, verbose: bool=False):
+def computemergetree(R, filtration: "tuple[tuple[float,float], tuple[float, float], int]", infAdjust: int=None, precision: int=5, size: int=0, verbose: bool=False, filter: bool = False):
     """
     main function to build merge tree for a given graph and filtration
+    
+    Args:
+        R (Reeb Graph): Reeb Graph
+        filtration (tuple of tuples): filtration for merge tree
+        infAdjust (int): parameter to adjust infinite value for root node
+        precision (int): precision
+        size (int): size
+        verbose (bool): verbose
+
+    Returns:
+        rmt: Merge Tree as a Reeb Graph object
     """
     from cereeberus.compute.degree import remove_isolates
     from cereeberus.compute.uf import UnionFind
@@ -62,12 +73,16 @@ def computemergetree(R, filtration: "tuple[tuple[float,float], tuple[float, floa
         uf = UnionFind(size, verbose=verbose)
     else:
         uf = UnionFind(len(Rmt.nodes), verbose=verbose)
+
         
     visited = set()
     numComponents = 0
-    heights = getSortedNodeHeights(Rmt, filtration, precision)
+    if filter==True:
+        heights = getSortedNodeHeights(Rmt, filtration, precision)
+    else:
+        heights = R.heights
     if verbose:
-        print(heights)
+        print("heights:" + str(heights))
     # this is the first node of min height since list
     topMerge = heights[0][0]
     
@@ -86,7 +101,7 @@ def computemergetree(R, filtration: "tuple[tuple[float,float], tuple[float, floa
         if possibleGroups == []:
             if verbose:
                 print(f"{node} is unconnected, about to add {numComponents}, {height}")
-            mt.add_node(node, pos=(numComponents, height), height=height)
+            mt.add_node(node, pos=(numComponents, height), fx=height)
             numComponents += 1
 
         else:
@@ -110,7 +125,7 @@ def computemergetree(R, filtration: "tuple[tuple[float,float], tuple[float, floa
                 if Rmt.nodes[node].get('projected', False):
                     if verbose:
                         print(f"although connected, key label{node}, existing connected to {myRoot}, adding still")
-                    mt.add_node(node, pos=(mt.nodes[myRoot]['pos'][0], height), height=height)
+                    mt.add_node(node, pos=(mt.nodes[myRoot]['pos'][0], height), fx=height)
                     mt.add_edge(node, myRoot)
                     
                     # change the root to represent the current head of merge point
@@ -132,7 +147,7 @@ def computemergetree(R, filtration: "tuple[tuple[float,float], tuple[float, floa
                 
                 topMerge = node
                 
-                mt.add_node(node, pos=(numComponents-len(componentList), height), height=height)
+                mt.add_node(node, pos=(numComponents-len(componentList), height), fx=height)
                 
                 for component in componentList:
                     componentRoot = uf.find(component)
@@ -172,11 +187,11 @@ def computemergetree(R, filtration: "tuple[tuple[float,float], tuple[float, floa
     if infAdjust is None:
         infAdjust = (heights[-1][1] - heights[0][1] ) * 0.1
     infHeight = heights[-1][1] + infAdjust
-    mt.add_node('inf', pos=(0, infHeight), height=float('inf'))
+    mt.add_node('inf', pos=(0, infHeight), fx=float('inf'))
     mt.add_edge('inf', topMerge)
-    #rmt = Reeb(mt)
+    rmt = Reeb(mt, set_attributes=False)
     
-    return mt
+    return rmt
  
 
 

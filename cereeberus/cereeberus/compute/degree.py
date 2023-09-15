@@ -116,3 +116,11 @@ def remove_isolates(R):
             H.remove_node(i)
     H = nx.convert_node_labels_to_integers(H)
     return Reeb(H)
+
+def heights(graph):
+    h = []
+    for i in graph.nodes:
+        pt = (i, graph.fx[i])
+        h.append(pt)
+    h.sort(key = lambda x: x[1])
+    return h

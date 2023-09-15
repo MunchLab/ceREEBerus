@@ -11,7 +11,7 @@ class Reeb:
     :ivar pos_fx: position values corresponding to x = fx and y = y value from pos
     """
 
-    def __init__(self, G, fx = {}, horizontalDrawing = False, verbose = False):
+    def __init__(self, G, fx = {}, horizontalDrawing = False, verbose = False, set_attributes = True):
         #Convert to MultiGraph to allow for Parallel Edges and Self-Loops
         if type(G) != 'networkx.classes.multigraph.MultiGraph':
             self.G = nx.MultiGraph(G)
@@ -33,21 +33,28 @@ class Reeb:
         self.nodes = G.nodes
         self.edges = G.edges
 
+        # add heights for merge tree function
+        self.heights = degree.heights(self)
+
         self._horizontalDrawing = horizontalDrawing
-        self.set_pos_fx(verbose = verbose)
 
-        # compute upper and lower degree of reeb graph
-        self.up_deg = degree.up_degree(G, self.fx)
-        self.down_deg = degree.down_degree(G, self.fx)
-
-        # adjacency matrix
-        #self.adjacency = nx.adjacency_matrix(G)
         node_properties = {}
+        
+        if set_attributes == True:
+            self.set_pos_fx(verbose = verbose)
+        # compute upper and lower degree of reeb graph
+            self.up_deg = degree.up_degree(G, self.fx)
+            self.down_deg = degree.down_degree(G, self.fx)
 
-        for i in self.nodes:
-            node_properties[i] = {'node': i, 'pos': self.pos[i], 'pos_fx': self.pos_fx[i], 'up_deg': self.up_deg[i],
-            'down_deg': self.down_deg[i]}
-        self.node_properties = node_properties
+
+            # adjacency matrix
+            #self.adjacency = nx.adjacency_matrix(G)
+            
+
+            for i in self.nodes:
+                node_properties[i] = {'node': i, 'pos': self.pos[i], 'pos_fx': self.pos_fx[i], 'up_deg': self.up_deg[i],
+                'down_deg': self.down_deg[i]}
+            self.node_properties = node_properties
 
         # show basic properties of reeb graph
         self.summary = {'nodes': len(self.nodes), 'edges': len(self.edges)}

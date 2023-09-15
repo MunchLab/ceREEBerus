@@ -185,6 +185,14 @@
             <span class="n">H</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="n">H</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">convert_node_labels_to_integers</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">H</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">heights</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">graph</span><span class="o">.</span><span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">h</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+    <span class="n">h</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">h</span>
 </pre></div>
 
            </div>
