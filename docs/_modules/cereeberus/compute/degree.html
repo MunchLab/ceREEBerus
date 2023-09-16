@@ -83,23 +83,32 @@
 
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
     <span class="n">up_adj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">))</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="n">RCopy</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">fx</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
-                <span class="n">e</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">inode</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="n">RCopy</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">inode</span><span class="p">)</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+        <span class="k">for</span> <span class="n">jnode</span> <span class="ow">in</span> <span class="n">RCopy</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fx</span><span class="p">[</span><span class="n">inode</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">fx</span><span class="p">[</span><span class="n">jnode</span><span class="p">]:</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">inode</span><span class="p">))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">inode</span><span class="p">,</span><span class="n">jnode</span><span class="p">)</span> <span class="ow">in</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">up_adj</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span>
-            <span class="k">if</span> <span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">fx</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
-                <span class="n">e</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fx</span><span class="p">[</span><span class="n">inode</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">fx</span><span class="p">[</span><span class="n">jnode</span><span class="p">]:</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">inode</span><span class="p">))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">inode</span><span class="p">,</span><span class="n">jnode</span><span class="p">)</span> <span class="ow">in</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">up_adj</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">j</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
 
     <span class="n">d</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">up_adj</span><span class="p">)</span>
 
     <span class="n">up_deg</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">up_deg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="n">up_deg</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
     <span class="k">return</span> <span class="n">up_deg</span></div>
 
 <div class="viewcode-block" id="down_degree"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.degree.down_degree">[docs]</a><span class="k">def</span> <span class="nf">down_degree</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">fx</span> <span class="o">=</span><span class="p">{</span> <span class="p">}):</span>
@@ -116,23 +125,32 @@
 
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
     <span class="n">down_adj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">))</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="n">RCopy</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">fx</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
-                <span class="n">e</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">inode</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="n">RCopy</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">inode</span><span class="p">)</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+        <span class="k">for</span> <span class="n">jnode</span> <span class="ow">in</span> <span class="n">RCopy</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fx</span><span class="p">[</span><span class="n">inode</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">fx</span><span class="p">[</span><span class="n">jnode</span><span class="p">]:</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">inode</span><span class="p">))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">inode</span><span class="p">,</span><span class="n">jnode</span><span class="p">)</span> <span class="ow">in</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">down_adj</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span>
-            <span class="k">if</span> <span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">fx</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
-                <span class="n">e</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fx</span><span class="p">[</span><span class="n">inode</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">fx</span><span class="p">[</span><span class="n">jnode</span><span class="p">]:</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">inode</span><span class="p">))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">inode</span><span class="p">,</span><span class="n">jnode</span><span class="p">)</span> <span class="ow">in</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">down_adj</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">j</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
 
     <span class="n">d</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">down_adj</span><span class="p">)</span>
 
     <span class="n">down_deg</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">down_deg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="n">down_deg</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
     <span class="k">return</span> <span class="n">down_deg</span></div>
 
 <div class="viewcode-block" id="add_nodes"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.degree.add_nodes">[docs]</a><span class="k">def</span> <span class="nf">add_nodes</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>

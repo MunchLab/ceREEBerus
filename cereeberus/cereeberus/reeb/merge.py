@@ -42,44 +42,44 @@ class mergeTree(Reeb):
         # Do everything from the Reeb graph setup step
         Reeb.__init__(self,T,fx)
 
-        # Mark the root vertex. If there's more than one, we'll store an array of them.
-        roots = np.where(np.isinf(fx))[0]
-        self.numComponents = len(roots)
+        # # Mark the root vertex. If there's more than one, we'll store an array of them.
+        # roots = np.where(np.isinf(fx))[0]
+        # self.numComponents = len(roots)
 
 
-        if self.numComponents==1:
-            self.rootIndex = roots[0]
-        elif self.numComponents>1:
-            self.rootIndex = roots 
-        else:
-            raise AttributeError("This has no function value at np.inf, so this is not a merge tree satisfying our requirements.")
+        # if self.numComponents==1:
+        #     self.rootIndex = roots[0]
+        # elif self.numComponents>1:
+        #     self.rootIndex = roots 
+        # else:
+        #     raise AttributeError("This has no function value at np.inf, so this is not a merge tree satisfying our requirements.")
         
-        # Update position drawing 
-        self.fix_pos_fx()
+        # # Update position drawing 
+        # self.fix_pos_fx()
 
-    def fix_pos_fx(self):
-        # Update drawing locations to deal with the fact that we have np.inf around.
+    # def fix_pos_fx(self):
+    #     # Update drawing locations to deal with the fact that we have np.inf around.
 
-        # First, figure out where the inf is that we'll have to update, based on whether we want horizontal or vertical drawings 
+    #     # First, figure out where the inf is that we'll have to update, based on whether we want horizontal or vertical drawings 
 
-        if self._horizontalDrawing:
-            functionCoord = 0 
-            otherCoord = 1
-        else:
-            functionCoord = 1
-            otherCoord = 0
+    #     if self._horizontalDrawing:
+    #         functionCoord = 0 
+    #         otherCoord = 1
+    #     else:
+    #         functionCoord = 1
+    #         otherCoord = 0
 
-        drawingLocation = [None,None]
-        drawingLocation[functionCoord] = self.maxFiniteVal + 3
+    #     drawingLocation = [None,None]
+    #     drawingLocation[functionCoord] = self.maxFiniteVal + 3
 
-        if self.numComponents >1:
-            for i in self.rootIndex: #Note this is an array of roots
+    #     if self.numComponents >1:
+    #         for i in self.rootIndex: #Note this is an array of roots
                 
-                drawingLocation[otherCoord] = self.pos_fx[i][otherCoord]
-                self.pos_fx[i] = list(drawingLocation)
-        else:
-            drawingLocation[otherCoord] = self.pos_fx[self.rootIndex][otherCoord]
-            self.pos_fx[self.rootIndex] = list(drawingLocation)
+    #             drawingLocation[otherCoord] = self.pos_fx[i][otherCoord]
+    #             self.pos_fx[i] = list(drawingLocation)
+    #     else:
+    #         drawingLocation[otherCoord] = self.pos_fx[self.rootIndex][otherCoord]
+    #         self.pos_fx[self.rootIndex] = list(drawingLocation)
 
 
 #     def set_pos_fx(self,resetSpring = False, verbose = False):

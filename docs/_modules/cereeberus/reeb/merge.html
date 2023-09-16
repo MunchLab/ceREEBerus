@@ -80,7 +80,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">cereeberus.compute.merge</span> <span class="kn">import</span> <span class="n">isMerge</span>
 
-<div class="viewcode-block" id="Merge"><a class="viewcode-back" href="../../../reeb.html#cereeberus.reeb.merge.Merge">[docs]</a><span class="k">class</span> <span class="nc">Merge</span><span class="p">(</span><span class="n">Reeb</span><span class="p">):</span>
+<div class="viewcode-block" id="mergeTree"><a class="viewcode-back" href="../../../reeb.html#cereeberus.reeb.merge.mergeTree">[docs]</a><span class="k">class</span> <span class="nc">mergeTree</span><span class="p">(</span><span class="n">Reeb</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Class for Merge tree</span>
 <span class="sd">    :ivar T: Graph: T</span>
 <span class="sd">    :ivar fx: function values associated with T</span>
@@ -102,49 +102,53 @@
 
         <span class="c1"># Set the maximum finite value. Needs to happen before runnning the Reeb init</span>
         <span class="c1"># because of how I overwrote the set_pos_fx function.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">maxFiniteVal</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fx</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">fx</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span><span class="o">==</span><span class="nb">list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">maxFiniteVal</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fx</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">fx</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span><span class="o">==</span><span class="nb">dict</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">fx</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">maxFiniteVal</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">values</span><span class="p">)])</span>
         
         <span class="c1"># Do everything from the Reeb graph setup step</span>
-        <span class="n">Reeb</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">fx</span><span class="p">)</span>
+        <span class="n">Reeb</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">fx</span><span class="p">)</span></div>
 
-        <span class="c1"># Mark the root vertex. If there&#39;s more than one, we&#39;ll store an array of them.</span>
-        <span class="n">roots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">fx</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">numComponents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">roots</span><span class="p">)</span>
+        <span class="c1"># # Mark the root vertex. If there&#39;s more than one, we&#39;ll store an array of them.</span>
+        <span class="c1"># roots = np.where(np.isinf(fx))[0]</span>
+        <span class="c1"># self.numComponents = len(roots)</span>
 
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">numComponents</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rootIndex</span> <span class="o">=</span> <span class="n">roots</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">numComponents</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rootIndex</span> <span class="o">=</span> <span class="n">roots</span> 
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;This has no function value at np.inf, so this is not a merge tree satisfying our requirements.&quot;</span><span class="p">)</span>
+        <span class="c1"># if self.numComponents==1:</span>
+        <span class="c1">#     self.rootIndex = roots[0]</span>
+        <span class="c1"># elif self.numComponents&gt;1:</span>
+        <span class="c1">#     self.rootIndex = roots </span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     raise AttributeError(&quot;This has no function value at np.inf, so this is not a merge tree satisfying our requirements.&quot;)</span>
         
-        <span class="c1"># Update position drawing </span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fix_pos_fx</span><span class="p">()</span>
+        <span class="c1"># # Update position drawing </span>
+        <span class="c1"># self.fix_pos_fx()</span>
 
-    <span class="k">def</span> <span class="nf">fix_pos_fx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Update drawing locations to deal with the fact that we have np.inf around.</span>
+    <span class="c1"># def fix_pos_fx(self):</span>
+    <span class="c1">#     # Update drawing locations to deal with the fact that we have np.inf around.</span>
 
-        <span class="c1"># First, figure out where the inf is that we&#39;ll have to update, based on whether we want horizontal or vertical drawings </span>
+    <span class="c1">#     # First, figure out where the inf is that we&#39;ll have to update, based on whether we want horizontal or vertical drawings </span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalDrawing</span><span class="p">:</span>
-            <span class="n">functionCoord</span> <span class="o">=</span> <span class="mi">0</span> 
-            <span class="n">otherCoord</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">functionCoord</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="n">otherCoord</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1">#     if self._horizontalDrawing:</span>
+    <span class="c1">#         functionCoord = 0 </span>
+    <span class="c1">#         otherCoord = 1</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         functionCoord = 1</span>
+    <span class="c1">#         otherCoord = 0</span>
 
-        <span class="n">drawingLocation</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span>
-        <span class="n">drawingLocation</span><span class="p">[</span><span class="n">functionCoord</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxFiniteVal</span> <span class="o">+</span> <span class="mi">3</span>
+    <span class="c1">#     drawingLocation = [None,None]</span>
+    <span class="c1">#     drawingLocation[functionCoord] = self.maxFiniteVal + 3</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">numComponents</span> <span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rootIndex</span><span class="p">:</span> <span class="c1">#Note this is an array of roots</span>
+    <span class="c1">#     if self.numComponents &gt;1:</span>
+    <span class="c1">#         for i in self.rootIndex: #Note this is an array of roots</span>
                 
-                <span class="n">drawingLocation</span><span class="p">[</span><span class="n">otherCoord</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">otherCoord</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">drawingLocation</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">drawingLocation</span><span class="p">[</span><span class="n">otherCoord</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rootIndex</span><span class="p">][</span><span class="n">otherCoord</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rootIndex</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">drawingLocation</span><span class="p">)</span></div>
+    <span class="c1">#             drawingLocation[otherCoord] = self.pos_fx[i][otherCoord]</span>
+    <span class="c1">#             self.pos_fx[i] = list(drawingLocation)</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         drawingLocation[otherCoord] = self.pos_fx[self.rootIndex][otherCoord]</span>
+    <span class="c1">#         self.pos_fx[self.rootIndex] = list(drawingLocation)</span>
 
 
 <span class="c1">#     def set_pos_fx(self,resetSpring = False, verbose = False):</span>

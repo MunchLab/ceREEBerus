@@ -181,6 +181,7 @@ def computemergetree(R, filtration: "tuple[tuple[float,float], tuple[float, floa
     mt.add_node('inf', pos=(0, infHeight), fx=float('inf'))
     mt.add_edge('inf', topMerge)
     mt = nx.MultiGraph(mt)
-    #rmt = mergeTree(mt)
+    fx=nx.get_node_attributes(mt, 'fx')
+    rmt = mergeTree(mt, fx)
     
-    return mt
+    return rmt

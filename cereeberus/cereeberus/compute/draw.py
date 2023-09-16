@@ -108,13 +108,15 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
     fx_max = Rfx.max()
     fx_min = Rfx.min()
 
-    colormap = []
+    colormap = {}
     for i in R.nodes:
         if R.fx[i]==np.inf:
             fx = fx_max+1
+            x = R.pos_fx[i][0]
+            R.pos_fx[i] = (x,fx)
         else:
             fx = R.fx[i]
-        colormap.append((fx-fx_min)/fx_max)
+        colormap[i] = ((fx-fx_min)/fx_max)
 
 
     edge_list = list(R.edges)
