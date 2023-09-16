@@ -9,3 +9,6 @@ Compute Module
 
 .. automodule:: cereeberus.compute.merge
     :members:
+
+.. automodule:: cereeberus.compute.uf
+    :members:

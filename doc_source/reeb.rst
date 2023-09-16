@@ -5,3 +5,6 @@ This is the reeb graph class which is the majority of functionality of the packa
 
 .. automodule:: cereeberus.reeb.graph
     :members:
+
+.. automodule:: cereeberus.reeb.merge
+    :members:

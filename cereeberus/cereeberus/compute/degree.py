@@ -14,23 +14,32 @@ def up_degree(R, fx = {}):
 
     n = len(R.nodes)
     up_adj = np.zeros((n,n))
+    i = 0
+    
+    RCopy = list(R.nodes)
 
-    for i in range(0,n):
-        for j in range(i,n):
-            if fx[i] < fx[j]:
-                e = list(R.edges(i))
-                if (i,j) in e:
+    for inode in R.nodes:
+        RCopy.remove(inode)
+        j = i+1
+        for jnode in RCopy:
+            if fx[inode] < fx[jnode]:
+                e = list(R.edges(inode))
+                if (inode,jnode) in e:
                     up_adj[j,i]+=1
-            if fx[i] > fx[j]:
-                e = list(R.edges(i))
-                if (i,j) in e:
+            if fx[inode] > fx[jnode]:
+                e = list(R.edges(inode))
+                if (inode,jnode) in e:
                     up_adj[i,j]+=1
+            j+=1
+        i+=1
 
     d = sum(up_adj)
 
     up_deg = {}
-    for i in range(0,n):
-        up_deg[i] = int(d[i])
+    i = 0
+    for node in R.nodes:
+        up_deg[node] = int(d[i])
+        i+=1
     return up_deg
 
 def down_degree(R, fx ={ }):
@@ -47,23 +56,32 @@ def down_degree(R, fx ={ }):
 
     n = len(R.nodes)
     down_adj = np.zeros((n,n))
+    i = 0
+    
+    RCopy = list(R.nodes)
 
-    for i in range(0,n):
-        for j in range(i,n):
-            if fx[i] > fx[j]:
-                e = list(R.edges(i))
-                if (i,j) in e:
+    for inode in R.nodes:
+        RCopy.remove(inode)
+        j = i+1
+        for jnode in RCopy:
+            if fx[inode] > fx[jnode]:
+                e = list(R.edges(inode))
+                if (inode,jnode) in e:
                     down_adj[j,i]+=1
-            if fx[i] < fx[j]:
-                e = list(R.edges(i))
-                if (i,j) in e:
+            if fx[inode] < fx[jnode]:
+                e = list(R.edges(inode))
+                if (inode,jnode) in e:
                     down_adj[i,j]+=1
+            j+=1
+        i+=1
 
     d = sum(down_adj)
 
     down_deg = {}
-    for i in range(0,n):
-        down_deg[i] = int(d[i])
+    i = 0
+    for node in R.nodes:
+        down_deg[node] = int(d[i])
+        i+=1
     return down_deg
 
 def add_nodes(R, fx, x=0):

@@ -11,7 +11,7 @@ class Reeb:
     :ivar pos_fx: position values corresponding to x = fx and y = y value from pos
     """
 
-    def __init__(self, G, fx = {}, horizontalDrawing = False, verbose = False, set_attributes = True):
+    def __init__(self, G, fx = {}, horizontalDrawing = False, verbose = False):
         #Convert to MultiGraph to allow for Parallel Edges and Self-Loops
         if type(G) != 'networkx.classes.multigraph.MultiGraph':
             self.G = nx.MultiGraph(G)
@@ -40,21 +40,22 @@ class Reeb:
 
         node_properties = {}
         
-        if set_attributes == True:
-            self.set_pos_fx(verbose = verbose)
-        # compute upper and lower degree of reeb graph
-            self.up_deg = degree.up_degree(G, self.fx)
-            self.down_deg = degree.down_degree(G, self.fx)
+
+        self.set_pos_fx(verbose = verbose)
+    # compute upper and lower degree of reeb graph
+        self.up_deg = degree.up_degree(G, self.fx)
+        self.down_deg = degree.down_degree(G, self.fx)
+    
 
 
-            # adjacency matrix
-            #self.adjacency = nx.adjacency_matrix(G)
-            
+        # adjacency matrix
+        #self.adjacency = nx.adjacency_matrix(G)
+        
 
-            for i in self.nodes:
-                node_properties[i] = {'node': i, 'pos': self.pos[i], 'pos_fx': self.pos_fx[i], 'up_deg': self.up_deg[i],
-                'down_deg': self.down_deg[i]}
-            self.node_properties = node_properties
+        for i in self.nodes:
+            node_properties[i] = {'node': i, 'pos': self.pos[i], 'pos_fx': self.pos_fx[i], 'up_deg': self.up_deg[i],
+            'down_deg': self.down_deg[i]}
+        self.node_properties = node_properties
 
         # show basic properties of reeb graph
         self.summary = {'nodes': len(self.nodes), 'edges': len(self.edges)}
@@ -80,18 +81,18 @@ class Reeb:
             if verbose:
                 print('Saving positions to be horizontal')
             self.pos_fx = {}
-            for i in range(0,len(self.pos)):
-                self.pos_fx[i] = (self.fx[i], self.pos[i][0])
+            for node in self.pos:
+                self.pos_fx[node] = (self.fx[node], self.pos[node][0])
         else:
             if verbose:
                 print('Saving positions to be vertical')
             self.pos_fx = {}
-            for i in range(0,len(self.pos)):
-                self.pos_fx[i] = (self.pos[i][0], self.fx[i])
+            for node in self.pos:
+                self.pos_fx[node] = (self.pos[node][0], self.fx[node])
 
     def plot_reeb(self, position = {}, resetSpring = False, horizontalDrawing = False, verbose = False, cpx=.1, cpy=.1):
         """ Plot a Reeb Graph given a graph with a position.
-        If no position passed, it will take the spring layout version. 
+        If no position passed, the position attributes from the reeb graph will be used. 
         In this case, it will either be drawn vertically or 
         horizontally, depending on the horizontalDrawing (boolean) 
         passed in.
