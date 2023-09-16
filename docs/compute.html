@@ -165,7 +165,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.draw.reeb_plot">
 <span class="sig-prename descclassname"><span class="pre">cereeberus.compute.draw.</span></span><span class="sig-name descname"><span class="pre">reeb_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/draw.html#reeb_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.draw.reeb_plot" title="Permalink to this definition"></a></dt>
-<dd><p>Compute bezier curves for plotting two edges between a single set of nodes</p>
+<dd><p>Main plotting function for the Reeb Graph Class</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -204,27 +204,28 @@
 </dl>
 </dd></dl>
 
-<span class="target" id="module-cereeberus.compute.merge"></span><p>Code started by Liz Nov 2022.
-The goal is to get a merge tree class with the following properties.
-- Should accept a Reeb graph class as input.
-- Needs a check to make sure the input is actually a Reeb graph. In particular, only down forks and a root node with function value <cite>np.inf</cite>.
-- Has drawing capabilities, in particular can handle that <cite>np.inf</cite> node.
-- If the Reeb graph passed in isn’t a merge tree, likely I just want to generate the merge tree of the input Reeb graph.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="cereeberus.compute.merge.Merge">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">Merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#Merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.Merge" title="Permalink to this definition"></a></dt>
-<dd><p>Class for Merge tree
-:ivar T: Graph: T
-:ivar fx: function values associated with T
-:ivar pos: spring layout position calculated from G
-:ivar pos_fx: position values corresponding to x = fx and y = y value from pos
-:ivar horizontalDrawing: Default to False. If true, fx is drawn as a height function.</p>
-</dd></dl>
-
-<dl class="py function">
+<span class="target" id="module-cereeberus.compute.merge"></span><dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.merge.computemergetree">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">computemergetree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infAdjust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#computemergetree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.computemergetree" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">computemergetree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infAdjust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#computemergetree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.computemergetree" title="Permalink to this definition"></a></dt>
 <dd><p>main function to build merge tree for a given graph and filtration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>R</strong> (<em>Reeb Graph</em>) – Reeb Graph</p></li>
+<li><p><strong>filtration</strong> (<em>tuple of tuples</em>) – filtration for merge tree</p></li>
+<li><p><strong>infAdjust</strong> (<em>int</em>) – parameter to adjust infinite value for root node</p></li>
+<li><p><strong>precision</strong> (<em>int</em>) – precision</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – size</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – verbose</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Merge Tree as a Reeb Graph object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>rmt</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -232,6 +233,74 @@ The goal is to get a merge tree class with the following properties.
 <span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">isMerge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#isMerge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.isMerge" title="Permalink to this definition"></a></dt>
 <dd><p>This function takes in a networkx tree or reeb graph and function, and checks to see if it is a
 merge tree.  This assumes that the root node(s) has/have a function value of np.inf.</p>
+</dd></dl>
+
+<span class="target" id="module-cereeberus.compute.uf"></span><dl class="py class">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.compute.uf.</span></span><span class="sig-name descname"><span class="pre">UnionFind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind" title="Permalink to this definition"></a></dt>
+<dd><p>Array index implementation of UnionFind inspired by William Fiset’s java implementation (github.com/williamfiset/data-structures) with special rerooting function to handle merge tree construction</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.find" title="Permalink to this definition"></a></dt>
+<dd><p>return the root of the connected component of c</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.getNumComponents">
+<span class="sig-name descname"><span class="pre">getNumComponents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.getNumComponents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.getNumComponents" title="Permalink to this definition"></a></dt>
+<dd><p>get number of total connected components</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.getSize">
+<span class="sig-name descname"><span class="pre">getSize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.getSize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.getSize" title="Permalink to this definition"></a></dt>
+<dd><p>get input max size of UF structure</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.getSizeOfComponent">
+<span class="sig-name descname"><span class="pre">getSizeOfComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.getSizeOfComponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.getSizeOfComponent" title="Permalink to this definition"></a></dt>
+<dd><p>get size of c’s connected component</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.isFullyConnected">
+<span class="sig-name descname"><span class="pre">isFullyConnected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.isFullyConnected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.isFullyConnected" title="Permalink to this definition"></a></dt>
+<dd><p>if all “size” # of nodes are fully connected, return True</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.printAll">
+<span class="sig-name descname"><span class="pre">printAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.printAll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.printAll" title="Permalink to this definition"></a></dt>
+<dd><p>print all nodes and the connected components of each</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.rerootComponent">
+<span class="sig-name descname"><span class="pre">rerootComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newRoot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.rerootComponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.rerootComponent" title="Permalink to this definition"></a></dt>
+<dd><p>given a component and any connected node, make that node the new root of the component - key for building up a mergetree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.union">
+<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.union"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.union" title="Permalink to this definition"></a></dt>
+<dd><p>union c1 and c2 connected components</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.getSortedNodeHeights">
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.uf.</span></span><span class="sig-name descname"><span class="pre">getSortedNodeHeights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#getSortedNodeHeights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.getSortedNodeHeights" title="Permalink to this definition"></a></dt>
+<dd><p>compute heights of each node given filtration line and return as sorted list of node height tuples, rounded to given precision</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cereeberus.compute.uf.signedDistToLine2Pts">
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.uf.</span></span><span class="sig-name descname"><span class="pre">signedDistToLine2Pts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#signedDistToLine2Pts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.signedDistToLine2Pts" title="Permalink to this definition"></a></dt>
+<dd><p>return a signed distance to a line where line is defined as two points</p>
+<p>positive sign refers to “above” the line or “left” of a vertical line
+to get the expected sign of “right” is positive, the vertical line will be inverted back under the “angle_sign” in _computeNodeHeights() of MergeTree.py</p>
 </dd></dl>
 
 </section>

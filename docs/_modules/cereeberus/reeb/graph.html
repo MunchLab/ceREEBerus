@@ -102,16 +102,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalDrawing</span> <span class="o">=</span> <span class="n">horizontalDrawing</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_fx</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="c1"># add heights for merge tree function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heights</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">heights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="c1"># compute upper and lower degree of reeb graph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_horizontalDrawing</span> <span class="o">=</span> <span class="n">horizontalDrawing</span>
+
+        <span class="n">node_properties</span> <span class="o">=</span> <span class="p">{}</span>
+        
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_fx</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="c1"># compute upper and lower degree of reeb graph</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">up_deg</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">up_degree</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">down_deg</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">down_degree</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
+    
+
 
         <span class="c1"># adjacency matrix</span>
         <span class="c1">#self.adjacency = nx.adjacency_matrix(G)</span>
-        <span class="n">node_properties</span> <span class="o">=</span> <span class="p">{}</span>
+        
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
             <span class="n">node_properties</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;node&#39;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;pos_fx&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;up_deg&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">up_deg</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
@@ -142,18 +150,18 @@
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saving positions to be horizontal&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">[</span><span class="n">node</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saving positions to be vertical&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">fx</span><span class="p">[</span><span class="n">node</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Reeb.plot_reeb"><a class="viewcode-back" href="../../../reeb.html#cereeberus.reeb.graph.Reeb.plot_reeb">[docs]</a>    <span class="k">def</span> <span class="nf">plot_reeb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">resetSpring</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">horizontalDrawing</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cpx</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span> <span class="n">cpy</span><span class="o">=.</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Plot a Reeb Graph given a graph with a position.</span>
-<span class="sd">        If no position passed, it will take the spring layout version. </span>
+<span class="sd">        If no position passed, the position attributes from the reeb graph will be used. </span>
 <span class="sd">        In this case, it will either be drawn vertically or </span>
 <span class="sd">        horizontally, depending on the horizontalDrawing (boolean) </span>
 <span class="sd">        passed in.</span>

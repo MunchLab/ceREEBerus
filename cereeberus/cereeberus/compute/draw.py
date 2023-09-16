@@ -83,7 +83,7 @@ def bezier_curve(pt0, midpt, pt1):
     return points    
 
 def reeb_plot(R, pos, cpx=.1, cpy=.1):
-    """Compute bezier curves for plotting two edges between a single set of nodes
+    """Main plotting function for the Reeb Graph Class
     
     Args:
         R (Reeb Graph): object of Reeb Graph class
@@ -108,9 +108,15 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
     fx_max = Rfx.max()
     fx_min = Rfx.min()
 
-    colormap = []
-    for i in range (0,n):
-        colormap.append((R.fx[i]-fx_min)/fx_max)
+    colormap = {}
+    for i in R.nodes:
+        if R.fx[i]==np.inf:
+            fx = fx_max+1
+            x = R.pos_fx[i][0]
+            R.pos_fx[i] = (x,fx)
+        else:
+            fx = R.fx[i]
+        colormap[i] = ((fx-fx_min)/fx_max)
 
 
     edge_list = list(R.edges)
@@ -138,5 +144,5 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
         c = np.array(curve)
         plt.plot(c[:,0], c[:,1], color='grey', zorder = 0)
 
-    for i in range(0, len(R.nodes)):
+    for i in R.nodes:
         ax.scatter(pos[i][0], pos[i][1], s = 250, color = viridis(colormap[i]))
