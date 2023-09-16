@@ -97,7 +97,6 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
     fig, ax = plt.subplots()
 
     n = len(R.nodes)
-    print(n)
     fx_max = 0
     fx_min = 0
     if type(R.fx) == dict:

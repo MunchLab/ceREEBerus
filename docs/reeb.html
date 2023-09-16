@@ -110,6 +110,23 @@ resetSpring will make it recalculate the spring layout to overwrite</p>
 
 </dd></dl>
 
+<span class="target" id="module-cereeberus.reeb.merge"></span><p>Code started by Liz Nov 2022.
+The goal is to get a merge tree class with the following properties.
+- Should accept a Reeb graph class as input.
+- Needs a check to make sure the input is actually a Reeb graph. In particular, only down forks and a root node with function value <cite>np.inf</cite>.
+- Has drawing capabilities, in particular can handle that <cite>np.inf</cite> node.
+- If the Reeb graph passed in isn’t a merge tree, likely I just want to generate the merge tree of the input Reeb graph.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.Merge">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.reeb.merge.</span></span><span class="sig-name descname"><span class="pre">Merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb/merge.html#Merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.Merge" title="Permalink to this definition"></a></dt>
+<dd><p>Class for Merge tree
+:ivar T: Graph: T
+:ivar fx: function values associated with T
+:ivar pos: spring layout position calculated from G
+:ivar pos_fx: position values corresponding to x = fx and y = y value from pos
+:ivar horizontalDrawing: Default to False. If true, fx is drawn as a height function.</p>
+</dd></dl>
+
 </section>
 
 
