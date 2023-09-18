@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cereeberus.data.shapes &mdash; ceREEBerus .14 documentation</title>
+  <title>cereeberus.compute.distance &mdash; ceREEBerus .14 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
@@ -61,7 +61,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">cereeberus.data.shapes</li>
+      <li class="breadcrumb-item active">cereeberus.compute.distance</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -70,32 +70,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for cereeberus.data.shapes</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<div class="viewcode-block" id="torus">
-<a class="viewcode-back" href="../../../data.html#cereeberus.data.shapes.torus">[docs]</a>
-<span class="k">def</span> <span class="nf">torus</span><span class="p">(</span><span class="n">num</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create torus object</span>
-<span class="sd">    </span>
-<span class="sd">        args:</span>
-<span class="sd">            num (int): number of samples to use when creating torus data</span>
+  <h1>Source code for cereeberus.compute.distance</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="edit">
+<a class="viewcode-back" href="../../../compute_distance.html#cereeberus.compute.distance.edit">[docs]</a>
+<span></span><span class="k">def</span> <span class="nf">edit</span><span class="p">(</span><span class="n">R1</span><span class="p">,</span> <span class="n">R2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to return the edit distance between two Reeb graphs.  Uses the graph_edit_distance function from https://networkx.org/documentation/stable/reference/algorithms/similarity.html.</span>
 
-<span class="sd">        returns:</span>
-<span class="sd">            3-element tuple containing</span>
+<span class="sd">    Args:</span>
+<span class="sd">        R1 (reeb graph): Reeb graph or Merge tree</span>
+<span class="sd">        R2 (reeb graph): Reeb graph or Merge tree</span>
 
-<span class="sd">            - **X** : X-coordinates</span>
-<span class="sd">            - **Y** : Y-coordinates</span>
-<span class="sd">            - **Z** : Z-coordinates</span>
-
+<span class="sd">    Returns:</span>
+<span class="sd">        edit_distance (int): graph edit distance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
-    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
-    <span class="n">U</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">V</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
-    <span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">V</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
-    <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span></div>
+    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+    <span class="n">edit_distance</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">graph_edit_distance</span><span class="p">(</span><span class="n">R1</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">R2</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">edit_distance</span></div>
 
 </pre></div>
 

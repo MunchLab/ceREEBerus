@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2. Reeb Graph &mdash; ceREEBerus .11 documentation</title>
+  <title>2. Reeb Graph &mdash; ceREEBerus .14 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
@@ -12,11 +12,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=479c982c"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -29,11 +29,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> ceREEBerus
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ceREEBerus
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -41,7 +45,15 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="data.html">1. Example data and graphs</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Reeb graphs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Reeb graphs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cereeberus.reeb.graph.Reeb"><code class="docutils literal notranslate"><span class="pre">Reeb</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cereeberus.reeb.graph.Reeb.plot_reeb"><code class="docutils literal notranslate"><span class="pre">Reeb.plot_reeb()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cereeberus.reeb.graph.Reeb.set_pos_fx"><code class="docutils literal notranslate"><span class="pre">Reeb.set_pos_fx()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cereeberus.reeb.merge.mergeTree"><code class="docutils literal notranslate"><span class="pre">mergeTree</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="compute.html">3. Compute</a></li>
 </ul>
 
@@ -58,8 +70,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="section-number">2. </span>Reeb Graph</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">2. </span>Reeb Graph</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/reeb.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -70,14 +82,14 @@
            <div itemprop="articleBody">
              
   <section id="reeb-graph">
-<h1><span class="section-number">2. </span>Reeb Graph<a class="headerlink" href="#reeb-graph" title="Permalink to this heading"></a></h1>
+<h1><span class="section-number">2. </span>Reeb Graph<a class="headerlink" href="#reeb-graph" title="Link to this heading"></a></h1>
 <p>This is the reeb graph class which is the majority of functionality of the package.  This includes funtionality such as assigning function values to nodes in the Reeb graph and plotting the graph.</p>
-<span class="target" id="module-cereeberus.reeb.graph"></span><dl class="py class">
+<dl class="py class" id="module-cereeberus.reeb.graph">
 <dt class="sig sig-object py" id="cereeberus.reeb.graph.Reeb">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.reeb.graph.</span></span><span class="sig-name descname"><span class="pre">Reeb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb/graph.html#Reeb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.graph.Reeb" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.reeb.graph.</span></span><span class="sig-name descname"><span class="pre">Reeb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb/graph.html#Reeb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.graph.Reeb" title="Link to this definition"></a></dt>
 <dd><p>Class for Reeb Graph</p>
 <dl class="field-list simple">
-<dt class="field-odd">Variables</dt>
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>G</strong> – Graph: G</p></li>
 <li><p><strong>fx</strong> – function values associated with G</p></li>
@@ -88,7 +100,7 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.graph.Reeb.plot_reeb">
-<span class="sig-name descname"><span class="pre">plot_reeb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resetSpring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb/graph.html#Reeb.plot_reeb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.graph.Reeb.plot_reeb" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">plot_reeb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resetSpring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb/graph.html#Reeb.plot_reeb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.graph.Reeb.plot_reeb" title="Link to this definition"></a></dt>
 <dd><p>Plot a Reeb Graph given a graph with a position.
 If no position passed, the position attributes from the reeb graph will be used.
 In this case, it will either be drawn vertically or
@@ -98,7 +110,7 @@ passed in.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.graph.Reeb.set_pos_fx">
-<span class="sig-name descname"><span class="pre">set_pos_fx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resetSpring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb/graph.html#Reeb.set_pos_fx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.graph.Reeb.set_pos_fx" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_pos_fx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resetSpring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb/graph.html#Reeb.set_pos_fx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.graph.Reeb.set_pos_fx" title="Link to this definition"></a></dt>
 <dd><p>Returns the position data for drawing the Reeb graph.
 If self.horizongalDrawing = False, we are drawing the vertices
 at locations
@@ -110,7 +122,7 @@ resetSpring will make it recalculate the spring layout to overwrite</p>
 
 </dd></dl>
 
-<span class="target" id="module-cereeberus.reeb.merge"></span><p>Code started by Liz Nov 2022.
+<p id="module-cereeberus.reeb.merge">Code started by Liz Nov 2022.
 The goal is to get a merge tree class with the following properties.
 - Should accept a Reeb graph class as input.
 - Needs a check to make sure the input is actually a Reeb graph. In particular, only down forks and a root node with function value <cite>np.inf</cite>.
@@ -118,7 +130,7 @@ The goal is to get a merge tree class with the following properties.
 - If the Reeb graph passed in isn’t a merge tree, likely I just want to generate the merge tree of the input Reeb graph.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cereeberus.reeb.merge.mergeTree">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.reeb.merge.</span></span><span class="sig-name descname"><span class="pre">mergeTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb/merge.html#mergeTree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.mergeTree" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.reeb.merge.</span></span><span class="sig-name descname"><span class="pre">mergeTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontalDrawing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/reeb/merge.html#mergeTree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.mergeTree" title="Link to this definition"></a></dt>
 <dd><p>Class for Merge tree
 :ivar T: Graph: T
 :ivar fx: function values associated with T

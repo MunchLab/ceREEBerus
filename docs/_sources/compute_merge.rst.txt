@@ -1,0 +1,7 @@
+Merge
+*************************************
+
+The `merge` module includes functions to create merge trees.
+
+.. automodule:: cereeberus.compute.merge
+    :members:

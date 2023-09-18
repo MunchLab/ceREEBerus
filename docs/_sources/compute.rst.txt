@@ -1,14 +1,13 @@
 Compute Module
 *************************************
 
-.. automodule:: cereeberus.compute.degree
-    :members:
+The compute module is organized based on function.
 
-.. automodule:: cereeberus.compute.draw
-    :members:
-
-.. automodule:: cereeberus.compute.merge
-    :members:
-
-.. automodule:: cereeberus.compute.uf
-    :members:
+.. toctree::
+   :maxdepth: 4
+   
+    Degree <compute_degree.rst>
+    Draw <compute_draw.rst>
+    Merge <compute_merge.rst>
+    Union Find <compute_uf.rst>
+    Distance <compute_distance.rst>
