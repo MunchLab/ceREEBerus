@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cereeberus.compute.degree &mdash; ceREEBerus .11 documentation</title>
+  <title>cereeberus.compute.degree &mdash; ceREEBerus .14 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/plot_directive.css" type="text/css" />
@@ -11,11 +11,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=80a48c64"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,11 +26,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> ceREEBerus
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ceREEBerus
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,9 +59,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>cereeberus.compute.degree</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cereeberus.compute.degree</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -70,7 +74,7 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 
-<div class="viewcode-block" id="up_degree"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.degree.up_degree">[docs]</a><span class="k">def</span> <span class="nf">up_degree</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">fx</span> <span class="o">=</span> <span class="p">{}):</span>
+<div class="viewcode-block" id="up_degree"><a class="viewcode-back" href="../../../compute_degree.html#cereeberus.compute.degree.up_degree">[docs]</a><span class="k">def</span> <span class="nf">up_degree</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">fx</span> <span class="o">=</span> <span class="p">{}):</span>
     <span class="sd">&quot;&quot;&quot; Compute Upper Degree of Reeb Graph</span>
 
 <span class="sd">    Args:</span>
@@ -111,7 +115,7 @@
         <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
     <span class="k">return</span> <span class="n">up_deg</span></div>
 
-<div class="viewcode-block" id="down_degree"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.degree.down_degree">[docs]</a><span class="k">def</span> <span class="nf">down_degree</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">fx</span> <span class="o">=</span><span class="p">{</span> <span class="p">}):</span>
+<div class="viewcode-block" id="down_degree"><a class="viewcode-back" href="../../../compute_degree.html#cereeberus.compute.degree.down_degree">[docs]</a><span class="k">def</span> <span class="nf">down_degree</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">fx</span> <span class="o">=</span><span class="p">{</span> <span class="p">}):</span>
 
     <span class="sd">&quot;&quot;&quot; Compute Down Degree of Reeb Graph</span>
 
@@ -153,7 +157,7 @@
         <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
     <span class="k">return</span> <span class="n">down_deg</span></div>
 
-<div class="viewcode-block" id="add_nodes"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.degree.add_nodes">[docs]</a><span class="k">def</span> <span class="nf">add_nodes</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="add_nodes"><a class="viewcode-back" href="../../../compute_degree.html#cereeberus.compute.degree.add_nodes">[docs]</a><span class="k">def</span> <span class="nf">add_nodes</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Function to add nodes to a Reeb Graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>
@@ -174,7 +178,7 @@
             <span class="n">c</span><span class="o">+=</span><span class="mi">1</span>
     <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="minimal_reeb"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.degree.minimal_reeb">[docs]</a><span class="k">def</span> <span class="nf">minimal_reeb</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+<div class="viewcode-block" id="minimal_reeb"><a class="viewcode-back" href="../../../compute_degree.html#cereeberus.compute.degree.minimal_reeb">[docs]</a><span class="k">def</span> <span class="nf">minimal_reeb</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Function to create minimal Reeb Graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>
@@ -193,7 +197,7 @@
     <span class="n">H</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">convert_node_labels_to_integers</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">H</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="remove_isolates"><a class="viewcode-back" href="../../../compute.html#cereeberus.compute.degree.remove_isolates">[docs]</a><span class="k">def</span> <span class="nf">remove_isolates</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+<div class="viewcode-block" id="remove_isolates"><a class="viewcode-back" href="../../../compute_degree.html#cereeberus.compute.degree.remove_isolates">[docs]</a><span class="k">def</span> <span class="nf">remove_isolates</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Function to remove isolates from Reeb Graph.  Important for computation of Merge Tree</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>

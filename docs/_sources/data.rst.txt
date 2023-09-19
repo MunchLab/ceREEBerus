@@ -3,13 +3,9 @@ Example Data and graphs
 
 This module contains example graphs and data to use for Reeb graph computations.
 
-.. automodule:: cereeberus.data.graphs
-    :members:
-
-.. automodule:: cereeberus.data.shapes
-    :members:
-
-This module allows creation of random merge trees for use in other functions
-
-.. automodule:: cereeberus.data.randomMergeTrees
-    :members:
+.. toctree::
+   :maxdepth: 4
+   
+    Networkx Graphs <data_networkx.rst>
+    Reeb Graphs <data_reeb.rst>
+    Merge Trees <data_merge.rst>

@@ -9,10 +9,9 @@ from cereeberus.reeb.graph import Reeb
 
 def torus_graph():
     """ nx graph input to construct the example Reeb graph of a torus
-        Args:
 
         Returns:
-            reeb_graph (networkx graph): reeb graph of a torus
+            graph (networkx graph): reeb graph of a torus
 
     """
 
@@ -40,10 +39,9 @@ def torus_graph():
 
 def reeb_torus_no_fx():
     """ Reeb graph of a torus with no function values
-        Args:
 
         Returns:
-            reeb_graph (networkx graph): reeb graph of a torus
+            graph (networkx graph): reeb graph of a torus
 
     """
 
@@ -72,10 +70,11 @@ def reeb_torus_no_fx():
 #=================================
 
 def dancing_man():
-    """ Dancing Man Graph
-        Args:
+    """ nx graph input to construct the example dancing man
+
         Returns:
-            reeb_graph (networkx graph): reeb graph
+            graph (networkx graph): reeb graph of dancing man
+
     """
 
     G = nx.MultiGraph()
@@ -115,9 +114,9 @@ def dancing_man():
 
 def juggling_man():
     """ Dancing Man Graph with isolates
-        Args:
+
         Returns:
-            reeb_graph (networkx graph): reeb graph
+            graph (networkx graph): reeb graph of juggling man, which is dancing man with isolates
     """
 
     G = nx.MultiGraph()
@@ -161,9 +160,9 @@ def juggling_man():
 
 def simple_loops():
     """ Simple loops example for plotting loops
-        Args:
+
         Returns:
-            reeb_graph (networkx graph): reeb graph
+            graph (networkx graph): reeb graph with simple loops
     """
 
     G = nx.MultiGraph()
@@ -190,9 +189,9 @@ def simple_loops():
 
 def simple_loops_unordered():
     """ Simple loops example for plotting loops and testing with unordered edges
-        Args:
+
         Returns:
-            reeb_graph (networkx graph): reeb graph
+            graph (networkx graph): reeb graph with unordered edges
     """
 
     G = nx.MultiGraph()
@@ -217,32 +216,5 @@ def simple_loops_unordered():
 
     return G
 
-def reeb_torus():
-    '''
-    Returns the Reeb graph of a simple upright torus as a Reeb class. 
-    '''
-    return Reeb(torus_graph())
 
-def reeb_dancing_man():
-    '''
-    Returns the Reeb graph of the dancing man as a Reeb class. 
-    '''
-    return Reeb(dancing_man())
 
-def reeb_juggling_man():
-    '''
-    Returns the Reeb graph of the juggling man as a Reeb class. 
-    '''
-    return Reeb(juggling_man())
-
-def reeb_simple_loops():
-    '''
-    Returns the Reeb graph of the simple loops example
-    '''
-    return Reeb(simple_loops())
-
-def reeb_simple_loops_unordered():
-    '''
-    Returns the Reeb graph of the simple loops example
-    '''
-    return Reeb(simple_loops_unordered())

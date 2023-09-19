@@ -1,8 +1,4 @@
 
-
-"""
-Some code to generate random Merge Trees to work with. 
-"""
 import networkx as nx
 import numpy as np
 from cereeberus.reeb.graph import Reeb
