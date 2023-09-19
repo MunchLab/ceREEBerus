@@ -13,9 +13,9 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=479c982c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=80a48c64"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -74,12 +74,17 @@
 <span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<div class="viewcode-block" id="isMerge">
-<a class="viewcode-back" href="../../../compute_merge.html#cereeberus.compute.merge.isMerge">[docs]</a>
-<span class="k">def</span> <span class="nf">isMerge</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">fx</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="isMerge"><a class="viewcode-back" href="../../../compute_merge.html#cereeberus.compute.merge.isMerge">[docs]</a><span class="k">def</span> <span class="nf">isMerge</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">fx</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function takes in a networkx tree or reeb graph and function, and checks to see if it is a </span>
 <span class="sd">    merge tree.  This assumes that the root node(s) has/have a function value of np.inf. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        T (Reeb Graph): Networkx graph or reeb graph</span>
+<span class="sd">        fx (dict): function values</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        isMerge(bool): True if T is a merge tree, False if T is not a merge tree</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
@@ -108,11 +113,8 @@
     
     <span class="k">return</span> <span class="kc">True</span></div>
 
-
-<div class="viewcode-block" id="computemergetree">
-<a class="viewcode-back" href="../../../compute_merge.html#cereeberus.compute.merge.computemergetree">[docs]</a>
-<span class="k">def</span> <span class="nf">computemergetree</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">filtration</span><span class="p">:</span> <span class="s2">&quot;tuple[tuple[float,float], tuple[float, float], int]&quot;</span><span class="p">,</span> <span class="n">infAdjust</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">filter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="computeMergeTree"><a class="viewcode-back" href="../../../compute_merge.html#cereeberus.compute.merge.computeMergeTree">[docs]</a><span class="k">def</span> <span class="nf">computeMergeTree</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">filtration</span><span class="p">:</span> <span class="s2">&quot;tuple[tuple[float,float], tuple[float, float], int]&quot;</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">8</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="mi">1</span><span class="p">],</span> <span class="n">infAdjust</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">filter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    main function to build merge tree for a given graph and filtration</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -263,7 +265,6 @@
     <span class="n">rmt</span> <span class="o">=</span> <span class="n">mergeTree</span><span class="p">(</span><span class="n">mt</span><span class="p">,</span> <span class="n">fx</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">rmt</span></div>
-
 </pre></div>
 
            </div>

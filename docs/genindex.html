@@ -13,9 +13,9 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=479c982c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=80a48c64"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -110,6 +110,10 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="compute_distance.html#cereeberus.compute.distance.calcDistanceInfNorm">calcDistanceInfNorm() (in module cereeberus.compute.distance)</a>
+</li>
+      <li><a href="compute_distance.html#cereeberus.compute.distance.calcDistanceMatrix">calcDistanceMatrix() (in module cereeberus.compute.distance)</a>
+</li>
       <li>
     cereeberus.compute.degree
 
@@ -145,27 +149,27 @@
         <li><a href="compute_uf.html#module-cereeberus.compute.uf">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     cereeberus.data.graphs
 
       <ul>
-        <li><a href="data.html#module-cereeberus.data.graphs">module</a>
+        <li><a href="data_networkx.html#module-cereeberus.data.graphs">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     cereeberus.data.randomMergeTrees
 
       <ul>
-        <li><a href="data.html#module-cereeberus.data.randomMergeTrees">module</a>
+        <li><a href="data_merge.html#module-cereeberus.data.randomMergeTrees">module</a>
 </li>
       </ul></li>
       <li>
-    cereeberus.data.shapes
+    cereeberus.data.reeb
 
       <ul>
-        <li><a href="data.html#module-cereeberus.data.shapes">module</a>
+        <li><a href="data_reeb.html#module-cereeberus.data.reeb">module</a>
 </li>
       </ul></li>
       <li>
@@ -182,7 +186,13 @@
         <li><a href="reeb.html#module-cereeberus.reeb.merge">module</a>
 </li>
       </ul></li>
-      <li><a href="compute_merge.html#cereeberus.compute.merge.computemergetree">computemergetree() (in module cereeberus.compute.merge)</a>
+      <li><a href="compute_distance.html#cereeberus.compute.distance.computeDistanceAtAngleFromMT">computeDistanceAtAngleFromMT() (in module cereeberus.compute.distance)</a>
+</li>
+      <li><a href="compute_distance.html#cereeberus.compute.distance.computeDistanceFull">computeDistanceFull() (in module cereeberus.compute.distance)</a>
+</li>
+      <li><a href="compute_distance.html#cereeberus.compute.distance.computeGraphDistanceAtAngle">computeGraphDistanceAtAngle() (in module cereeberus.compute.distance)</a>
+</li>
+      <li><a href="compute_merge.html#cereeberus.compute.merge.computeMergeTree">computeMergeTree() (in module cereeberus.compute.merge)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -190,10 +200,16 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data.html#cereeberus.data.graphs.dancing_man">dancing_man() (in module cereeberus.data.graphs)</a>
+      <li><a href="data_networkx.html#cereeberus.data.graphs.dancing_man">dancing_man() (in module cereeberus.data.graphs)</a>
+
+      <ul>
+        <li><a href="data_reeb.html#cereeberus.data.reeb.dancing_man">(in module cereeberus.data.reeb)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="compute_distance.html#cereeberus.compute.distance.directedMergeTreeDistance">directedMergeTreeDistance() (in module cereeberus.compute.distance)</a>
+</li>
       <li><a href="compute_degree.html#cereeberus.compute.degree.down_degree">down_degree() (in module cereeberus.compute.degree)</a>
 </li>
   </ul></td>
@@ -213,20 +229,30 @@
       <li><a href="compute_uf.html#cereeberus.compute.uf.UnionFind.find">find() (cereeberus.compute.uf.UnionFind method)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="compute_distance.html#cereeberus.compute.distance.findFiltration">findFiltration() (in module cereeberus.compute.distance)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="compute_uf.html#cereeberus.compute.uf.UnionFind.getNumComponents">getNumComponents() (cereeberus.compute.uf.UnionFind method)</a>
+      <li><a href="compute_distance.html#cereeberus.compute.distance.getHeightMatrix">getHeightMatrix() (in module cereeberus.compute.distance)</a>
 </li>
-      <li><a href="compute_uf.html#cereeberus.compute.uf.UnionFind.getSize">getSize() (cereeberus.compute.uf.UnionFind method)</a>
+      <li><a href="compute_distance.html#cereeberus.compute.distance.getMidpointKey">getMidpointKey() (in module cereeberus.compute.distance)</a>
+</li>
+      <li><a href="compute_uf.html#cereeberus.compute.uf.UnionFind.getNumComponents">getNumComponents() (cereeberus.compute.uf.UnionFind method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="compute_uf.html#cereeberus.compute.uf.UnionFind.getSize">getSize() (cereeberus.compute.uf.UnionFind method)</a>
+</li>
       <li><a href="compute_uf.html#cereeberus.compute.uf.UnionFind.getSizeOfComponent">getSizeOfComponent() (cereeberus.compute.uf.UnionFind method)</a>
 </li>
       <li><a href="compute_uf.html#cereeberus.compute.uf.getSortedNodeHeights">getSortedNodeHeights() (in module cereeberus.compute.uf)</a>
+</li>
+      <li><a href="compute_distance.html#cereeberus.compute.distance.getUnitVector">getUnitVector() (in module cereeberus.compute.distance)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -246,8 +272,12 @@
 <h2 id="J">J</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data.html#cereeberus.data.graphs.juggling_man">juggling_man() (in module cereeberus.data.graphs)</a>
+      <li><a href="data_networkx.html#cereeberus.data.graphs.juggling_man">juggling_man() (in module cereeberus.data.graphs)</a>
+
+      <ul>
+        <li><a href="data_reeb.html#cereeberus.data.reeb.juggling_man">(in module cereeberus.data.reeb)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -280,11 +310,11 @@
 </li>
         <li><a href="compute_uf.html#module-cereeberus.compute.uf">cereeberus.compute.uf</a>
 </li>
-        <li><a href="data.html#module-cereeberus.data.graphs">cereeberus.data.graphs</a>
+        <li><a href="data_networkx.html#module-cereeberus.data.graphs">cereeberus.data.graphs</a>
 </li>
-        <li><a href="data.html#module-cereeberus.data.randomMergeTrees">cereeberus.data.randomMergeTrees</a>
+        <li><a href="data_merge.html#module-cereeberus.data.randomMergeTrees">cereeberus.data.randomMergeTrees</a>
 </li>
-        <li><a href="data.html#module-cereeberus.data.shapes">cereeberus.data.shapes</a>
+        <li><a href="data_reeb.html#module-cereeberus.data.reeb">cereeberus.data.reeb</a>
 </li>
         <li><a href="reeb.html#module-cereeberus.reeb.graph">cereeberus.reeb.graph</a>
 </li>
@@ -309,25 +339,15 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data.html#cereeberus.data.randomMergeTrees.randomMerge">randomMerge() (in module cereeberus.data.randomMergeTrees)</a>
+      <li><a href="data_merge.html#cereeberus.data.randomMergeTrees.randomMerge">randomMerge() (in module cereeberus.data.randomMergeTrees)</a>
 </li>
       <li><a href="reeb.html#cereeberus.reeb.graph.Reeb">Reeb (class in cereeberus.reeb.graph)</a>
-</li>
-      <li><a href="data.html#cereeberus.data.graphs.reeb_dancing_man">reeb_dancing_man() (in module cereeberus.data.graphs)</a>
-</li>
-      <li><a href="data.html#cereeberus.data.graphs.reeb_juggling_man">reeb_juggling_man() (in module cereeberus.data.graphs)</a>
 </li>
       <li><a href="compute_draw.html#cereeberus.compute.draw.reeb_plot">reeb_plot() (in module cereeberus.compute.draw)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data.html#cereeberus.data.graphs.reeb_simple_loops">reeb_simple_loops() (in module cereeberus.data.graphs)</a>
-</li>
-      <li><a href="data.html#cereeberus.data.graphs.reeb_simple_loops_unordered">reeb_simple_loops_unordered() (in module cereeberus.data.graphs)</a>
-</li>
-      <li><a href="data.html#cereeberus.data.graphs.reeb_torus">reeb_torus() (in module cereeberus.data.graphs)</a>
-</li>
-      <li><a href="data.html#cereeberus.data.graphs.reeb_torus_no_fx">reeb_torus_no_fx() (in module cereeberus.data.graphs)</a>
+      <li><a href="data_networkx.html#cereeberus.data.graphs.reeb_torus_no_fx">reeb_torus_no_fx() (in module cereeberus.data.graphs)</a>
 </li>
       <li><a href="compute_degree.html#cereeberus.compute.degree.remove_isolates">remove_isolates() (in module cereeberus.compute.degree)</a>
 </li>
@@ -343,12 +363,20 @@
 </li>
       <li><a href="compute_uf.html#cereeberus.compute.uf.signedDistToLine2Pts">signedDistToLine2Pts() (in module cereeberus.compute.uf)</a>
 </li>
+      <li><a href="data_networkx.html#cereeberus.data.graphs.simple_loops">simple_loops() (in module cereeberus.data.graphs)</a>
+
+      <ul>
+        <li><a href="data_reeb.html#cereeberus.data.reeb.simple_loops">(in module cereeberus.data.reeb)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data.html#cereeberus.data.graphs.simple_loops">simple_loops() (in module cereeberus.data.graphs)</a>
+      <li><a href="data_networkx.html#cereeberus.data.graphs.simple_loops_unordered">simple_loops_unordered() (in module cereeberus.data.graphs)</a>
+
+      <ul>
+        <li><a href="data_reeb.html#cereeberus.data.reeb.simple_loops_unordered">(in module cereeberus.data.reeb)</a>
 </li>
-      <li><a href="data.html#cereeberus.data.graphs.simple_loops_unordered">simple_loops_unordered() (in module cereeberus.data.graphs)</a>
-</li>
+      </ul></li>
       <li><a href="compute_draw.html#cereeberus.compute.draw.slope_intercept">slope_intercept() (in module cereeberus.compute.draw)</a>
 </li>
   </ul></td>
@@ -357,11 +385,11 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data.html#cereeberus.data.shapes.torus">torus() (in module cereeberus.data.shapes)</a>
+      <li><a href="data_reeb.html#cereeberus.data.reeb.torus">torus() (in module cereeberus.data.reeb)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="data.html#cereeberus.data.graphs.torus_graph">torus_graph() (in module cereeberus.data.graphs)</a>
+      <li><a href="data_networkx.html#cereeberus.data.graphs.torus_graph">torus_graph() (in module cereeberus.data.graphs)</a>
 </li>
   </ul></td>
 </tr></table>

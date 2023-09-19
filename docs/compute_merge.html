@@ -14,9 +14,9 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=479c982c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=80a48c64"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -50,7 +50,7 @@
 <li class="toctree-l2"><a class="reference internal" href="compute_degree.html">3.1.  Degree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compute_draw.html">3.2.  Draw</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">3.3.  Merge</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#cereeberus.compute.merge.computemergetree"><code class="docutils literal notranslate"><span class="pre">computemergetree()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cereeberus.compute.merge.computeMergeTree"><code class="docutils literal notranslate"><span class="pre">computeMergeTree()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#cereeberus.compute.merge.isMerge"><code class="docutils literal notranslate"><span class="pre">isMerge()</span></code></a></li>
 </ul>
 </li>
@@ -86,11 +86,11 @@
            <div itemprop="articleBody">
              
   <section id="merge">
-<h1><span class="section-number">3.3. </span>Merge<a class="headerlink" href="#merge" title="Link to this heading"></a></h1>
-<p>The <cite>merge</cite> module includes functions to create merge trees.</p>
-<dl class="py function" id="module-cereeberus.compute.merge">
-<dt class="sig sig-object py" id="cereeberus.compute.merge.computemergetree">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">computemergetree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infAdjust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#computemergetree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.computemergetree" title="Link to this definition"></a></dt>
+<h1><span class="section-number">3.3. </span>Merge<a class="headerlink" href="#merge" title="Permalink to this heading"></a></h1>
+<p>The <cite>merge</cite> module includes a function to compute merge trees and a function to test if a networkx graph or reeb graph is a merge tree.</p>
+<span class="target" id="module-cereeberus.compute.merge"></span><dl class="py function">
+<dt class="sig sig-object py" id="cereeberus.compute.merge.computeMergeTree">
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">computeMergeTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[[8,</span> <span class="pre">0],</span> <span class="pre">[8,</span> <span class="pre">7],</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infAdjust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#computeMergeTree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.computeMergeTree" title="Permalink to this definition"></a></dt>
 <dd><p>main function to build merge tree for a given graph and filtration</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -114,9 +114,23 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.merge.isMerge">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">isMerge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#isMerge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.isMerge" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">isMerge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#isMerge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.isMerge" title="Permalink to this definition"></a></dt>
 <dd><p>This function takes in a networkx tree or reeb graph and function, and checks to see if it is a
 merge tree.  This assumes that the root node(s) has/have a function value of np.inf.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> (<em>Reeb Graph</em>) – Networkx graph or reeb graph</p></li>
+<li><p><strong>fx</strong> (<em>dict</em>) – function values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if T is a merge tree, False if T is not a merge tree</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>isMerge(bool)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

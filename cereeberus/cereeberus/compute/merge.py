@@ -5,6 +5,13 @@ def isMerge(T,fx):
     """
     This function takes in a networkx tree or reeb graph and function, and checks to see if it is a 
     merge tree.  This assumes that the root node(s) has/have a function value of np.inf. 
+
+    Args:
+        T (Reeb Graph): Networkx graph or reeb graph
+        fx (dict): function values
+
+    Returns:
+        isMerge(bool): True if T is a merge tree, False if T is not a merge tree
     """
     import numpy as np
     import networkx as nx
@@ -33,7 +40,7 @@ def isMerge(T,fx):
     
     return True
 
-def computemergetree(R, filtration: "tuple[tuple[float,float], tuple[float, float], int]", infAdjust: int=None, precision: int=5, size: int=0, verbose: bool=False, filter: bool = False):
+def computeMergeTree(R, filtration: "tuple[tuple[float,float], tuple[float, float], int]" = [[8,0], [8, 7], 1], infAdjust: int=None, precision: int=5, size: int=0, verbose: bool=False, filter: bool = False):
     """
     main function to build merge tree for a given graph and filtration
     
