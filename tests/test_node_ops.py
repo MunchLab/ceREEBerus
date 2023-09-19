@@ -1,10 +1,10 @@
 import unittest
-import cereeberus.data.graphs as graphs
+import cereeberus.data.reeb as reeb
 import cereeberus.compute.degree as degree
 
 class TestNodeOps(unittest.TestCase):
     def test_minimal(self):
-        R = graphs.reeb_torus()
+        R = reeb.torus()
         R_min = degree.minimal_reeb(R)
         nodes = [0, 1, 2, 3]
         edges = [(0, 1, 0), (1, 2, 0), (1, 2, 1), (2, 3, 0)]
@@ -12,7 +12,7 @@ class TestNodeOps(unittest.TestCase):
         self.assertEqual(list(R_min.edges), edges)
         
     def test_add_nodes(self):
-        R = graphs.reeb_torus()
+        R = reeb.torus()
         R_add = degree.add_nodes(R, fx=3.5, x = 1)
         R_add = degree.add_nodes(R_add, fx = 1.5, x = 1)
         nodes = [0, 1, 2, 3, 4, 5, 6, 7, 8]

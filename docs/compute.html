@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3. Compute Module &mdash; ceREEBerus .11 documentation</title>
+  <title>3. Compute Module &mdash; ceREEBerus .14 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
@@ -12,15 +12,16 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=80a48c64"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="2. Reeb Graph" href="reeb.html" /> 
+    <link rel="next" title="3.1. Degree" href="compute_degree.html" />
+    <link rel="prev" title="2. Reeb Graph and Merge Trees" href="reeb.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -28,11 +29,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> ceREEBerus
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ceREEBerus
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -41,7 +46,14 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="data.html">1. Example data and graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reeb.html">2. Reeb graphs</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Compute</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Compute</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compute_degree.html">3.1.  Degree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_draw.html">3.2.  Draw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_merge.html">3.3.  Merge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_uf.html">3.4.  Union Find</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html">3.5.  Distance</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -57,8 +69,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="section-number">3. </span>Compute Module</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">3. </span>Compute Module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/compute.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -68,248 +80,72 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-cereeberus.compute.degree">
-<span id="compute-module"></span><h1><span class="section-number">3. </span>Compute Module<a class="headerlink" href="#module-cereeberus.compute.degree" title="Permalink to this heading"></a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.degree.add_nodes">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">add_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/degree.html#add_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.add_nodes" title="Permalink to this definition"></a></dt>
-<dd><p>Function to add nodes to a Reeb Graph</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.degree.down_degree">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">down_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/degree.html#down_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.down_degree" title="Permalink to this definition"></a></dt>
-<dd><p>Compute Down Degree of Reeb Graph</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>R</strong> (<em>reeb graph</em>) – networkx or reeb graph to use for reeb graph computation</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dictionary of down degrees by node</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>down_deg (dict)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.degree.minimal_reeb">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">minimal_reeb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/degree.html#minimal_reeb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.minimal_reeb" title="Permalink to this definition"></a></dt>
-<dd><p>Function to create minimal Reeb Graph</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.degree.remove_isolates">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">remove_isolates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/degree.html#remove_isolates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.remove_isolates" title="Permalink to this definition"></a></dt>
-<dd><p>Function to remove isolates from Reeb Graph.  Important for computation of Merge Tree</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.degree.up_degree">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">up_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/degree.html#up_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.up_degree" title="Permalink to this definition"></a></dt>
-<dd><p>Compute Upper Degree of Reeb Graph</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>R</strong> (<em>reeb graph</em>) – networkx or reeb graph to use for reeb graph computation</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dictionary of up degrees by node</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>up_deg (dict)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<span class="target" id="module-cereeberus.compute.draw"></span><dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.draw.bezier_curve">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.draw.</span></span><span class="sig-name descname"><span class="pre">bezier_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">midpt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pt1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/draw.html#bezier_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.draw.bezier_curve" title="Permalink to this definition"></a></dt>
-<dd><p>Compute bezier curves for plotting two edges between a single set of nodes</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pt0</strong> (<em>ordered pair</em>) – first point</p></li>
-<li><p><strong>midpt</strong> (<em>ordered pair</em>) – midpoint for bezier curve to pass through</p></li>
-<li><p><strong>pt1</strong> (<em>ordered pair</em>) – second point</p></li>
+  <section id="compute-module">
+<h1><span class="section-number">3. </span>Compute Module<a class="headerlink" href="#compute-module" title="Permalink to this heading"></a></h1>
+<p>The compute module is organized based on function and has 5 main categories.</p>
+<p>The <strong>Degree</strong> functions are used to compute functions on nodes, including adding and removing notes.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="compute_degree.html">3.1.  Degree</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compute_degree.html#cereeberus.compute.degree.add_nodes"><code class="docutils literal notranslate"><span class="pre">add_nodes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_degree.html#cereeberus.compute.degree.down_degree"><code class="docutils literal notranslate"><span class="pre">down_degree()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_degree.html#cereeberus.compute.degree.minimal_reeb"><code class="docutils literal notranslate"><span class="pre">minimal_reeb()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_degree.html#cereeberus.compute.degree.remove_isolates"><code class="docutils literal notranslate"><span class="pre">remove_isolates()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_degree.html#cereeberus.compute.degree.up_degree"><code class="docutils literal notranslate"><span class="pre">up_degree()</span></code></a></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>array of points to be used in plotting</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>points (np array)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.draw.line_loop_index">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.draw.</span></span><span class="sig-name descname"><span class="pre">line_loop_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/draw.html#line_loop_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.draw.line_loop_index" title="Permalink to this definition"></a></dt>
-<dd><p>Determine if edges between two nodes should be lines or loops</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>R</strong> (<em>Reeb Graph</em>) – Reeb Graph</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>2-element tuple containing</p>
-<ul class="simple">
-<li><p><strong>line_index (list)</strong> : list of indices for edges to be drawn as lines</p></li>
-<li><p><strong>loop_index (list)</strong> : list of indices for edges to be drawn as loops</p></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compute_draw.html">3.2.  Draw</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compute_draw.html#cereeberus.compute.draw.bezier_curve"><code class="docutils literal notranslate"><span class="pre">bezier_curve()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_draw.html#cereeberus.compute.draw.line_loop_index"><code class="docutils literal notranslate"><span class="pre">line_loop_index()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_draw.html#cereeberus.compute.draw.reeb_plot"><code class="docutils literal notranslate"><span class="pre">reeb_plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_draw.html#cereeberus.compute.draw.slope_intercept"><code class="docutils literal notranslate"><span class="pre">slope_intercept()</span></code></a></li>
 </ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.draw.reeb_plot">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.draw.</span></span><span class="sig-name descname"><span class="pre">reeb_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/draw.html#reeb_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.draw.reeb_plot" title="Permalink to this definition"></a></dt>
-<dd><p>Main plotting function for the Reeb Graph Class</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>R</strong> (<em>Reeb Graph</em>) – object of Reeb Graph class</p></li>
-<li><p><strong>cp</strong> (<em>float</em>) – parameter to control curvature of loops in the plotting function</p></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compute_merge.html">3.3.  Merge</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compute_merge.html#cereeberus.compute.merge.computeMergeTree"><code class="docutils literal notranslate"><span class="pre">computeMergeTree()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_merge.html#cereeberus.compute.merge.isMerge"><code class="docutils literal notranslate"><span class="pre">isMerge()</span></code></a></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>custom visualization of Reeb Graph</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>plot (Reeb Graph)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.draw.slope_intercept">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.draw.</span></span><span class="sig-name descname"><span class="pre">slope_intercept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pt1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/draw.html#slope_intercept"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.draw.slope_intercept" title="Permalink to this definition"></a></dt>
-<dd><p>Compute slope and intercept to be used in the bezier curve function</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pt0</strong> (<em>ordered pair</em>) – first point</p></li>
-<li><p><strong>pt1</strong> (<em>ordered pair</em>) – second point</p></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compute_uf.html">3.4.  Union Find</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind"><code class="docutils literal notranslate"><span class="pre">UnionFind</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.find"><code class="docutils literal notranslate"><span class="pre">UnionFind.find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.getNumComponents"><code class="docutils literal notranslate"><span class="pre">UnionFind.getNumComponents()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.getSize"><code class="docutils literal notranslate"><span class="pre">UnionFind.getSize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.getSizeOfComponent"><code class="docutils literal notranslate"><span class="pre">UnionFind.getSizeOfComponent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.isFullyConnected"><code class="docutils literal notranslate"><span class="pre">UnionFind.isFullyConnected()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.printAll"><code class="docutils literal notranslate"><span class="pre">UnionFind.printAll()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.rerootComponent"><code class="docutils literal notranslate"><span class="pre">UnionFind.rerootComponent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.union"><code class="docutils literal notranslate"><span class="pre">UnionFind.union()</span></code></a></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>2-element tuple containing</p>
-<ul class="simple">
-<li><p><strong>m (float)</strong> : slope</p></li>
-<li><p><strong>b (float)</strong> : intercept</p></li>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.getSortedNodeHeights"><code class="docutils literal notranslate"><span class="pre">getSortedNodeHeights()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.signedDistToLine2Pts"><code class="docutils literal notranslate"><span class="pre">signedDistToLine2Pts()</span></code></a></li>
 </ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<span class="target" id="module-cereeberus.compute.merge"></span><dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.merge.computemergetree">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">computemergetree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infAdjust</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#computemergetree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.computemergetree" title="Permalink to this definition"></a></dt>
-<dd><p>main function to build merge tree for a given graph and filtration</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>R</strong> (<em>Reeb Graph</em>) – Reeb Graph</p></li>
-<li><p><strong>filtration</strong> (<em>tuple of tuples</em>) – filtration for merge tree</p></li>
-<li><p><strong>infAdjust</strong> (<em>int</em>) – parameter to adjust infinite value for root node</p></li>
-<li><p><strong>precision</strong> (<em>int</em>) – precision</p></li>
-<li><p><strong>size</strong> (<em>int</em>) – size</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – verbose</p></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compute_distance.html">3.5.  Distance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.calcDistanceInfNorm"><code class="docutils literal notranslate"><span class="pre">calcDistanceInfNorm()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.calcDistanceMatrix"><code class="docutils literal notranslate"><span class="pre">calcDistanceMatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.computeDistanceAtAngleFromMT"><code class="docutils literal notranslate"><span class="pre">computeDistanceAtAngleFromMT()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.computeDistanceFull"><code class="docutils literal notranslate"><span class="pre">computeDistanceFull()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.computeGraphDistanceAtAngle"><code class="docutils literal notranslate"><span class="pre">computeGraphDistanceAtAngle()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.directedMergeTreeDistance"><code class="docutils literal notranslate"><span class="pre">directedMergeTreeDistance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.edit"><code class="docutils literal notranslate"><span class="pre">edit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.findFiltration"><code class="docutils literal notranslate"><span class="pre">findFiltration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.getHeightMatrix"><code class="docutils literal notranslate"><span class="pre">getHeightMatrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.getMidpointKey"><code class="docutils literal notranslate"><span class="pre">getMidpointKey()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.getUnitVector"><code class="docutils literal notranslate"><span class="pre">getUnitVector()</span></code></a></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Merge Tree as a Reeb Graph object</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>rmt</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.merge.isMerge">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.merge.</span></span><span class="sig-name descname"><span class="pre">isMerge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/merge.html#isMerge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.merge.isMerge" title="Permalink to this definition"></a></dt>
-<dd><p>This function takes in a networkx tree or reeb graph and function, and checks to see if it is a
-merge tree.  This assumes that the root node(s) has/have a function value of np.inf.</p>
-</dd></dl>
-
-<span class="target" id="module-cereeberus.compute.uf"></span><dl class="py class">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.compute.uf.</span></span><span class="sig-name descname"><span class="pre">UnionFind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind" title="Permalink to this definition"></a></dt>
-<dd><p>Array index implementation of UnionFind inspired by William Fiset’s java implementation (github.com/williamfiset/data-structures) with special rerooting function to handle merge tree construction</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.find">
-<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.find" title="Permalink to this definition"></a></dt>
-<dd><p>return the root of the connected component of c</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.getNumComponents">
-<span class="sig-name descname"><span class="pre">getNumComponents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.getNumComponents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.getNumComponents" title="Permalink to this definition"></a></dt>
-<dd><p>get number of total connected components</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.getSize">
-<span class="sig-name descname"><span class="pre">getSize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.getSize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.getSize" title="Permalink to this definition"></a></dt>
-<dd><p>get input max size of UF structure</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.getSizeOfComponent">
-<span class="sig-name descname"><span class="pre">getSizeOfComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.getSizeOfComponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.getSizeOfComponent" title="Permalink to this definition"></a></dt>
-<dd><p>get size of c’s connected component</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.isFullyConnected">
-<span class="sig-name descname"><span class="pre">isFullyConnected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.isFullyConnected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.isFullyConnected" title="Permalink to this definition"></a></dt>
-<dd><p>if all “size” # of nodes are fully connected, return True</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.printAll">
-<span class="sig-name descname"><span class="pre">printAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.printAll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.printAll" title="Permalink to this definition"></a></dt>
-<dd><p>print all nodes and the connected components of each</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.rerootComponent">
-<span class="sig-name descname"><span class="pre">rerootComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newRoot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.rerootComponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.rerootComponent" title="Permalink to this definition"></a></dt>
-<dd><p>given a component and any connected node, make that node the new root of the component - key for building up a mergetree</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.UnionFind.union">
-<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#UnionFind.union"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.UnionFind.union" title="Permalink to this definition"></a></dt>
-<dd><p>union c1 and c2 connected components</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.getSortedNodeHeights">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.uf.</span></span><span class="sig-name descname"><span class="pre">getSortedNodeHeights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#getSortedNodeHeights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.getSortedNodeHeights" title="Permalink to this definition"></a></dt>
-<dd><p>compute heights of each node given filtration line and return as sorted list of node height tuples, rounded to given precision</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cereeberus.compute.uf.signedDistToLine2Pts">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.uf.</span></span><span class="sig-name descname"><span class="pre">signedDistToLine2Pts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/cereeberus/compute/uf.html#signedDistToLine2Pts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.uf.signedDistToLine2Pts" title="Permalink to this definition"></a></dt>
-<dd><p>return a signed distance to a line where line is defined as two points</p>
-<p>positive sign refers to “above” the line or “left” of a vertical line
-to get the expected sign of “right” is positive, the vertical line will be inverted back under the “angle_sign” in _computeNodeHeights() of MergeTree.py</p>
-</dd></dl>
-
+</li>
+</ul>
+</div>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="reeb.html" class="btn btn-neutral float-left" title="2. Reeb Graph" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reeb.html" class="btn btn-neutral float-left" title="2. Reeb Graph and Merge Trees" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compute_degree.html" class="btn btn-neutral float-right" title="3.1. Degree" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

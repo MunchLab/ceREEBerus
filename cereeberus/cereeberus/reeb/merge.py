@@ -1,24 +1,19 @@
-"""
-Code started by Liz Nov 2022. 
-The goal is to get a merge tree class with the following properties. 
-- Should accept a Reeb graph class as input. 
-- Needs a check to make sure the input is actually a Reeb graph. In particular, only down forks and a root node with function value `np.inf`. 
-- Has drawing capabilities, in particular can handle that `np.inf` node. 
-- If the Reeb graph passed in isn't a merge tree, likely I just want to generate the merge tree of the input Reeb graph. 
-"""
 from cereeberus.reeb.graph import Reeb
 import networkx as nx
 import numpy as np
 from cereeberus.compute.merge import isMerge
+from cereeberus.compute.merge import computeMergeTree
 
 class mergeTree(Reeb):
     """ Class for Merge tree
+
     :ivar T: Graph: T
     :ivar fx: function values associated with T
     :ivar pos: spring layout position calculated from G
     :ivar pos_fx: position values corresponding to x = fx and y = y value from pos
     :ivar horizontalDrawing: Default to False. If true, fx is drawn as a height function. 
-    """
+
+        """
 
     def __init__(self, T, 
                     fx = {}, 
@@ -29,7 +24,8 @@ class mergeTree(Reeb):
         # function actually satisfy the merge
         # tree requirements.
         if not isMerge(T,fx):
-            raise AttributeError("The tree and function you passed in do not satisfy the requirements of a merge tree. ")
+            print("The tree and function you passed in do not satisfy the requirements of a merge tree. Creating Merge Tree")
+            T = computeMergeTree(T)
 
         # Set the maximum finite value. Needs to happen before runnning the Reeb init
         # because of how I overwrote the set_pos_fx function.
