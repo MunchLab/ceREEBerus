@@ -92,7 +92,6 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
     Returns:
         plot (Reeb Graph): custom visualization of Reeb Graph
     """
-
     viridis = mpl.colormaps['viridis'].resampled(16)
     fig, ax = plt.subplots()
 
@@ -108,6 +107,8 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
     fx_max = Rfx.max()
     fx_min = Rfx.min()
 
+    cmap = {}
+    clist = []
     colormap = {}
     for i in R.nodes:
         if R.fx[i]==np.inf:
@@ -116,7 +117,10 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
             R.pos_fx[i] = (x,fx)
         else:
             fx = R.fx[i]
-        colormap[i] = ((fx-fx_min)/fx_max)
+        cmap[i] = ((fx-fx_min)/fx_max)
+        clist.append((fx-fx_min)/fx_max)
+    for i in cmap.keys():
+        colormap[i] = cmap[i]/max(clist)
 
 
     edge_list = list(R.edges)
