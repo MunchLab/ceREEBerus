@@ -99,23 +99,23 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
     n = len(R.nodes)
     fx_max = 0
     fx_min = 0
-    if type(R.fx) == dict:
-        R.fxl = dict_to_list(R.fx)
+    if type(R.f) == dict:
+        f_list = dict_to_list(R.f)
     else:
-        R.fxl = R.fx
-    Rfx = np.array(R.fxl)
+        f_list = R.f
+    Rfx = np.array(f_list)
     Rfx = Rfx[np.isfinite(Rfx)]
     fx_max = Rfx.max()
     fx_min = Rfx.min()
 
     colormap = {}
     for i in R.nodes:
-        if R.fx[i]==np.inf:
+        if R.f[i]==np.inf:
             fx = fx_max+1
             x = R.pos_fx[i][0]
             R.pos_fx[i] = (x,fx)
         else:
-            fx = R.fx[i]
+            fx = R.f[i]
         colormap[i] = ((fx-fx_min)/fx_max)
 
 
@@ -146,3 +146,5 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
 
     for i in R.nodes:
         ax.scatter(pos[i][0], pos[i][1], s = 250, color = viridis(colormap[i]))
+
+    ax.tick_params(left = True, bottom = False, labelleft = True, labelbottom = False)
