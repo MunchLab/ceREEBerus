@@ -1,4 +1,4 @@
-.PHONY: tests
+PHONY: tests
 
 html:
 	# Running sphinx-build to build html files in build folder.

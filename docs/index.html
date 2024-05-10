@@ -1,26 +1,29 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ceREEBerus: Reeb Graph Computations in Python &mdash; ceREEBerus .14 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=80a48c64"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="1. Example Data and graphs" href="data.html" /> 
+    <link rel="next" title="Modules" href="modules/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,9 +46,8 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="data.html">1. Example data and graphs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reeb.html">2. Reeb graphs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="compute.html">3. Compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Tutorial Notebooks</a></li>
 </ul>
 
         </div>
@@ -64,7 +66,7 @@
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">ceREEBerus: Reeb Graph Computations in Python</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -79,98 +81,40 @@
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="data.html">1. Example data and graphs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="data_networkx.html">1.1.  Networkx Graphs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="data_networkx.html#cereeberus.data.graphs.dancing_man"><code class="docutils literal notranslate"><span class="pre">dancing_man()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_networkx.html#cereeberus.data.graphs.juggling_man"><code class="docutils literal notranslate"><span class="pre">juggling_man()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_networkx.html#cereeberus.data.graphs.reeb_torus_no_fx"><code class="docutils literal notranslate"><span class="pre">reeb_torus_no_fx()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_networkx.html#cereeberus.data.graphs.simple_loops"><code class="docutils literal notranslate"><span class="pre">simple_loops()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_networkx.html#cereeberus.data.graphs.simple_loops_unordered"><code class="docutils literal notranslate"><span class="pre">simple_loops_unordered()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_networkx.html#cereeberus.data.graphs.torus_graph"><code class="docutils literal notranslate"><span class="pre">torus_graph()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">Modules and Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/reeb.html">1. Reeb graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/data/index.html">2. Example data and graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/compute/index.html">3. Compute</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="data_reeb.html">1.2.  Reeb Graphs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="data_reeb.html#cereeberus.data.reeb.dancing_man"><code class="docutils literal notranslate"><span class="pre">dancing_man()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_reeb.html#cereeberus.data.reeb.juggling_man"><code class="docutils literal notranslate"><span class="pre">juggling_man()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_reeb.html#cereeberus.data.reeb.simple_loops"><code class="docutils literal notranslate"><span class="pre">simple_loops()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_reeb.html#cereeberus.data.reeb.simple_loops_unordered"><code class="docutils literal notranslate"><span class="pre">simple_loops_unordered()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_reeb.html#cereeberus.data.reeb.torus"><code class="docutils literal notranslate"><span class="pre">torus()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="data_merge.html">1.3.  Merge Trees</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="data_merge.html#cereeberus.data.randomMergeTrees.randomMerge"><code class="docutils literal notranslate"><span class="pre">randomMerge()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reeb.html">2. Reeb graphs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reeb.html#cereeberus.reeb.graph.Reeb"><code class="docutils literal notranslate"><span class="pre">Reeb</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="reeb.html#cereeberus.reeb.graph.Reeb.plot_reeb"><code class="docutils literal notranslate"><span class="pre">Reeb.plot_reeb()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="reeb.html#cereeberus.reeb.graph.Reeb.set_pos_fx"><code class="docutils literal notranslate"><span class="pre">Reeb.set_pos_fx()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="reeb.html#cereeberus.reeb.merge.mergeTree"><code class="docutils literal notranslate"><span class="pre">mergeTree</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="compute.html">3. Compute</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="compute_degree.html">3.1.  Degree</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="compute_degree.html#cereeberus.compute.degree.add_nodes"><code class="docutils literal notranslate"><span class="pre">add_nodes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_degree.html#cereeberus.compute.degree.down_degree"><code class="docutils literal notranslate"><span class="pre">down_degree()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_degree.html#cereeberus.compute.degree.minimal_reeb"><code class="docutils literal notranslate"><span class="pre">minimal_reeb()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_degree.html#cereeberus.compute.degree.remove_isolates"><code class="docutils literal notranslate"><span class="pre">remove_isolates()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_degree.html#cereeberus.compute.degree.up_degree"><code class="docutils literal notranslate"><span class="pre">up_degree()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="compute_draw.html">3.2.  Draw</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="compute_draw.html#cereeberus.compute.draw.bezier_curve"><code class="docutils literal notranslate"><span class="pre">bezier_curve()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_draw.html#cereeberus.compute.draw.line_loop_index"><code class="docutils literal notranslate"><span class="pre">line_loop_index()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_draw.html#cereeberus.compute.draw.reeb_plot"><code class="docutils literal notranslate"><span class="pre">reeb_plot()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_draw.html#cereeberus.compute.draw.slope_intercept"><code class="docutils literal notranslate"><span class="pre">slope_intercept()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="compute_merge.html">3.3.  Merge</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="compute_merge.html#cereeberus.compute.merge.computeMergeTree"><code class="docutils literal notranslate"><span class="pre">computeMergeTree()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_merge.html#cereeberus.compute.merge.isMerge"><code class="docutils literal notranslate"><span class="pre">isMerge()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="compute_uf.html">3.4.  Union Find</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind"><code class="docutils literal notranslate"><span class="pre">UnionFind</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.find"><code class="docutils literal notranslate"><span class="pre">UnionFind.find()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.getNumComponents"><code class="docutils literal notranslate"><span class="pre">UnionFind.getNumComponents()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.getSize"><code class="docutils literal notranslate"><span class="pre">UnionFind.getSize()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.getSizeOfComponent"><code class="docutils literal notranslate"><span class="pre">UnionFind.getSizeOfComponent()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.isFullyConnected"><code class="docutils literal notranslate"><span class="pre">UnionFind.isFullyConnected()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.printAll"><code class="docutils literal notranslate"><span class="pre">UnionFind.printAll()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.rerootComponent"><code class="docutils literal notranslate"><span class="pre">UnionFind.rerootComponent()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.UnionFind.union"><code class="docutils literal notranslate"><span class="pre">UnionFind.union()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.getSortedNodeHeights"><code class="docutils literal notranslate"><span class="pre">getSortedNodeHeights()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_uf.html#cereeberus.compute.uf.signedDistToLine2Pts"><code class="docutils literal notranslate"><span class="pre">signedDistToLine2Pts()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="compute_distance.html">3.5.  Distance</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.calcDistanceInfNorm"><code class="docutils literal notranslate"><span class="pre">calcDistanceInfNorm()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.calcDistanceMatrix"><code class="docutils literal notranslate"><span class="pre">calcDistanceMatrix()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.computeDistanceAtAngleFromMT"><code class="docutils literal notranslate"><span class="pre">computeDistanceAtAngleFromMT()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.computeDistanceFull"><code class="docutils literal notranslate"><span class="pre">computeDistanceFull()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.computeGraphDistanceAtAngle"><code class="docutils literal notranslate"><span class="pre">computeGraphDistanceAtAngle()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.directedMergeTreeDistance"><code class="docutils literal notranslate"><span class="pre">directedMergeTreeDistance()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.edit"><code class="docutils literal notranslate"><span class="pre">edit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.findFiltration"><code class="docutils literal notranslate"><span class="pre">findFiltration()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.getHeightMatrix"><code class="docutils literal notranslate"><span class="pre">getHeightMatrix()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.getMidpointKey"><code class="docutils literal notranslate"><span class="pre">getMidpointKey()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html#cereeberus.compute.distance.getUnitVector"><code class="docutils literal notranslate"><span class="pre">getUnitVector()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Tutorial Notebooks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/reeb_plot.html">1. Examples of Reeb graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/juggling_man.html">2. Juggling Man Example</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </section>
+<section id="about">
+<h2>About<a class="headerlink" href="#about" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ceReeberus</span></code> is a Python package for working with Reeb graphs, in particular with a view towards using the interleaving distance in an applied context.</p>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>You can either update the latest version from pip using</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>cereeberus
+</pre></div>
+</div>
+<p>or to work with the most up to date version, you can clone the repo and install with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MunchLab/ceREEBerus.git
+<span class="nb">cd</span><span class="w"> </span>ceREEBerus
+pip<span class="w"> </span>install<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
 <section id="collaborators">
 <h2>Collaborators<a class="headerlink" href="#collaborators" title="Permalink to this heading"></a></h2>
-<p>The code is a compilation of work done by the lab of <a class="reference external" href="http://www.elizabethmunch.com">Elizabeth Munch</a>.  The lead developer for this package is <a class="reference external" href="https://github.com/barnesd8">Danielle Barnes</a>, and other people who have contributed to ceREEBerus include:</p>
+<p>The code is a compilation of work done by <a class="reference external" href="http://www.elizabethmunch.com">Elizabeth Munch</a> with her research group and collaborators. The lead developer for this package is <a class="reference external" href="https://github.com/barnesd8">Danielle Barnes</a>, and other people who have contributed to ceREEBerus include:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/barnesd8">Danielle Barnes</a></p></li>
 <li><p><a class="reference external" href="https://https://elenaxwang.com">Elena Wang</a></p></li>
@@ -189,7 +133,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="data.html" class="btn btn-neutral float-right" title="1. Example Data and graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="modules/index.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
