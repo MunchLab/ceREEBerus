@@ -26,12 +26,17 @@ cd ceREEBerus
 pip install .
 ```
 
+## Documentation
+
+Find the documentation for ceREEBerus [here](https://munchlab.github.io/ceREEBerus/).
+
 ## Collaborators
 
 The code is a compilation of work done by [Elizabeth Munch](http://www.elizabethmunch.com) with her research group and collaborators. The lead developer for this package is [Danielle Barnes](https://github.com/barnesd8), and other people who have contributed to ceREEBerus include:
 
 - [Danielle Barnes](https://github.com/barnesd8)
 - [Elena Wang](https://https://elenaxwang.com)
+- [Ishika Ghsoh](https://www.ishikaghosh.com/)
 
 ## Contact Information
 
