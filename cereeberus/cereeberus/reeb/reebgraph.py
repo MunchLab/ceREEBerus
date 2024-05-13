@@ -310,45 +310,30 @@ class ReebGraph(nx.MultiDiGraph):
                 print('Function values:', self.f)
                 print('Positions:', self.pos_f)
 
-    def draw(self, cpx = .1, cpy = .1):
+    def draw(self, with_labels = True, with_colorbar = False, cpx = .1):
         """
         A drawing of the Reeb graph. Uses the fancy version from cereeberus.compute.draw.
 
         Parameters:
+            with_labels (bool): Optional. If True, will include the labels of the nodes.
             cpx (float): Optional. A parameter that controls "loopiness" of multiedges in the drawing.
-            cpy (float): Optional. A parameter that controls "loopiness" of multiedges in the drawing.
         
         Returns:
             None
         """
 
+        # This really shouldn't be called ever since this is supposed to be maintained by the class
         if not set(self.pos_f.keys()) == set(self.nodes()):
             print('The positions are not set correctly. Setting them now.')
             self.set_pos_from_f()
+        
+
 
     
-        draw.reeb_plot(self, pos=self.pos_f, cpx=cpx, cpy=cpy)
+        draw.reeb_plot(self, with_labels = with_labels, with_colorbar = with_colorbar, cpx=cpx, cpy=0)
 
 
-    def draw_straight_line(self, ax=None, **kwargs):
-        """
-        A straight line drawing of the Reeb graph. Very simple, but if you have multi-edges, they won't show up.
 
-        Parameters:
-            ax (matplotlib axis): Optional. If not passed, will create a new figure and axis.
-            **kwargs: Additional keyword arguments to pass to the draw.
-        
-        Returns:
-            ax (matplotlib axis): The matplotlib axis object used for the drawing.
-        """
-        if ax is None:
-            fig, ax = plt.subplots()
-
-        nx.draw(self, pos=self.pos_f, **kwargs)
-        plt.axis('on')
-        ax.tick_params(left=True, labelleft=True)
-
-        return ax
     
 
     #-----------------------------------------------#

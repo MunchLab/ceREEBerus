@@ -80,38 +80,157 @@
   <section id="Sandbox-for-testing-purposes">
 <h1>Sandbox for testing purposes<a class="headerlink" href="#Sandbox-for-testing-purposes" title="Link to this heading"></a></h1>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">ReebGraph</span>
 <span class="kn">from</span> <span class="nn">cereeberus.data</span> <span class="kn">import</span> <span class="n">ex_graphs</span> <span class="k">as</span> <span class="n">ex_g</span>
 <span class="kn">from</span> <span class="nn">cereeberus.data</span> <span class="kn">import</span> <span class="n">ex_reebgraphs</span> <span class="k">as</span> <span class="n">ex_rg</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ex_rg</span><span class="o">.</span><span class="n">juggling_man</span><span class="p">()</span>
-<span class="n">R</span><span class="o">.</span><span class="n">draw_straight_line</span><span class="p">(</span><span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_3_0.png" src="../_images/notebooks_sandbox_3_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ex_rg</span><span class="o">.</span><span class="n">juggling_man</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_4_0.png" src="../_images/notebooks_sandbox_4_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ex_rg</span><span class="o">.</span><span class="n">torus</span><span class="p">()</span>
+<span class="n">R</span><span class="o">.</span><span class="n">remove_all_regular_vertices</span><span class="p">()</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span> <span class="o">=</span> <span class="mi">17</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_5_0.png" src="../_images/notebooks_sandbox_5_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># nx.draw_networkx_nodes(R, R.pos_f, node_color = R.f, node_size = 100, alpha = 1)</span>
+<span class="n">color_map</span> <span class="o">=</span> <span class="p">[</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">]</span>
+<span class="c1"># Some weird plotting to make the colorbar work.</span>
+<span class="n">pathcollection</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">pos_f</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">color_map</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_labels</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">pos_f</span><span class="p">,</span> <span class="n">font_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">pos_f</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;Axes: &gt;
+[&lt;matplotlib.patches.FancyArrowPatch at 0x12b30b5e0&gt;,
+ &lt;matplotlib.patches.FancyArrowPatch at 0x12b2cd0f0&gt;,
+ &lt;matplotlib.patches.FancyArrowPatch at 0x12b30bd60&gt;,
+ &lt;matplotlib.patches.FancyArrowPatch at 0x12b30bf70&gt;,
+ &lt;matplotlib.patches.FancyArrowPatch at 0x12b30be20&gt;,
+ &lt;matplotlib.patches.FancyArrowPatch at 0x12b32c3d0&gt;,
+ &lt;matplotlib.patches.FancyArrowPatch at 0x12b32c5e0&gt;,
+ &lt;matplotlib.patches.FancyArrowPatch at 0x12b32c7f0&gt;,
+ &lt;matplotlib.patches.FancyArrowPatch at 0x12b32ca00&gt;]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_2_1.png" src="../_images/notebooks_sandbox_2_1.png" />
+<img alt="../_images/notebooks_sandbox_6_1.png" src="../_images/notebooks_sandbox_6_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -119,7 +238,7 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span>
-<span class="n">R</span><span class="o">.</span><span class="n">draw_straight_line</span><span class="p">(</span><span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -136,7 +255,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_3_1.png" src="../_images/notebooks_sandbox_3_1.png" />
+<img alt="../_images/notebooks_sandbox_13_1.png" src="../_images/notebooks_sandbox_13_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -203,7 +322,7 @@ Adding edge with both endpoints outside slice: (7, 9)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_5_2.png" src="../_images/notebooks_sandbox_5_2.png" />
+<img alt="../_images/notebooks_sandbox_15_2.png" src="../_images/notebooks_sandbox_15_2.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -291,7 +410,7 @@ The positions are not set correctly. Setting them now.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_10_1.png" src="../_images/notebooks_sandbox_10_1.png" />
+<img alt="../_images/notebooks_sandbox_20_1.png" src="../_images/notebooks_sandbox_20_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -332,7 +451,7 @@ The positions are not set correctly. Setting them now.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_12_1.png" src="../_images/notebooks_sandbox_12_1.png" />
+<img alt="../_images/notebooks_sandbox_22_1.png" src="../_images/notebooks_sandbox_22_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">

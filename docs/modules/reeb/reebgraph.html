@@ -321,37 +321,17 @@ The node to get the down degree of.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.draw">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cpx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.draw" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">with_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.draw" title="Link to this definition"></a></dt>
 <dd><p>A drawing of the Reeb graph. Uses the fancy version from cereeberus.compute.draw.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>with_labels</strong> (<em>bool</em>) – Optional. If True, will include the labels of the nodes.</p></li>
 <li><p><strong>cpx</strong> (<em>float</em>) – Optional. A parameter that controls “loopiness” of multiedges in the drawing.</p></li>
-<li><p><strong>cpy</strong> (<em>float</em>) – Optional. A parameter that controls “loopiness” of multiedges in the drawing.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.draw_straight_line">
-<span class="sig-name descname"><span class="pre">draw_straight_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.draw_straight_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.draw_straight_line" title="Link to this definition"></a></dt>
-<dd><p>A straight line drawing of the Reeb graph. Very simple, but if you have multi-edges, they won’t show up.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ax</strong> (<em>matplotlib axis</em>) – Optional. If not passed, will create a new figure and axis.</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword arguments to pass to the draw.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The matplotlib axis object used for the drawing.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ax (matplotlib axis)</p>
 </dd>
 </dl>
 </dd></dl>
