@@ -11,6 +11,7 @@
 .. toctree::
    :maxdepth: 2
    
+   Contributing <contributing.rst>
    Modules and Documentation  <modules/index.md>
    Tutorial Notebooks <notebooks/index.md>
 ```

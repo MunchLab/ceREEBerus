@@ -2,11 +2,12 @@
 
 [project]
 name = "cereeberus"
-version = "0.0.14"
+version = "0.1.0"
 authors = [
+  { name="Liz Munch", email="muncheli@msu.edu" },
   { name="Danielle Barnes", email="barnesd8@msu.edu" },
 ]
-description = "Package to do fun things with Reeb graphs"
+description = "A Python package for Reeb graphs"
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
@@ -26,5 +27,5 @@ cereeberus = ["data"]
 
 [project.urls]
 repository = "https://github.com/MunchLab/ceREEBerus"
-homepage = "https://github.com/MunchLab/ceREEBerus"
-documentation = "https://github.com/MunchLab/ceREEBerus"
+homepage = "https://munchlab.github.io/ceREEBerus/"
+documentation = "https://munchlab.github.io/ceREEBerus/"

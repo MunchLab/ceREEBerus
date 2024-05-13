@@ -3,13 +3,13 @@ import networkx as nx
 
 def up_degree(R, fx = {}):
     """ Compute Upper Degree of Reeb Graph
+    degree.up_degree is deprecated. Instead use R.up_degree() to compute the up degree of a node in a Reeb graph.
 
     Args:
         R (reeb graph): networkx or reeb graph to use for reeb graph computation
 
     Returns:
         up_deg (dict): dictionary of up degrees by node
-    
     """
 
     n = len(R.nodes)
@@ -45,12 +45,14 @@ def up_degree(R, fx = {}):
 def down_degree(R, fx ={ }):
 
     """ Compute Down Degree of Reeb Graph
+    degree.down_degree is deprecated. Instead use R.down_degree() to compute the down degree of a node in a Reeb graph.
 
     Args:
         R (reeb graph): networkx or reeb graph to use for reeb graph computation
 
     Returns:
         down_deg (dict): dictionary of down degrees by node
+    
     
     """
 
@@ -86,8 +88,10 @@ def down_degree(R, fx ={ }):
 
 def add_nodes(R, fx, x=0):
     """ Function to add nodes to a Reeb Graph
+    degree.add_nodes is deprecated. You can now use R.add_node() to add nodes to a Reeb graph. 
     """
-    from cereeberus.reeb.graph import Reeb
+    print('degree.add_nodes is deprecated. You can now use R.add_node() to add nodes to a Reeb graph.')
+    from cereeberus.reeb.reebgraph import ReebGraph
     r = len(R.edges)
     e = list(R.edges)
     c = 0
@@ -103,37 +107,42 @@ def add_nodes(R, fx, x=0):
             R.G.add_node(r+c, fx = fx, pos = (x, fx))
             R.G.remove_edge(pt0, pt1)
             c+=1
-    return Reeb(R.G)
+    return ReebGraph(R.G)
 
 def minimal_reeb(R):
     """ Function to create minimal Reeb Graph
     """
-    from cereeberus.reeb.graph import Reeb
-    H = R.G.copy()
-    for i in H.nodes:
-        if R.up_deg[i] == R.down_deg[i] == 1:
-            e = list(H.edges(i))
-            pt0 = e[0][1]
-            pt1 = e[1][1]
-            H.add_edge(pt0, pt1)
-            H.remove_edge(i, pt0)
-            H.remove_edge(i, pt1)
-    for i in R.nodes:
-        if R.up_deg[i] == R.down_deg[i] == 1:
-            H.remove_node(i)
-    H = nx.convert_node_labels_to_integers(H)
-    return Reeb(H)
+    print("degree.minimal_reeb is deprecated. You can now use R.remove_regular_vertices() to remove regular vertices from a Reeb graph.")
+
+    R.remove_all_regular_vertices()
+    return R
+    # from cereeberus.reeb.reebgraph import ReebGraph
+    # H = R.G.copy()
+    # for i in H.nodes:
+    #     if R.up_deg[i] == R.down_deg[i] == 1:
+    #         e = list(H.edges(i))
+    #         pt0 = e[0][1]
+    #         pt1 = e[1][1]
+    #         H.add_edge(pt0, pt1)
+    #         H.remove_edge(i, pt0)
+    #         H.remove_edge(i, pt1)
+    # for i in R.nodes:
+    #     if R.up_deg[i] == R.down_deg[i] == 1:
+    #         H.remove_node(i)
+    # H = nx.convert_node_labels_to_integers(H)
+    # return ReebGraph(H)
 
 def remove_isolates(R):
-    """ Function to remove isolates from Reeb Graph.  Important for computation of Merge Tree
+    """ 
+    Function to remove isolates from Reeb Graph.  Important for computation of Merge Tree
     """
-    from cereeberus.reeb.graph import Reeb
+    from cereeberus.reeb.reebgraph import ReebGraph
     H = R.G.copy()
     for i in R.nodes:
         if R.up_deg[i] == R.down_deg[i] == 0:
             H.remove_node(i)
     H = nx.convert_node_labels_to_integers(H)
-    return Reeb(H)
+    return ReebGraph(H)
 
 def heights(graph):
     h = []
