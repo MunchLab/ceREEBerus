@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
+import networkx as nx
 
 def dict_to_list(d):
     l = []
@@ -82,15 +83,15 @@ def bezier_curve(pt0, midpt, pt1):
         y2 = a2*x2 + b2
     return points    
 
-def reeb_plot(R, pos, cpx=.1, cpy=.1):
+def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1):
     """Main plotting function for the Reeb Graph Class
-    
-    Args:
-        R (Reeb Graph): object of Reeb Graph class
-        cp (float): parameter to control curvature of loops in the plotting function
 
-    Returns:
-        plot (Reeb Graph): custom visualization of Reeb Graph
+    Parameters: 
+        R (Reeb Graph): object of Reeb Graph class
+        with_labels (bool): parameter to control whether or not to plot labels
+        with_colorbar (bool): parameter to control whether or not to plot colorbar
+        cp (float): parameter to control curvature of loops in the plotting function. For vertical Reeb graph, only mess with cpx.
+
     """
 
     viridis = mpl.colormaps['viridis'].resampled(16)
@@ -121,30 +122,39 @@ def reeb_plot(R, pos, cpx=.1, cpy=.1):
 
     edge_list = list(R.edges)
     line_index, loop_index = line_loop_index(R)
+
+    # Some weird plotting to make the colored and labeled nodes work.
+    color_map = [R.f[v] for v in R.nodes]
+    pathcollection = nx.draw_networkx_nodes(R, R.pos_f, node_color=color_map)
+    if with_labels:
+        nx.draw_networkx_labels(R, pos=R.pos_f, font_color='black')
+    if with_colorbar:
+        plt.colorbar(pathcollection)
+
     for i in line_index:
         node0 = edge_list[i][0]
         node1 = edge_list[i][1]
-        x_pos = (pos[node0][0], pos[node1][0])
-        y_pos = (pos[node0][1], pos[node1][1])
+        x_pos = (R.pos_f[node0][0], R.pos_f[node1][0])
+        y_pos = (R.pos_f[node0][1], R.pos_f[node1][1])
         ax.plot(x_pos, y_pos, color='grey', zorder = 0)
     
     for i in loop_index:
         node0 = edge_list[i][0]
         node1 = edge_list[i][1]
-        xmid = (pos[node0][0]+pos[node1][0])/2
+        xmid = (R.pos_f[node0][0]+R.pos_f[node1][0])/2
         xmid0 = xmid - cpx*xmid
         xmid1 = xmid + cpx*xmid
-        ymid = (pos[node0][1]+pos[node1][1])/2
+        ymid = (R.pos_f[node0][1]+R.pos_f[node1][1])/2
         ymid0 = ymid - cpy*ymid
         ymid1 = ymid + cpy*ymid
-        curve = bezier_curve(pos[node0], (xmid0, ymid0), pos[node1])
+        curve = bezier_curve(R.pos_f[node0], (xmid0, ymid0), R.pos_f[node1])
         c = np.array(curve)
         plt.plot(c[:,0], c[:,1], color='grey', zorder = 0)
-        curve = bezier_curve(pos[node0], (xmid1, ymid1), pos[node1])
+        curve = bezier_curve(R.pos_f[node0], (xmid1, ymid1), R.pos_f[node1])
         c = np.array(curve)
         plt.plot(c[:,0], c[:,1], color='grey', zorder = 0)
 
-    for i in R.nodes:
-        ax.scatter(pos[i][0], pos[i][1], s = 250, color = viridis(colormap[i]))
+    # for i in R.nodes:
+    #     ax.scatter(R.pos_f[i][0], R.pos_f[i][1], s = 250, color = viridis(colormap[i]))
 
     ax.tick_params(left = True, bottom = False, labelleft = True, labelbottom = False)
