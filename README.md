@@ -32,6 +32,7 @@ The code is a compilation of work done by [Elizabeth Munch](http://www.elizabeth
 
 - [Danielle Barnes](https://github.com/barnesd8)
 - [Elena Wang](https://https://elenaxwang.com)
+- [Ishika Ghsoh](https://www.ishikaghosh.com/)
 
 ## Contact Information
 
