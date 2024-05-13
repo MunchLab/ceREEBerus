@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>1. Examples of Reeb graphs &mdash; ceREEBerus .14 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>1. Examples of Reeb graphs &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
 
@@ -15,18 +15,18 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="2. Juggling Man Example" href="juggling_man.html" />
+    <link rel="next" title="2. Example Reeb graphs" href="example_reeb_graphs.html" />
     <link rel="prev" title="Jupyter Notebooks" href="index.html" /> 
 </head>
 
@@ -50,15 +50,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/index.html">Modules and Documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial Notebooks</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Examples of Reeb graphs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#You-can-also-check-if-a-graph-is-a-merge-tree.">1.1. You can also check if a graph is a merge tree.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:">1.2. To compute a merge tree from a Reeb Graph, we need to first identify any isolates in the graph (nodes with degree 0) and remove them as they will not be going into the merge tree. Looking at a Reeb graph with isolates:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Then-we-can-remove-isolates-and-plot">1.3. Then we can remove isolates and plot</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="juggling_man.html">2. Juggling Man Example</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Examples of Reeb graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_reeb_graphs.html">2. Example Reeb graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="juggling_man.html">3. Juggling Man Example</a></li>
 </ul>
 </li>
 </ul>
@@ -92,32 +89,29 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.data</span> <span class="kn">import</span> <span class="n">graphs</span>
-<span class="kn">from</span> <span class="nn">cereeberus.data</span> <span class="kn">import</span> <span class="n">reeb</span>
-<span class="kn">from</span> <span class="nn">cereeberus.reeb.graph</span> <span class="kn">import</span> <span class="n">Reeb</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">ReebGraph</span>
+<span class="kn">from</span> <span class="nn">cereeberus.data</span> <span class="kn">import</span> <span class="n">ex_reebgraphs</span>
 </pre></div>
 </div>
 </div>
 <section id="Examples-of-Reeb-graphs">
-<h1><span class="section-number">1. </span>Examples of Reeb graphs<a class="headerlink" href="#Examples-of-Reeb-graphs" title="Permalink to this heading"></a></h1>
+<h1><span class="section-number">1. </span>Examples of Reeb graphs<a class="headerlink" href="#Examples-of-Reeb-graphs" title="Link to this heading"></a></h1>
 <p>In the following notebook, we show examples of Reeb graphs that are included in the package which show functionality related to the main class. All Reeb graphs are stored as the class <code class="docutils literal notranslate"><span class="pre">cereberus.reeb.Reeb</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span> <span class="o">=</span> <span class="n">reeb</span><span class="o">.</span><span class="n">torus</span><span class="p">()</span>
-<span class="n">reeb_torus</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span> <span class="o">=</span> <span class="n">ex_reebgraphs</span><span class="o">.</span><span class="n">torus</span><span class="p">()</span>
+<span class="n">reeb_torus</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;cereeberus.reeb.graph.Reeb at 0x7fe0f8a0d520&gt;
-</pre></div></div>
+<img alt="../_images/notebooks_reeb_plot_2_0.png" src="../_images/notebooks_reeb_plot_2_0.png" />
+</div>
 </div>
 <p>The Reeb Graph class has many attributes available such as nodes, edges, position, up degree, down degree, and function values provided at class instantiation</p>
 <div class="nbinput docutils container">
@@ -126,17 +120,17 @@
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reeb Graph nodes: &quot;</span><span class="p">,</span> <span class="n">reeb_torus</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reeb Graph edges: &quot;</span><span class="p">,</span> <span class="n">reeb_torus</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reeb Graph function values: &quot;</span><span class="p">,</span> <span class="n">reeb_torus</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reeb Graph up degree: &quot;</span><span class="p">,</span> <span class="n">reeb_torus</span><span class="o">.</span><span class="n">up_deg</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reeb Graph down degree: &quot;</span><span class="p">,</span> <span class="n">reeb_torus</span><span class="o">.</span><span class="n">down_deg</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reeb Graph function values: &quot;</span><span class="p">,</span> <span class="n">reeb_torus</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+<span class="c1"># print(&quot;Reeb Graph up degree: &quot;, reeb_torus.up_deg)</span>
+<span class="c1"># print(&quot;Reeb Graph down degree: &quot;, reeb_torus.down_deg)</span>
 <span class="c1">#print(&quot;Reeb Graph Adjacency Matrix:&quot;, reeb_torus.adjacency)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reeb Graph Plotting Positions:&quot;</span><span class="p">,</span> <span class="n">reeb_torus</span><span class="o">.</span><span class="n">pos_fx</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Drawing Preference:&quot;</span><span class="p">,</span> <span class="n">reeb_torus</span><span class="o">.</span><span class="n">_horizontalDrawing</span><span class="p">)</span>
-<span class="n">reeb_torus</span><span class="o">.</span><span class="n">summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reeb Graph Plotting Positions:&quot;</span><span class="p">,</span> <span class="n">reeb_torus</span><span class="o">.</span><span class="n">pos_f</span><span class="p">)</span>
+<span class="c1"># print(&quot;Drawing Preference:&quot;, reeb_torus._horizontalDrawing)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reeb_torus</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
@@ -144,19 +138,8 @@
 Reeb Graph nodes:  [0, 1, 2, 3, 4, 5]
 Reeb Graph edges:  [(0, 1, 0), (1, 2, 0), (1, 3, 0), (2, 4, 0), (3, 4, 0), (4, 5, 0)]
 Reeb Graph function values:  {0: 1, 1: 2, 2: 3, 3: 3, 4: 4, 5: 5}
-Reeb Graph up degree:  {0: 1, 1: 2, 2: 1, 3: 1, 4: 1, 5: 0}
-Reeb Graph down degree:  {0: 0, 1: 1, 2: 1, 3: 1, 4: 2, 5: 1}
-Reeb Graph Plotting Positions: {0: (1, 1), 1: (1, 2), 2: (0.5, 3), 3: (1.5, 3), 4: (1, 4), 5: (1, 5)}
-Drawing Preference: False
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{&#39;nodes&#39;: 6, &#39;edges&#39;: 6}
+Reeb Graph Plotting Positions: {0: (0.19541798022696485, 1), 1: (-0.012698776666018726, 2), 2: (-0.5843085161127943, 3), 3: (0.2823385786868408, 3), 4: (-0.19974621424521702, 4), 5: (0.3189969481102244, 5)}
+ReebGraph with 6 nodes and 6 edges.
 </pre></div></div>
 </div>
 <p>There is also a custom plot function to plot Reeb Graphs which can be called with <code class="docutils literal notranslate"><span class="pre">plot_reeb</span></code>.</p>
@@ -164,7 +147,7 @@ Drawing Preference: False
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -175,28 +158,37 @@ Drawing Preference: False
 <img alt="../_images/notebooks_reeb_plot_6_0.png" src="../_images/notebooks_reeb_plot_6_0.png" />
 </div>
 </div>
-<p>By using the <code class="docutils literal notranslate"><span class="pre">horizontalDrawing</span></code> parameter, you can plot the Reeb Graph horizontally instead of vertically</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">horizontalDrawing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span><span class="o">.</span><span class="n">draw_straight_line</span><span class="p">(</span><span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Axes: &gt;
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_8_0.png" src="../_images/notebooks_reeb_plot_8_0.png" />
+<img alt="../_images/notebooks_reeb_plot_7_1.png" src="../_images/notebooks_reeb_plot_7_1.png" />
 </div>
 </div>
-<p>You can also pass your own positions in, in which case we note the <code class="docutils literal notranslate"><span class="pre">horizontalDrawing</span></code> and <code class="docutils literal notranslate"><span class="pre">verbose</span></code> parameters are not used.</p>
+<p>You can also reset the positions completely by using the <code class="docutils literal notranslate"><span class="pre">set_pos_from_f</span></code> method. If you pass a seed, it will make the resulting positions the same every time.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">position</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">:(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">:(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="mi">3</span><span class="p">:(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="mi">4</span><span class="p">:(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="mi">5</span><span class="p">:(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)},</span> <span class="n">horizontalDrawing</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">reeb_torus</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -204,15 +196,16 @@ Drawing Preference: False
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_10_0.png" src="../_images/notebooks_reeb_plot_10_0.png" />
+<img alt="../_images/notebooks_reeb_plot_9_0.png" src="../_images/notebooks_reeb_plot_9_0.png" />
 </div>
 </div>
-<p>You can also reset the positions completely by using the <code class="docutils literal notranslate"><span class="pre">resetSpring</span></code> parameter</p>
+<p>There are also some other example graphs, such as the dancing man</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">resetSpring</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dm</span> <span class="o">=</span> <span class="n">ex_reebgraphs</span><span class="o">.</span><span class="n">dancing_man</span><span class="p">()</span>
+<span class="n">dm</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -220,14 +213,16 @@ Drawing Preference: False
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_12_0.png" src="../_images/notebooks_reeb_plot_12_0.png" />
+<img alt="../_images/notebooks_reeb_plot_11_0.png" src="../_images/notebooks_reeb_plot_11_0.png" />
 </div>
 </div>
+<p>The next is an illustration of how loops are handled in the <code class="docutils literal notranslate"><span class="pre">plot_reeb()</span></code> function. The <code class="docutils literal notranslate"><span class="pre">cpx</span></code> parameter controls how loopy the loops are.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">resetSpring</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sl</span> <span class="o">=</span> <span class="n">ex_reebgraphs</span><span class="o">.</span><span class="n">simple_loops</span><span class="p">()</span>
+<span class="n">sl</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span><span class="o">=</span><span class="mf">.1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -239,10 +234,10 @@ Drawing Preference: False
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">resetSpring</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">horizontalDrawing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sl</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -253,52 +248,65 @@ Drawing Preference: False
 <img alt="../_images/notebooks_reeb_plot_14_0.png" src="../_images/notebooks_reeb_plot_14_0.png" />
 </div>
 </div>
-<p>There are also some other graphs, such as the dancing man</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dm</span> <span class="o">=</span> <span class="n">reeb</span><span class="o">.</span><span class="n">dancing_man</span><span class="p">()</span>
-<span class="n">dm</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_16_0.png" src="../_images/notebooks_reeb_plot_16_0.png" />
-</div>
-</div>
-<p>The next is an illustration of how loops are handled in the <code class="docutils literal notranslate"><span class="pre">plot_reeb()</span></code> function. The ‘cp’ parameter controls how loopy the loops are.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sl</span> <span class="o">=</span> <span class="n">reeb</span><span class="o">.</span><span class="n">simple_loops</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sl</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">cpx</span><span class="o">=</span><span class="mf">.1</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_19_0.png" src="../_images/notebooks_reeb_plot_19_0.png" />
-</div>
-</div>
+<p>We can subdivide edges at certain function values. To demonstrate this we will use the <code class="docutils literal notranslate"><span class="pre">reeb_torus</span></code> graph.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sl</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">cpx</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ex_reebgraphs</span><span class="o">.</span><span class="n">torus</span><span class="p">()</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw_straight_line</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Axes: &gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_reeb_plot_16_1.png" src="../_images/notebooks_reeb_plot_16_1.png" />
+</div>
+</div>
+<p>Let’s add a node named <code class="docutils literal notranslate"><span class="pre">6</span></code> with function value 4.5 subdividing the edge <code class="docutils literal notranslate"><span class="pre">(4,5)</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">v</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">w</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">f_w</span><span class="o">=</span><span class="mf">4.2</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw_straight_line</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Axes: &gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_reeb_plot_18_1.png" src="../_images/notebooks_reeb_plot_18_1.png" />
+</div>
+</div>
+<p>We can also remove all regular nodes (i.e. those with both up- and down-degree equal to 1) to get an equivalent, minimal Reeb graph. Note that we’re using the <code class="docutils literal notranslate"><span class="pre">draw</span></code> command here since <code class="docutils literal notranslate"><span class="pre">draw_straight_line</span></code> will make the multiedges land on top of each other and so not be visible.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">remove_all_regular_vertices</span><span class="p">()</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -309,291 +317,6 @@ Drawing Preference: False
 <img alt="../_images/notebooks_reeb_plot_20_0.png" src="../_images/notebooks_reeb_plot_20_0.png" />
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sl</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">cpx</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_21_0.png" src="../_images/notebooks_reeb_plot_21_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sl</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">cpx</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_22_0.png" src="../_images/notebooks_reeb_plot_22_0.png" />
-</div>
-</div>
-<p>We can add nodes at a certain function values. To demonstrate this we will use the <code class="docutils literal notranslate"><span class="pre">reeb_torus</span></code> graph.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb</span><span class="o">.</span><span class="n">torus</span><span class="p">()</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_24_0.png" src="../_images/notebooks_reeb_plot_24_0.png" />
-</div>
-</div>
-<p>Let’s add a node at value 4.5</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cereeberus.compute.degree</span> <span class="k">as</span> <span class="nn">degree</span>
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="n">reeb_torus</span> <span class="o">=</span> <span class="n">reeb</span><span class="o">.</span><span class="n">torus</span><span class="p">()</span>
-<span class="n">reeb_torus_add</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">add_nodes</span><span class="p">(</span><span class="n">reeb_torus</span><span class="p">,</span> <span class="n">fx</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">reeb_torus_add</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_26_0.png" src="../_images/notebooks_reeb_plot_26_0.png" />
-</div>
-</div>
-<p>Let’s add additional nodes at 3.5</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus_add</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">add_nodes</span><span class="p">(</span><span class="n">reeb_torus_add</span><span class="p">,</span> <span class="n">fx</span><span class="o">=</span><span class="mf">3.5</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">reeb_torus_add</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_28_0.png" src="../_images/notebooks_reeb_plot_28_0.png" />
-</div>
-</div>
-<p>And one more at 1.25</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus_add</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">add_nodes</span><span class="p">(</span><span class="n">reeb_torus_add</span><span class="p">,</span> <span class="n">fx</span><span class="o">=</span><span class="mf">1.25</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">reeb_torus_add</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_30_0.png" src="../_images/notebooks_reeb_plot_30_0.png" />
-</div>
-</div>
-<p>We can also remove any unnecessary nodes using the <code class="docutils literal notranslate"><span class="pre">minimal_reeb</span></code> function</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus_min</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">minimal_reeb</span><span class="p">(</span><span class="n">reeb_torus_add</span><span class="p">)</span>
-<span class="n">reeb_torus_min</span> <span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">cpx</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_32_0.png" src="../_images/notebooks_reeb_plot_32_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reeb_torus_min</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">(</span><span class="n">horizontalDrawing</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cpy</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_33_0.png" src="../_images/notebooks_reeb_plot_33_0.png" />
-</div>
-</div>
-<p>You can also create random merge trees and plot them</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.data.randomMergeTrees</span> <span class="kn">import</span> <span class="n">randomMerge</span>
-<span class="kn">from</span> <span class="nn">cereeberus.reeb.merge</span> <span class="kn">import</span> <span class="n">mergeTree</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">randomMerge</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">M</span> <span class="o">=</span> <span class="n">mergeTree</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
-<span class="n">M</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_35_0.png" src="../_images/notebooks_reeb_plot_35_0.png" />
-</div>
-</div>
-<section id="You-can-also-check-if-a-graph-is-a-merge-tree.">
-<h2><span class="section-number">1.1. </span>You can also check if a graph is a merge tree.<a class="headerlink" href="#You-can-also-check-if-a-graph-is-a-merge-tree." title="Permalink to this heading"></a></h2>
-<p>This works for both Reeb graphs and Networkx graphs, and it part of the Merge function already</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute.merge</span> <span class="kn">import</span> <span class="n">isMerge</span>
-<span class="c1">### Reeb Graph</span>
-<span class="n">isMerge</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-True
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Networkx Graph</span>
-<span class="n">isMerge</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-True
-</pre></div></div>
-</div>
-</section>
-<section id="To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:">
-<h2><span class="section-number">1.2. </span>To compute a merge tree from a Reeb Graph, we need to first identify any isolates in the graph (nodes with degree 0) and remove them as they will not be going into the merge tree. Looking at a Reeb graph with isolates:<a class="headerlink" href="#To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:" title="Permalink to this heading"></a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jm</span> <span class="o">=</span> <span class="n">reeb</span><span class="o">.</span><span class="n">juggling_man</span><span class="p">()</span>
-<span class="n">jm</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_40_0.png" src="../_images/notebooks_reeb_plot_40_0.png" />
-</div>
-</div>
-</section>
-<section id="Then-we-can-remove-isolates-and-plot">
-<h2><span class="section-number">1.3. </span>Then we can remove isolates and plot<a class="headerlink" href="#Then-we-can-remove-isolates-and-plot" title="Permalink to this heading"></a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jm_im</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">remove_isolates</span><span class="p">(</span><span class="n">jm</span><span class="p">)</span>
-<span class="n">jm_im</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_42_0.png" src="../_images/notebooks_reeb_plot_42_0.png" />
-</div>
-</div>
-<p>We then import the <code class="docutils literal notranslate"><span class="pre">computemergetree</span></code> function, and provide a filtration.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute.merge</span> <span class="kn">import</span> <span class="n">computeMergeTree</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmt</span> <span class="o">=</span> <span class="n">computeMergeTree</span><span class="p">(</span><span class="n">jm_im</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">cmt</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-<span class="n">cmt</span><span class="o">.</span><span class="n">fx</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{7: 1, 5: 4, 2: 5, &#39;inf&#39;: inf}
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_plot_45_1.png" src="../_images/notebooks_reeb_plot_45_1.png" />
-</div>
-</div>
-<p>We can also compute distances between networkx graphs, reeb graphs, and merge trees. The first example is the graph edit distance, compliments of the networkx package implementation.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute</span> <span class="kn">import</span> <span class="n">distance</span>
-<span class="n">distance</span><span class="o">.</span><span class="n">edit</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="n">jm_im</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-9.0
-</pre></div></div>
-</div>
-</section>
 </section>
 
 
@@ -601,7 +324,7 @@ True
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Jupyter Notebooks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="juggling_man.html" class="btn btn-neutral float-right" title="2. Juggling Man Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="example_reeb_graphs.html" class="btn btn-neutral float-right" title="2. Example Reeb graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

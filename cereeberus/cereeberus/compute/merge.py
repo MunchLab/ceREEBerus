@@ -16,7 +16,7 @@ def isMerge(T,fx):
     import numpy as np
     import networkx as nx
     from cereeberus.compute.degree import up_degree
-    from cereeberus.reeb.graph import Reeb
+    from cereeberus.reeb.reebgraph import Reeb
     
     if type(T) is nx.classes.multigraph.MultiGraph or type(T) is nx.classes.digraph.DiGraph:
         node_list = list(T.nodes)

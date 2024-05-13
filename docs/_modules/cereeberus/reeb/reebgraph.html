@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cereeberus.reeb.reebgraph &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cereeberus.reeb.reebgraph</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cereeberus.reeb.reebgraph</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">cereeberus.compute.draw</span> <span class="k">as</span> <span class="nn">draw</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<div class="viewcode-block" id="ReebGraph">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph">[docs]</a>
+<span class="k">class</span> <span class="nc">ReebGraph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Reeb graph stored as a networkx ``MultiDiGraph``. The function values are stored as a dictionary. The directedness of the edges follows the convention that the edge goes from the lower function value to the higher function value node.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ReebGraph.__init__">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="p">{},</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes a Reeb graph object.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            G : nx.graph, optional. If not None, a graph to initialize the Reeb graph.</span>
+<span class="sd">            f : dict, optional. If not an empty dictionary, a dictionary of function values associated with the graph nodes.</span>
+<span class="sd">            seed : int, optional. If not None, a seed to pass to the spring layout.</span>
+<span class="sd">            verbose: bool, optional. If True, will print out additional information during initialization.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">G</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">elif</span> <span class="n">f</span> <span class="o">!=</span> <span class="p">{}:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Some example graphs still have the function values stored as &#39;fx&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_node_attributes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;fx&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Function values: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">G</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Nodes: </span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="c1"># self.f = nx.get_node_attributes(G, &#39;f&#39;)</span>
+
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="n">e</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Edge: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="c1"># Can&#39;t figure out why the graphs are outputting a </span>
+                <span class="c1"># 3rd part of the tuple from our examples</span>
+                <span class="n">edge</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
+
+    
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ReebGraph with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s1"> nodes and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s1"> edges.&#39;</span>
+
+<div class="viewcode-block" id="ReebGraph.summary">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.summary">[docs]</a>
+    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Summary of the Reeb graph.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict</span>
+<span class="sd">                A dictionary with the number of nodes and edges in the Reeb graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;nodes&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">),</span> <span class="s1">&#39;edges&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">)}</span></div>
+
+
+    <span class="c1">#-----------------#</span>
+    <span class="c1"># Methods for getting info about the Reeb graph and its nodes</span>
+    <span class="c1">#-----------------#</span>
+
+<div class="viewcode-block" id="ReebGraph.up_degree">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.up_degree">[docs]</a>
+    <span class="k">def</span> <span class="nf">up_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the up degree of a node.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            node : int. The node to get the up degree of.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            int  </span>
+<span class="sd">                The up degree of the node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ReebGraph.down_degree">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.down_degree">[docs]</a>
+    <span class="k">def</span> <span class="nf">down_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the down degree of a node.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            node : int</span>
+<span class="sd">                The node to get the down degree of.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            int</span>
+<span class="sd">                The down degree of the node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_degree</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReebGraph.number_connected_components">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.number_connected_components">[docs]</a>
+    <span class="k">def</span> <span class="nf">number_connected_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the number of connected components in the Reeb graph.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            int</span>
+<span class="sd">                The number of connected components in the Reeb graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">number_connected_components</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_undirected</span><span class="p">())</span></div>
+
+    
+    <span class="c1">#-----------------------------------------------#</span>
+    <span class="c1"># Methods for adding and removing nodes and edges </span>
+    <span class="c1">#-----------------------------------------------#</span>
+
+<div class="viewcode-block" id="ReebGraph.add_node">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_node">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">f_vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a vertex to the Reeb graph. </span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            vertex (hashable like int or str) : The name of the vertex to add.</span>
+<span class="sd">            f_vertex (float) : The function value of the vertex being added.</span>
+<span class="sd">            reset_pos (bool, optional) </span>
+<span class="sd">                If True, will reset the positions of the nodes based on the function values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The vertex </span><span class="si">{</span><span class="n">vertex</span><span class="si">}</span><span class="s1"> is already in the Reeb graph.&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_vertex</span>
+
+        <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ReebGraph.add_nodes_from">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_nodes_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_nodes_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">f_dict</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a list of nodes to the Reeb graph.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            nodes (list) </span>
+<span class="sd">                The list of node names to add.</span>
+<span class="sd">            f_dict (dict): A dictionary of function values associated with the nodes. Should be ``f_dict[node] = f_value``.</span>
+<span class="sd">            reset_pos (bool, optional): If True, will reset the positions of the nodes based on the function values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">f_dict</span><span class="p">[</span><span class="n">node</span><span class="p">],</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_dict</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ReebGraph.remove_node">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_node">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a vertex from the Reeb graph.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            vertex (hashable like int or str): The name of the vertex to remove.</span>
+<span class="sd">            reset_pos (bool, optional): If True, will reset the positions of the nodes based on the function values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">vertex</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The vertex </span><span class="si">{</span><span class="n">vertex</span><span class="si">}</span><span class="s1"> is not in the Reeb graph.&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ReebGraph.remove_nodes_from">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_nodes_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_nodes_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a list of nodes from the Reeb graph.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            nodes (list): The list of node names to remove.</span>
+<span class="sd">            reset_pos (bool, optional): If True, will reset the positions of the nodes based on the function values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ReebGraph.add_edge">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_edge">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an edge to the Reeb graph. Make sure that the edge points to the vertex with higher function value. </span>
+
+<span class="sd">        Note that if the edge added is between two vertices with the same function value, it will collapse the two vertices into one.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            u,v: The edge to add.</span>
+<span class="sd">            reset_pos (bool): Optional. If True, will reset the positions of the nodes based on the function values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The vertex </span><span class="si">{</span><span class="n">vertex</span><span class="si">}</span><span class="s1"> must be in the Reeb graph to add an edge between them.&#39;</span><span class="p">)</span>
+                
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]:</span>
+            <span class="n">edge</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]:</span>
+            <span class="n">edge</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">u</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># the function values are the same, so the edge collapses the two vertices</span>
+            <span class="c1"># wlog we&#39;re going to get rid of v, and add all its edges to u</span>
+
+            <span class="c1"># get the edges of v</span>
+            <span class="n">edges_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_edges</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">edges_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_edges</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+            <span class="c1"># add the edges to u</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges_in</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">u</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges_out</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="c1"># Remove v</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="ReebGraph.add_edges_from">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_edges_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_edges_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a list of edges to the Reeb graph.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            edges (list): The list of edges to add.</span>
+<span class="sd">            reset_pos (bool): Optional. If True, will reset the positions of the nodes based on the function values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
+
+
+    
+<div class="viewcode-block" id="ReebGraph.subdivide_edge">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.subdivide_edge">[docs]</a>
+    <span class="k">def</span> <span class="nf">subdivide_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">f_w</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subdivide an edge with a new vertex.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            u,v: The edge to subdivide.</span>
+<span class="sd">            w: The new vertex to add.</span>
+<span class="sd">            f_w: The function value of the new vertex.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f_lower</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">])</span>
+        <span class="n">f_upper</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">f_w</span> <span class="o">&lt;</span> <span class="n">f_lower</span> <span class="ow">or</span> <span class="n">f_w</span> <span class="o">&gt;</span> <span class="n">f_upper</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The function value of the new vertex must be between the function values of the edge vertices.&#39;</span><span class="p">)</span>
+        
+        <span class="n">edge</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">],</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">edge</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The edge must be in the Reeb graph to subdivide it.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_w</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">f_w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ReebGraph.remove_regular_vertex">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_regular_vertex">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_regular_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a regular vertex from the Reeb graph. A regular vertex is one for which down degree = up degree = 1, so it can be removed and replaed with a single edge.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            v (int): The vertex to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The vertex must be in the Reeb graph to be removed.&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">up_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">down_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The vertex must have up degree 1 and down degree 1 to be removed as a regular vertex.&#39;</span><span class="p">)</span>
+        
+        <span class="n">u</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">v</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">v</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReebGraph.remove_all_regular_vertices">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_all_regular_vertices">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_all_regular_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove all regular vertices from the Reeb graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">regular_vertices</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">up_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">down_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">regular_vertices</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_regular_vertex</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReebGraph.remove_isolates">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_isolates">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_isolates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove all isolated vertices from the Reeb graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_nodes_from</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">isolates</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span></div>
+
+
+    <span class="c1">#----------------------------------#</span>
+    <span class="c1"># Methods for drawing the Reeb graph</span>
+    <span class="c1">#----------------------------------#</span>
+<div class="viewcode-block" id="ReebGraph.set_pos_from_f">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.set_pos_from_f">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_pos_from_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the position of the nodes based on the function values. The result will be the (spring layout x, function value y). Note that this will overwrite the previous positions.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            verbose (bool): Optional. If True, will print out the function values and the positions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Nothing to be done, no nodes here&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Function values:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Positions:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReebGraph.draw">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpx</span> <span class="o">=</span> <span class="mf">.1</span><span class="p">,</span> <span class="n">cpy</span> <span class="o">=</span> <span class="mf">.1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A drawing of the Reeb graph. Uses the fancy version from cereeberus.compute.draw.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            cpx (float): Optional. A parameter that controls &quot;loopiness&quot; of multiedges in the drawing.</span>
+<span class="sd">            cpy (float): Optional. A parameter that controls &quot;loopiness&quot; of multiedges in the drawing.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">()):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The positions are not set correctly. Setting them now.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span>
+
+    
+        <span class="n">draw</span><span class="o">.</span><span class="n">reeb_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">,</span> <span class="n">cpx</span><span class="o">=</span><span class="n">cpx</span><span class="p">,</span> <span class="n">cpy</span><span class="o">=</span><span class="n">cpy</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ReebGraph.draw_straight_line">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.draw_straight_line">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_straight_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A straight line drawing of the Reeb graph. Very simple, but if you have multi-edges, they won&#39;t show up.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            ax (matplotlib axis): Optional. If not passed, will create a new figure and axis.</span>
+<span class="sd">            **kwargs: Additional keyword arguments to pass to the draw.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            ax (matplotlib axis): The matplotlib axis object used for the drawing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+        <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;on&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labelleft</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ax</span></div>
+
+    
+
+    <span class="c1">#-----------------------------------------------#</span>
+    <span class="c1"># Methods for getting portions of the Reeb graph</span>
+    <span class="c1">#-----------------------------------------------#</span>
+    
+<div class="viewcode-block" id="ReebGraph.induced_subgraph">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.induced_subgraph">[docs]</a>
+    <span class="k">def</span> <span class="nf">induced_subgraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the subgraph of the Reeb graph induced by the nodes in the list nodes.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            nodes (list): The list of nodes to include in the subgraph.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            ReebGraph: The subgraph of the Reeb graph induced by the nodes in the list nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">H</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">nodes</span><span class="p">),</span> <span class="n">f</span><span class="o">=</span><span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">H</span></div>
+
+    
+
+<div class="viewcode-block" id="ReebGraph.slice">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.slice">[docs]</a>
+    <span class="k">def</span> <span class="nf">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the subgraph of the Reeb graph with image in the open interval (a,b).</span>
+<span class="sd">        This will convert any edges that cross the slice into vertices.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            a (float): The lower bound of the slice.</span>
+<span class="sd">            b (float): The upper bound of the slice.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            ReebGraph: The subgraph of the Reeb graph with image in (a,b).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">v_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">a</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">]</span>
+
+        <span class="c1"># Keep the edges where either endpoint (or both) is in (a,b)</span>
+        <span class="n">e_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span> <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="ow">or</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="p">]</span>
+        <span class="c1">#Include the edges that cover the entire slice. </span>
+        <span class="c1"># Note this assumes that all edges are ordered twoards teh upper function value</span>
+        <span class="n">e_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">&lt;</span><span class="n">a</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">&gt;</span><span class="n">b</span><span class="p">])</span>
+        <span class="c1"># e_list = [&#39;-&#39;.join([str(v) for v in edge]) for edge in e_list]</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Vertices (v,f(v)):&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Edges:&#39;</span><span class="p">,</span> <span class="n">e_list</span><span class="p">)</span>
+
+
+        <span class="c1"># Build the subgraph </span>
+        <span class="n">H</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
+            <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">e_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
+                <span class="c1"># The edge is entirely in the set, so both vertices are already there</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Adding edge entirely inside slice:&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
+                <span class="c1"># The edge is entirely crossing the slice, so we add two vertices and an edge</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Adding edge with both endpoints outside slice:&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_lower&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+                <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_upper&#39;</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+                <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_lower&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_upper&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Half the edge is included </span>
+
+                <span class="c1"># Make a name for the new vertex to create</span>
+                <span class="n">edge_name</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;adding edge with one endpoint outside slice:&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adding part of edge </span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> with function values </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;This should add edge </span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">edge_name</span><span class="si">}</span><span class="s1"> with function values </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                    <span class="c1"># The lower edge is in the set, so the other vertex must have </span>
+                    <span class="c1"># value above the max </span>
+                    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="n">b</span>
+                    <span class="n">vert_in</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">func_val</span> <span class="o">=</span> <span class="n">b</span>
+
+                    <span class="c1"># Add a new vertex called edge_name with value b</span>
+                    <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">func_val</span><span class="p">)</span>
+                    <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_name</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># The higher edge is in the set, so the other vertex must have </span>
+                    <span class="c1"># value below the min </span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adding part of edge </span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> with function values </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;This should add edge (</span><span class="si">{</span><span class="n">edge_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">) with function values </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;=</span> <span class="n">a</span>
+                    <span class="n">vert_in</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">func_val</span> <span class="o">=</span> <span class="n">a</span>
+
+                    <span class="c1"># Add a new vertex called edge_name with value a</span>
+                    <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">func_val</span><span class="p">)</span>
+                    <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">H</span></div>
+
+    
+<div class="viewcode-block" id="ReebGraph.connected_components">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.connected_components">[docs]</a>
+    <span class="k">def</span> <span class="nf">connected_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the connected components of the Reeb graph by providing a set of vertices for each connected component. If you want to actually get the subgraphs of ReebGraph `R` returned as Reeb graphs, you can use::</span>
+<span class="sd">            </span>
+<span class="sd">            [R.induced_subgraph(component) for component in R.connected_components()]</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            A generator of sets of nodes, one for each component of the Reeb graph.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_undirected</span><span class="p">())</span></div>
+
+    
+    
+<div class="viewcode-block" id="ReebGraph.get_largest_component">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.get_largest_component">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_largest_component</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the largest connected component of the Reeb graph as a set of nodes. Note: this is not well defined unless the Reeb graph is minimal.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ReebGraph: The largest connected component of the Reeb graph based on number of vertices. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">v_list</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">v_list</span><span class="p">)</span></div>
+</div>
+
+    
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

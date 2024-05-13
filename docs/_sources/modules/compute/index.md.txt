@@ -1,12 +1,11 @@
 # Compute Module
 
-The compute module is organized based on function and has 5 main categories.
+The compute module has code for computations on Reeb graphs and merge trees. However, this has largely been deprecated in version 0.1.0 so enter at your own risk.
 
-The **Degree** functions are used to compute functions on nodes, including adding and removing notes.
 
 ```{eval-rst}
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
    
     Degree <compute_degree.rst>
     Draw <compute_draw.rst>

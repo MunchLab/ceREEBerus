@@ -22,10 +22,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__),'..','..'))
 # -- Project information -----------------------------------------------------
 
 project = 'ceREEBerus'
-author = 'Danielle Barnes'
+author = 'Liz Munch'
 
 # The full version, including alpha/beta/rc tags
-release = '.14'
+release = '0.1.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -34,6 +34,7 @@ release = '.14'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
+            #   'numpydoc',
               'sphinx.ext.coverage',
               'sphinx.ext.napoleon',
               'matplotlib.sphinxext.mathmpl',
@@ -66,6 +67,16 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'special-members': '__init__',
+    'undoc-members': True,
+    'exclude-members': '__weakref__'
+}
+numpydoc_show_class_members = False
+autodoc_typehints = "none"
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

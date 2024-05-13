@@ -1,4 +1,4 @@
-from cereeberus.reeb.graph import Reeb
+from cereeberus import ReebGraph
 import networkx as nx
 import numpy as np
 from cereeberus.compute.merge import isMerge

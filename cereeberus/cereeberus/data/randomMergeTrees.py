@@ -1,7 +1,7 @@
 
 import networkx as nx
 import numpy as np
-from cereeberus.reeb.graph import Reeb
+from cereeberus.reeb.reebgraph import ReebGraph
 
 def randomMerge(n = 10):
     """
@@ -27,7 +27,7 @@ def randomMerge(n = 10):
     fx.append(np.inf)
 
     # Generate the Reeb graph class for this input 
-    T_Merge = Reeb(T,fx)
+    T_Merge = ReebGraph(T,fx)
 
     # Overwrite the position drawing to make drawing not freak out
     T_Merge.pos_fx[n] = ( T_Merge.pos[n][0], max(fx[:-1]) + 3)
