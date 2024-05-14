@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Merge tree tutorials and such &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
 
@@ -15,11 +15,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -78,7 +78,7 @@
            <div itemprop="articleBody">
              
   <section id="Merge-tree-tutorials-and-such">
-<h1>Merge tree tutorials and such<a class="headerlink" href="#Merge-tree-tutorials-and-such" title="Link to this heading"></a></h1>
+<h1>Merge tree tutorials and such<a class="headerlink" href="#Merge-tree-tutorials-and-such" title="Permalink to this heading"></a></h1>
 <p><em>This was stolen from the old ``reeb_plot.ipynb`` files so likely needs editing.</em></p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -117,7 +117,7 @@
 </div>
 </div>
 <section id="You-can-also-check-if-a-graph-is-a-merge-tree.">
-<h2>You can also check if a graph is a merge tree.<a class="headerlink" href="#You-can-also-check-if-a-graph-is-a-merge-tree." title="Link to this heading"></a></h2>
+<h2>You can also check if a graph is a merge tree.<a class="headerlink" href="#You-can-also-check-if-a-graph-is-a-merge-tree." title="Permalink to this heading"></a></h2>
 <p>This works for both Reeb graphs and Networkx graphs, and it part of the Merge function already</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -156,7 +156,7 @@ True
 </div>
 </section>
 <section id="To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:">
-<h2>To compute a merge tree from a Reeb Graph, we need to first identify any isolates in the graph (nodes with degree 0) and remove them as they will not be going into the merge tree. Looking at a Reeb graph with isolates:<a class="headerlink" href="#To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:" title="Link to this heading"></a></h2>
+<h2>To compute a merge tree from a Reeb Graph, we need to first identify any isolates in the graph (nodes with degree 0) and remove them as they will not be going into the merge tree. Looking at a Reeb graph with isolates:<a class="headerlink" href="#To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:" title="Permalink to this heading"></a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -175,7 +175,7 @@ True
 </div>
 </section>
 <section id="Then-we-can-remove-isolates-and-plot">
-<h2>Then we can remove isolates and plot<a class="headerlink" href="#Then-we-can-remove-isolates-and-plot" title="Link to this heading"></a></h2>
+<h2>Then we can remove isolates and plot<a class="headerlink" href="#Then-we-can-remove-isolates-and-plot" title="Permalink to this heading"></a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>

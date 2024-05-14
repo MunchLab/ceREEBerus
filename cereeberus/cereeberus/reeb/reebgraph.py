@@ -376,6 +376,9 @@ class ReebGraph(nx.MultiDiGraph):
         e_list.extend([e for e in self.edges() if self.f[e[0]]<a and self.f[e[1]]>b])
         # e_list = ['-'.join([str(v) for v in edge]) for edge in e_list]
 
+        # Make a dictionary of counts to deal with multiedges
+        e_dict = {e:e_list.count(e) for e in e_list}
+
         if verbose:
             print('Vertices (v,f(v)):', [(v, self.f[v]) for v in v_list])
             print('Edges:', e_list)
@@ -387,55 +390,65 @@ class ReebGraph(nx.MultiDiGraph):
         for v in v_list:
             H.add_node(v, self.f[v])
 
-        for e in e_list:
+        for e in e_dict:
             if e[0] in v_list and e[1] in v_list:
                 # The edge is entirely in the set, so both vertices are already there
                 if verbose:
-                    print('Adding edge entirely inside slice:', e)
-                H.add_edge(e[0], e[1])
+                    print(f'Adding {e_dict[e]} copy/copies of edge {e} entirely inside slice:')
+
+                for i in range(e_dict[e]): # Add an edge for each copy in the list
+                    H.add_edge(e[0], e[1])
+
+
             elif e[0] not in v_list and e[1] not in v_list:
                 # The edge is entirely crossing the slice, so we add two vertices and an edge
                 if verbose:
-                    print('Adding edge with both endpoints outside slice:', e)
-                H.add_node('-'.join([str(v) for v in e])+'_lower', a)
-                H.add_node('-'.join([str(v) for v in e])+'_upper', b)
-                H.add_edge('-'.join([str(v) for v in e])+'_lower', '-'.join([str(v) for v in e])+'_upper')
+                    print(f'Adding {e_dict[e]} copy/copies ofedge {e} with both endpoints outside slice')
+                
+                for i in range(e_dict[e]):
+                    v1 = '-'.join([str(v) for v in e])+'_'+str(i)+'_lower'
+                    v2 = '-'.join([str(v) for v in e])+'_'+str(i)+'_upper'
+                    H.add_node(v1, a)
+                    H.add_node(v2, b)
+                    H.add_edge(v1,v2)
             else:
                 # Half the edge is included 
 
-                # Make a name for the new vertex to create
-                edge_name = '-'.join([str(v) for v in e])
                 if verbose:
-                    print('adding edge with one endpoint outside slice:', e)
+                    print(f'adding {e_dict[e]} copy/copies of edge {e} with one endpoint outside slice')
+                
+                # Make a name for the new vertex to create
+                for i in range(e_dict[e]):
+                    edge_name = '-'.join([str(v) for v in e])+'_'+str(i)
 
-                if e[0] in v_list:
-                    if verbose:
-                        print(f'Adding part of edge {e[0],e[1]} with function values {self.f[e[0]],[e[1]]} and {self.f[e[1]]}')
-                        print(f'This should add edge {e[0]}-{edge_name} with function values {self.f[e[0]]} and {b}')
+                    if e[0] in v_list:
+                        if verbose:
+                            print(f'Adding part of edge {e[0],e[1]} with function values {self.f[e[0]],[e[1]]} and {self.f[e[1]]}')
+                            print(f'This should add edge {e[0]}-{edge_name} with function values {self.f[e[0]]} and {b}')
 
-                    # The lower edge is in the set, so the other vertex must have 
-                    # value above the max 
-                    assert self.f[e[1]] >= b
-                    vert_in = e[0]
-                    func_val = b
+                        # The lower edge is in the set, so the other vertex must have 
+                        # value above the max 
+                        assert self.f[e[1]] >= b
+                        vert_in = e[0]
+                        func_val = b
 
-                    # Add a new vertex called edge_name with value b
-                    H.add_node(edge_name, func_val)
-                    H.add_edge(e[0], edge_name)
-                else:
-                    # The higher edge is in the set, so the other vertex must have 
-                    # value below the min 
-                    if verbose:
-                        print(f'Adding part of edge {e[0],e[1]} with function values {self.f[e[0]]} and {self.f[e[1]]}')
-                        print(f'This should add edge ({edge_name}, {e[1]}) with function values {a} and {self.f[e[1]]}')
+                        # Add a new vertex called edge_name with value b
+                        H.add_node(edge_name, func_val)
+                        H.add_edge(e[0], edge_name)
+                    else:
+                        # The higher edge is in the set, so the other vertex must have 
+                        # value below the min 
+                        if verbose:
+                            print(f'Adding part of edge {e[0],e[1]} with function values {self.f[e[0]]} and {self.f[e[1]]}')
+                            print(f'This should add edge ({edge_name}, {e[1]}) with function values {a} and {self.f[e[1]]}')
 
-                    assert self.f[e[0]] <= a
-                    vert_in = e[1]
-                    func_val = a
+                        assert self.f[e[0]] <= a
+                        vert_in = e[1]
+                        func_val = a
 
-                    # Add a new vertex called edge_name with value a
-                    H.add_node(edge_name, func_val)
-                    H.add_edge(edge_name, e[1])
+                        # Add a new vertex called edge_name with value a
+                        H.add_node(edge_name, func_val)
+                        H.add_edge(edge_name, e[1])
         return H
     
     def connected_components(self):

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2.1. Reeb Graphs &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
 
   
@@ -14,11 +14,11 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -49,16 +49,9 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Modules and Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../reeb/index.html">1. 'reeb': Classes for graphical signatures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reeb/reebgraph.html">1. ReebGraph</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">2. Example data and graphs</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">2.1.  Reeb Graphs</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.data.ex_reebgraphs.torus"><code class="docutils literal notranslate"><span class="pre">torus()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.data.ex_reebgraphs.dancing_man"><code class="docutils literal notranslate"><span class="pre">dancing_man()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.data.ex_reebgraphs.juggling_man"><code class="docutils literal notranslate"><span class="pre">juggling_man()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.data.ex_reebgraphs.simple_loops"><code class="docutils literal notranslate"><span class="pre">simple_loops()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.data.ex_reebgraphs.simple_loops_unordered"><code class="docutils literal notranslate"><span class="pre">simple_loops_unordered()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2.1.  Reeb Graphs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data_merge.html">2.2.  Merge Trees</a></li>
 </ul>
 </li>
@@ -95,34 +88,34 @@
            <div itemprop="articleBody">
              
   <section id="reeb-graphs">
-<h1><span class="section-number">2.1. </span>Reeb Graphs<a class="headerlink" href="#reeb-graphs" title="Link to this heading"></a></h1>
+<h1><span class="section-number">2.1. </span>Reeb Graphs<a class="headerlink" href="#reeb-graphs" title="Permalink to this heading"></a></h1>
 <p>This module contains example graphs and data to use for Reeb graph computations. Pictures of these can be seen in <a class="reference external" href="../../notebooks/example_reeb_graphs.html">this notebook</a></p>
-<dl class="py function" id="module-cereeberus.data.ex_reebgraphs">
+<span class="target" id="module-cereeberus.data.ex_reebgraphs"></span><dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.data.ex_reebgraphs.torus">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">torus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#torus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.torus" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">torus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#torus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.torus" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.data.ex_reebgraphs.dancing_man">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">dancing_man</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#dancing_man"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.dancing_man" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">dancing_man</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#dancing_man"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.dancing_man" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the Reeb graph of the dancing man as a ReebGraph class.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.data.ex_reebgraphs.juggling_man">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">juggling_man</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#juggling_man"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.juggling_man" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">juggling_man</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#juggling_man"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.juggling_man" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the Reeb graph of the juggling man as a ReebGraph class.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.data.ex_reebgraphs.simple_loops">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">simple_loops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#simple_loops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.simple_loops" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">simple_loops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#simple_loops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.simple_loops" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the Reeb graph of the simple loops example</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.data.ex_reebgraphs.simple_loops_unordered">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">simple_loops_unordered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#simple_loops_unordered"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.simple_loops_unordered" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">simple_loops_unordered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#simple_loops_unordered"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.simple_loops_unordered" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the Reeb graph of the simple loops example</p>
 </dd></dl>
 
