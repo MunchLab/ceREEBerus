@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Basic Tutorial: Reeb graph class &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+  <title>1. Basic Tutorial: Reeb graph class &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
 
@@ -15,17 +15,19 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2. Example Reeb graphs" href="example_reeb_graphs.html" />
+    <link rel="prev" title="Jupyter Notebooks" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,10 +49,18 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/index.html">Modules and Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Tutorial Notebooks</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial Notebooks</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Basic Tutorial: Reeb graph class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Basic-operations-on-a-Reeb-graph">1.1. Basic operations on a Reeb graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Subgraphs-and-slices-of-the-Reeb-graph">1.2. Subgraphs and slices of the Reeb graph</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="example_reeb_graphs.html">2. Example Reeb graphs</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -67,7 +77,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Basic Tutorial: Reeb graph class</li>
+          <li class="breadcrumb-item"><a href="index.html">Jupyter Notebooks</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">1. </span>Basic Tutorial: Reeb graph class</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/notebooks/reeb_basics.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
@@ -78,31 +89,86 @@
            <div itemprop="articleBody">
              
   <section id="Basic-Tutorial:-Reeb-graph-class">
-<h1>Basic Tutorial: Reeb graph class<a class="headerlink" href="#Basic-Tutorial:-Reeb-graph-class" title="Link to this heading"></a></h1>
-<p>In this notebook, we’ll be</p>
+<h1><span class="section-number">1. </span>Basic Tutorial: Reeb graph class<a class="headerlink" href="#Basic-Tutorial:-Reeb-graph-class" title="Permalink to this heading"></a></h1>
+<p>In this notebook, we’ll walk through the basic functionality of the <code class="docutils literal notranslate"><span class="pre">cereeberus.ReebGraph</span></code> class. See <a class="reference internal" href="../modules/reeb/reebgraph.html"><span class="doc">here</span></a> for full documentation.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">cereeberus.data.ex_graphs</span> <span class="k">as</span> <span class="nn">ex_graph</span>
-<span class="kn">import</span> <span class="nn">cereeberus.data.ex_reebgraphs</span> <span class="k">as</span> <span class="nn">ex_rg</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-
+<span class="c1"># The main class for the Reeb Graph</span>
 <span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">ReebGraph</span>
+
+<span class="c1"># Some built in example graphs</span>
+<span class="kn">import</span> <span class="nn">cereeberus.data.ex_reebgraphs</span> <span class="k">as</span> <span class="nn">ex_rg</span>
 </pre></div>
 </div>
 </div>
+<p>A Reeb graph consists of a graph <span class="math notranslate nohighlight">\(G\)</span> with a function <span class="math notranslate nohighlight">\(f:G \to \mathbb{R}\)</span> which is monotone on the edges. For our encoding purposes, we are going to assume that the function is defined by providing the function value on the vertices</p>
+<div class="math notranslate nohighlight">
+\[f:V(G) \to \mathbb{R}\]</div>
+<p>with the property that for any edge <span class="math notranslate nohighlight">\(e = (u,v)\)</span>, <span class="math notranslate nohighlight">\(f(u) \neq f(v)\)</span>.</p>
+<p>In this tutorial, we go over the basic structure of the <code class="docutils literal notranslate"><span class="pre">cereeberus.ReebGraph</span></code> class.</p>
+<section id="Basic-operations-on-a-Reeb-graph">
+<h2><span class="section-number">1.1. </span>Basic operations on a Reeb graph<a class="headerlink" href="#Basic-operations-on-a-Reeb-graph" title="Permalink to this heading"></a></h2>
+<p>We’re going to start with an empty Reeb graph.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ReebGraph with 0 nodes and 0 edges.
+</pre></div></div>
+</div>
+<p>Let’s add some vertices. Of course, we have to be sure to specify the function value at the same time.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">f_vertex</span> <span class="o">=</span> <span class="mf">3.2</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">f_vertex</span> <span class="o">=</span> <span class="mf">1.7</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">f_vertex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="n">f_vertex</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">f_vertex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ReebGraph with 5 nodes and 0 edges.
+</pre></div></div>
+</div>
+<p>We can also add some edges to our Reeb graph. Note that the Reeb graph allows for multiple edges between two vertices.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Version with an example graph</span>
-<span class="n">H</span> <span class="o">=</span> <span class="n">ex_graph</span><span class="o">.</span><span class="n">torus_graph</span><span class="p">()</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">48864</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
 
-<span class="n">G</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -110,15 +176,18 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_3_0.png" src="../_images/notebooks_reeb_basics_3_0.png" />
+<div class="highlight"><pre>
+ReebGraph with 5 nodes and 6 edges.
+</pre></div></div>
 </div>
-</div>
+<p>The function values are stored in the dictionary <code class="docutils literal notranslate"><span class="pre">R.f</span></code>. Below we can see function values for some of the vertices we just added.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span> <span class="o">=</span> <span class="n">ex_rg</span><span class="o">.</span><span class="n">torus</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">17</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f(A) = </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f(B) = </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;f(E) = </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -126,16 +195,19 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_4_0.png" src="../_images/notebooks_reeb_basics_4_0.png" />
+<div class="highlight"><pre>
+f(A) = 3.2
+f(B) = 1.7
+f(E) = 3.141592653589793
+</pre></div></div>
 </div>
-</div>
+<p>We can take a look at the Reeb graph using the built in drawing function. The <code class="docutils literal notranslate"><span class="pre">cpx</span></code> input controls loopiness for the drawing. The <code class="docutils literal notranslate"><span class="pre">R.set_pos_from_f</span></code> randomly sets the drawing positions. In this case, we picked <code class="docutils literal notranslate"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">2</span></code> to make a reasonable graph, however, this command is unnecessary unless you want more control over drawing locations.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -143,224 +215,46 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-(0, 1, 0)
-True
-(1, 2, 0)
-True
-(1, 3, 0)
-True
-(2, 4, 0)
-True
-(3, 4, 0)
-True
-(4, 5, 0)
-True
-</pre></div></div>
+<img alt="../_images/notebooks_reeb_basics_13_0.png" src="../_images/notebooks_reeb_basics_13_0.png" />
 </div>
+</div>
+<p>You can manually control the drawing locations for the vertices if you want to. The drawing locations are held in the dictionary <code class="docutils literal notranslate"><span class="pre">R.pos_f</span></code>. So I can just move vertex <code class="docutils literal notranslate"><span class="pre">A</span></code> over a bit to the left to make my drawing a touch nicer. The second coordinate is always the function value <code class="docutils literal notranslate"><span class="pre">R.f['A']</span></code>, but we can change the first coordinate. Note that later when adding vertices and edges, this will likely be reset so you won’t likely want to use this tweaking much.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">G</span><span class="o">.</span><span class="n">in_degree</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">G</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Drawing location for A: </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">.5</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">])</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Drawing location for A: (0.14133460941762915, 3.2)
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-0 0 1
-1 1 2
-2 1 1
-3 1 1
-4 2 1
-5 1 0
-</pre></div></div>
+<img alt="../_images/notebooks_reeb_basics_15_1.png" src="../_images/notebooks_reeb_basics_15_1.png" />
 </div>
-<div class="nbinput nblast docutils container">
+</div>
+<p>We can also subdivde edges. Note that in a Reeb graph, because we think of an edge as being a copy of the unit interval, the result is considered the same Reeb graph. So, we can add a vertex to an edge <span class="math notranslate nohighlight">\((u,v)\)</span> at any function value <span class="math notranslate nohighlight">\(f(u) &lt; a&lt; f(b)\)</span>.</p>
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;chicken&#39;</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_8_0.png" src="../_images/notebooks_reeb_basics_8_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">isolates</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-chicken
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span><span class="o">.</span><span class="n">remove_all_regular_vertices</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_11_0.png" src="../_images/notebooks_reeb_basics_11_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">48864</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">draw_straight_line</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;Axes: &gt;
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_12_1.png" src="../_images/notebooks_reeb_basics_12_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-True
-dict_keys([0, 1, 3, 4, 5, &#39;chicken&#39;, &#39;A&#39;])
-[0, 1, 3, 4, 5, &#39;chicken&#39;, &#39;A&#39;]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">3.6</span><span class="p">)</span>
-<span class="n">H</span><span class="o">.</span><span class="n">draw_straight_line</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;Axes: &gt;
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_14_1.png" src="../_images/notebooks_reeb_basics_14_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H</span><span class="o">.</span><span class="n">number_connected_components</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-4
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">v_list</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">connected_components</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">v_list</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">v_list</span><span class="p">))</span>
-    <span class="k">break</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{1, 3, &#39;3-4&#39;, &#39;0-1&#39;, &#39;0-3&#39;, &#39;1-4&#39;}
-&lt;class &#39;set&#39;&gt;
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H_cc</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">v_list</span><span class="p">)</span>
-<span class="n">H_cc</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;G&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Just for drawing purposes</span>
+<span class="n">R</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -371,94 +265,15 @@ dict_keys([0, 1, 3, 4, 5, &#39;chicken&#39;, &#39;A&#39;])
 <img alt="../_images/notebooks_reeb_basics_17_0.png" src="../_images/notebooks_reeb_basics_17_0.png" />
 </div>
 </div>
+<p>These so-called regular vertices can also be removed. Either by using the command <code class="docutils literal notranslate"><span class="pre">R.remove_regular_vertex(v)</span></code> (note the difference between removing a regular vertex and the <code class="docutils literal notranslate"><span class="pre">R.remove_node</span></code> command which deletes a vertex and all adjacent edges from the Reeb graph), or by removing all at once as follows.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">v_list</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">connected_components</span><span class="p">():</span>
-    <span class="n">H_cc</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">v_list</span><span class="p">)</span>
-    <span class="n">H_cc</span><span class="o">.</span><span class="n">draw_straight_line</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_18_0.png" src="../_images/notebooks_reeb_basics_18_0.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_18_1.png" src="../_images/notebooks_reeb_basics_18_1.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_18_2.png" src="../_images/notebooks_reeb_basics_18_2.png" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_18_3.png" src="../_images/notebooks_reeb_basics_18_3.png" />
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H</span><span class="o">.</span><span class="n">f</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{1: 2,
- 3: 3,
- &#39;chicken&#39;: 3.5,
- &#39;A&#39;: 3.5,
- &#39;0-1&#39;: 1.5,
- &#39;0-3&#39;: 1.5,
- &#39;0-A&#39;: 1.5,
- &#39;1-4&#39;: 3.6,
- &#39;3-4&#39;: 3.6,
- &#39;0-5_lower&#39;: 1.5,
- &#39;0-5_upper&#39;: 3.6}
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H_cc</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
-<span class="n">H_cc</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">v_list</span><span class="p">,</span> <span class="n">H</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">H_cc</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">remove_all_regular_vertices</span><span class="p">()</span>
+
+<span class="n">R</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -466,34 +281,16 @@ dict_keys([0, 1, 3, 4, 5, &#39;chicken&#39;, &#39;A&#39;])
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-ReebGraph with 6 nodes and 0 edges.
-</pre></div></div>
+<img alt="../_images/notebooks_reeb_basics_19_0.png" src="../_images/notebooks_reeb_basics_19_0.png" />
 </div>
+</div>
+<p>Note that if you add an edge between two vertices at the same function value, the Reeb graph will actually merge the two vertices into one. First I’m going to put back in an extra vertex on the edge <span class="math notranslate nohighlight">\((D,E)\)</span> at the same function value as <span class="math notranslate nohighlight">\(C\)</span>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">e_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span> <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="ow">and</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">e_list</span><span class="p">)</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[(1, 3), (1, &#39;1-4&#39;), (3, &#39;3-4&#39;), (&#39;0-1&#39;, 1), (&#39;0-3&#39;, 3)]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">e_list</span><span class="p">:</span>
-    <span class="n">H_cc</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">H_cc</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">])</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -501,16 +298,16 @@ ReebGraph with 6 nodes and 0 edges.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-ReebGraph with 6 nodes and 6 edges.
-</pre></div></div>
+<img alt="../_images/notebooks_reeb_basics_21_0.png" src="../_images/notebooks_reeb_basics_21_0.png" />
 </div>
+</div>
+<p>Then if I try to add the edge <span class="math notranslate nohighlight">\((Z,C)\)</span>, it will merge the two endpoints, keeping the name as the first vertex I passed in.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">H_cc</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">e_list</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">H_cc</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -518,520 +315,22 @@ ReebGraph with 6 nodes and 6 edges.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-ReebGraph with 6 nodes and 5 edges.
-</pre></div></div>
+<img alt="../_images/notebooks_reeb_basics_23_0.png" src="../_images/notebooks_reeb_basics_23_0.png" />
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
-</pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H_cc</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_26_0.png" src="../_images/notebooks_reeb_basics_26_0.png" />
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<section id="Getting-slicing-working">
-<h2>Getting slicing working<a class="headerlink" href="#Getting-slicing-working" title="Link to this heading"></a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Going to get the slice of the reeb graph with f \inv (a,b)</span>
-<span class="n">a</span> <span class="o">=</span> <span class="mf">2.5</span>
-<span class="n">b</span> <span class="o">=</span> <span class="mf">4.6</span>
-<span class="n">int_type</span> <span class="o">=</span> <span class="s1">&#39;open&#39;</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span> <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">a</span> <span class="ow">and</span> <span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">]</span>
-<span class="n">v_list</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[3, 4, &#39;chicken&#39;, &#39;A&#39;]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">e_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span> <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="ow">or</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="p">]</span>
-
-<span class="c1">#Include the edges that cover the entire slice</span>
-<span class="n">e_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span> <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">&lt;</span><span class="n">a</span> <span class="ow">and</span> <span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">&gt;</span><span class="n">b</span><span class="p">])</span>
-<span class="c1"># e_list = [&#39;-&#39;.join([str(v) for v in edge]) for edge in e_list]</span>
-<span class="n">e_list</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[(0, 3),
- (0, &#39;A&#39;),
- (0, &#39;A&#39;),
- (0, &#39;A&#39;),
- (0, &#39;A&#39;),
- (1, 3),
- (1, 4),
- (3, 4),
- (4, 5),
- (0, 5)]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
-
-<span class="c1">#TODO overwrite this function to take in the function list as well</span>
-<span class="c1"># H.add_nodes_from(v_list)</span>
-<span class="c1"># H.f = {v: G.f[v] for v in v_list}</span>
-<span class="c1"># H.set_pos_from_f()</span>
-
-<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
-    <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">])</span>
-
-<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">e_list</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
-        <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
-        <span class="c1"># The edge is entirely crossing the slice, so we add two vertices and an edge</span>
-        <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_lower&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
-        <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_upper&#39;</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-        <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_lower&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_upper&#39;</span><span class="p">)</span>
-
-
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># Half the edge is included</span>
-
-        <span class="c1"># Make sure the edge is in order, so f(e[0]) &lt; f(e[1])</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
-
-        <span class="c1"># Make a name for the new vertex to create</span>
-        <span class="n">edge_name</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span>
-
-        <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
-            <span class="c1"># The lower edge is in the set, so the other vertex must have</span>
-            <span class="c1"># value above the max</span>
-            <span class="k">assert</span> <span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="n">b</span>
-            <span class="n">vert_in</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">func_val</span> <span class="o">=</span> <span class="n">b</span>
-
-            <span class="c1"># Add a new vertex called edge_name with value b</span>
-            <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">func_val</span><span class="p">)</span>
-            <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_name</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># The higher edge is in the set, so the other vertex must have</span>
-            <span class="c1"># value below the min</span>
-            <span class="k">assert</span> <span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">a</span>
-            <span class="n">vert_in</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">func_val</span> <span class="o">=</span> <span class="n">a</span>
-
-            <span class="c1"># Add a new vertex called edge_name with value a</span>
-            <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">func_val</span><span class="p">)</span>
-            <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-<span class="n">H</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">12</span><span class="p">)</span>
-<span class="n">H</span><span class="o">.</span><span class="n">draw_straight_line</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;Axes: &gt;
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_33_1.png" src="../_images/notebooks_reeb_basics_33_1.png" />
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Version starting with an empty graph</span>
-
-<span class="n">G</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
-<span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;chicken&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;chicken&#39;</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_39_0.png" src="../_images/notebooks_reeb_basics_39_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;chicken&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-1
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">graph_ex</span><span class="o">.</span><span class="n">torus_graph</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[25], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> H <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">graph_ex</span><span style="color: rgb(98,98,98)">.</span>torus_graph()
-<span class="ansi-green-intense-fg ansi-bold">      2</span> <span style="color: rgb(0,135,0)">print</span>(H)
-
-<span class="ansi-red-fg">NameError</span>: name &#39;graph_ex&#39; is not defined
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
-
-<span class="n">G</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_node_attributes</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="s1">&#39;fx&#39;</span><span class="p">)</span>
-<span class="n">G</span><span class="o">.</span><span class="n">f</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{0: 1, 1: 2, 2: 3, 3: 3, 4: 4, 5: 5}
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-    <span class="n">G</span><span class="o">.</span><span class="n">add_vertex</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">G</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-0
-1
-2
-3
-4
-5
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[0, 1, 2, 3, 4, 5]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
-    <span class="n">e</span> <span class="o">=</span> <span class="n">e</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-    <span class="c1"># Can&#39;t figure out why the graphs are outputting a</span>
-    <span class="c1"># 3rd part of the tuple from our examples</span>
-    <span class="n">edge</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(0, 1)
-(1, 2)
-(1, 3)
-(2, 4)
-(3, 4)
-(4, 5)
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<p>G</p>
 </section>
-<section id="Liz-making-examples,-delete-eventually">
-<h2>Liz making examples, delete eventually<a class="headerlink" href="#Liz-making-examples,-delete-eventually" title="Link to this heading"></a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Reeb</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">MultiGraph</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for Reeb Graph.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        G (nx.Graph): Optional. If nothing passed on initialization, defaults to None.</span>
-<span class="sd">        fx (dict): The function values associated with G stored as a dictionary.</span>
-<span class="sd">        pos (dict): Standard spring layout locations for the nodes.</span>
-<span class="sd">        pos_f (dict): Positions for nodes given by (spring layout location, function value).</span>
-
-<span class="sd">    Methods:</span>
-<span class="sd">        __init__(self, G=None, f={}, verbose=False):</span>
-<span class="sd">            Initializes a Reeb graph object.</span>
-
-<span class="sd">        add_node(self, vertex, f_vertex):</span>
-<span class="sd">            Add a vertex to the Reeb graph. Note that edges can be added using the standard networkx add_edge method.</span>
-
-<span class="sd">        set_pos_from_f(self, verbose=False):</span>
-<span class="sd">            Set the position of the nodes based on the function values. The result will be the (spring layout x, function value y). Note that this will overwrite the previous positions.</span>
-
-<span class="sd">        draw(self, ax=None, **kwargs):</span>
-<span class="sd">            A drawing of the Reeb graph.</span>
-
-<span class="sd">        draw_straight_line(self, ax=None, **kwargs):</span>
-<span class="sd">            A straight line drawing of the Reeb graph. Very simple, but if you have multi-edges, they won&#39;t show up.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="p">{},</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes a Reeb graph object.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            G (nx.Graph): Optional. If not None, a graph to initialize the Reeb graph with.</span>
-<span class="sd">            f (dict): Optional. If not an empty dictionary, a dictionary of function values associated with the graph nodes.</span>
-<span class="sd">            seed (int): Optional. If not None, a seed to pass to the spring layout.</span>
-<span class="sd">            verbose (bool): Optional. If True, will print out additional information during initialization.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">G</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_node_attributes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">G</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">elif</span> <span class="n">f</span> <span class="o">!=</span> <span class="p">{}:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_node_attributes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;fx&#39;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">f_vertex</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a vertex to the Reeb graph. Note that edges can be added using the standard networkx add_edge method.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            vertex (int): The vertex to add.</span>
-<span class="sd">            f_vertex (float): The function value of the vertex.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_vertex</span>
-
-    <span class="k">def</span> <span class="nf">set_pos_from_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the position of the nodes based on the function values. The result will be the (spring layout x, function value y). Note that this will overwrite the previous positions.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            verbose (bool): Optional. If True, will print out the function values and the positions.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Nothing to be done, no nodes here&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span> <span class="o">=</span> <span class="p">{}</span>
-
-            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">])</span>
-
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Function values:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Positions:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A drawing of the Reeb graph. Uses the fancy version from cereeberus.compute.draw.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            None</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># TODO: What does cpx and cpy do and do we want to pass them as options?</span>
-        <span class="n">draw</span><span class="o">.</span><span class="n">reeb_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">,</span> <span class="n">cpx</span><span class="o">=</span><span class="mf">.1</span><span class="p">,</span> <span class="n">cpy</span><span class="o">=</span><span class="mf">.1</span><span class="p">)</span>
-
-
-    <span class="k">def</span> <span class="nf">draw_straight_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A straight line drawing of the Reeb graph. Very simple, but if you have multi-edges, they won&#39;t show up.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            ax (matplotlib axis): Optional. If not passed, will create a new figure and axis.</span>
-<span class="sd">            **kwargs: Additional keyword arguments to pass to the draw.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            ax (matplotlib axis): The matplotlib axis object used for the drawing.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-
-        <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;on&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labelleft</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">ax</span>
-<br/></pre></div>
-</div>
-</div>
+<section id="Subgraphs-and-slices-of-the-Reeb-graph">
+<h2><span class="section-number">1.2. </span>Subgraphs and slices of the Reeb graph<a class="headerlink" href="#Subgraphs-and-slices-of-the-Reeb-graph" title="Permalink to this heading"></a></h2>
+<p>Let’s get a new Reeb graph to work with. In this case, we’re going to use one of the example Reeb graphs provided in <code class="docutils literal notranslate"><span class="pre">cereeberus.data.ex_reebgraphs</span></code>. I’m also going to add a few edges for fun.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Version with an example graph</span>
-<span class="n">H</span> <span class="o">=</span> <span class="n">graph_ex</span><span class="o">.</span><span class="n">torus_graph</span><span class="p">()</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">Reeb</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">48864</span><span class="p">)</span>
-
-<span class="c1"># G.set_pos_from_f()</span>
-
-<span class="n">G</span><span class="o">.</span><span class="n">pos_f</span>
-
-<span class="n">G</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ex_rg</span><span class="o">.</span><span class="n">dancing_man</span><span class="p">()</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(((</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">)))</span>
+<span class="n">R</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1039,38 +338,51 @@ Cell <span class="ansi-green-fg">In[25], line 1</span>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_52_0.png" src="../_images/notebooks_reeb_basics_52_0.png" />
+<img alt="../_images/notebooks_reeb_basics_25_0.png" src="../_images/notebooks_reeb_basics_25_0.png" />
 </div>
 </div>
+<p>We can get the induced sub-Reeb-graph by providing a collection of vertices. This returns the portion of the Reeb graph with vertices from the set, and edges are included only if both endpoints are in the set.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span><span class="o">.</span><span class="n">draw_straight_line</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">v_list</span><span class="p">)</span>
+<span class="n">H</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;Axes: &gt;
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_reeb_basics_53_1.png" src="../_images/notebooks_reeb_basics_53_1.png" />
+<img alt="../_images/notebooks_reeb_basics_27_0.png" src="../_images/notebooks_reeb_basics_27_0.png" />
 </div>
 </div>
+<p>We can also take a slice of the Reeb graph, defined as the inverse image <span class="math notranslate nohighlight">\(f^{-1}(a,b)\)</span> for some interval <span class="math notranslate nohighlight">\((a,b) \subset \mathbb{R}\)</span>. Note that this is not the same thing as taking the induced graph of the set of vertices <span class="math notranslate nohighlight">\(\{v \mid f(v) \in (a,b)\}\)</span> since we treat edges as being topologically equivalent to an interval. So taking the slice is done by adding spare vertices for edges that cross this interval.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mf">4.5</span><span class="p">,</span><span class="mf">6.5</span><span class="p">)</span>
+<span class="n">H</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">H</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_reeb_basics_29_0.png" src="../_images/notebooks_reeb_basics_29_0.png" />
+</div>
+</div>
+<p>Although the drawing doesn’t make it particularly obvious, we can do things like check the number of connected components.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;There are </span><span class="si">{</span><span class="n">H</span><span class="o">.</span><span class="n">number_connected_components</span><span class="p">()</span><span class="si">}</span><span class="s1"> components in this Reeb Graph&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1079,15 +391,17 @@ Cell <span class="ansi-green-fg">In[25], line 1</span>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-1
-4
+There are 3 components in this Reeb Graph
 </pre></div></div>
 </div>
+<p>Or we can extract them individually:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">G</span><span class="o">.</span><span class="n">adjacency</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H_components</span> <span class="o">=</span> <span class="p">[</span><span class="n">H</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">connected_components</span><span class="p">()]</span>
+
+<span class="n">H_components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1095,52 +409,7 @@ Cell <span class="ansi-green-fg">In[25], line 1</span>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;dict_itemiterator at 0x7fd42f0fcf90&gt;
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Version with an empty graph initialized</span>
-
-<span class="n">G</span> <span class="o">=</span> <span class="n">Reeb</span><span class="p">()</span>
-
-<span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-0
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
+<img alt="../_images/notebooks_reeb_basics_33_0.png" src="../_images/notebooks_reeb_basics_33_0.png" />
 </div>
 </div>
 </section>
@@ -1149,7 +418,10 @@ Cell <span class="ansi-green-fg">In[25], line 1</span>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Jupyter Notebooks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="example_reeb_graphs.html" class="btn btn-neutral float-right" title="2. Example Reeb graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

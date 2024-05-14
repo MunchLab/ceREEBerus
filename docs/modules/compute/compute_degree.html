@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>3.1. Degree &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
 
   
@@ -14,11 +14,11 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -49,18 +49,10 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Modules and Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../reeb/index.html">1. 'reeb': Classes for graphical signatures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reeb/reebgraph.html">1. ReebGraph</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/index.html">2. Example data and graphs</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">3. Compute</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">3.1.  Degree</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.compute.degree.up_degree"><code class="docutils literal notranslate"><span class="pre">up_degree()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.compute.degree.down_degree"><code class="docutils literal notranslate"><span class="pre">down_degree()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.compute.degree.add_nodes"><code class="docutils literal notranslate"><span class="pre">add_nodes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.compute.degree.minimal_reeb"><code class="docutils literal notranslate"><span class="pre">minimal_reeb()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.compute.degree.remove_isolates"><code class="docutils literal notranslate"><span class="pre">remove_isolates()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cereeberus.compute.degree.heights"><code class="docutils literal notranslate"><span class="pre">heights()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">3.1.  Degree</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compute_draw.html">3.2.  Draw</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compute_merge.html">3.3.  Merge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compute_uf.html">3.4.  Union Find</a></li>
@@ -99,11 +91,11 @@
            <div itemprop="articleBody">
              
   <section id="degree">
-<h1><span class="section-number">3.1. </span>Degree<a class="headerlink" href="#degree" title="Link to this heading"></a></h1>
+<h1><span class="section-number">3.1. </span>Degree<a class="headerlink" href="#degree" title="Permalink to this heading"></a></h1>
 <p>The <cite>degree</cite> module includes functions the compute up degree, down degree and minimal reeb graphs.</p>
-<dl class="py function" id="module-cereeberus.compute.degree">
+<span class="target" id="module-cereeberus.compute.degree"></span><dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.degree.up_degree">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">up_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#up_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.up_degree" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">up_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#up_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.up_degree" title="Permalink to this definition"></a></dt>
 <dd><p>Compute Upper Degree of Reeb Graph
 degree.up_degree is deprecated. Instead use R.up_degree() to compute the up degree of a node in a Reeb graph.</p>
 <dl class="field-list simple">
@@ -121,7 +113,7 @@ degree.up_degree is deprecated. Instead use R.up_degree() to compute the up degr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.degree.down_degree">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">down_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#down_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.down_degree" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">down_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#down_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.down_degree" title="Permalink to this definition"></a></dt>
 <dd><p>Compute Down Degree of Reeb Graph
 degree.down_degree is deprecated. Instead use R.down_degree() to compute the down degree of a node in a Reeb graph.</p>
 <dl class="field-list simple">
@@ -139,26 +131,26 @@ degree.down_degree is deprecated. Instead use R.down_degree() to compute the dow
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.degree.add_nodes">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">add_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#add_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.add_nodes" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">add_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#add_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.add_nodes" title="Permalink to this definition"></a></dt>
 <dd><p>Function to add nodes to a Reeb Graph
 degree.add_nodes is deprecated. You can now use R.add_node() to add nodes to a Reeb graph.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.degree.minimal_reeb">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">minimal_reeb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#minimal_reeb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.minimal_reeb" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">minimal_reeb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#minimal_reeb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.minimal_reeb" title="Permalink to this definition"></a></dt>
 <dd><p>Function to create minimal Reeb Graph</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.degree.remove_isolates">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">remove_isolates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#remove_isolates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.remove_isolates" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">remove_isolates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#remove_isolates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.remove_isolates" title="Permalink to this definition"></a></dt>
 <dd><p>Function to remove isolates from Reeb Graph.  Important for computation of Merge Tree</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.compute.degree.heights">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">heights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#heights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.heights" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.compute.degree.</span></span><span class="sig-name descname"><span class="pre">heights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/compute/degree.html#heights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.compute.degree.heights" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>

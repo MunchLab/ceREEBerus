@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sandbox for testing purposes &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
 
@@ -15,11 +15,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -78,9 +78,9 @@
            <div itemprop="articleBody">
              
   <section id="Sandbox-for-testing-purposes">
-<h1>Sandbox for testing purposes<a class="headerlink" href="#Sandbox-for-testing-purposes" title="Link to this heading"></a></h1>
+<h1>Sandbox for testing purposes<a class="headerlink" href="#Sandbox-for-testing-purposes" title="Permalink to this heading"></a></h1>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">ReebGraph</span>
@@ -88,6 +88,224 @@
 <span class="kn">from</span> <span class="nn">cereeberus.data</span> <span class="kn">import</span> <span class="n">ex_reebgraphs</span> <span class="k">as</span> <span class="n">ex_rg</span>
 
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">f_vertex</span> <span class="o">=</span> <span class="mf">3.2</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">f_vertex</span> <span class="o">=</span> <span class="mf">1.7</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">f_vertex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="n">f_vertex</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">f_vertex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
+<span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
+
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cpx</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_2_0.png" src="../_images/notebooks_sandbox_2_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># H = R.slice(-1.5,2.5)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mf">2.5</span>
+<span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">v_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span> <span class="k">if</span> <span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">a</span> <span class="ow">and</span> <span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">]</span>
+
+<span class="c1"># Keep the edges where either endpoint (or both) is in (a,b)</span>
+<span class="n">e_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span> <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="ow">or</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="p">]</span>
+<span class="c1">#Include the edges that cover the entire slice.</span>
+<span class="c1"># Note this assumes that all edges are ordered twoards teh upper function value</span>
+<span class="n">e_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span> <span class="k">if</span> <span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">&lt;</span><span class="n">a</span> <span class="ow">and</span> <span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">&gt;</span><span class="n">b</span><span class="p">])</span>
+<span class="c1"># e_list = [&#39;-&#39;.join([str(v) for v in edge]) for edge in e_list]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">v_list</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">e_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;B&#39;, &#39;C&#39;]
+[(&#39;B&#39;, &#39;A&#39;), (&#39;C&#39;, &#39;B&#39;), (&#39;D&#39;, &#39;B&#39;), (&#39;D&#39;, &#39;B&#39;), (&#39;D&#39;, &#39;A&#39;), (&#39;D&#39;, &#39;E&#39;)]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">e_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">e</span><span class="p">:</span><span class="n">e_list</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">e_list</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">e_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{(&#39;B&#39;, &#39;A&#39;): 1, (&#39;C&#39;, &#39;B&#39;): 1, (&#39;D&#39;, &#39;B&#39;): 2, (&#39;D&#39;, &#39;A&#39;): 1, (&#39;D&#39;, &#39;E&#39;): 1}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build the subgraph</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
+    <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">e_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
+        <span class="c1"># The edge is entirely in the set, so both vertices are already there</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adding </span><span class="si">{</span><span class="n">e_dict</span><span class="p">[</span><span class="n">e</span><span class="p">]</span><span class="si">}</span><span class="s1"> copy/copies of edge </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1"> entirely inside slice:&#39;</span><span class="p">)</span>
+        <span class="c1"># Add a copy for each time the edge appears</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">e_dict</span><span class="p">[</span><span class="n">e</span><span class="p">]):</span>
+            <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">elif</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v_list</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
+        <span class="c1"># The edge is entirely crossing the slice, so we add two vertices and an edge</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adding </span><span class="si">{</span><span class="n">e_dict</span><span class="p">[</span><span class="n">e</span><span class="p">]</span><span class="si">}</span><span class="s1"> copy/copies ofedge </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1"> with both endpoints outside slice&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">e_dict</span><span class="p">[</span><span class="n">e</span><span class="p">]):</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_lower&#39;</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_upper&#39;</span>
+            <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span><span class="n">v2</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;adding </span><span class="si">{</span><span class="n">e_dict</span><span class="p">[</span><span class="n">e</span><span class="p">]</span><span class="si">}</span><span class="s1"> copy/copies of edge </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1"> with one endpoint outside slice&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Half the edge is included</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">e_dict</span><span class="p">[</span><span class="n">e</span><span class="p">]):</span>
+            <span class="c1"># Make a name for the new vertex to create</span>
+            <span class="n">edge_name</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">e</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+
+            <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adding part of edge </span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> with function values </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;This should add edge </span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">edge_name</span><span class="si">}</span><span class="s1"> with function values </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="c1"># The lower edge is in the set, so the other vertex must have</span>
+                <span class="c1"># value above the max</span>
+                <span class="k">assert</span> <span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;=</span> <span class="n">b</span>
+                <span class="n">vert_in</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">func_val</span> <span class="o">=</span> <span class="n">b</span>
+
+                <span class="c1"># Add a new vertex called edge_name with value b</span>
+                <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">func_val</span><span class="p">)</span>
+                <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># The higher edge is in the set, so the other vertex must have</span>
+                <span class="c1"># value below the min</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adding part of edge </span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> with function values </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;This should add edge (</span><span class="si">{</span><span class="n">edge_name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">) with function values </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="k">assert</span> <span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;=</span> <span class="n">a</span>
+                <span class="n">vert_in</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">func_val</span> <span class="o">=</span> <span class="n">a</span>
+
+                <span class="c1"># Add a new vertex called edge_name with value a</span>
+                <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">func_val</span><span class="p">)</span>
+                <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">H</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+adding 1 copy/copies of edge (&#39;B&#39;, &#39;A&#39;) with one endpoint outside slice
+Adding part of edge (&#39;B&#39;, &#39;A&#39;) with function values (1.7, [&#39;A&#39;]) and 3.2
+This should add edge B-B-A_0 with function values 1.7 and 2.5
+Adding 1 copy/copies of edge (&#39;C&#39;, &#39;B&#39;) entirely inside slice:
+adding 2 copy/copies of edge (&#39;D&#39;, &#39;B&#39;) with one endpoint outside slice
+Adding part of edge (&#39;D&#39;, &#39;B&#39;) with function values -2 and 1.7
+This should add edge (D-B_0, B) with function values -1.5 and 1.7
+Adding part of edge (&#39;D&#39;, &#39;B&#39;) with function values -2 and 1.7
+This should add edge (D-B_1, B) with function values -1.5 and 1.7
+Adding 1 copy/copies ofedge (&#39;D&#39;, &#39;A&#39;) with both endpoints outside slice
+Adding 1 copy/copies ofedge (&#39;D&#39;, &#39;E&#39;) with both endpoints outside slice
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_5_1.png" src="../_images/notebooks_sandbox_5_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
 </div>
@@ -112,7 +330,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_3_0.png" src="../_images/notebooks_sandbox_3_0.png" />
+<img alt="../_images/notebooks_sandbox_12_0.png" src="../_images/notebooks_sandbox_12_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -128,7 +346,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_4_0.png" src="../_images/notebooks_sandbox_4_0.png" />
+<img alt="../_images/notebooks_sandbox_13_0.png" src="../_images/notebooks_sandbox_13_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -145,7 +363,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_5_0.png" src="../_images/notebooks_sandbox_5_0.png" />
+<img alt="../_images/notebooks_sandbox_14_0.png" src="../_images/notebooks_sandbox_14_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -182,7 +400,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_6_1.png" src="../_images/notebooks_sandbox_6_1.png" />
+<img alt="../_images/notebooks_sandbox_15_1.png" src="../_images/notebooks_sandbox_15_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -255,7 +473,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_13_1.png" src="../_images/notebooks_sandbox_13_1.png" />
+<img alt="../_images/notebooks_sandbox_22_1.png" src="../_images/notebooks_sandbox_22_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -322,7 +540,7 @@ Adding edge with both endpoints outside slice: (7, 9)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_15_2.png" src="../_images/notebooks_sandbox_15_2.png" />
+<img alt="../_images/notebooks_sandbox_24_2.png" src="../_images/notebooks_sandbox_24_2.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -410,7 +628,7 @@ The positions are not set correctly. Setting them now.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_20_1.png" src="../_images/notebooks_sandbox_20_1.png" />
+<img alt="../_images/notebooks_sandbox_29_1.png" src="../_images/notebooks_sandbox_29_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -451,7 +669,7 @@ The positions are not set correctly. Setting them now.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sandbox_22_1.png" src="../_images/notebooks_sandbox_22_1.png" />
+<img alt="../_images/notebooks_sandbox_31_1.png" src="../_images/notebooks_sandbox_31_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">

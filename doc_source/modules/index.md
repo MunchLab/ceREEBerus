@@ -7,7 +7,7 @@ See below for the full documentation of the modules available in `ceREEBerus`.
    :maxdepth: 2
    :numbered:
 
-   'reeb': Classes for graphical signatures <reeb/index.md>
+   ReebGraph <reeb/reebgraph.rst>
    Example data and graphs <data/index.md>
    Compute <compute/index.md>
 ```

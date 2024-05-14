@@ -4,8 +4,9 @@ This section is for adding example jupyter notebooks.  Please be patient with us
 
 ```{eval-rst}
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
    :numbered:
 
+   reeb_basics.ipynb
    example_reeb_graphs.ipynb
 ```
