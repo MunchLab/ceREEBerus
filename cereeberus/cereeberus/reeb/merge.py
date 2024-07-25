@@ -10,7 +10,7 @@ from cereeberus.compute.merge import computeMergeTree
 
 class MergeTree(ReebGraph):
     """ 
-    A merge tree stored as a ``ReebGraph`` object. Like a Reeb graph, this is a directed graph with a function defined on the vertices. However, in a merge tree, the function is required to have a single root with function value treated as :math:`\infty`. 
+    A merge tree stored as a ``ReebGraph`` object. Like a Reeb graph, this is a directed graph with a function defined on the vertices. However, in a merge tree, the function is required to iave a single root with function value treated as :math:`\infty`. 
 
     We also store label information to construct a labeled merge tree. Here, this is a dictionary from some set (usually [1,...,n]) to a subset of vertices of the graph. 
 
@@ -49,15 +49,36 @@ class MergeTree(ReebGraph):
     def __str__(self):
         return f'MergeTree with {len(self.nodes)} nodes and {len(self.edges)} edges.'
         
-    #-----------------------------------------------#
-    # Methods for adding and removing nodes and edges 
-    #-----------------------------------------------#
+    #------------------------------------------------------#
+    # Methods for listing, adding and removing nodes and edges 
+    #---------------------------------------------------------#
+
+    def get_finite_nodes(self):
+        """
+        Returns a list of the finite nodes of the tree. That is, everything except for `v_inf`.
+        """
+        return [v for v in self.nodes if v != 'v_inf']
+    
+
+    def get_leaves(self):
+        """
+        Returns a list of the leaves of the tree.
+        """
+
+        return [v for v in self.nodes if self.down_degree(v) == 0]
 
     def add_node(self,  vertex, f_vertex, reset_pos=True):
+        """
+        Adds a node to the tree. Note that this will break the single connected component property of the tree so we assume you will do this in the process of adding more connecting edges.
+        """
+
         super().add_node(vertex, f_vertex, reset_pos)
         warn("Merge trees assume a single connected component. Adding a node may break this assumption.")
     
     def remove_node(self, vertex, reset_pos=True):
+        """
+        Removes a node from the tree. Note that this will break the single connected component property of the tree if it is not a leaf so we assume you will do this in the process of adding more connecting edges.
+        """
         if vertex == 'v_inf':
             raise ValueError("You cannot remove the infinite node")
         
@@ -68,8 +89,9 @@ class MergeTree(ReebGraph):
     
     
     def add_edge(self, u, v, reset_pos=True):
-        # if u == 'v_inf' or v == 'v_inf':
-        #     raise ValueError("You cannot add an edge to the infinite node.")
+        """
+        Adds the edge (u,v) to the tree. This command will not allow you to add an edge if it will create a loop. 
+        """
         
         if self.f[u] < self.f[v]:
             lowerVertex = u
@@ -139,6 +161,10 @@ class MergeTree(ReebGraph):
         
         return T,f
 
+    #-----------------------------------------------#
+    # Methods for drawing 
+    #-----------------------------------------------#
+
         
     def fix_pos_f(self):
         """
@@ -163,16 +189,50 @@ class MergeTree(ReebGraph):
             self.pos_f['v_inf'] = (self.pos_f[top_vertex][0], Lmax + .3 * height)
         
     def set_pos_from_f(self, seed=None, verbose=False):
+        """
+        Fix the drawing locations for the function values. 
+        """
         super().set_pos_from_f(seed, verbose)
         if 'v_inf' in self.pos_f.keys():
             self.fix_pos_f()
 
-    def get_leaves(self):
-        """
-        Get the leaves of the tree.
-        """
 
-        return [v for v in self.nodes if self.down_degree(v) == 0]
+    def draw(self, with_labels = True, label_type = 'names', with_colorbar = False):
+        """
+        Draw the merge tree. 
+
+        If `with_labels` is True, the labels will be drawn. This is either the vertex names if `label_type` is 'names' or the merge tree labels if `label_type` is 'labels'.
+        """
+        # viridis = mpl.colormaps['viridis'].resampled(16)
+        fig, ax = plt.subplots()
+
+
+        color_map = [self.pos_f[v][1] for v in self.nodes]
+
+        nx.draw_networkx_nodes(self,self.pos_f,node_color = color_map)
+        nx.draw_networkx_edges(self,self.pos_f)
+
+        if with_labels:
+            if label_type == 'names':
+                nx.draw_networkx_labels(self,self.pos_f)
+            elif label_type == 'labels':
+                label_map  = {}
+                
+                for k, v in self.labels.items():
+                    label_map[v] = label_map.get(v, []) + [k]
+
+                nx.draw_networkx_labels(self,self.pos_f, labels = label_map)
+            else:
+                raise ValueError("The label type must be either 'names' or 'labels'.")
+
+        ax.tick_params(left = True, bottom = False, labelleft = True, labelbottom = False)
+
+
+
+    #-----------------------------------------------#
+    # Methods for labeled merge trees
+    # 
+    # -----------------------------------------------# 
     
     def label_all_leaves(self):
         """
@@ -265,39 +325,6 @@ class MergeTree(ReebGraph):
                     M[i,j] = self.f[LCA_vertex]
 
         return M
-
-
-    def draw(self, with_labels = True, label_type = 'names', with_colorbar = False):
-        """
-        Draw the merge tree. 
-
-        If `with_labels` is True, the labels will be drawn. This is either the vertex names if `label_type` is 'names' or the merge tree labels if `label_type` is 'labels'.
-        """
-        # viridis = mpl.colormaps['viridis'].resampled(16)
-        fig, ax = plt.subplots()
-
-
-        color_map = [self.pos_f[v][1] for v in self.nodes]
-
-        nx.draw_networkx_nodes(self,self.pos_f,node_color = color_map)
-        nx.draw_networkx_edges(self,self.pos_f)
-
-        if with_labels:
-            if label_type == 'names':
-                nx.draw_networkx_labels(self,self.pos_f)
-            elif label_type == 'labels':
-                label_map  = {}
-                for v in self.nodes:
-                    if not v in self.labels.values():
-                        label_map[v] = None 
-                    else: 
-                        label_map = {}
-                        for k, v in self.labels.items():
-                            label_map[v] = label_map.get(v, []) + [k]
-
-                nx.draw_networkx_labels(self,self.pos_f, labels = label_map)
-
-        ax.tick_params(left = True, bottom = False, labelleft = True, labelbottom = False)
 
 
 
