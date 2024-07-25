@@ -243,10 +243,10 @@ class ReebGraph(nx.MultiDiGraph):
 
         self.f[w] = f_w
 
+        self.remove_edge(*edge)
         self.add_node(w, f_w)
         self.add_edge(u, w)
         self.add_edge(w, v)
-        self.remove_edge(*edge)
 
         self.set_pos_from_f()
 
