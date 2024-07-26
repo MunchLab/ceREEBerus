@@ -4,10 +4,8 @@ import numpy as np
 import networkx as nx
 
 def dict_to_list(d):
-    l = []
-    for i in d:
-        l.append(d[i])
-    return l
+    return list(d.values())
+
 
 def line_loop_index(R):
     """Determine if edges between two nodes should be lines or loops
@@ -98,33 +96,14 @@ def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1):
     fig, ax = plt.subplots()
 
     n = len(R.nodes)
-    fx_max = 0
-    fx_min = 0
-    if type(R.f) == dict:
-        f_list = dict_to_list(R.f)
-    else:
-        f_list = R.f
-    Rfx = np.array(f_list)
-    Rfx = Rfx[np.isfinite(Rfx)]
-    fx_max = Rfx.max()
-    fx_min = Rfx.min()
-
-    colormap = {}
-    for i in R.nodes:
-        if R.f[i]==np.inf:
-            fx = fx_max+1
-            x = R.pos_fx[i][0]
-            R.pos_fx[i] = (x,fx)
-        else:
-            fx = R.f[i]
-        colormap[i] = ((fx-fx_min)/fx_max)
 
 
     edge_list = list(R.edges)
     line_index, loop_index = line_loop_index(R)
 
     # Some weird plotting to make the colored and labeled nodes work.
-    color_map = [R.f[v] for v in R.nodes]
+    # Taking the list of function values from the pos_f dicationary since the infinite node should already have a position set.
+    color_map = [R.pos_f[v][1] for v in R.nodes]
     pathcollection = nx.draw_networkx_nodes(R, R.pos_f, node_color=color_map)
     if with_labels:
         nx.draw_networkx_labels(R, pos=R.pos_f, font_color='black')
@@ -154,7 +133,5 @@ def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1):
         c = np.array(curve)
         plt.plot(c[:,0], c[:,1], color='grey', zorder = 0)
 
-    # for i in R.nodes:
-    #     ax.scatter(R.pos_f[i][0], R.pos_f[i][1], s = 250, color = viridis(colormap[i]))
 
     ax.tick_params(left = True, bottom = False, labelleft = True, labelbottom = False)

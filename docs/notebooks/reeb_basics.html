@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>1. Basic Tutorial: Reeb graph class &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
 
@@ -15,11 +15,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -59,6 +59,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="example_reeb_graphs.html">2. Example Reeb graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merge_basics.html">3. Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class</a></li>
 </ul>
 </li>
 </ul>
@@ -89,7 +90,7 @@
            <div itemprop="articleBody">
              
   <section id="Basic-Tutorial:-Reeb-graph-class">
-<h1><span class="section-number">1. </span>Basic Tutorial: Reeb graph class<a class="headerlink" href="#Basic-Tutorial:-Reeb-graph-class" title="Permalink to this heading"></a></h1>
+<h1><span class="section-number">1. </span>Basic Tutorial: Reeb graph class<a class="headerlink" href="#Basic-Tutorial:-Reeb-graph-class" title="Link to this heading"></a></h1>
 <p>In this notebook, we’ll walk through the basic functionality of the <code class="docutils literal notranslate"><span class="pre">cereeberus.ReebGraph</span></code> class. See <a class="reference internal" href="../modules/reeb/reebgraph.html"><span class="doc">here</span></a> for full documentation.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -113,7 +114,7 @@
 <p>with the property that for any edge <span class="math notranslate nohighlight">\(e = (u,v)\)</span>, <span class="math notranslate nohighlight">\(f(u) \neq f(v)\)</span>.</p>
 <p>In this tutorial, we go over the basic structure of the <code class="docutils literal notranslate"><span class="pre">cereeberus.ReebGraph</span></code> class.</p>
 <section id="Basic-operations-on-a-Reeb-graph">
-<h2><span class="section-number">1.1. </span>Basic operations on a Reeb graph<a class="headerlink" href="#Basic-operations-on-a-Reeb-graph" title="Permalink to this heading"></a></h2>
+<h2><span class="section-number">1.1. </span>Basic operations on a Reeb graph<a class="headerlink" href="#Basic-operations-on-a-Reeb-graph" title="Link to this heading"></a></h2>
 <p>We’re going to start with an empty Reeb graph.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -320,7 +321,7 @@ Drawing location for A: (0.14133460941762915, 3.2)
 </div>
 </section>
 <section id="Subgraphs-and-slices-of-the-Reeb-graph">
-<h2><span class="section-number">1.2. </span>Subgraphs and slices of the Reeb graph<a class="headerlink" href="#Subgraphs-and-slices-of-the-Reeb-graph" title="Permalink to this heading"></a></h2>
+<h2><span class="section-number">1.2. </span>Subgraphs and slices of the Reeb graph<a class="headerlink" href="#Subgraphs-and-slices-of-the-Reeb-graph" title="Link to this heading"></a></h2>
 <p>Let’s get a new Reeb graph to work with. In this case, we’re going to use one of the example Reeb graphs provided in <code class="docutils literal notranslate"><span class="pre">cereeberus.data.ex_reebgraphs</span></code>. I’m also going to add a few edges for fun.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:

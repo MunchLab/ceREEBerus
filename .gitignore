@@ -28,6 +28,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+*.code-workspace
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -129,3 +130,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# Liz's specific sandbox jupyter notebook that probably shouldn't be on the website.
+doc_source/notebooks/sandbox_liz.ipynb

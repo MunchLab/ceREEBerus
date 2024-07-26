@@ -6,6 +6,6 @@ This module contains examples to use for Reeb graph computations.
 .. toctree::
    :maxdepth: 2
    
-    Reeb Graphs <data_reeb.rst>
-    Merge Trees <data_merge.rst>
+    Example Reeb Graphs <ex_reebgraphs.rst>
+    Example Merge Trees <ex_mergetrees.rst>
 ```

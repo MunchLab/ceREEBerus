@@ -9,7 +9,7 @@
 
 ```{eval-rst}
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    
    Contributing <contributing.rst>
    Modules and Documentation  <modules/index.md>
@@ -32,7 +32,7 @@ You can either update the latest version from pip using
 
 ```
 
-or to work with the most up to date version, you can clone the repo and install with
+or to work with the most up to date version, you can clone the [source code repository](https://github.com/MunchLab/ceREEBerus) and install with
 
 ```{eval-rst}
 
@@ -46,7 +46,7 @@ or to work with the most up to date version, you can clone the repo and install 
 
 ## Collaborators
 
-The code is a compilation of work done by [Elizabeth Munch](http://www.elizabethmunch.com) with her research group and collaborators. The lead developer for this package is [Danielle Barnes](https://github.com/barnesd8), and other people who have contributed to ceREEBerus include:
+The code is a compilation of work done by [Elizabeth Munch](http://www.elizabethmunch.com) with her research group and collaborators. People who have made major contributions to ceREEBerus include:
 
 - [Danielle Barnes](https://github.com/barnesd8)
 - [Elena Wang](https://https://elenaxwang.com)
@@ -54,4 +54,3 @@ The code is a compilation of work done by [Elizabeth Munch](http://www.elizabeth
 ## Contact Information
 
 - [Liz Munch](http://www.elizabethmunch.com): [muncheli@msu.edu](mailto:muncheli@msu.edu)
-- [Danielle Barnes](https://github.com/barnesd8): [barnesd8@msu.edu](mailto:barnesd8@msu.edu)

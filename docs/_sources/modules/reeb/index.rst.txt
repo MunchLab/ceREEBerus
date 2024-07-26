@@ -1,7 +1,7 @@
-The `reeb` module 
-------------------
+ReebGraph and related classes 
+-----------------------------
 
-The module `reeb` contains classes for both the Reeb graph and merge tree.
+The module `cereeberus.reeb` contains classes for both the Reeb graph and merge tree.
 
 
 .. toctree::

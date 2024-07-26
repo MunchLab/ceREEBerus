@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sandbox for testing purposes &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Sandbox for testing purposes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/notebooks/sandbox_liz.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Sandbox-for-testing-purposes">
+<h1>Sandbox for testing purposes<a class="headerlink" href="#Sandbox-for-testing-purposes" title="Link to this heading"></a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">networkx.generators</span> <span class="kn">import</span> <span class="n">random_tree</span>
+<span class="kn">from</span> <span class="nn">networkx</span> <span class="kn">import</span> <span class="n">random_unlabeled_rooted_tree</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">MergeTree</span>
+<span class="kn">from</span> <span class="nn">cereeberus.data.ex_mergetrees</span> <span class="kn">import</span> <span class="n">randomMergeTree</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span> <span class="o">=</span> <span class="n">randomMergeTree</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">func_randomizer</span><span class="o">=</span><span class="s1">&#39;exp&#39;</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">51</span><span class="p">)</span>
+
+<span class="n">MT</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">MT</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">MT</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="n">MT</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;edge </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2"> has values </span><span class="si">{</span><span class="n">MT</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">MT</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_liz_2_0.png" src="../_images/notebooks_sandbox_liz_2_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">MT</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_liz_3_0.png" src="../_images/notebooks_sandbox_liz_3_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;exp&#39;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;v_inf&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">}</span>
+<span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">37</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">edge_bfs</span><span class="p">(</span><span class="n">MT</span><span class="o">.</span><span class="n">to_undirected</span><span class="p">(),</span> <span class="s1">&#39;v_inf&#39;</span><span class="p">):</span>
+
+    <span class="c1"># print(e)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">bot_f</span> <span class="o">=</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">u</span> <span class="o">==</span> <span class="s1">&#39;v_inf&#39;</span><span class="p">:</span>
+        <span class="n">top_f</span> <span class="o">=</span> <span class="nb">range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">top_f</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span>
+
+    <span class="c1"># print(f&quot;Range is {bot_f} to {top_f}&quot;)</span>
+
+    <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">bot_f</span><span class="p">,</span> <span class="n">top_f</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">&#39;exp&#39;</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_f</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="mf">.1</span><span class="o">*</span><span class="p">(</span><span class="n">top_f</span><span class="o">-</span><span class="n">bot_f</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">bot_f</span><span class="p">:</span>
+            <span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">bot_f</span>
+
+<span class="n">MT</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">f</span>
+
+
+<span class="n">MT</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">MT</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">)</span>
+
+<span class="n">MT</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Function values: {&#39;v_inf&#39;: inf, 3: 33.30213062175942, 7: 27.71042781187343, 0: 31.966818602610015, 8: 18.73387395958257, 6: 28.997619793632055, 9: 31.711414177200634, 5: 16.095649738456885, 1: 27.74253793688234, 4: 15.093650675538665, 2: 14.522246344478008}
+Positions: {3: (-0.47565524641925006, 33.30213062175942), 7: (-0.24011284177587364, 27.71042781187343), 0: (-0.0041446396279385825, 31.966818602610015), 8: (-0.010059263416572595, 18.73387395958257), 6: (0.3027414791023897, 28.997619793632055), 9: (0.41143074188496354, 31.711414177200634), 5: (0.23533070880942752, 16.095649738456885), 1: (0.8025396857532018, 27.74253793688234), 4: (0.02182182727460213, 15.093650675538665), 2: (-0.04389245158494995, 14.522246344478008), &#39;v_inf&#39;: (-1.0, inf)}
+{&#39;v_inf&#39;: inf, 3: 33.30213062175942, 7: 27.71042781187343, 0: 31.966818602610015, 8: 18.73387395958257, 6: 28.997619793632055, 9: 31.711414177200634, 5: 16.095649738456885, 1: 27.74253793688234, 4: 15.093650675538665, 2: 14.522246344478008}
+{3: (-0.47565524641925006, 33.30213062175942), 7: (-0.24011284177587364, 27.71042781187343), 0: (-0.0041446396279385825, 31.966818602610015), 8: (-0.010059263416572595, 18.73387395958257), 6: (0.3027414791023897, 28.997619793632055), 9: (0.41143074188496354, 31.711414177200634), 5: (0.23533070880942752, 16.095649738456885), 1: (0.8025396857532018, 27.74253793688234), 4: (0.02182182727460213, 15.093650675538665), 2: (-0.04389245158494995, 14.522246344478008), &#39;v_inf&#39;: (-0.47565524641925006, 38.93609590494384)}
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_liz_7_1.png" src="../_images/notebooks_sandbox_liz_7_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top_f</span> <span class="o">-</span> <span class="n">bot_f</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.4072700476715916
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="mf">.1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(array([108.,  84.,  99.,  72.,  63.,  68.,  39.,  55.,  38.,  27.,  32.,
+         26.,  38.,  28.,  20.,  17.,  28.,  15.,  13.,  13.,  13.,   7.,
+          9.,  13.,   5.,   4.,   5.,   5.,   8.,   7.,   5.,   5.,   3.,
+          3.,   3.,   4.,   2.,   3.,   0.,   4.,   0.,   1.,   0.,   2.,
+          1.,   1.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,
+          0.,   1.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   1.,   0.,
+          0.,   1.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,
+          0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,
+          0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,
+          1.]),
+ array([9.50360634e-05, 1.11696693e-02, 2.22443025e-02, 3.33189357e-02,
+        4.43935690e-02, 5.54682022e-02, 6.65428354e-02, 7.76174686e-02,
+        8.86921019e-02, 9.97667351e-02, 1.10841368e-01, 1.21916002e-01,
+        1.32990635e-01, 1.44065268e-01, 1.55139901e-01, 1.66214534e-01,
+        1.77289168e-01, 1.88363801e-01, 1.99438434e-01, 2.10513067e-01,
+        2.21587701e-01, 2.32662334e-01, 2.43736967e-01, 2.54811600e-01,
+        2.65886233e-01, 2.76960867e-01, 2.88035500e-01, 2.99110133e-01,
+        3.10184766e-01, 3.21259400e-01, 3.32334033e-01, 3.43408666e-01,
+        3.54483299e-01, 3.65557932e-01, 3.76632566e-01, 3.87707199e-01,
+        3.98781832e-01, 4.09856465e-01, 4.20931099e-01, 4.32005732e-01,
+        4.43080365e-01, 4.54154998e-01, 4.65229631e-01, 4.76304265e-01,
+        4.87378898e-01, 4.98453531e-01, 5.09528164e-01, 5.20602798e-01,
+        5.31677431e-01, 5.42752064e-01, 5.53826697e-01, 5.64901330e-01,
+        5.75975964e-01, 5.87050597e-01, 5.98125230e-01, 6.09199863e-01,
+        6.20274497e-01, 6.31349130e-01, 6.42423763e-01, 6.53498396e-01,
+        6.64573029e-01, 6.75647663e-01, 6.86722296e-01, 6.97796929e-01,
+        7.08871562e-01, 7.19946196e-01, 7.31020829e-01, 7.42095462e-01,
+        7.53170095e-01, 7.64244729e-01, 7.75319362e-01, 7.86393995e-01,
+        7.97468628e-01, 8.08543261e-01, 8.19617895e-01, 8.30692528e-01,
+        8.41767161e-01, 8.52841794e-01, 8.63916428e-01, 8.74991061e-01,
+        8.86065694e-01, 8.97140327e-01, 9.08214960e-01, 9.19289594e-01,
+        9.30364227e-01, 9.41438860e-01, 9.52513493e-01, 9.63588127e-01,
+        9.74662760e-01, 9.85737393e-01, 9.96812026e-01, 1.00788666e+00,
+        1.01896129e+00, 1.03003593e+00, 1.04111056e+00, 1.05218519e+00,
+        1.06325983e+00, 1.07433446e+00, 1.08540909e+00, 1.09648373e+00,
+        1.10755836e+00]),
+ &lt;BarContainer object of 100 artists&gt;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_liz_9_1.png" src="../_images/notebooks_sandbox_liz_9_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1"># T = random_unlabeled_rooted_tree(10, seed = 0)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">random_tree</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">is_tree</span><span class="p">(</span><span class="n">T</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+True
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_liz_14_1.png" src="../_images/notebooks_sandbox_liz_14_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span> <span class="o">=</span> <span class="n">MergeTree</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">root</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1"># MT.set_pos_from_f()</span>
+
+<span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{5: (-0.5555708109123855, 4),
+ 4: (-0.16787010058938995, 3),
+ 6: (-0.18517169021850033, 3),
+ 7: (-0.31578764079648064, 3),
+ 2: (0.3266420309597904, 2),
+ 0: (0.628682744164983, 1),
+ 3: (0.4077897402230644, 1),
+ 8: (0.15643537284115994, 1),
+ 9: (0.29215110201566186, 1),
+ 1: (0.3963982154815085, 0),
+ &#39;v_inf&#39;: (-0.5555708109123855, 5.2)}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">fix_pos_f</span><span class="p">()</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{5: (-0.5555708109123855, 4),
+ 4: (-0.16787010058938995, 3),
+ 6: (-0.18517169021850033, 3),
+ 7: (-0.31578764079648064, 3),
+ 2: (0.3266420309597904, 2),
+ 0: (0.628682744164983, 1),
+ 3: (0.4077897402230644, 1),
+ 8: (0.15643537284115994, 1),
+ 9: (0.29215110201566186, 1),
+ 1: (0.3963982154815085, 0),
+ &#39;v_inf&#39;: (-0.5555708109123855, 5.2)}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">MT</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="s1">&#39;v_inf&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[5]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_liz_19_0.png" src="../_images/notebooks_sandbox_liz_19_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">nodes</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NodeView((5, 4, 6, 7, 2, 0, 3, 8, 9, 1, &#39;v_inf&#39;))
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[6, 7, 3, 8, 9, 1]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">LCA</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+2
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">LCA_matrix_labels</span><span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;leaves&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+leaf version
+[6, 7, 3, 8, 9, 1] [0, 1, 2, 3, 4, 5]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([[1., 4., 4., 4., 4., 4.],
+       [4., 0., 4., 4., 4., 4.],
+       [4., 4., 2., 2., 2., 2.],
+       [4., 4., 2., 1., 2., 2.],
+       [4., 4., 2., 2., 3., 2.],
+       [4., 4., 2., 2., 2., 4.]])
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">MT</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">min</span><span class="p">(</span><span class="n">MT</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">label_all_leaves</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">labels</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{0: 6, 1: 7, 2: 3, 3: 8, 4: 9, 5: 1}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">add_label</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">add_label_edge</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;chicken&#39;</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">)</span>
+
+<span class="n">MT</span><span class="o">.</span><span class="n">labels</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{0: 6, 1: 7, 2: 3, 3: 8, 4: 9, 5: 1, 6: 2, 7: &#39;chicken&#39;}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;chicken&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1.7
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_liz_30_0.png" src="../_images/notebooks_sandbox_liz_30_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">labels</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{0: 6, 1: 7, 2: 3, 3: 8, 4: 9, 5: 1, 6: 2, 7: &#39;chicken&#39;}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">color_map</span> <span class="o">=</span> <span class="p">[</span><span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">MT</span><span class="o">.</span><span class="n">nodes</span><span class="p">]</span>
+<span class="n">label_map</span>  <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">MT</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">MT</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">label_map</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">label_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">MT</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">label_map</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">[])</span> <span class="o">+</span> <span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">label_map</span><span class="p">)</span>
+
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">MT</span><span class="p">,</span><span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">,</span><span class="n">node_color</span> <span class="o">=</span> <span class="n">color_map</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span><span class="n">MT</span><span class="p">,</span><span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_labels</span><span class="p">(</span><span class="n">MT</span><span class="p">,</span><span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">label_map</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{6: [0], 7: [1], 3: [2], 8: [3], 9: [4], 1: [5], 2: [6], &#39;chicken&#39;: [7]}
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{6: Text(0.2828086074882763, 3, &#39;[0]&#39;),
+ 7: Text(0.15502084727532217, 3, &#39;[1]&#39;),
+ 3: Text(-0.24687029528484294, 1, &#39;[2]&#39;),
+ 8: Text(-0.4909288927615536, 1, &#39;[3]&#39;),
+ 9: Text(-0.06982927526178426, 1, &#39;[4]&#39;),
+ 1: Text(0.034571816916680854, 0, &#39;[5]&#39;),
+ 2: Text(-0.22522020432130074, 2, &#39;[6]&#39;),
+ &#39;chicken&#39;: Text(-0.2853941892057095, 1.7, &#39;[7]&#39;)}
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_liz_32_2.png" src="../_images/notebooks_sandbox_liz_32_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">label_type</span> <span class="o">=</span> <span class="s1">&#39;labels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_sandbox_liz_34_0.png" src="../_images/notebooks_sandbox_liz_34_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<section id="Making-random-merge-trees">
+<h2>Making random merge trees<a class="headerlink" href="#Making-random-merge-trees" title="Link to this heading"></a></h2>
+<p>np.randomint(10)</p>
+<p>np.random</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+5
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">nodes</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NodeView((5, 4, 6, 7, 2, 0, 3, 8, 9, 1, &#39;v_inf&#39;, &#39;chicken&#39;))
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">bfs_edges</span><span class="p">(</span><span class="n">MT</span><span class="p">,</span> <span class="n">source</span> <span class="o">=</span> <span class="mi">7</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(7, 5)
+(5, &#39;v_inf&#39;)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

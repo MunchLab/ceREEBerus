@@ -1,1 +1,1 @@
-__all__ = ['graph', 'merge']
+__all__ = ['reebgraph', 'merge']
