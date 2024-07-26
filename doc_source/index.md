@@ -46,7 +46,7 @@ or to work with the most up to date version, you can clone the [source code repo
 
 ## Collaborators
 
-The code is a compilation of work done by [Elizabeth Munch](http://www.elizabethmunch.com) with her research group and collaborators. The lead developer for this package is [Danielle Barnes](https://github.com/barnesd8), and other people who have contributed to ceREEBerus include:
+The code is a compilation of work done by [Elizabeth Munch](http://www.elizabethmunch.com) with her research group and collaborators. People who have made major contributions to ceREEBerus include:
 
 - [Danielle Barnes](https://github.com/barnesd8)
 - [Elena Wang](https://https://elenaxwang.com)
@@ -54,4 +54,3 @@ The code is a compilation of work done by [Elizabeth Munch](http://www.elizabeth
 ## Contact Information
 
 - [Liz Munch](http://www.elizabethmunch.com): [muncheli@msu.edu](mailto:muncheli@msu.edu)
-- [Danielle Barnes](https://github.com/barnesd8): [barnesd8@msu.edu](mailto:barnesd8@msu.edu)

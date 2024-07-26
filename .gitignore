@@ -130,3 +130,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# Liz's specific sandbox jupyter notebook that probably shouldn't be on the website.
+doc_source/notebooks/sandbox_liz.ipynb
