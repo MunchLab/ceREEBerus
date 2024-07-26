@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>cereeberus.reeb.reebgraph &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
 
   
@@ -13,11 +13,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -78,13 +78,17 @@
 <span class="kn">import</span> <span class="nn">cereeberus.compute.draw</span> <span class="k">as</span> <span class="nn">draw</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<div class="viewcode-block" id="ReebGraph"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph">[docs]</a><span class="k">class</span> <span class="nc">ReebGraph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph">[docs]</a>
+<span class="k">class</span> <span class="nc">ReebGraph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A Reeb graph stored as a networkx ``MultiDiGraph``. The function values are stored as a dictionary. The directedness of the edges follows the convention that the edge goes from the lower function value to the higher function value node.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ReebGraph.__init__"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="p">{},</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.__init__">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="p">{},</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes a Reeb graph object.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters:</span>
@@ -125,11 +129,14 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
+
     
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ReebGraph with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s1"> nodes and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s1"> edges.&#39;</span>
 
-<div class="viewcode-block" id="ReebGraph.summary"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.summary">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.summary">[docs]</a>
+    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Summary of the Reeb graph.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
@@ -138,11 +145,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;nodes&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">),</span> <span class="s1">&#39;edges&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">)}</span></div>
 
+
     <span class="c1">#-----------------#</span>
     <span class="c1"># Methods for getting info about the Reeb graph and its nodes</span>
     <span class="c1">#-----------------#</span>
 
-<div class="viewcode-block" id="ReebGraph.up_degree"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.up_degree">[docs]</a>    <span class="k">def</span> <span class="nf">up_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.up_degree">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.up_degree">[docs]</a>
+    <span class="k">def</span> <span class="nf">up_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the up degree of a node.</span>
 
 <span class="sd">        Parameters:</span>
@@ -153,8 +163,11 @@
 <span class="sd">                The up degree of the node.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="ReebGraph.down_degree"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.down_degree">[docs]</a>    <span class="k">def</span> <span class="nf">down_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.down_degree">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.down_degree">[docs]</a>
+    <span class="k">def</span> <span class="nf">down_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the down degree of a node.</span>
 
@@ -168,7 +181,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_degree</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ReebGraph.number_connected_components"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.number_connected_components">[docs]</a>    <span class="k">def</span> <span class="nf">number_connected_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReebGraph.number_connected_components">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.number_connected_components">[docs]</a>
+    <span class="k">def</span> <span class="nf">number_connected_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of connected components in the Reeb graph.</span>
 <span class="sd">        </span>
@@ -177,12 +193,15 @@
 <span class="sd">                The number of connected components in the Reeb graph.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">number_connected_components</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_undirected</span><span class="p">())</span></div>
+
     
     <span class="c1">#-----------------------------------------------#</span>
     <span class="c1"># Methods for adding and removing nodes and edges </span>
     <span class="c1">#-----------------------------------------------#</span>
 
-<div class="viewcode-block" id="ReebGraph.add_node"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_node">[docs]</a>    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">f_vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.add_node">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_node">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">f_vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a vertex to the Reeb graph. </span>
 
 <span class="sd">        Parameters:</span>
@@ -199,7 +218,10 @@
         <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ReebGraph.add_nodes_from"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_nodes_from">[docs]</a>    <span class="k">def</span> <span class="nf">add_nodes_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">f_dict</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReebGraph.add_nodes_from">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_nodes_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_nodes_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">f_dict</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a list of nodes to the Reeb graph.</span>
 
 <span class="sd">        Parameters:</span>
@@ -217,7 +239,10 @@
         <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ReebGraph.remove_node"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_node">[docs]</a>    <span class="k">def</span> <span class="nf">remove_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReebGraph.remove_node">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_node">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a vertex from the Reeb graph.</span>
 
 <span class="sd">        Parameters:</span>
@@ -233,7 +258,10 @@
         <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ReebGraph.remove_nodes_from"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_nodes_from">[docs]</a>    <span class="k">def</span> <span class="nf">remove_nodes_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReebGraph.remove_nodes_from">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_nodes_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_nodes_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a list of nodes from the Reeb graph.</span>
 
 <span class="sd">        Parameters:</span>
@@ -246,7 +274,10 @@
         <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ReebGraph.add_edge"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReebGraph.add_edge">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_edge">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an edge to the Reeb graph. Make sure that the edge points to the vertex with higher function value. </span>
 
 <span class="sd">        Note that if the edge added is between two vertices with the same function value, it will collapse the two vertices into one.</span>
@@ -285,8 +316,11 @@
 
         <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
+
     
-<div class="viewcode-block" id="ReebGraph.add_edges_from"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_edges_from">[docs]</a>    <span class="k">def</span> <span class="nf">add_edges_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.add_edges_from">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_edges_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_edges_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a list of edges to the Reeb graph.</span>
 
 <span class="sd">        Parameters:</span>
@@ -299,8 +333,11 @@
         <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
 
+
     
-<div class="viewcode-block" id="ReebGraph.subdivide_edge"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.subdivide_edge">[docs]</a>    <span class="k">def</span> <span class="nf">subdivide_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">f_w</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.subdivide_edge">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.subdivide_edge">[docs]</a>
+    <span class="k">def</span> <span class="nf">subdivide_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">f_w</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Subdivide an edge with a new vertex.</span>
 
 <span class="sd">        Parameters:</span>
@@ -319,14 +356,17 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">f_w</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">f_w</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ReebGraph.remove_regular_vertex"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_regular_vertex">[docs]</a>    <span class="k">def</span> <span class="nf">remove_regular_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReebGraph.remove_regular_vertex">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_regular_vertex">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_regular_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a regular vertex from the Reeb graph. A regular vertex is one for which down degree = up degree = 1, so it can be removed and replaed with a single edge.</span>
 
 <span class="sd">        Parameters:</span>
@@ -344,7 +384,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ReebGraph.remove_all_regular_vertices"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_all_regular_vertices">[docs]</a>    <span class="k">def</span> <span class="nf">remove_all_regular_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReebGraph.remove_all_regular_vertices">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_all_regular_vertices">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_all_regular_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove all regular vertices from the Reeb graph.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -353,16 +396,22 @@
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">regular_vertices</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remove_regular_vertex</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ReebGraph.remove_isolates"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_isolates">[docs]</a>    <span class="k">def</span> <span class="nf">remove_isolates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReebGraph.remove_isolates">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_isolates">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_isolates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove all isolated vertices from the Reeb graph.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_nodes_from</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">isolates</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span></div>
 
+
     <span class="c1">#----------------------------------#</span>
     <span class="c1"># Methods for drawing the Reeb graph</span>
     <span class="c1">#----------------------------------#</span>
-<div class="viewcode-block" id="ReebGraph.set_pos_from_f"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.set_pos_from_f">[docs]</a>    <span class="k">def</span> <span class="nf">set_pos_from_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.set_pos_from_f">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.set_pos_from_f">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_pos_from_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the position of the nodes based on the function values. The result will be the (spring layout x, function value y). Note that this will overwrite the previous positions.</span>
 
 <span class="sd">        Parameters:</span>
@@ -386,7 +435,10 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Function values:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Positions:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ReebGraph.draw"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">with_colorbar</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cpx</span> <span class="o">=</span> <span class="mf">.1</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ReebGraph.draw">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">with_colorbar</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cpx</span> <span class="o">=</span> <span class="mf">.1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A drawing of the Reeb graph. Uses the fancy version from cereeberus.compute.draw.</span>
 
@@ -410,13 +462,16 @@
 
 
 
+
     
 
     <span class="c1">#-----------------------------------------------#</span>
     <span class="c1"># Methods for getting portions of the Reeb graph</span>
     <span class="c1">#-----------------------------------------------#</span>
     
-<div class="viewcode-block" id="ReebGraph.induced_subgraph"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.induced_subgraph">[docs]</a>    <span class="k">def</span> <span class="nf">induced_subgraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.induced_subgraph">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.induced_subgraph">[docs]</a>
+    <span class="k">def</span> <span class="nf">induced_subgraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the subgraph of the Reeb graph induced by the nodes in the list nodes.</span>
 
@@ -429,9 +484,12 @@
         <span class="n">H</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">nodes</span><span class="p">),</span> <span class="n">f</span><span class="o">=</span><span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">})</span>
 
         <span class="k">return</span> <span class="n">H</span></div>
+
     
 
-<div class="viewcode-block" id="ReebGraph.slice"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.slice">[docs]</a>    <span class="k">def</span> <span class="nf">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.slice">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.slice">[docs]</a>
+    <span class="k">def</span> <span class="nf">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the subgraph of the Reeb graph with image in the open interval (a,b).</span>
 <span class="sd">        This will convert any edges that cross the slice into vertices.</span>
@@ -526,8 +584,11 @@
                         <span class="n">H</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">func_val</span><span class="p">)</span>
                         <span class="n">H</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge_name</span><span class="p">,</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">H</span></div>
+
     
-<div class="viewcode-block" id="ReebGraph.connected_components"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.connected_components">[docs]</a>    <span class="k">def</span> <span class="nf">connected_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.connected_components">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.connected_components">[docs]</a>
+    <span class="k">def</span> <span class="nf">connected_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the connected components of the Reeb graph by providing a set of vertices for each connected component. If you want to actually get the subgraphs of ReebGraph `R` returned as Reeb graphs, you can use::</span>
 <span class="sd">            </span>
@@ -539,9 +600,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_undirected</span><span class="p">())</span></div>
+
     
     
-<div class="viewcode-block" id="ReebGraph.get_largest_component"><a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.get_largest_component">[docs]</a>    <span class="k">def</span> <span class="nf">get_largest_component</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.get_largest_component">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.get_largest_component">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_largest_component</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the largest connected component of the Reeb graph as a set of nodes. Note: this is not well defined unless the Reeb graph is minimal.</span>
 
@@ -550,7 +614,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="n">v_list</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">v_list</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">v_list</span><span class="p">)</span></div>
+</div>
+
     
 
 </pre></div>

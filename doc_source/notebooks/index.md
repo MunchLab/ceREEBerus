@@ -9,4 +9,5 @@ This section is for adding example jupyter notebooks.  Please be patient with us
 
    reeb_basics.ipynb
    example_reeb_graphs.ipynb
+   merge_basics.ipynb
 ```

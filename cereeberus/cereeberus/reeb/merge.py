@@ -2,6 +2,7 @@ from cereeberus import ReebGraph
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from warnings import warn
 
@@ -289,7 +290,7 @@ class MergeTree(ReebGraph):
         # Get the vertex with the minimum function value
         return min(common_anc, key = lambda x: self.f[x])
 
-    def LCA_matrix(self, type = 'leaves'):
+    def LCA_matrix(self, type = 'leaves', return_as_df = False):
         """
         Compute the matrix of least common ancestors. 
 
@@ -298,14 +299,15 @@ class MergeTree(ReebGraph):
         If type is `labels`, then the rows and columns of the matrix are determined by the labels internal to the MergeTree.
         """
         if type == 'leaves':
-            print('leaf version')
+            # print('leaf version')
             nodes = self.get_leaves()
-            keys = list(range(len(nodes)))
-            print(nodes,keys)
+            # keys = list(range(len(nodes)))
+            # print(nodes,keys)
+            col_labels = nodes
 
         elif type == 'labels':
-            keys = list(self.labels.keys())
-            nodes = [labels[i] for i in keys]
+            col_labels = list(self.labels.keys())
+            nodes = [self.labels[i] for i in col_labels]
 
         else:
             raise ValueError("The input `type` of LCA matrix must be either 'leaves' or 'labels'.")
@@ -316,15 +318,17 @@ class MergeTree(ReebGraph):
         M = np.zeros((n,n))
 
         # Compute the LCA matrix
-        for i in keys:
-            for j in keys:
+        for i, node_i in enumerate(nodes):
+            for j, node_j in enumerate(nodes):
                 if i == j:
-                    M[i,j] = self.f[i]
+                    M[i,j] = self.f[node_i]
                 else:
-                    LCA_vertex = self.LCA(nodes[i], nodes[j])
+                    LCA_vertex = self.LCA(node_i, node_j)
                     M[i,j] = self.f[LCA_vertex]
-
-        return M
+        if return_as_df:
+            return pd.DataFrame(M,col_labels, col_labels)
+        else:
+            return M
 
 
 

@@ -9,7 +9,7 @@
 
 ```{eval-rst}
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    
    Contributing <contributing.rst>
    Modules and Documentation  <modules/index.md>
@@ -32,7 +32,7 @@ You can either update the latest version from pip using
 
 ```
 
-or to work with the most up to date version, you can clone the repo and install with
+or to work with the most up to date version, you can clone the [source code repository](https://munchlab.github.io/ceREEBerus/) and install with
 
 ```{eval-rst}
 

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Merge tree tutorials and such &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>3. Basic Tutorial: MergeTree class &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
 
@@ -15,17 +15,18 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="2. Example Reeb graphs" href="example_reeb_graphs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,10 +48,23 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/index.html">Modules and Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Tutorial Notebooks</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial Notebooks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reeb_basics.html">1. Basic Tutorial: Reeb graph class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_reeb_graphs.html">2. Example Reeb graphs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3. Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Old-stuff-down-here,-to-be-deleted....">3.1. Old stuff down here, to be deleted….</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#You-can-also-check-if-a-graph-is-a-merge-tree.">3.1.1. You can also check if a graph is a merge tree.</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:">3.1.2. To compute a merge tree from a Reeb Graph, we need to first identify any isolates in the graph (nodes with degree 0) and remove them as they will not be going into the merge tree. Looking at a Reeb graph with isolates:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Then-we-can-remove-isolates-and-plot">3.1.3. Then we can remove isolates and plot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -67,7 +81,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Merge tree tutorials and such</li>
+          <li class="breadcrumb-item"><a href="index.html">Jupyter Notebooks</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">3. </span>Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/notebooks/merge_basics.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
@@ -77,35 +92,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="Merge-tree-tutorials-and-such">
-<h1>Merge tree tutorials and such<a class="headerlink" href="#Merge-tree-tutorials-and-such" title="Permalink to this heading"></a></h1>
-<p><em>This was stolen from the old ``reeb_plot.ipynb`` files so likely needs editing.</em></p>
+  <section id="Basic-Tutorial:-MergeTree-class">
+<h1><span class="section-number">3. </span>Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class<a class="headerlink" href="#Basic-Tutorial:-MergeTree-class" title="Link to this heading"></a></h1>
+<p>This notebook walks through the basic functionality of the <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">MergeTree</span>
+<span class="kn">from</span> <span class="nn">cereeberus.data.ex_mergetrees</span> <span class="kn">import</span> <span class="n">randomMergeTree</span>
 </pre></div>
 </div>
 </div>
-<p>You can also create random merge trees and plot them</p>
+<p>A merge tree is a tree with a function for which any vertex (with the exception of the root) has exactly one neighbor of higher function value. The root, which is this module is always called <code class="docutils literal notranslate"><span class="pre">v_inf</span></code>, has function value <span class="math notranslate nohighlight">\(\infty\)</span>, given by <code class="docutils literal notranslate"><span class="pre">np.inf</span></code>. An empty merge tree can be initizlied with</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>MergeTree()
+</pre></div>
+</div>
+<p>However, we will run this introduction by working with a random merge tree.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.data.randomMergeTrees</span> <span class="kn">import</span> <span class="n">randomMerge</span>
-<span class="kn">from</span> <span class="nn">cereeberus.reeb.merge</span> <span class="kn">import</span> <span class="n">mergeTree</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">randomMerge</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">M</span> <span class="o">=</span> <span class="n">mergeTree</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
-<span class="n">M</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The default settings for the draw command show the names on each node.</span>
+<span class="n">MT</span> <span class="o">=</span> <span class="n">randomMergeTree</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span>  <span class="n">seed</span> <span class="o">=</span> <span class="mi">21</span><span class="p">)</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -113,101 +123,23 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_merge_basics_4_0.png" src="../_images/notebooks_merge_basics_4_0.png" />
+<img alt="../_images/notebooks_merge_basics_3_0.png" src="../_images/notebooks_merge_basics_3_0.png" />
 </div>
 </div>
-<section id="You-can-also-check-if-a-graph-is-a-merge-tree.">
-<h2>You can also check if a graph is a merge tree.<a class="headerlink" href="#You-can-also-check-if-a-graph-is-a-merge-tree." title="Permalink to this heading"></a></h2>
-<p>This works for both Reeb graphs and Networkx graphs, and it part of the Merge function already</p>
+<p>As with <code class="docutils literal notranslate"><span class="pre">ReebGraph</span></code>s, we can always manually mess with the drawing locations if we want. Drawing is done by taking a spring layout from networkx, and then forcing the <span class="math notranslate nohighlight">\(y\)</span>-coordinate to be the same as the function value of the node. Here, we are just making the top string of vertices aligned over vertex 7.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute.merge</span> <span class="kn">import</span> <span class="n">isMerge</span>
-<span class="c1">### Reeb Graph</span>
-<span class="n">isMerge</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-True
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">### Networkx Graph</span>
-<span class="n">isMerge</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-True
-</pre></div></div>
-</div>
-</section>
-<section id="To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:">
-<h2>To compute a merge tree from a Reeb Graph, we need to first identify any isolates in the graph (nodes with degree 0) and remove them as they will not be going into the merge tree. Looking at a Reeb graph with isolates:<a class="headerlink" href="#To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:" title="Permalink to this heading"></a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">jm</span> <span class="o">=</span> <span class="n">reeb</span><span class="o">.</span><span class="n">juggling_man</span><span class="p">()</span>
-<span class="n">jm</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_merge_basics_9_0.png" src="../_images/notebooks_merge_basics_9_0.png" />
-</div>
-</div>
-</section>
-<section id="Then-we-can-remove-isolates-and-plot">
-<h2>Then we can remove isolates and plot<a class="headerlink" href="#Then-we-can-remove-isolates-and-plot" title="Permalink to this heading"></a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">jm_im</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">remove_isolates</span><span class="p">(</span><span class="n">jm</span><span class="p">)</span>
-<span class="n">jm_im</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_merge_basics_11_0.png" src="../_images/notebooks_merge_basics_11_0.png" />
-</div>
-</div>
-<p>We then import the <code class="docutils literal notranslate"><span class="pre">computemergetree</span></code> function, and provide a filtration.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute.merge</span> <span class="kn">import</span> <span class="n">computeMergeTree</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmt</span> <span class="o">=</span> <span class="n">computeMergeTree</span><span class="p">(</span><span class="n">jm_im</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">cmt</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-<span class="n">cmt</span><span class="o">.</span><span class="n">fx</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The position of node 7 is </span><span class="si">{</span><span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The position of node 8 is </span><span class="si">{</span><span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">mid_x</span> <span class="o">=</span> <span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="s1">&#39;v_inf&#39;</span><span class="p">}:</span>
+    <span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">mid_x</span><span class="p">,</span> <span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The new position of node 8 is </span><span class="si">{</span><span class="n">MT</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">MT</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -216,23 +148,55 @@ True
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{7: 1, 5: 4, 2: 5, &#39;inf&#39;: inf}
+The position of node 7 is (-0.11660480784942846, 4)
+The position of node 8 is (0.08886735396991338, 5)
+The new position of node 8 is (-0.11660480784942846, 5)
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_merge_basics_14_1.png" src="../_images/notebooks_merge_basics_14_1.png" />
+<img alt="../_images/notebooks_merge_basics_5_1.png" src="../_images/notebooks_merge_basics_5_1.png" />
 </div>
 </div>
-<p>We can also compute distances between networkx graphs, reeb graphs, and merge trees. The first example is the graph edit distance, compliments of the networkx package implementation.</p>
+<p>As with Reeb Graphs, we can add vertices and edges. Notice that until we actually add all necessary edges and vertices it doesn’t satisfy the requirements of a merge tree.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute</span> <span class="kn">import</span> <span class="n">distance</span>
-<span class="n">distance</span><span class="o">.</span><span class="n">edit</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="n">jm_im</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;leaf_1&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;leaf_1&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Resetting positions just to get the drawing to look nicer</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">13</span><span class="p">)</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_merge_basics_7_0.png" src="../_images/notebooks_merge_basics_7_0.png" />
+</div>
+</div>
+<p>However, if we try to add an edge which creates a loop, the code will throw an error and not allow the edge to be added. For instance, the command</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>MT.add_edge(3,8)
+</pre></div>
+</div>
+<p>will throw the error</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ValueError: Edge ((3, 8)) cannot be added. Adding the edge will create a loop in the graph.
+</pre></div>
+</div>
+<p>We can get the list of leaves as well as find the least common ancestor of any pair of vertices.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The leaves are </span><span class="si">{</span><span class="n">MT</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The LCA of vertices 5 and 6 is vertex </span><span class="si">{</span><span class="n">MT</span><span class="o">.</span><span class="n">LCA</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The LCA of vertices 0 and 1 is vertex </span><span class="si">{</span><span class="n">MT</span><span class="o">.</span><span class="n">LCA</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -241,16 +205,362 @@ True
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-9.0
+The leaves are [5, 1, 0, &#39;leaf_1&#39;].
+The LCA of vertices 5 and 6 is vertex 7.
+The LCA of vertices 0 and 1 is vertex 6.
 </pre></div></div>
 </div>
+<p>The merge trees inherit much of the structure from the <code class="docutils literal notranslate"><span class="pre">ReebGraph</span></code> class. One important addition in the merge tree is the ability to work with labels. This is stored as a dictionary in the class, where <code class="docutils literal notranslate"><span class="pre">MT.labels[key]</span> <span class="pre">=</span> <span class="pre">vertex</span></code>. Here, we’ll give automatic labels to all the leaves of the tree, and add in a few more for good measure. Note that if we add a label to an edge at a function value, we will subdivide the edge to add a vertex before giving it a label.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">label_all_leaves</span><span class="p">()</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">add_label</span><span class="p">(</span><span class="n">vertex</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<span class="c1"># Note that this adds two labels to the same vertex, which is allowed.</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">add_label</span><span class="p">(</span><span class="n">vertex</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="mi">17</span><span class="p">)</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">add_label_edge</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="s1">&#39;hen&#39;</span><span class="p">,</span> <span class="n">f_w</span> <span class="o">=</span> <span class="mf">2.4</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="mi">37</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">MT</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{0: 5, 1: 1, 2: 0, 3: &#39;leaf_1&#39;, 4: 6, 17: 6, 37: &#39;hen&#39;}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MT</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">13</span><span class="p">)</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">label_type</span><span class="o">=</span><span class="s2">&quot;labels&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_merge_basics_13_0.png" src="../_images/notebooks_merge_basics_13_0.png" />
+</div>
+</div>
+<p>We can also compute the matrix giving the function value of LCA, either by using the internally defined labels, or by using all leaves.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The matrix of LCA for the leabels. Here we ask that it be returned as a pandas data fram so that its easier to read the row and column info. If `return_as_df` is false, it will return just a matrix.</span>
+<span class="c1"># Here columns are given by the label key.</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">LCA_matrix</span><span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="n">return_as_df</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>17</th>
+      <th>37</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>2.4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>2.4</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>2.4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The matrix of LCA for the leaf set. Here columns are given by the leaf name.</span>
+<span class="n">MT</span><span class="o">.</span><span class="n">LCA_matrix</span><span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;leaves&#39;</span><span class="p">,</span> <span class="n">return_as_df</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>5</th>
+      <th>1</th>
+      <th>0</th>
+      <th>leaf_1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>2.0</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>leaf_1</th>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<section id="Old-stuff-down-here,-to-be-deleted....">
+<h2><span class="section-number">3.1. </span>Old stuff down here, to be deleted….<a class="headerlink" href="#Old-stuff-down-here,-to-be-deleted...." title="Link to this heading"></a></h2>
+<p>You can also create random merge trees and plot them</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.data.randomMergeTrees</span> <span class="kn">import</span> <span class="n">randomMerge</span>
+<span class="kn">from</span> <span class="nn">cereeberus.reeb.merge</span> <span class="kn">import</span> <span class="n">mergeTree</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">randomMerge</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">M</span> <span class="o">=</span> <span class="n">mergeTree</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
+<span class="n">M</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<section id="You-can-also-check-if-a-graph-is-a-merge-tree.">
+<h3><span class="section-number">3.1.1. </span>You can also check if a graph is a merge tree.<a class="headerlink" href="#You-can-also-check-if-a-graph-is-a-merge-tree." title="Link to this heading"></a></h3>
+<p>This works for both Reeb graphs and Networkx graphs, and it part of the Merge function already</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute.merge</span> <span class="kn">import</span> <span class="n">isMerge</span>
+<span class="c1">### Reeb Graph</span>
+<span class="n">isMerge</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Networkx Graph</span>
+<span class="n">isMerge</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:">
+<h3><span class="section-number">3.1.2. </span>To compute a merge tree from a Reeb Graph, we need to first identify any isolates in the graph (nodes with degree 0) and remove them as they will not be going into the merge tree. Looking at a Reeb graph with isolates:<a class="headerlink" href="#To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jm</span> <span class="o">=</span> <span class="n">reeb</span><span class="o">.</span><span class="n">juggling_man</span><span class="p">()</span>
+<span class="n">jm</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Then-we-can-remove-isolates-and-plot">
+<h3><span class="section-number">3.1.3. </span>Then we can remove isolates and plot<a class="headerlink" href="#Then-we-can-remove-isolates-and-plot" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jm_im</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">remove_isolates</span><span class="p">(</span><span class="n">jm</span><span class="p">)</span>
+<span class="n">jm_im</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>We then import the <code class="docutils literal notranslate"><span class="pre">computemergetree</span></code> function, and provide a filtration.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute.merge</span> <span class="kn">import</span> <span class="n">computeMergeTree</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmt</span> <span class="o">=</span> <span class="n">computeMergeTree</span><span class="p">(</span><span class="n">jm_im</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">cmt</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
+<span class="n">cmt</span><span class="o">.</span><span class="n">fx</span>
+</pre></div>
+</div>
+</div>
+<p>We can also compute distances between networkx graphs, reeb graphs, and merge trees. The first example is the graph edit distance, compliments of the networkx package implementation.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute</span> <span class="kn">import</span> <span class="n">distance</span>
+<span class="n">distance</span><span class="o">.</span><span class="n">edit</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="n">jm_im</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
 </section>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="example_reeb_graphs.html" class="btn btn-neutral float-left" title="2. Example Reeb graphs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 

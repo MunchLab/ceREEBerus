@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ceREEBerus: Reeb Graph Computations in Python &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
 
   
@@ -14,12 +14,14 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=01f34227"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -76,43 +78,29 @@
            <div itemprop="articleBody">
              
   <section id="cereeberus-reeb-graph-computations-in-python">
-<h1>ceREEBerus: Reeb Graph Computations in Python<a class="headerlink" href="#cereeberus-reeb-graph-computations-in-python" title="Permalink to this heading"></a></h1>
+<h1>ceREEBerus: Reeb Graph Computations in Python<a class="headerlink" href="#cereeberus-reeb-graph-computations-in-python" title="Link to this heading"></a></h1>
 <a class="reference internal image-reference" href="_images/juggling_man.gif"><img alt="_images/juggling_man.gif" src="_images/juggling_man.gif" style="width: 600px;" /></a>
 <section id="table-of-contents">
-<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading"></a></h2>
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#info-on-markdown-vs-restructuredtext">Info on Markdown vs. reStructuredText</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#info-on-documentation">Info on documentation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#things-i-always-forget">Things I always forget</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="modules/index.html">Modules and Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="modules/reeb/reebgraph.html">1. ReebGraph</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/data/index.html">2. Example data and graphs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/compute/index.html">3. Compute</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Tutorial Notebooks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/reeb_basics.html">1. Basic Tutorial: Reeb graph class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/example_reeb_graphs.html">2. Example Reeb graphs</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Tutorial Notebooks</a></li>
 </ul>
 </div>
 </section>
 <section id="about">
-<h2>About<a class="headerlink" href="#about" title="Permalink to this heading"></a></h2>
+<h2>About<a class="headerlink" href="#about" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ceReeberus</span></code> is a Python package for working with Reeb graphs, in particular with a view towards using the interleaving distance in an applied context.</p>
 </section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
 <p>You can either update the latest version from pip using</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>cereeberus
 </pre></div>
 </div>
-<p>or to work with the most up to date version, you can clone the repo and install with</p>
+<p>or to work with the most up to date version, you can clone the <a class="reference external" href="https://munchlab.github.io/ceREEBerus/">source code repository</a> and install with</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MunchLab/ceREEBerus.git
 <span class="nb">cd</span><span class="w"> </span>ceREEBerus
 pip<span class="w"> </span>install<span class="w"> </span>.
@@ -120,7 +108,7 @@ pip<span class="w"> </span>install<span class="w"> </span>.
 </div>
 </section>
 <section id="collaborators">
-<h2>Collaborators<a class="headerlink" href="#collaborators" title="Permalink to this heading"></a></h2>
+<h2>Collaborators<a class="headerlink" href="#collaborators" title="Link to this heading"></a></h2>
 <p>The code is a compilation of work done by <a class="reference external" href="http://www.elizabethmunch.com">Elizabeth Munch</a> with her research group and collaborators. The lead developer for this package is <a class="reference external" href="https://github.com/barnesd8">Danielle Barnes</a>, and other people who have contributed to ceREEBerus include:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/barnesd8">Danielle Barnes</a></p></li>
@@ -128,7 +116,7 @@ pip<span class="w"> </span>install<span class="w"> </span>.
 </ul>
 </section>
 <section id="contact-information">
-<h2>Contact Information<a class="headerlink" href="#contact-information" title="Permalink to this heading"></a></h2>
+<h2>Contact Information<a class="headerlink" href="#contact-information" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="http://www.elizabethmunch.com">Liz Munch</a>: <a class="reference external" href="mailto:muncheli&#37;&#52;&#48;msu&#46;edu">muncheli<span>&#64;</span>msu<span>&#46;</span>edu</a></p></li>
 <li><p><a class="reference external" href="https://github.com/barnesd8">Danielle Barnes</a>: <a class="reference external" href="mailto:barnesd8&#37;&#52;&#48;msu&#46;edu">barnesd8<span>&#64;</span>msu<span>&#46;</span>edu</a></p></li>
