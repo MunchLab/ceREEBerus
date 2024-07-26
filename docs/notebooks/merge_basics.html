@@ -96,7 +96,7 @@
 <h1><span class="section-number">3. </span>Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class<a class="headerlink" href="#Basic-Tutorial:-MergeTree-class" title="Link to this heading"></a></h1>
 <p>This notebook walks through the basic functionality of the <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">MergeTree</span>
@@ -110,7 +110,7 @@
 </div>
 <p>However, we will run this introduction by working with a random merge tree.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The default settings for the draw command show the names on each node.</span>
@@ -250,7 +250,7 @@ The LCA of vertices 0 and 1 is vertex 6.
 </div>
 <p>We can also compute the matrix giving the function value of LCA, either by using the internally defined labels, or by using all leaves.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The matrix of LCA for the leabels. Here we ask that it be returned as a pandas data fram so that its easier to read the row and column info. If `return_as_df` is false, it will return just a matrix.</span>
@@ -260,7 +260,7 @@ The LCA of vertices 0 and 1 is vertex 6.
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -367,7 +367,7 @@ The LCA of vertices 0 and 1 is vertex 6.
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The matrix of LCA for the leaf set. Here columns are given by the leaf name.</span>
@@ -376,7 +376,7 @@ The LCA of vertices 0 and 1 is vertex 6.
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">

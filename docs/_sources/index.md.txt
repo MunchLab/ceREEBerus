@@ -32,7 +32,7 @@ You can either update the latest version from pip using
 
 ```
 
-or to work with the most up to date version, you can clone the [source code repository](https://munchlab.github.io/ceREEBerus/) and install with
+or to work with the most up to date version, you can clone the [source code repository](https://github.com/MunchLab/ceREEBerus) and install with
 
 ```{eval-rst}
 
