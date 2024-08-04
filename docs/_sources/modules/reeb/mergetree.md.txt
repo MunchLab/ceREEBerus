@@ -1,3 +1,0 @@
-# Merge tree
-
-Coming soon!
