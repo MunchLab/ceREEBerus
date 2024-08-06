@@ -8,4 +8,5 @@ This module contains examples to use for Reeb graph computations.
    
     Example Reeb Graphs <ex_reebgraphs.rst>
     Example Merge Trees <ex_mergetrees.rst>
+    Example Embedded Graphs <ex_embedgraphs.rst>
 ```
