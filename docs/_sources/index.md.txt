@@ -49,7 +49,7 @@ or to work with the most up to date version, you can clone the [source code repo
 The code is a compilation of work done by [Elizabeth Munch](http://www.elizabethmunch.com) with her research group and collaborators. People who have made major contributions to ceREEBerus include:
 
 - [Danielle Barnes](https://github.com/barnesd8)
-- [Elena Wang](https://https://elenaxwang.com)
+- [Elena Wang](https://elenaxwang.com)
 
 ## Contact Information
 

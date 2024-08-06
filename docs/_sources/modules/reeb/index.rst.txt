@@ -7,6 +7,7 @@ The module `cereeberus.reeb` contains classes for both the Reeb graph and merge 
 .. toctree::
     :maxdepth: 2
 
-    reebgraph.md 
-    mergetree.md
+    reebgraph.rst
+    mergetree.rst
+    embedgraph.rst
     
