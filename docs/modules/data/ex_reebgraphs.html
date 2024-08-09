@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2.1. Reeb Graphs &mdash; ceREEBerus 0.1.0 documentation</title>
@@ -17,7 +17,7 @@
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -61,6 +61,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ex_mergetrees.html">2.2.  Example Merge Trees</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ex_embedgraphs.html">2.3.  Example Embedded Graphs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ex_mappergraphs.html">2.4.  Example Mapper Graphs</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../compute/index.html">3. Compute</a></li>
@@ -101,30 +102,98 @@
 <dl class="py function" id="module-cereeberus.data.ex_reebgraphs">
 <dt class="sig sig-object py" id="cereeberus.data.ex_reebgraphs.torus">
 <span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">torus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#torus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.torus" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the Reeb graph of a simple upright torus as a ReebGraph class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – Optional. The seed to use for the random number generator, which only controls the layout function.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Reeb graph of the torus.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph" title="cereeberus.reeb.reebgraph.ReebGraph">ReebGraph</a></p>
+</dd>
+</dl>
+<figure class="align-default" style="width: 400px">
+<img alt="../../_images/torus.png" src="../../_images/torus.png" />
+</figure>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.data.ex_reebgraphs.dancing_man">
 <span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">dancing_man</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#dancing_man"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.dancing_man" title="Link to this definition"></a></dt>
 <dd><p>Returns the Reeb graph of the dancing man as a ReebGraph class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – Optional. The seed to use for the random number generator, which only controls the layout function.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Reeb graph of the dancing man.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph" title="cereeberus.reeb.reebgraph.ReebGraph">ReebGraph</a></p>
+</dd>
+</dl>
+<figure class="align-default" style="width: 400px">
+<img alt="../../_images/dancing_man.png" src="../../_images/dancing_man.png" />
+</figure>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.data.ex_reebgraphs.juggling_man">
 <span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">juggling_man</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#juggling_man"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.juggling_man" title="Link to this definition"></a></dt>
 <dd><p>Returns the Reeb graph of the juggling man as a ReebGraph class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – Optional. The seed to use for the random number generator, which only controls the layout function.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Reeb graph of the juggling man.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph" title="cereeberus.reeb.reebgraph.ReebGraph">ReebGraph</a></p>
+</dd>
+</dl>
+<figure class="align-default" style="width: 400px">
+<img alt="../../_images/juggling_man.png" src="../../_images/juggling_man.png" />
+</figure>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.data.ex_reebgraphs.simple_loops">
 <span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">simple_loops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#simple_loops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.simple_loops" title="Link to this definition"></a></dt>
-<dd><p>Returns the Reeb graph of the simple loops example</p>
+<dd><p>Returns the Reeb graph of the simple loops example.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – Optional. The seed to use for the random number generator, which only controls the layout function.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Reeb graph of the simple loops example.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph" title="cereeberus.reeb.reebgraph.ReebGraph">ReebGraph</a></p>
+</dd>
+</dl>
+<figure class="align-default" style="width: 400px">
+<img alt="../../_images/simple_loops.png" src="../../_images/simple_loops.png" />
+</figure>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.data.ex_reebgraphs.simple_loops_unordered">
 <span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_reebgraphs.</span></span><span class="sig-name descname"><span class="pre">simple_loops_unordered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_reebgraphs.html#simple_loops_unordered"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_reebgraphs.simple_loops_unordered" title="Link to this definition"></a></dt>
-<dd><p>Returns the Reeb graph of the simple loops example</p>
+<dd><p>Returns the Reeb graph of the simple loops example.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – Optional. The seed to use for the random number generator, which only controls the layout function.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Reeb graph of the simple loops example.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph" title="cereeberus.reeb.reebgraph.ReebGraph">ReebGraph</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

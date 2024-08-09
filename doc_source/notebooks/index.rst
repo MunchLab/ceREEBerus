@@ -8,6 +8,7 @@ This section is for adding example jupyter notebooks.  Please be patient with us
    :numbered:
 
    reeb_basics.ipynb
-   example_reeb_graphs.ipynb
    merge_basics.ipynb
    embed_graph_basics.ipynb
+   mapper_basics.ipynb
+   example_graphs.ipynb

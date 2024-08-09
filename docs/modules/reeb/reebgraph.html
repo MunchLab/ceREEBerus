@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>1.1. ReebGraph class &mdash; ceREEBerus 0.1.0 documentation</title>
@@ -17,7 +17,7 @@
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -56,6 +56,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="mergetree.html">1.2. Merge tree</a></li>
 <li class="toctree-l3"><a class="reference internal" href="embedgraph.html">1.3. Embedded Graphs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mappergraph.html">1.4. MapperGraph class</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../data/index.html">2. Example data and graphs</a></li>
@@ -187,13 +188,34 @@ The node to get the down degree of.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.next_vert_name">
+<span class="sig-name descname"><span class="pre">next_vert_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.next_vert_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.next_vert_name" title="Link to this definition"></a></dt>
+<dd><p>Making a simple name generator for vertices.
+If you’re using integers, it will just up the count by one.
+Letters will be incremented in the alphabet. If you reach ‘Z’, it will return ‘AA’. If you reach ‘ZZ’, it will return ‘AAA’, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em><em> or </em><em>int</em>) – The name of the vertex to increment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>str or int</dt><dd><p>The next name in the sequence.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.add_node">
 <span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_vertex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.add_node" title="Link to this definition"></a></dt>
-<dd><p>Add a vertex to the Reeb graph.</p>
+<dd><p>Add a vertex to the Reeb graph.
+If the vertex name is given as None, it will be assigned via the next_vert_name method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vertex</strong> (<em>hashable like int</em><em> or </em><em>str</em>) – The name of the vertex to add.</p></li>
+<li><p><strong>vertex</strong> (<em>hashable like int</em><em> or </em><em>str</em><em>, or </em><em>None</em>) – The name of the vertex to add.</p></li>
 <li><p><strong>f_vertex</strong> (<em>float</em>) – The function value of the vertex being added.</p></li>
 <li><p><strong>reset_pos</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will reset the positions of the nodes based on the function values.</p></li>
 </ul>
@@ -403,6 +425,23 @@ This will convert any edges that cross the slice into vertices.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#cereeberus.reeb.reebgraph.ReebGraph" title="cereeberus.reeb.reebgraph.ReebGraph">ReebGraph</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.to_mapper">
+<span class="sig-name descname"><span class="pre">to_mapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.to_mapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.to_mapper" title="Link to this definition"></a></dt>
+<dd><p>Convert the Reeb graph to a Mapper graph as long as all function values are integers. Note this is NOT the same as computing the mapper graph of a given Reeb graph as the input topological space.  This will create a new Mapper graph object with the same nodes and edges as the Reeb graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>delta</strong> (<em>float</em>) – Optional. The delta value to use for the Mapper graph. If None, will use 1.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Mapper graph representation of the Reeb graph.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="mappergraph.html#cereeberus.reeb.mapper.MapperGraph" title="cereeberus.reeb.mapper.MapperGraph">MapperGraph</a></p>
 </dd>
 </dl>
 </dd></dl>

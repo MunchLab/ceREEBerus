@@ -40,9 +40,12 @@ class TestReebClass(unittest.TestCase):
     def test_reeb_add_nodes(self):
         # This test makes sure you can add nodes to a Reeb graph.
         R = ex_rg.simple_loops()
+        # Test adding a node without specificying the name 
+        R.add_node(None, 3)
+
         self.assertRaises(ValueError, R.add_node, 0, 0.5)
         R.add_node('chicken', 0.5)
-        S = {'nodes': 5, 'edges': 5}
+        S = {'nodes': 6, 'edges': 5}
         self.assertEqual(R.summary(), S)
         self.check_reeb(R)
 
@@ -52,8 +55,9 @@ class TestReebClass(unittest.TestCase):
         input_f_dict = {v : f for v, f in zip(v_list, input_f)}
         R.add_nodes_from(v_list, input_f_dict)
 
-        S = {'nodes': 10, 'edges': 5}
+        S = {'nodes': 11, 'edges': 5}
         self.assertEqual(R.summary(), S)
+
 
         # General check of the Reeb graph
         self.check_reeb(R)

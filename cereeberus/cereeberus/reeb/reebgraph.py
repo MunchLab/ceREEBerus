@@ -105,19 +105,54 @@ class ReebGraph(nx.MultiDiGraph):
     #-----------------------------------------------#
     # Methods for adding and removing nodes and edges 
     #-----------------------------------------------#
+    def next_vert_name(self, s):
+        """ 
+        Making a simple name generator for vertices. 
+        If you're using integers, it will just up the count by one. 
+        Letters will be incremented in the alphabet. If you reach 'Z', it will return 'AA'. If you reach 'ZZ', it will return 'AAA', etc.
+
+        Parameters:
+            s (str or int): The name of the vertex to increment.
+
+        Returns:
+            str or int
+                The next name in the sequence.
+        """
+
+        if type(s) == int:
+            return s+1
+        elif type(s) == str and len(s) == 1:
+            if not s == 'Z':
+                return chr(ord(s)+1)
+            else:
+                return 'AA'
+        elif type(s) == str and len(s) > 1:
+            if s[-1] == 'Z':
+                return (len(s)+1)* 'A'
+            else:
+                return len(s)* chr(ord(s[-1])+1)
+        else:
+            ValueError('Input must be a string or an integer')
+
 
     def add_node(self, vertex, f_vertex, reset_pos=True):
         """Add a vertex to the Reeb graph. 
+        If the vertex name is given as None, it will be assigned via the next_vert_name method.
 
         Parameters:
-            vertex (hashable like int or str) : The name of the vertex to add.
+            vertex (hashable like int or str, or None) : The name of the vertex to add.
             f_vertex (float) : The function value of the vertex being added.
             reset_pos (bool, optional) 
                 If True, will reset the positions of the nodes based on the function values.
         """
         if vertex in self.nodes:
             raise ValueError(f'The vertex {vertex} is already in the Reeb graph.')
+
+        if vertex is None:
+            vertex = self.next_vert_name(max(self.nodes))
+            
         super().add_node(vertex)
+
         self.f[vertex] = f_vertex
 
         if reset_pos:
@@ -477,3 +512,20 @@ class ReebGraph(nx.MultiDiGraph):
         return self.induced_subgraph(v_list)
     
 
+    def to_mapper(self, delta = None):
+        """
+        Convert the Reeb graph to a Mapper graph as long as all function values are integers. Note this is NOT the same as computing the mapper graph of a given Reeb graph as the input topological space.  This will create a new Mapper graph object with the same nodes and edges as the Reeb graph.
+
+        Parameters:
+            delta (float): Optional. The delta value to use for the Mapper graph. If None, will use 1.
+
+        Returns:
+            MapperGraph: The Mapper graph representation of the Reeb graph.
+        """
+
+        # Check that all function values are integers before proceeding
+        if not all([isinstance(self.f[v], int) for v in self.f]):
+            raise ValueError("Function values must be integers to convert to a Mapper graph.")
+
+        from cereeberus.reeb.mapper import MapperGraph
+        return MapperGraph(self, f=self.f, delta = delta)
