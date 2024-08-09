@@ -1,1 +1,1 @@
-__all__ = ['reebgraph', 'merge']
+__all__ = ['reebgraph', 'merge', 'mapper', 'embeddedgraph']

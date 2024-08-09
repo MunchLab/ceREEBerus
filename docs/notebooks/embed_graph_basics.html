@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>4. Basic Tutorial: Embedded graph class &mdash; ceREEBerus 0.1.0 documentation</title>
+  <title>3. Basic Tutorial: Embedded graph class &mdash; ceREEBerus 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
@@ -18,7 +18,7 @@
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -26,7 +26,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="3. Basic Tutorial: MergeTree class" href="merge_basics.html" /> 
+    <link rel="next" title="4. Basic tutorial: MapperGraph class" href="mapper_basics.html" />
+    <link rel="prev" title="2. Basic Tutorial: MergeTree class" href="merge_basics.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,13 +54,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../modules/index.html">Modules and Documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial Notebooks</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="reeb_basics.html">1. Basic Tutorial: Reeb graph class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="example_reeb_graphs.html">2. Example Reeb graphs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="merge_basics.html">3. Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">4. Basic Tutorial: Embedded graph class</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Constructing-the-embedded-graph">4.1. Constructing the embedded graph</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Reeb-graph-from-a-given-direction">4.2. Reeb graph from a given direction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merge_basics.html">2. Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3. Basic Tutorial: Embedded graph class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Constructing-the-embedded-graph">3.1. Constructing the embedded graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Reeb-graph-from-a-given-direction">3.2. Reeb graph from a given direction</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="mapper_basics.html">4. Basic tutorial: <code class="docutils literal notranslate"><span class="pre">MapperGraph</span></code> class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_graphs.html">5. Example graphs</a></li>
 </ul>
 </li>
 </ul>
@@ -79,7 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Jupyter Notebooks</a></li>
-      <li class="breadcrumb-item active"><span class="section-number">4. </span>Basic Tutorial: Embedded graph class</li>
+      <li class="breadcrumb-item active"><span class="section-number">3. </span>Basic Tutorial: Embedded graph class</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/notebooks/embed_graph_basics.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
@@ -90,7 +92,7 @@
            <div itemprop="articleBody">
              
   <section id="Basic-Tutorial:-Embedded-graph-class">
-<h1><span class="section-number">4. </span>Basic Tutorial: Embedded graph class<a class="headerlink" href="#Basic-Tutorial:-Embedded-graph-class" title="Link to this heading"></a></h1>
+<h1><span class="section-number">3. </span>Basic Tutorial: Embedded graph class<a class="headerlink" href="#Basic-Tutorial:-Embedded-graph-class" title="Link to this heading"></a></h1>
 <p>In this notebook, we’ll walk through the basic functionality of the <code class="docutils literal notranslate"><span class="pre">EmbeddedGraph</span></code> class. See <a class="reference internal" href="../modules/reeb/embedgraph.html"><span class="doc">here</span></a></p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -106,7 +108,7 @@
 </div>
 </div>
 <section id="Constructing-the-embedded-graph">
-<h2><span class="section-number">4.1. </span>Constructing the embedded graph<a class="headerlink" href="#Constructing-the-embedded-graph" title="Link to this heading"></a></h2>
+<h2><span class="section-number">3.1. </span>Constructing the embedded graph<a class="headerlink" href="#Constructing-the-embedded-graph" title="Link to this heading"></a></h2>
 <p>We assume our input is an undirected graph <span class="math notranslate nohighlight">\(G\)</span> with an embedding in 2D given by a map on the vertices <span class="math notranslate nohighlight">\(f: V(G) \to \mathbb{R}^2\)</span>. A graph can be constructed as follows.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
@@ -214,7 +216,7 @@
 </div>
 </section>
 <section id="Reeb-graph-from-a-given-direction">
-<h2><span class="section-number">4.2. </span>Reeb graph from a given direction<a class="headerlink" href="#Reeb-graph-from-a-given-direction" title="Link to this heading"></a></h2>
+<h2><span class="section-number">3.2. </span>Reeb graph from a given direction<a class="headerlink" href="#Reeb-graph-from-a-given-direction" title="Link to this heading"></a></h2>
 <p>Directions are given in the code by specifying <span class="math notranslate nohighlight">\(\theta \in [0,2\pi]\)</span>. We often convert this to <span class="math notranslate nohighlight">\(\omega \in \mathbb{S}^1\)</span> by defining the unit vector <span class="math notranslate nohighlight">\(\omega = (\cos(\theta), \sin(\theta))\)</span>. Then the function <span class="math notranslate nohighlight">\(g_\omega\)</span> is defined on the vertices of <span class="math notranslate nohighlight">\(G\)</span> by taking the dot product of the embedding coordinates with the unit vector, specifically</p>
 <div class="math notranslate nohighlight">
 \[g_\omega(v) = \langle f(v), \omega\rangle.\]</div>
@@ -284,7 +286,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="merge_basics.html" class="btn btn-neutral float-left" title="3. Basic Tutorial: MergeTree class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="merge_basics.html" class="btn btn-neutral float-left" title="2. Basic Tutorial: MergeTree class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mapper_basics.html" class="btn btn-neutral float-right" title="4. Basic tutorial: MapperGraph class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
