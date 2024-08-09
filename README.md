@@ -41,4 +41,3 @@ The code is a compilation of work done by [Elizabeth Munch](http://www.elizabeth
 ## Contact Information
 
 - [Liz Munch](http://www.elizabethmunch.com): [muncheli@msu.edu](mailto:muncheli@msu.edu)
-- [Danielle Barnes](https://github.com/barnesd8): [barnesd8@msu.edu](mailto:barnesd8@msu.edu)

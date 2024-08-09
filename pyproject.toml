@@ -2,7 +2,7 @@
 
 [project]
 name = "cereeberus"
-version = "0.1.4"
+version = "0.1.5"
 authors = [
   { name="Liz Munch", email="muncheli@msu.edu" },
 ]
