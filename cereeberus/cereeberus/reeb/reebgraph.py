@@ -1,6 +1,7 @@
 import networkx as nx
 import cereeberus.compute.draw as draw
 import matplotlib.pyplot as plt
+import numpy as np
 
 class ReebGraph(nx.MultiDiGraph):
     """
@@ -133,6 +134,18 @@ class ReebGraph(nx.MultiDiGraph):
                 return len(s)* chr(ord(s[-1])+1)
         else:
             ValueError('Input must be a string or an integer')
+
+    def get_next_vert_name(self):
+        """Get the next name for a vertex in the Reeb graph. If there are no nodes, it will return 0.
+
+        Returns:
+            str or int
+                The next name in the sequence.
+        """
+        if len(self.nodes) == 0:
+            return 0
+        else:
+            return self.next_vert_name(max(self.nodes))
 
 
     def add_node(self, vertex, f_vertex, reset_pos=True):
@@ -390,33 +403,39 @@ class ReebGraph(nx.MultiDiGraph):
         return H
     
 
-    def slice(self,a,b, verbose = False):
+    def slice(self,a,b, type = 'open', verbose = False):
         """
-        Returns the subgraph of the Reeb graph with image in the open interval (a,b).
+        Returns the subgraph of the Reeb graph with image in the open interval (a,b) if `type = 'open'` or in the closed interval [a,b] of `type = 'closed'`.
         This will convert any edges that cross the slice into vertices.
 
         Parameters:
             a (float): The lower bound of the slice.
             b (float): The upper bound of the slice.
+            type (str): Optional. The type of interval used to take the slice. Can be 'open' or 'closed'. Default is 'open'.
         
         Returns:
             ReebGraph: The subgraph of the Reeb graph with image in (a,b).
         """
-        v_list = [v for v in self.nodes() if self.f[v] > a and self.f[v] < b]
+        if type == 'open':
+            v_list = [v for v in self.nodes() if self.f[v] > a and self.f[v] < b]
+        elif type == 'closed':
+            v_list = [v for v in self.nodes() if self.f[v] >= a and self.f[v] <= b]
 
         # Keep the edges where either endpoint (or both) is in (a,b)
         e_list = [e for e in self.edges() if e[0] in v_list or e[1] in v_list ]
         #Include the edges that cover the entire slice. 
         # Note this assumes that all edges are ordered twoards teh upper function value
         e_list.extend([e for e in self.edges() if self.f[e[0]]<a and self.f[e[1]]>b])
-        # e_list = ['-'.join([str(v) for v in edge]) for edge in e_list]
 
         # Make a dictionary of counts to deal with multiedges
         e_dict = {e:e_list.count(e) for e in e_list}
 
+
+
         if verbose:
             print('Vertices (v,f(v)):', [(v, self.f[v]) for v in v_list])
             print('Edges:', e_list)
+            print('Edge dictionary:', e_dict)
 
 
         # Build the subgraph 
@@ -429,7 +448,7 @@ class ReebGraph(nx.MultiDiGraph):
             if e[0] in v_list and e[1] in v_list:
                 # The edge is entirely in the set, so both vertices are already there
                 if verbose:
-                    print(f'Adding {e_dict[e]} copy/copies of edge {e} entirely inside slice:')
+                    print(f'Adding {e_dict[e]} of edge {e} entirely inside slice:')
 
                 for i in range(e_dict[e]): # Add an edge for each copy in the list
                     H.add_edge(e[0], e[1])
@@ -438,7 +457,7 @@ class ReebGraph(nx.MultiDiGraph):
             elif e[0] not in v_list and e[1] not in v_list:
                 # The edge is entirely crossing the slice, so we add two vertices and an edge
                 if verbose:
-                    print(f'Adding {e_dict[e]} copy/copies ofedge {e} with both endpoints outside slice')
+                    print(f'Adding {e_dict[e]} of edge {e} with both endpoints outside slice')
                 
                 for i in range(e_dict[e]):
                     v1 = '-'.join([str(v) for v in e])+'_'+str(i)+'_lower'
@@ -447,10 +466,15 @@ class ReebGraph(nx.MultiDiGraph):
                     H.add_node(v2, b)
                     H.add_edge(v1,v2)
             else:
-                # Half the edge is included 
+                # One vertex is in the set and one is out. 
+                # Need to check (for the closed case) that this isn't an edge going up from the top bound or down from the bottom bound
+                if e[0] in v_list and self.f[e[0]] == b or e[1] in v_list and self.f[e[1]] == a:
+                    if verbose:
+                        print(f'Edge {e} is not in the slice')
+                    continue
 
                 if verbose:
-                    print(f'adding {e_dict[e]} copy/copies of edge {e} with one endpoint outside slice')
+                    print(f'adding {e_dict[e]} of edge {e} with one endpoint outside slice')
                 
                 # Make a name for the new vertex to create
                 for i in range(e_dict[e]):
@@ -510,6 +534,162 @@ class ReebGraph(nx.MultiDiGraph):
         
         v_list = max(self.connected_components(), key=len)
         return self.induced_subgraph(v_list)
+
+    #-----------------------------------------------#
+    # Methods for getting matrices for the graph 
+    #-----------------------------------------------#
+
+    def adjacency_matrix(self, symmetrize = True):
+        """
+        Returns the adjacency matrix of the Reeb graph. Symmetrizes the matrix by default; if symmetrize = False, it will return the directed adjacency matrix.
+
+        Parameters:
+            symmetrize (bool): Optional. If True, will return the symmetrized adjacency matrix. If False, will return the directed adjacency matrix.
+
+        Returns:
+            numpy.ndarray: The adjacency matrix of the Reeb graph.
+        """
+        A = nx.to_numpy_array(self)
+        if symmetrize:
+            A = A + A.T
+
+        return A
+
+    def plot_adjacency_matrix(self, symmetrize = True):
+        plt.matshow(self.adjacency_matrix(symmetrize = symmetrize))
+        
+        # Add vertices as the row and column labels
+        plt.xticks(range(len(self.nodes)), self.nodes, rotation = 90)
+        plt.yticks(range(len(self.nodes)), self.nodes)
+    
+    def boundary_matrix(self):
+        """
+        Returns the boundary matrix of the Reeb graph.
+
+        Returns:
+            numpy.ndarray: The boundary matrix of the Reeb graph.
+        """
+        return nx.linalg.graphmatrix.incidence_matrix(self, oriented = True).toarray()
+    
+    def boundary_matrix(self):
+        """
+        Creates an boundary matrix for the graph, where :math:`B[v,e] = 1` if vertex :math:`v` is an endpoint of edge :math:`e` and :math:`B[v,e] = 0` otherwise.
+
+        Args:
+            G (networkx.Graph): The graph.
+            node_subset (list): A list of nodes representing the subset.
+
+        Returns:
+            numpy.ndarray: The boundary matrix.
+        """
+
+        V = list(self.nodes())
+        E = list(self.edges())
+
+        B = np.zeros((len(V), len(E)))
+
+        for j, e in enumerate(E):
+            i = V.index(e[0])
+            B[i, j] = 1
+
+            i = V.index(e[1])
+            B[i, j] = 1
+
+        return B
+    
+    def plot_boundary_matrix(self):
+        plt.matshow(self.boundary_matrix())
+        
+        # Add vertices as the row labels
+        plt.yticks(range(len(self.nodes)), self.nodes)
+        plt.xticks(range(len(self.edges)), self.edges, rotation = 90)
+
+
+    #-----------------------------------------------#
+    # Operations on Reeb graph to get new Reeb graph
+    #-----------------------------------------------#
+
+    def smoothing(self, eps = 1, return_map = False, verbose = False):
+        """
+        Builds the `eps`-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. 
+
+        Parameters:
+            eps (float): The amount of smoothing to apply.
+            return_map (bool): Optional. If True, will return a map from the vertices of the original Reeb graph to the vertices of the smoothed Reeb graph.
+            verbose (bool): Optional. If True, will print out additional information during the smoothing process.
+        
+        Returns:
+            ReebGraph: The smoothed Reeb graph.
+            If ``return_map`` is True, it returns a tuple with the second object giving a dictionary with keys as vertices in the original Reeb graph and values as vertices in the smoothed Reeb graph.
+        """
+
+        # Get the list of critical values to place new nodes 
+        crit_vals = list(set(self.f.values()))
+        new_crit_vals = [cv + eps for cv in crit_vals]
+        new_crit_vals.extend([cv - eps for cv in crit_vals])
+        if return_map == True:
+            # Only need to create vertices at this level if we want to return the map from
+            # the original vertices to the new vertices
+            new_crit_vals.extend(list(self.f.values()))
+        new_crit_vals = list(set(new_crit_vals))
+        new_crit_vals.sort()
+
+        # Create the new Reeb graph
+        R_eps = ReebGraph()
+
+        cv_0 = new_crit_vals[0]-eps # is arbitrary
+        H_0 = self.slice(cv_0-eps, cv_0+eps, type = 'closed') # This should give empty graph 
+        C_0 = list(H_0.connected_components()) # This should give empty list
+        comp_to_new_vert_0 = {}
+
+        if return_map == True:
+            # This will be a dictionary with keys as vertices in R and values as vertices in R_eps
+            map = {}
+
+
+        for i in range(len(new_crit_vals)):
+            cv = new_crit_vals[i]
+            # print(f"Current critical value: {cv}")
+            H = self.slice(cv-eps, cv+eps, type = 'closed')
+            C = list(H.connected_components())
+
+            # Add vertices 
+            comp_to_new_vert = {}
+            for i,c  in enumerate(C):
+                vert_name = R_eps.get_next_vert_name()
+                R_eps.add_node(vert_name, cv, reset_pos = False)
+                comp_to_new_vert[i] = vert_name
+
+                if return_map == True:
+                    for v in c:
+                        if v in self.nodes() and self.f[v] == cv:
+                            map[v] = vert_name
+
+            # Add edges 
+            for i,c in enumerate(C):
+                for i_0, c_0 in enumerate(C_0):
+                    if len(c.intersection(c_0)) > 0:
+                        R_eps.add_edge(comp_to_new_vert[i], comp_to_new_vert_0[i_0])
+
+            # Set up for the next round
+            cv_0 = cv
+            H_0 = H
+            C_0 = C 
+            comp_to_new_vert_0 = comp_to_new_vert
+
+        R_eps.set_pos_from_f()
+
+        if return_map == True:
+            return R_eps, map
+        else:
+            return R_eps
+
+
+
+
+    #-----------------------------------------------#
+    # Methods for converting to other graph types
+    #-----------------------------------------------#
     
 
     def to_mapper(self, delta = None):

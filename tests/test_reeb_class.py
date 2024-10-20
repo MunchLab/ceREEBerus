@@ -195,9 +195,33 @@ class TestReebClass(unittest.TestCase):
 
         # Example chosen so that we have vertices with value on the endpoints (we're assuming open interval so shouldn't be included)
         # We also have at least one edge that completely crosses the interval in question
-        H = R.slice( 2,6)
+        H = R.slice( 2,5)
 
         self.assertEqual(H.number_connected_components(),3 )
+
+        # Example chosen so that we have vertices with value on the endpoints (we're using closed interval so now these should be included)
+        H = R.slice( 2,5, type = 'closed')
+
+        self.assertEqual(H.number_connected_components(),2 )
+
+    def test_smoothing(self):
+        # This test makes sure you can smooth a Reeb graph.
+        R = ex_rg.juggling_man()
+
+        R_eps = R.smoothing(0.1)
+        self.assertIsInstance(R_eps, ReebGraph)
+        self.check_reeb(R_eps)
+
+    def test_matrices(self):
+        # This test makes sure you can get the adjacency matrix and boundary matrix of a Reeb graph.
+        R = ex_rg.juggling_man()
+        A = R.adjacency_matrix()
+        self.assertEqual(A.shape, (len(R.nodes), len(R.nodes)))
+
+        B = R.boundary_matrix()
+        self.assertEqual(B.shape, (len(R.nodes), len(R.edges)))
+
+
 
 
        
