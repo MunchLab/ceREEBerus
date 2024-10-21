@@ -94,4 +94,20 @@ class MapperGraph(ReebGraph):
         """
         R = super().induced_subgraph(nodes)
         return R.to_mapper(self.delta)
+
+
+    def smoothing(self, n = 1, return_map = False):
+        """
+        Compute the smoothing of a mapper graph as given in todo: Cite the paper. Note that the input :math:`n` parameter is related to the integer function values, not the delta-scaled function values.
+
+        Parameters:
+            n (int): The amount of smoothing
+        """
+        if type(n) != int:
+            raise ValueError("Smoothing amount must be an integer.")
+        if return_map == True:
+            M_n, induced_map = super().smoothing(n, return_map)
+            return M_n.to_mapper(self.delta), induced_map
+        else:
+            return super().smoothing(n, return_map = False).to_mapper(self.delta)
     

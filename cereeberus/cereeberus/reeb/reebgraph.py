@@ -103,6 +103,23 @@ class ReebGraph(nx.MultiDiGraph):
         """
         return nx.number_connected_components(self.to_undirected())
     
+    def func_to_vertex_dict(self):
+        """
+        Get a dictionary mapping function values to all vertices at that height.
+
+        Returns:
+            dict
+                A dictionary mapping function values to vertices.
+        """
+        f_to_v = {}
+        for v in self.nodes:
+            f = self.f[v]
+            if f in f_to_v:
+                f_to_v[f].append(v)
+            else:
+                f_to_v[f] = [v]
+        return f_to_v
+    
     #-----------------------------------------------#
     # Methods for adding and removing nodes and edges 
     #-----------------------------------------------#
@@ -609,13 +626,17 @@ class ReebGraph(nx.MultiDiGraph):
     # Operations on Reeb graph to get new Reeb graph
     #-----------------------------------------------#
 
-    def smoothing(self, eps = 1, return_map = False, verbose = False):
+    def smoothing(self, eps = 1, 
+                  return_map = False, 
+                  map_type = 'dict',
+                  verbose = False):
         """
         Builds the `eps`-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. 
 
         Parameters:
             eps (float): The amount of smoothing to apply.
             return_map (bool): Optional. If True, will return a map from the vertices of the original Reeb graph to the vertices of the smoothed Reeb graph.
+            map_type (str): Optional. The type of map to return. Can be 'matrix' or 'dictionary'. Default is 'matrix'.
             verbose (bool): Optional. If True, will print out additional information during the smoothing process.
         
         Returns:
@@ -680,7 +701,14 @@ class ReebGraph(nx.MultiDiGraph):
         R_eps.set_pos_from_f()
 
         if return_map == True:
-            return R_eps, map
+            if map_type == 'matrix':
+                # Create the matrix version of the map
+                map_matrix = np.zeros((len(self.nodes), len(R_eps.nodes)))
+                for v in map:
+                    map_matrix[v, R_eps.nodes().index(map[v])] = 1
+                return R_eps, map_matrix
+            else:
+                return R_eps, map
         else:
             return R_eps
 
