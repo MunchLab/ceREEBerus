@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>4. Basic tutorial: MapperGraph class &mdash; ceREEBerus 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
 
   
   <!--[if lt IE 9]>
@@ -18,7 +18,7 @@
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/doctools.js?v=9bcbadda"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -56,8 +56,12 @@
 <li class="toctree-l2"><a class="reference internal" href="reeb_basics.html">1. Basic Tutorial: Reeb graph class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="merge_basics.html">2. Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="embed_graph_basics.html">3. Basic Tutorial: Embedded graph class</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">4. Basic tutorial: <code class="docutils literal notranslate"><span class="pre">MapperGraph</span></code> class</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4. Basic tutorial: <code class="docutils literal notranslate"><span class="pre">MapperGraph</span></code> class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Smoothing-of-mapper-graph">4.1. Smoothing of mapper graph</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="example_graphs.html">5. Example graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interleaving_basics.html">6. Basic tutorial: <code class="docutils literal notranslate"><span class="pre">Interleaving</span></code> class</a></li>
 </ul>
 </li>
 </ul>
@@ -108,7 +112,7 @@
 </div>
 <p>Mapper graphs are similar to Reeb graphs, except that: - The value of <span class="math notranslate nohighlight">\(f\)</span> are <em>integers</em> in some range, <code class="docutils literal notranslate"><span class="pre">[n_low,</span> <span class="pre">...</span> <span class="pre">,</span> <span class="pre">n_high]</span></code>. - We store a <code class="docutils literal notranslate"><span class="pre">delta</span></code> so that we can equivalently think of the function values as being <code class="docutils literal notranslate"><span class="pre">[delta</span> <span class="pre">*</span> <span class="pre">n_low,</span> <span class="pre">...</span> <span class="pre">,</span> <span class="pre">delta</span> <span class="pre">*</span> <span class="pre">n_high]</span></code>. - All edges have adjacent integers for function values. Equivalently, the inverse image of an integer is only vertices, no internal points of edges. This can be done by subdividing any edge as needed.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MG</span> <span class="o">=</span> <span class="n">MapperGraph</span><span class="p">(</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">delta</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
@@ -143,7 +147,7 @@
 </div>
 <p>We can convert a <code class="docutils literal notranslate"><span class="pre">ReebGraph</span></code> class instance into a <code class="docutils literal notranslate"><span class="pre">MapperGraph</span></code> class instance. Note that this is <strong>NOT</strong> the same as computing the mapper graph of a Reeb graph treated as the input object.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ex_rg</span><span class="o">.</span><span class="n">dancing_man</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
@@ -168,7 +172,7 @@
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MG</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">to_mapper</span><span class="p">()</span>
@@ -184,6 +188,117 @@
 </div>
 </div>
 <p>However, if the Reeb graph has any vertices with a non-integer function value, no mapper graph instance can be created.</p>
+<section id="Smoothing-of-mapper-graph">
+<h2><span class="section-number">4.1. </span>Smoothing of mapper graph<a class="headerlink" href="#Smoothing-of-mapper-graph" title="Link to this heading"></a></h2>
+<p>We can construct the smoothing of a mapper graph in the same way that we can</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ex_rg</span><span class="o">.</span><span class="n">dancing_man</span><span class="p">()</span>
+<span class="n">R</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="mi">2</span><span class="o">*</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+<span class="n">M</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">to_mapper</span><span class="p">(</span><span class="n">delta</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">M</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_mapper_basics_9_0.png" src="../_images/notebooks_mapper_basics_9_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">M_n</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">smoothing</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">M</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
+<span class="n">M</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_mapper_basics_10_0.png" src="../_images/notebooks_mapper_basics_10_0.png" />
+</div>
+</div>
+<p>If we want this to return the map <span class="math notranslate nohighlight">\((M,f) \to S_n(M,f)\)</span> induced by inclusion, we can pass the <code class="docutils literal notranslate"><span class="pre">return_map</span> <span class="pre">=</span> <span class="pre">True</span></code> flag.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">M_n</span><span class="p">,</span> <span class="n">map_induced</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">smoothing</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">return_map</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="n">M_n</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">map_induced</span><span class="o">.</span><span class="n">keys</span><span class="p">())[:</span><span class="mi">5</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original vertex </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2"> maps to new vertex </span><span class="si">{</span><span class="n">map_induced</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Original vertex 7 maps to new vertex 1
+Original vertex 15 maps to new vertex 2
+Original vertex 16 maps to new vertex 3
+Original vertex 17 maps to new vertex 4
+Original vertex 18 maps to new vertex 5
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_mapper_basics_12_1.png" src="../_images/notebooks_mapper_basics_12_1.png" />
+</div>
+</div>
+<p>We can also look at some matrices for the underlying graph.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Returns the adjacency matrix</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">M_n</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">()</span>
+
+<span class="c1"># Plots the adjacency matrix</span>
+<span class="n">M_n</span><span class="o">.</span><span class="n">plot_adjacency_matrix</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_mapper_basics_14_0.png" src="../_images/notebooks_mapper_basics_14_0.png" />
+</div>
+</div>
+<p>We also have the boundary matrix, where <span class="math notranslate nohighlight">\(B[v,e] = 1\)</span> if <span class="math notranslate nohighlight">\(v\)</span> is an endpoint of <span class="math notranslate nohighlight">\(e\)</span>. Note that the edge labels <code class="docutils literal notranslate"><span class="pre">(u,v,k)</span></code> have a third entry in case of multiple edges between <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Returns the boundary matrix</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">M_n</span><span class="o">.</span><span class="n">boundary_matrix</span><span class="p">()</span>
+
+<span class="c1"># Plots the boundary matrix.</span>
+<span class="n">M_n</span><span class="o">.</span><span class="n">plot_boundary_matrix</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_mapper_basics_16_0.png" src="../_images/notebooks_mapper_basics_16_0.png" />
+</div>
+</div>
+</section>
 </section>
 
 

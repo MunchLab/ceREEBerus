@@ -217,9 +217,9 @@ class ReebGraph(nx.MultiDiGraph):
             raise ValueError(f'The vertex {vertex} is not in the Reeb graph.')
         super().remove_node(vertex)
         del self.f[vertex]
-        del self.pos_f[vertex]
 
         if reset_pos:
+            del self.pos_f[vertex]
             self.set_pos_from_f()
 
     def remove_nodes_from(self, nodes, reset_pos=True):
@@ -578,15 +578,6 @@ class ReebGraph(nx.MultiDiGraph):
         # Add vertices as the row and column labels
         plt.xticks(range(len(self.nodes)), self.nodes, rotation = 90)
         plt.yticks(range(len(self.nodes)), self.nodes)
-    
-    def boundary_matrix(self):
-        """
-        Returns the boundary matrix of the Reeb graph.
-
-        Returns:
-            numpy.ndarray: The boundary matrix of the Reeb graph.
-        """
-        return nx.linalg.graphmatrix.incidence_matrix(self, oriented = True).toarray()
     
     def boundary_matrix(self):
         """

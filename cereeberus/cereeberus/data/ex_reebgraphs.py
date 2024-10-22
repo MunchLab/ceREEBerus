@@ -73,3 +73,46 @@ def simple_loops_unordered(seed=None):
         ReebGraph: The Reeb graph of the simple loops example.
     '''
     return ReebGraph(ex_graphs.simple_loops_unordered(), seed=seed)
+
+def interleave_example_A(seed=None):
+    '''
+    Returns the Reeb graph of the first example for the interleave function.
+
+    Parameters:
+        seed (int): Optional. The seed to use for the random number generator, which only controls the layout function.
+
+    Returns:
+        ReebGraph: The Reeb graph of the first example for the interleave function.
+
+    .. figure:: ../../images/interleave_example_A.png
+        :figwidth: 400px
+    '''
+
+    R = dancing_man()
+    R.subdivide_edge(6,7,8, 3)
+    R.add_edge(8,1)
+    R.f = {v: 2*R.f[v] for v in R.nodes()}
+    R.set_pos_from_f(seed=seed)
+
+
+    return R
+
+def interleave_example_B(seed=None):
+    '''
+    Returns the Reeb graph of the second example for the interleave function.
+
+    Parameters:
+        seed (int): Optional. The seed to use for the random number generator, which only controls the layout function.
+    
+    Returns:
+        ReebGraph: The Reeb graph of the second example for the interleave function.
+    
+    .. figure:: ../../images/interleave_example_B.png
+        :figwidth: 400px
+    '''
+    R = interleave_example_A()
+    R.f[8] = 3
+    R.f[5] = 3
+    R.remove_edge(3,1)
+    R.set_pos_from_f(seed = seed)
+    return R

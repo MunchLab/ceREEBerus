@@ -16,7 +16,7 @@
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9bcbadda"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -196,6 +196,26 @@
         <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">number_connected_components</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_undirected</span><span class="p">())</span></div>
 
     
+<div class="viewcode-block" id="ReebGraph.func_to_vertex_dict">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.func_to_vertex_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">func_to_vertex_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a dictionary mapping function values to all vertices at that height.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict</span>
+<span class="sd">                A dictionary mapping function values to vertices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f_to_v</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">f_to_v</span><span class="p">:</span>
+                <span class="n">f_to_v</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">f_to_v</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">f_to_v</span></div>
+
+    
     <span class="c1">#-----------------------------------------------#</span>
     <span class="c1"># Methods for adding and removing nodes and edges </span>
     <span class="c1">#-----------------------------------------------#</span>
@@ -307,9 +327,9 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The vertex </span><span class="si">{</span><span class="n">vertex</span><span class="si">}</span><span class="s1"> is not in the Reeb graph.&#39;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
 
 
@@ -715,15 +735,6 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span></div>
 
     
-    <span class="k">def</span> <span class="nf">boundary_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the boundary matrix of the Reeb graph.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            numpy.ndarray: The boundary matrix of the Reeb graph.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">graphmatrix</span><span class="o">.</span><span class="n">incidence_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oriented</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
-    
 <div class="viewcode-block" id="ReebGraph.boundary_matrix">
 <a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.boundary_matrix">[docs]</a>
     <span class="k">def</span> <span class="nf">boundary_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -770,13 +781,17 @@
 
 <div class="viewcode-block" id="ReebGraph.smoothing">
 <a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.smoothing">[docs]</a>
-    <span class="k">def</span> <span class="nf">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">return_map</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
+                  <span class="n">return_map</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                  <span class="n">map_type</span> <span class="o">=</span> <span class="s1">&#39;dict&#39;</span><span class="p">,</span>
+                  <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Builds the `eps`-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. </span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            eps (float): The amount of smoothing to apply.</span>
 <span class="sd">            return_map (bool): Optional. If True, will return a map from the vertices of the original Reeb graph to the vertices of the smoothed Reeb graph.</span>
+<span class="sd">            map_type (str): Optional. The type of map to return. Can be &#39;matrix&#39; or &#39;dictionary&#39;. Default is &#39;matrix&#39;.</span>
 <span class="sd">            verbose (bool): Optional. If True, will print out additional information during the smoothing process.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
@@ -841,7 +856,14 @@
         <span class="n">R_eps</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">return_map</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">R_eps</span><span class="p">,</span> <span class="nb">map</span>
+            <span class="k">if</span> <span class="n">map_type</span> <span class="o">==</span> <span class="s1">&#39;matrix&#39;</span><span class="p">:</span>
+                <span class="c1"># Create the matrix version of the map</span>
+                <span class="n">map_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">R_eps</span><span class="o">.</span><span class="n">nodes</span><span class="p">)))</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">:</span>
+                    <span class="n">map_matrix</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">R_eps</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">map</span><span class="p">[</span><span class="n">v</span><span class="p">])]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">return</span> <span class="n">R_eps</span><span class="p">,</span> <span class="n">map_matrix</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">R_eps</span><span class="p">,</span> <span class="nb">map</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">R_eps</span></div>
 

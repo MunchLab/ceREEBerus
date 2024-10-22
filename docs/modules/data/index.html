@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2. Example Data and graphs &mdash; ceREEBerus 0.1.0 documentation</title>
+  <title>3. Example Data and graphs &mdash; ceREEBerus 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,14 +17,14 @@
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/doctools.js?v=9bcbadda"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="2.1. Reeb Graphs" href="ex_reebgraphs.html" />
-    <link rel="prev" title="1.4. MapperGraph class" href="../reeb/mappergraph.html" /> 
+    <link rel="next" title="3.1. Reeb Graphs" href="ex_reebgraphs.html" />
+    <link rel="prev" title="2.1. Interleave class" href="../dist/interleave.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,14 +50,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Modules and Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../reeb/index.html">1. ReebGraph and Related Classes</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">2. Example data and graphs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ex_reebgraphs.html">2.1.  Example Reeb Graphs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ex_mergetrees.html">2.2.  Example Merge Trees</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ex_embedgraphs.html">2.3.  Example Embedded Graphs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ex_mappergraphs.html">2.4.  Example Mapper Graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dist/index.html">2. Distances</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3. Example data and graphs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ex_reebgraphs.html">3.1.  Example Reeb Graphs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ex_mergetrees.html">3.2.  Example Merge Trees</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ex_embedgraphs.html">3.3.  Example Embedded Graphs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ex_mappergraphs.html">3.4.  Example Mapper Graphs</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../compute/index.html">3. Compute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compute/index.html">4. Compute</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Tutorial Notebooks</a></li>
@@ -78,7 +79,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Modules</a></li>
-      <li class="breadcrumb-item active"><span class="section-number">2. </span>Example Data and graphs</li>
+      <li class="breadcrumb-item active"><span class="section-number">3. </span>Example Data and graphs</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/modules/data/index.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -89,33 +90,33 @@
            <div itemprop="articleBody">
              
   <section id="example-data-and-graphs">
-<h1><span class="section-number">2. </span>Example Data and graphs<a class="headerlink" href="#example-data-and-graphs" title="Link to this heading"></a></h1>
+<h1><span class="section-number">3. </span>Example Data and graphs<a class="headerlink" href="#example-data-and-graphs" title="Link to this heading"></a></h1>
 <p>This module contains examples to use for Reeb graph computations.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ex_reebgraphs.html">2.1.  Example Reeb Graphs</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="ex_reebgraphs.html">3.1.  Example Reeb Graphs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.torus"><code class="docutils literal notranslate"><span class="pre">torus()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.dancing_man"><code class="docutils literal notranslate"><span class="pre">dancing_man()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.juggling_man"><code class="docutils literal notranslate"><span class="pre">juggling_man()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.simple_loops"><code class="docutils literal notranslate"><span class="pre">simple_loops()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.simple_loops_unordered"><code class="docutils literal notranslate"><span class="pre">simple_loops_unordered()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.interleave_example_A"><code class="docutils literal notranslate"><span class="pre">interleave_example_A()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.interleave_example_B"><code class="docutils literal notranslate"><span class="pre">interleave_example_B()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ex_mergetrees.html">2.2.  Example Merge Trees</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ex_mergetrees.html#cereeberus.data.ex_mergetrees.randomMergeTree"><code class="docutils literal notranslate"><span class="pre">randomMergeTree()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="ex_mergetrees.html#cereeberus.data.ex_mergetrees.randomizeMergeFunction"><code class="docutils literal notranslate"><span class="pre">randomizeMergeFunction()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ex_embedgraphs.html">2.3.  Example Embedded Graphs</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="ex_mergetrees.html">3.2.  Example Merge Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ex_embedgraphs.html">3.3.  Example Embedded Graphs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ex_embedgraphs.html#cereeberus.data.ex_embedgraphs.exampleEmbeddedGraph"><code class="docutils literal notranslate"><span class="pre">exampleEmbeddedGraph()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ex_mappergraphs.html">2.4.  Example Mapper Graphs</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="ex_mappergraphs.html">3.4.  Example Mapper Graphs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ex_mappergraphs.html#cereeberus.data.ex_mappergraphs.torus"><code class="docutils literal notranslate"><span class="pre">torus()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ex_mappergraphs.html#cereeberus.data.ex_mappergraphs.dancing_man"><code class="docutils literal notranslate"><span class="pre">dancing_man()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ex_mappergraphs.html#cereeberus.data.ex_mappergraphs.juggling_man"><code class="docutils literal notranslate"><span class="pre">juggling_man()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ex_mappergraphs.html#cereeberus.data.ex_mappergraphs.simple_loops"><code class="docutils literal notranslate"><span class="pre">simple_loops()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="ex_mappergraphs.html#cereeberus.data.ex_mappergraphs.simple_loops_unordered"><code class="docutils literal notranslate"><span class="pre">simple_loops_unordered()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex_mappergraphs.html#cereeberus.data.ex_mappergraphs.interleave_example_A"><code class="docutils literal notranslate"><span class="pre">interleave_example_A()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ex_mappergraphs.html#cereeberus.data.ex_mappergraphs.interleave_example_B"><code class="docutils literal notranslate"><span class="pre">interleave_example_B()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -126,8 +127,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../reeb/mappergraph.html" class="btn btn-neutral float-left" title="1.4. MapperGraph class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ex_reebgraphs.html" class="btn btn-neutral float-right" title="2.1. Reeb Graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../dist/interleave.html" class="btn btn-neutral float-left" title="2.1. Interleave class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ex_reebgraphs.html" class="btn btn-neutral float-right" title="3.1. Reeb Graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -16,7 +16,7 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=01f34227"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9bcbadda"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -103,6 +103,8 @@
       <li><a href="modules/compute/compute_uf.html#cereeberus.compute.uf.UnionFind.__init__">__init__() (cereeberus.compute.uf.UnionFind method)</a>
 
       <ul>
+        <li><a href="modules/dist/interleave.html#cereeberus.dist.interleave.Interleave.__init__">(cereeberus.dist.interleave.Interleave method)</a>
+</li>
         <li><a href="modules/reeb/embedgraph.html#cereeberus.reeb.embeddedgraph.EmbeddedGraph.__init__">(cereeberus.reeb.embeddedgraph.EmbeddedGraph method)</a>
 </li>
         <li><a href="modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.__init__">(cereeberus.reeb.mapper.MapperGraph method)</a>
@@ -166,6 +168,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/dist/interleave.html#cereeberus.dist.interleave.Interleave.block_dict_to_matrix">block_dict_to_matrix() (cereeberus.dist.interleave.Interleave method)</a>
+</li>
       <li><a href="modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.boundary_matrix">boundary_matrix() (cereeberus.reeb.reebgraph.ReebGraph method)</a>
 </li>
   </ul></td>
@@ -230,17 +234,17 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    cereeberus.data.ex_mergetrees
-
-      <ul>
-        <li><a href="modules/data/ex_mergetrees.html#module-cereeberus.data.ex_mergetrees">module</a>
-</li>
-      </ul></li>
-      <li>
     cereeberus.data.ex_reebgraphs
 
       <ul>
         <li><a href="modules/data/ex_reebgraphs.html#module-cereeberus.data.ex_reebgraphs">module</a>
+</li>
+      </ul></li>
+      <li>
+    cereeberus.dist.interleave
+
+      <ul>
+        <li><a href="modules/dist/interleave.html#module-cereeberus.dist.interleave">module</a>
 </li>
       </ul></li>
       <li>
@@ -297,20 +301,26 @@
 </li>
       <li><a href="modules/compute/compute_distance.html#cereeberus.compute.distance.directedMergeTreeDistance">directedMergeTreeDistance() (in module cereeberus.compute.distance)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.down_degree">down_degree() (cereeberus.reeb.reebgraph.ReebGraph method)</a>
 
       <ul>
         <li><a href="modules/compute/compute_degree.html#cereeberus.compute.degree.down_degree">(in module cereeberus.compute.degree)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.draw">draw() (cereeberus.reeb.merge.MergeTree method)</a>
 
       <ul>
         <li><a href="modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.draw">(cereeberus.reeb.reebgraph.ReebGraph method)</a>
 </li>
       </ul></li>
+      <li><a href="modules/dist/interleave.html#cereeberus.dist.interleave.Interleave.draw_B">draw_B() (cereeberus.dist.interleave.Interleave method)</a>
+</li>
+      <li><a href="modules/dist/interleave.html#cereeberus.dist.interleave.Interleave.draw_I">draw_I() (cereeberus.dist.interleave.Interleave method)</a>
+</li>
+      <li><a href="modules/dist/interleave.html#cereeberus.dist.interleave.Interleave.draw_matrix">draw_matrix() (cereeberus.dist.interleave.Interleave method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -333,11 +343,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/compute/compute_uf.html#cereeberus.compute.uf.UnionFind.find">find() (cereeberus.compute.uf.UnionFind method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/compute/compute_distance.html#cereeberus.compute.distance.findFiltration">findFiltration() (in module cereeberus.compute.distance)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.fix_pos_f">fix_pos_f() (cereeberus.reeb.merge.MergeTree method)</a>
+</li>
+      <li><a href="modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.func_to_vertex_dict">func_to_vertex_dict() (cereeberus.reeb.reebgraph.ReebGraph method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -401,10 +413,24 @@
         <li><a href="modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.induced_subgraph">(cereeberus.reeb.reebgraph.ReebGraph method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.inputToDirRootTree">inputToDirRootTree() (cereeberus.reeb.merge.MergeTree method)</a>
 </li>
+      <li><a href="modules/dist/interleave.html#cereeberus.dist.interleave.Interleave">Interleave (class in cereeberus.dist.interleave)</a>
+</li>
+      <li><a href="modules/data/ex_mappergraphs.html#cereeberus.data.ex_mappergraphs.interleave_example_A">interleave_example_A() (in module cereeberus.data.ex_mappergraphs)</a>
+
+      <ul>
+        <li><a href="modules/data/ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.interleave_example_A">(in module cereeberus.data.ex_reebgraphs)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/data/ex_mappergraphs.html#cereeberus.data.ex_mappergraphs.interleave_example_B">interleave_example_B() (in module cereeberus.data.ex_mappergraphs)</a>
+
+      <ul>
+        <li><a href="modules/data/ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.interleave_example_B">(in module cereeberus.data.ex_reebgraphs)</a>
+</li>
+      </ul></li>
       <li><a href="modules/compute/compute_uf.html#cereeberus.compute.uf.UnionFind.isFullyConnected">isFullyConnected() (cereeberus.compute.uf.UnionFind method)</a>
 </li>
       <li><a href="modules/compute/compute_merge.html#cereeberus.compute.merge.isMerge">isMerge() (in module cereeberus.compute.merge)</a>
@@ -445,6 +471,8 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/dist/interleave.html#cereeberus.dist.interleave.Interleave.map_dict_to_matrix">map_dict_to_matrix() (cereeberus.dist.interleave.Interleave method)</a>
+</li>
       <li><a href="modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph">MapperGraph (class in cereeberus.reeb.mapper)</a>
 </li>
       <li><a href="modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.mapperify">mapperify() (cereeberus.reeb.mapper.MapperGraph method)</a>
@@ -471,9 +499,9 @@
 </li>
         <li><a href="modules/data/ex_mappergraphs.html#module-cereeberus.data.ex_mappergraphs">cereeberus.data.ex_mappergraphs</a>
 </li>
-        <li><a href="modules/data/ex_mergetrees.html#module-cereeberus.data.ex_mergetrees">cereeberus.data.ex_mergetrees</a>
-</li>
         <li><a href="modules/data/ex_reebgraphs.html#module-cereeberus.data.ex_reebgraphs">cereeberus.data.ex_reebgraphs</a>
+</li>
+        <li><a href="modules/dist/interleave.html#module-cereeberus.dist.interleave">cereeberus.dist.interleave</a>
 </li>
         <li><a href="modules/reeb/embedgraph.html#module-cereeberus.reeb.embeddedgraph">cereeberus.reeb.embeddedgraph</a>
 </li>
@@ -518,10 +546,6 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules/data/ex_mergetrees.html#cereeberus.data.ex_mergetrees.randomizeMergeFunction">randomizeMergeFunction() (in module cereeberus.data.ex_mergetrees)</a>
-</li>
-      <li><a href="modules/data/ex_mergetrees.html#cereeberus.data.ex_mergetrees.randomMergeTree">randomMergeTree() (in module cereeberus.data.ex_mergetrees)</a>
-</li>
       <li><a href="modules/reeb/embedgraph.html#cereeberus.reeb.embeddedgraph.EmbeddedGraph.reeb_graph_from_direction">reeb_graph_from_direction() (cereeberus.reeb.embeddedgraph.EmbeddedGraph method)</a>
 </li>
       <li><a href="modules/compute/compute_draw.html#cereeberus.compute.draw.reeb_plot">reeb_plot() (in module cereeberus.compute.draw)</a>
@@ -530,14 +554,14 @@
 </li>
       <li><a href="modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_all_regular_vertices">remove_all_regular_vertices() (cereeberus.reeb.reebgraph.ReebGraph method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.remove_isolates">remove_isolates() (cereeberus.reeb.reebgraph.ReebGraph method)</a>
 
       <ul>
         <li><a href="modules/compute/compute_degree.html#cereeberus.compute.degree.remove_isolates">(in module cereeberus.compute.degree)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.remove_node">remove_node() (cereeberus.reeb.merge.MergeTree method)</a>
 
       <ul>
@@ -576,20 +600,24 @@
         <li><a href="modules/data/ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.simple_loops">(in module cereeberus.data.ex_reebgraphs)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/data/ex_mappergraphs.html#cereeberus.data.ex_mappergraphs.simple_loops_unordered">simple_loops_unordered() (in module cereeberus.data.ex_mappergraphs)</a>
 
       <ul>
         <li><a href="modules/data/ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.simple_loops_unordered">(in module cereeberus.data.ex_reebgraphs)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.slice">slice() (cereeberus.reeb.reebgraph.ReebGraph method)</a>
 </li>
       <li><a href="modules/compute/compute_draw.html#cereeberus.compute.draw.slope_intercept">slope_intercept() (in module cereeberus.compute.draw)</a>
 </li>
-      <li><a href="modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.smoothing">smoothing() (cereeberus.reeb.reebgraph.ReebGraph method)</a>
+      <li><a href="modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.smoothing">smoothing() (cereeberus.reeb.mapper.MapperGraph method)</a>
+
+      <ul>
+        <li><a href="modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.smoothing">(cereeberus.reeb.reebgraph.ReebGraph method)</a>
 </li>
+      </ul></li>
       <li><a href="modules/reeb/embedgraph.html#cereeberus.reeb.embeddedgraph.EmbeddedGraph.sort_edges">sort_edges() (cereeberus.reeb.embeddedgraph.EmbeddedGraph method)</a>
 </li>
       <li><a href="modules/reeb/embedgraph.html#cereeberus.reeb.embeddedgraph.EmbeddedGraph.sort_vertices">sort_vertices() (cereeberus.reeb.embeddedgraph.EmbeddedGraph method)</a>

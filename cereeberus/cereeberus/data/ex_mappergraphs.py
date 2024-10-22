@@ -1,5 +1,6 @@
 from cereeberus import ReebGraph, MapperGraph
 from cereeberus.data import ex_graphs
+from cereeberus.data import ex_reebgraphs as ex_rg
 
 def torus(delta = .1, seed=None):
     '''
@@ -85,3 +86,35 @@ def simple_loops_unordered(seed=None):
 
     '''
     return ReebGraph(ex_graphs.simple_loops_unordered(), seed=seed).to_mapper()
+
+def interleave_example_A():
+    '''
+    Returns the mapper graph of the first example for the interleave function.
+
+    Parameters:
+        seed (int): Optional. The seed to use for the random number generator, which only controls the layout function.
+
+    Returns:
+        MapperGraph: The mapper graph of the first example for the interleave function.
+    
+    .. figure:: ../../images/interleave_example_A_mapper.png
+        :figwidth: 400px
+
+    '''
+    return ex_rg.interleave_example_A().to_mapper()
+
+def interleave_example_B():
+    '''
+    Returns the mapper graph of the second example for the interleave function.
+
+    Parameters:
+        seed (int): Optional. The seed to use for the random number generator, which only controls the layout function.
+
+    Returns:
+        MapperGraph: The mapper graph of the second example for the interleave function.
+    
+    .. figure:: ../../images/interleave_example_B_mapper.png
+        :figwidth: 400px
+
+    '''
+    return ex_rg.interleave_example_B().to_mapper()
