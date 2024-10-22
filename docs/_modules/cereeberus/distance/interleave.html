@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cereeberus.distance.interleave &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cereeberus.distance.interleave</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cereeberus.distance.interleave</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">MapperGraph</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">block_diag</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<div class="viewcode-block" id="Interleave">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave">[docs]</a>
+<span class="k">class</span> <span class="nc">Interleave</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to bound the interleaving distance between two Mapper graphs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Interleave.__init__">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Interleave object.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            F : MapperGraph</span>
+<span class="sd">                The first Mapper graph.</span>
+<span class="sd">            G : MapperGraph</span>
+<span class="sd">                The second Mapper graph.</span>
+<span class="sd">            n : int</span>
+<span class="sd">                The interleaving parameter. The default is 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+
+        <span class="c1"># ---</span>
+        <span class="c1"># Containers for matrices for later </span>
+        <span class="c1"># self.A = {&#39;F&#39;:{}, &#39;G&#39;:{}} # adjacency matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;F&#39;</span><span class="p">:{},</span> <span class="s1">&#39;G&#39;</span><span class="p">:{}}</span> <span class="c1"># boundary matrix</span>
+        <span class="c1"># self.D = {&#39;F&#39;:{}, &#39;G&#39;:{}} # distance matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;F&#39;</span><span class="p">:{},</span> <span class="s1">&#39;G&#39;</span><span class="p">:{}}</span> <span class="c1"># induced maps</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;F&#39;</span><span class="p">:{},</span> <span class="s1">&#39;G&#39;</span><span class="p">:{}}</span> <span class="c1"># dictionaries from function values to vertices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;F&#39;</span><span class="p">:{},</span> <span class="s1">&#39;G&#39;</span><span class="p">:{}}</span> <span class="c1"># dictionaries from function values to edges</span>
+
+        <span class="c1"># ----</span>
+        <span class="c1"># Make F graphs and smoothed versions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">F</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="n">I_0</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">return_map</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">[</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> <span class="n">I_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">return_map</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Get the dictionaries needed for the induced maps&#39; block structure </span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">func_to_vertex_dict</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">func_to_edge_dict</span><span class="p">()</span>
+
+        
+        
+        <span class="c1"># Make the induced map from F_0 to F_n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="n">I_0</span><span class="p">,</span> 
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+        <span class="n">I_0_edges</span> <span class="o">=</span> <span class="p">{(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">):</span> <span class="p">(</span><span class="n">I_0</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">I_0</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="n">I_0_edges</span><span class="p">,</span> 
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Make the induced map from F_n to F_2n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="n">I_n</span><span class="p">,</span> 
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
+        <span class="c1"># Note that in this setting, the induced map on edges is the same as the map sending the edge to the edge with endpoints given by the vertices since there are no double edges for any smoothing &gt;= 1. </span>
+        <span class="n">I_n_edges</span> <span class="o">=</span> <span class="p">{(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">):</span> <span class="p">(</span><span class="n">I_n</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">I_n</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="n">I_n_edges</span><span class="p">,</span> 
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
+
+        <span class="c1"># ----</span>
+        <span class="c1"># Now do the same for G</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="n">I_0</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">return_map</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> <span class="n">I_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">return_map</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Get the dictionaries needed for the induced maps&#39; block structure </span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">func_to_vertex_dict</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">func_to_edge_dict</span><span class="p">()</span>
+
+        <span class="c1"># Make the induced map from G_0 to G_n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="n">I_0</span><span class="p">,</span> 
+                                <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
+                                <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+        <span class="n">I_0_edges</span> <span class="o">=</span> <span class="p">{(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">):</span> <span class="p">(</span><span class="n">I_0</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">I_0</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="n">I_0_edges</span><span class="p">,</span> 
+                                <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
+                                <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Make the induced map from G_n to G_2n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="n">I_n</span><span class="p">,</span> 
+                                <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
+                                <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
+        <span class="n">I_n_edges</span> <span class="o">=</span> <span class="p">{(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">):</span> <span class="p">(</span><span class="n">I_n</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">I_n</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="n">I_n_edges</span><span class="p">,</span> 
+                                <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
+                                <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
+        <span class="c1">#---old----</span>
+        <span class="c1"># self.G = {}</span>
+        <span class="c1"># self.G[&#39;0&#39;] = G</span>
+        <span class="c1"># self.G[&#39;n&#39;], I_0 = G.smoothing(self.n, return_map = True)</span>
+        <span class="c1"># self.G[&#39;2n&#39;], I_n = self.G[&#39;n&#39;].smoothing(self.n, return_map = True)</span>
+
+        <span class="c1"># # Get the dictionaries needed for the induced maps&#39; block structure </span>
+        <span class="c1"># for key in [&#39;0&#39;, &#39;n&#39;, &#39;2n&#39;]:</span>
+        <span class="c1">#     self.val_to_verts[&#39;G&#39;][key] = self.G[key].func_to_vertex_dict()</span>
+        <span class="c1">#     self.val_to_edges[&#39;G&#39;][key] = self.G[key].func_to_edge_dict()</span>
+        
+        <span class="c1"># # Make the induced map from G_0 to G_n</span>
+        <span class="c1"># self.I[&#39;G&#39;][&#39;0&#39;] = self.map_dict_to_matrix(I_0, self.val_to_verts[&#39;G&#39;][&#39;n&#39;], self.val_to_verts[&#39;G&#39;][&#39;0&#39;])</span>
+        
+
+        <span class="c1"># # Make the induced map from G_n to G_2n</span>
+        <span class="c1"># self.I[&#39;G&#39;][&#39;n&#39;] = self.map_dict_to_matrix(I_n, self.val_to_verts[&#39;G&#39;][&#39;2n&#39;], self.val_to_verts[&#39;G&#39;][&#39;n&#39;])</span>
+        <span class="c1"># ----</span>
+
+        <span class="c1"># ----</span>
+        <span class="c1"># phi: F -&gt; G^n</span>
+
+        <span class="c1"># Initialize the phi matrices. These will have all 0 entries.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi_V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi_E</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># TODO: Edge version!</span>
+
+
+        <span class="c1"># End phi</span>
+        <span class="c1"># ---</span>
+
+        <span class="c1"># ---</span>
+        <span class="c1"># Build boundary matrices </span>
+
+        <span class="c1"># Boundary matrix for F</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">boundary_matrix</span><span class="p">(</span><span class="n">astype</span> <span class="o">=</span> <span class="s1">&#39;dict&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Boundary matrix for G</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">boundary_matrix</span><span class="p">(</span><span class="n">astype</span> <span class="o">=</span> <span class="s1">&#39;dict&#39;</span><span class="p">)</span>
+
+        <span class="c1"># ----</span>
+        <span class="c1"># psi: G -&gt; F^n</span>
+        
+        <span class="c1"># Initialize the psi matrices. These will have all 0 entries.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_E</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+        <span class="c1"># TODO: Edge version!</span>
+
+        <span class="c1"># End psi</span>
+        <span class="c1"># ---</span>
+
+<div class="viewcode-block" id="Interleave.map_dict_to_matrix">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.map_dict_to_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">map_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_dict</span><span class="p">,</span> 
+                           <span class="n">row_val_to_verts</span><span class="p">,</span> 
+                           <span class="n">col_val_to_verts</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a dictionary of maps to a matrix. </span>
+<span class="sd">        We have row objects and column objects (for example vertices from $F$ for columns and vertices from $G_n$ for rows although this all should work for edge versions as well).</span>
+<span class="sd">        Input &#39;map_dict&#39; is a dictionary from column objects to row objects. However, &#39;map_dict&#39; can also be passed in as None, in which case this will set up the structure of the block dictionary but not fill in the array.</span>
+
+<span class="sd">        Also provided are dictionaries from function values to a list of objects for the row and column objects.</span>
+
+<span class="sd">        We will break this up into a dictionary of matrices, one for each function value. Out[i] has keys &#39;rows&#39;, &#39;cols&#39;, and &#39;array&#39; for each function value i. The array should be a numpy array with the rows corresponding to the rows and the columns corresponding to the columns.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            map_dict : dict</span>
+<span class="sd">                A dictionary from column objects to row objects.</span>
+<span class="sd">            row_val_to_verts : dict</span>
+<span class="sd">                A dictionary from function values to a list of row objects.</span>
+<span class="sd">            col_val_to_verts : dict</span>
+<span class="sd">                A dictionary from function values to a list of column objects.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict</span>
+<span class="sd">                A dictionary of matrices, one for each function value.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Out</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">col_val_to_verts</span><span class="p">:</span>
+            <span class="c1"># i is the function value of the vertices </span>
+            <span class="n">matrix_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row_val_to_verts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">col_val_to_verts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">row_val_to_verts</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_val_to_verts</span><span class="p">[</span><span class="n">i</span><span class="p">])))</span>
+
+            <span class="k">if</span> <span class="n">map_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># only fill in the array if map data is provided</span>
+                <span class="k">for</span> <span class="n">col_i</span><span class="p">,</span> <span class="n">vert</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">]):</span>
+                        <span class="n">row_j</span> <span class="o">=</span> <span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">map_dict</span><span class="p">[</span><span class="n">vert</span><span class="p">])</span>
+                        <span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">][</span><span class="n">row_j</span><span class="p">,</span> <span class="n">col_i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+            <span class="n">Out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">matrix_dict</span>
+
+        <span class="k">return</span> <span class="n">Out</span></div>
+
+
+<div class="viewcode-block" id="Interleave.block_dict_to_matrix">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.block_dict_to_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a dictionary of blocks to a block diagonal matrix.</span>
+<span class="sd">        The dictionary should have keys that are integers and values that are dictionaries with keys &#39;rows&#39;, &#39;cols&#39;, and &#39;array&#39; that are lists of rows, columns, and a numpy array respectively.</span>
+
+<span class="sd">        parameters:</span>
+<span class="sd">            block_dict : dict</span>
+<span class="sd">                A dictionary of blocks.</span>
+<span class="sd">        </span>
+<span class="sd">        returns:</span>
+<span class="sd">            dict</span>
+<span class="sd">                A dictionary with keys &#39;rows&#39;, &#39;cols&#39;, and &#39;array&#39; that are lists of rows, columns, and a numpy array respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Blocks</span> <span class="o">=</span> <span class="n">block_dict</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">Blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">Blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">)</span>
+
+        <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">Blocks</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="p">[])</span> <span class="c1"># flatten the list</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">Blocks</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;cols&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="p">[])</span> <span class="c1"># flatten the list</span>
+
+        <span class="n">arrays</span> <span class="o">=</span> <span class="p">[</span> <span class="n">Blocks</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;array&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+        <span class="n">BigMatrix</span> <span class="o">=</span> <span class="n">block_diag</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">rows</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="n">cols</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">BigMatrix</span><span class="p">}</span></div>
+
+    
+<div class="viewcode-block" id="Interleave.draw_matrix">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a matrix with row and column labels.</span>
+
+<span class="sd">        The dictionary can either be passed in as a block dictionary or a matrix dictionary.</span>
+
+<span class="sd">        A block dictionary has keys that are integers and values that are dictionaries with keys &#39;rows&#39;, &#39;cols&#39;, and &#39;array&#39; that are lists of rows, columns, and a numpy array respectively.</span>
+
+<span class="sd">        A matrix dictionary has keys &#39;rows&#39;, &#39;cols&#39;, and &#39;array&#39; that are lists of rows, columns, and a numpy array respectively.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            matrix_dict : dict</span>
+<span class="sd">                A dictionary (or dictionary of dictionaries) with keys &#39;rows&#39;, &#39;cols&#39;, and &#39;array&#39; that are lists of rows, columns, and a numpy array respectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="s1">&#39;array&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">matrix_dict</span><span class="p">:</span>
+            <span class="n">matrix_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="n">matrix_dict</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">])</span>
+            
+        <span class="c1"># Add vertices as the row and column labels</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">])),</span> <span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">],</span> <span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">])),</span> <span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="Interleave.draw_I">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_I">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the induced map from one Mapper graph to another.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            graph : str</span>
+<span class="sd">                The graph to draw the induced map for. Either &#39;F&#39; or &#39;G&#39;.</span>
+<span class="sd">            key : str</span>
+<span class="sd">                The key for the induced map. Either &#39;0&#39; or &#39;n&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">matrixDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="nb">type</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_matrix</span><span class="p">(</span><span class="n">matrixDict</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">graph</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">graph</span><span class="si">}</span><span class="s2">_n&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">graph</span><span class="si">}</span><span class="s2">_2n&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Interleave.draw_B">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_B">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_B</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the boundary matrix for a Mapper graph.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            graph : str</span>
+<span class="sd">                The graph to draw the boundary matrix for. Either &#39;F&#39; or &#39;G&#39;.</span>
+<span class="sd">            key : str</span>
+<span class="sd">                The key for the boundary matrix. Either &#39;0&#39;, &#39;n&#39;, or &#39;2n&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;E(</span><span class="si">{</span><span class="n">graph</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;V(</span><span class="si">{</span><span class="n">graph</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

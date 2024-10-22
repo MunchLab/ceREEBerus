@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>4.3. Merge &mdash; ceREEBerus 0.1.0 documentation</title>
+  <title>3.3. Merge &mdash; ceREEBerus 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -17,14 +17,14 @@
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../_static/doctools.js?v=9bcbadda"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="4.4. Union Find" href="compute_uf.html" />
-    <link rel="prev" title="4.2. Draw" href="compute_draw.html" /> 
+    <link rel="next" title="3.4. Union Find" href="compute_uf.html" />
+    <link rel="prev" title="3.2. Draw" href="compute_draw.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,18 +50,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Modules and Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../reeb/index.html">1. ReebGraph and Related Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dist/index.html">2. Distances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../data/index.html">3. Example data and graphs</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="index.html">4. Compute</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="compute_degree.html">4.1.  Degree</a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_draw.html">4.2.  Draw</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">4.3.  Merge</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data/index.html">2. Example data and graphs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">3. Compute</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="compute_degree.html">3.1.  Degree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compute_draw.html">3.2.  Draw</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">3.3.  Merge</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#cereeberus.compute.merge.isMerge"><code class="docutils literal notranslate"><span class="pre">isMerge()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cereeberus.compute.merge.computeMergeTree"><code class="docutils literal notranslate"><span class="pre">computeMergeTree()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="compute_uf.html">4.4.  Union Find</a></li>
-<li class="toctree-l3"><a class="reference internal" href="compute_distance.html">4.5.  Distance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compute_uf.html">3.4.  Union Find</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compute_distance.html">3.5.  Distance</a></li>
 </ul>
 </li>
 </ul>
@@ -84,8 +83,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Modules</a></li>
-          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">4. </span>Compute Module</a></li>
-      <li class="breadcrumb-item active"><span class="section-number">4.3. </span>Merge</li>
+          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">3. </span>Compute Module</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">3.3. </span>Merge</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/modules/compute/compute_merge.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,7 +95,7 @@
            <div itemprop="articleBody">
              
   <section id="merge">
-<h1><span class="section-number">4.3. </span>Merge<a class="headerlink" href="#merge" title="Link to this heading"></a></h1>
+<h1><span class="section-number">3.3. </span>Merge<a class="headerlink" href="#merge" title="Link to this heading"></a></h1>
 <p>The <cite>merge</cite> module includes a function to compute merge trees and a function to test if a networkx graph or reeb graph is a merge tree.</p>
 <dl class="py function" id="module-cereeberus.compute.merge">
 <dt class="sig sig-object py" id="cereeberus.compute.merge.isMerge">
@@ -149,8 +148,8 @@ merge tree.  This assumes that the root node(s) has/have a function value of np.
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="compute_draw.html" class="btn btn-neutral float-left" title="4.2. Draw" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="compute_uf.html" class="btn btn-neutral float-right" title="4.4. Union Find" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compute_draw.html" class="btn btn-neutral float-left" title="3.2. Draw" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compute_uf.html" class="btn btn-neutral float-right" title="3.4. Union Find" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
