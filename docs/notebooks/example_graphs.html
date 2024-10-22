@@ -220,12 +220,70 @@ Text(0.5, 1.0, &#39;Simple loops&#39;)
 <img alt="../_images/notebooks_example_graphs_5_1.png" src="../_images/notebooks_example_graphs_5_1.png" />
 </div>
 </div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ex_rg</span><span class="o">.</span><span class="n">interleave_example_A</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cpx</span><span class="o">=</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Interleaving example A&#39;</span><span class="p">)</span>
+
+<span class="c1"># plt.savefig(&#39;../images/interleave_example_A.png&#39;, bbox_inches = &#39;tight&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Interleaving example A&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_example_graphs_6_1.png" src="../_images/notebooks_example_graphs_6_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="n">ex_rg</span><span class="o">.</span><span class="n">interleave_example_B</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="n">R</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cpx</span><span class="o">=</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Interleaving example B&#39;</span><span class="p">)</span>
+
+<span class="c1"># plt.savefig(&#39;../images/interleave_example_B.png&#39;, bbox_inches = &#39;tight&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Interleaving example B&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_example_graphs_7_1.png" src="../_images/notebooks_example_graphs_7_1.png" />
+</div>
+</div>
 </section>
 <section id="Mapper-Graphs">
 <h2><span class="section-number">5.2. </span>Mapper Graphs<a class="headerlink" href="#Mapper-Graphs" title="Link to this heading"></a></h2>
 <p>These cells generate the examples from the <a class="reference internal" href="../modules/data/ex_mappergraphs.html"><span class="doc">example mapper graphs module</span></a>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cereeberus.data.ex_mappergraphs</span> <span class="k">as</span> <span class="nn">ex_mg</span>
@@ -234,7 +292,7 @@ Text(0.5, 1.0, &#39;Simple loops&#39;)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MG</span> <span class="o">=</span> <span class="n">ex_mg</span><span class="o">.</span><span class="n">torus</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
@@ -254,15 +312,24 @@ Text(0.5, 1.0, &#39;Simple loops&#39;)
 Delta value is: 0.1
 </pre></div></div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Torus graph mapper&#39;)
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_example_graphs_8_1.png" src="../_images/notebooks_example_graphs_8_1.png" />
+<img alt="../_images/notebooks_example_graphs_10_2.png" src="../_images/notebooks_example_graphs_10_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MG</span> <span class="o">=</span> <span class="n">ex_mg</span><span class="o">.</span><span class="n">dancing_man</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
@@ -281,15 +348,24 @@ Delta value is: 0.1
 Delta value is: 0.1
 </pre></div></div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Dancing Man Mapper&#39;)
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_example_graphs_9_1.png" src="../_images/notebooks_example_graphs_9_1.png" />
+<img alt="../_images/notebooks_example_graphs_11_2.png" src="../_images/notebooks_example_graphs_11_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MG</span> <span class="o">=</span> <span class="n">ex_mg</span><span class="o">.</span><span class="n">juggling_man</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
@@ -310,15 +386,24 @@ Delta value is: 0.1
 Delta value is: 0.1
 </pre></div></div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Juggling Man Mapper&#39;)
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_example_graphs_10_1.png" src="../_images/notebooks_example_graphs_10_1.png" />
+<img alt="../_images/notebooks_example_graphs_12_2.png" src="../_images/notebooks_example_graphs_12_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MG</span> <span class="o">=</span> <span class="n">ex_mg</span><span class="o">.</span><span class="n">simple_loops</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
@@ -339,11 +424,78 @@ Delta value is: 0.1
 Delta value is: 1
 </pre></div></div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Simple loops mapper&#39;)
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_example_graphs_11_1.png" src="../_images/notebooks_example_graphs_11_1.png" />
+<img alt="../_images/notebooks_example_graphs_13_2.png" src="../_images/notebooks_example_graphs_13_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MG</span> <span class="o">=</span> <span class="n">ex_mg</span><span class="o">.</span><span class="n">interleave_example_A</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Delta value is: </span><span class="si">{</span><span class="n">MG</span><span class="o">.</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">MG</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Interleaving example A mapper&#39;</span><span class="p">)</span>
+
+<span class="c1"># plt.savefig(&#39;interleave_example_A_mapper.png&#39;, bbox_inches = &#39;tight&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Delta value is: 1
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_example_graphs_14_1.png" src="../_images/notebooks_example_graphs_14_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MG</span> <span class="o">=</span> <span class="n">ex_mg</span><span class="o">.</span><span class="n">interleave_example_B</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Delta value is: </span><span class="si">{</span><span class="n">MG</span><span class="o">.</span><span class="n">delta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">MG</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">with_labels</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Interleaving example B mapper&#39;</span><span class="p">)</span>
+
+<span class="c1"># plt.savefig(&#39;interleave_example_B_mapper.png&#39;, bbox_inches = &#39;tight&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Delta value is: 1
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_example_graphs_15_1.png" src="../_images/notebooks_example_graphs_15_1.png" />
 </div>
 </div>
 </section>

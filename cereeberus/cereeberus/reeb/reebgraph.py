@@ -119,6 +119,23 @@ class ReebGraph(nx.MultiDiGraph):
             else:
                 f_to_v[f] = [v]
         return f_to_v
+
+    def func_to_edge_dict(self):
+        """
+        Get a dictionary mapping function values to all edges with lower endpoint at that height.
+
+        Returns:
+            dict
+                A dictionary mapping function values to edges.
+        """
+        f_to_e = {}
+        for e in self.edges:
+            f = self.f[e[0]]
+            if f in f_to_e:
+                f_to_e[f].append(e)
+            else:
+                f_to_e[f] = [e]
+        return f_to_e
     
     #-----------------------------------------------#
     # Methods for adding and removing nodes and edges 
@@ -579,7 +596,7 @@ class ReebGraph(nx.MultiDiGraph):
         plt.xticks(range(len(self.nodes)), self.nodes, rotation = 90)
         plt.yticks(range(len(self.nodes)), self.nodes)
     
-    def boundary_matrix(self):
+    def boundary_matrix(self, astype = 'numpy'):
         """
         Creates an boundary matrix for the graph, where :math:`B[v,e] = 1` if vertex :math:`v` is an endpoint of edge :math:`e` and :math:`B[v,e] = 0` otherwise.
 
@@ -592,7 +609,9 @@ class ReebGraph(nx.MultiDiGraph):
         """
 
         V = list(self.nodes())
+        V.sort(key = lambda x: self.f[x])
         E = list(self.edges())
+        E.sort(key = lambda x: self.f[x[0]])
 
         B = np.zeros((len(V), len(E)))
 
@@ -603,7 +622,13 @@ class ReebGraph(nx.MultiDiGraph):
             i = V.index(e[1])
             B[i, j] = 1
 
-        return B
+        if astype == 'numpy':
+
+            return B
+
+        if astype == 'dict':
+            return {'rows': V, 'cols': E, 'array': B}
+
     
     def plot_boundary_matrix(self):
         plt.matshow(self.boundary_matrix())

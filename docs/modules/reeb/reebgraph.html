@@ -206,6 +206,21 @@ The node to get the down degree of.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.func_to_edge_dict">
+<span class="sig-name descname"><span class="pre">func_to_edge_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.func_to_edge_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.func_to_edge_dict" title="Link to this definition"></a></dt>
+<dd><p>Get a dictionary mapping function values to all edges with lower endpoint at that height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>dict</dt><dd><p>A dictionary mapping function values to edges.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.next_vert_name">
 <span class="sig-name descname"><span class="pre">next_vert_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.next_vert_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.next_vert_name" title="Link to this definition"></a></dt>
 <dd><p>Making a simple name generator for vertices.
@@ -487,7 +502,7 @@ This will convert any edges that cross the slice into vertices.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.boundary_matrix">
-<span class="sig-name descname"><span class="pre">boundary_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.boundary_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.boundary_matrix" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">boundary_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">astype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'numpy'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.boundary_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.boundary_matrix" title="Link to this definition"></a></dt>
 <dd><p>Creates an boundary matrix for the graph, where <span class="math notranslate nohighlight">\(B[v,e] = 1\)</span> if vertex <span class="math notranslate nohighlight">\(v\)</span> is an endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and <span class="math notranslate nohighlight">\(B[v,e] = 0\)</span> otherwise.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

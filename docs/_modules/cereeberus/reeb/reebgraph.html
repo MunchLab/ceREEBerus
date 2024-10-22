@@ -215,6 +215,26 @@
                 <span class="n">f_to_v</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">f_to_v</span></div>
 
+
+<div class="viewcode-block" id="ReebGraph.func_to_edge_dict">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.func_to_edge_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">func_to_edge_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a dictionary mapping function values to all edges with lower endpoint at that height.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict</span>
+<span class="sd">                A dictionary mapping function values to edges.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">f_to_e</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">f_to_e</span><span class="p">:</span>
+                <span class="n">f_to_e</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">f_to_e</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">f_to_e</span></div>
+
     
     <span class="c1">#-----------------------------------------------#</span>
     <span class="c1"># Methods for adding and removing nodes and edges </span>
@@ -737,7 +757,7 @@
     
 <div class="viewcode-block" id="ReebGraph.boundary_matrix">
 <a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.boundary_matrix">[docs]</a>
-    <span class="k">def</span> <span class="nf">boundary_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">boundary_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">astype</span> <span class="o">=</span> <span class="s1">&#39;numpy&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates an boundary matrix for the graph, where :math:`B[v,e] = 1` if vertex :math:`v` is an endpoint of edge :math:`e` and :math:`B[v,e] = 0` otherwise.</span>
 
@@ -750,7 +770,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">V</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+        <span class="n">V</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
         <span class="n">E</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+        <span class="n">E</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
 
         <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">E</span><span class="p">)))</span>
 
@@ -761,7 +783,13 @@
             <span class="n">i</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
-        <span class="k">return</span> <span class="n">B</span></div>
+        <span class="k">if</span> <span class="n">astype</span> <span class="o">==</span> <span class="s1">&#39;numpy&#39;</span><span class="p">:</span>
+
+            <span class="k">return</span> <span class="n">B</span>
+
+        <span class="k">if</span> <span class="n">astype</span> <span class="o">==</span> <span class="s1">&#39;dict&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">V</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">B</span><span class="p">}</span></div>
+
 
     
 <div class="viewcode-block" id="ReebGraph.plot_boundary_matrix">

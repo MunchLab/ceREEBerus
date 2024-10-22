@@ -87,7 +87,7 @@ def simple_loops_unordered(seed=None):
     '''
     return ReebGraph(ex_graphs.simple_loops_unordered(), seed=seed).to_mapper()
 
-def interleave_example_A():
+def interleave_example_A(seed = None):
     '''
     Returns the mapper graph of the first example for the interleave function.
 
@@ -101,9 +101,9 @@ def interleave_example_A():
         :figwidth: 400px
 
     '''
-    return ex_rg.interleave_example_A().to_mapper()
+    return ex_rg.interleave_example_A(seed = seed).to_mapper()
 
-def interleave_example_B():
+def interleave_example_B(seed = None):
     '''
     Returns the mapper graph of the second example for the interleave function.
 
@@ -117,4 +117,4 @@ def interleave_example_B():
         :figwidth: 400px
 
     '''
-    return ex_rg.interleave_example_B().to_mapper()
+    return ex_rg.interleave_example_B(seed = seed).to_mapper()
