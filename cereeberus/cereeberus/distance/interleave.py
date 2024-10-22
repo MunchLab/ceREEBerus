@@ -8,7 +8,9 @@ class Interleave:
     """
     A class to bound the interleaving distance between two Mapper graphs.
     """
-    def __init__(self, F, G, n = 1):
+    def __init__(self, F, G, 
+                        n = 1, 
+                        initialize_random_maps = False, seed = None):
         """
         Initialize the Interleave object.
         
@@ -143,12 +145,24 @@ class Interleave:
         # phi: F -> G^n
 
         # Initialize the phi matrices. These will have all 0 entries.
-        self.phi_V = self.map_dict_to_matrix(None, self.val_to_verts['G']['n'], self.val_to_verts['F']['0'])
+        self.phi = {'V':{}, 'E':{}}
+        self.phi['V'] = self.map_dict_to_matrix(None, 
+                                    self.val_to_verts['G']['n'], 
+                                    self.val_to_verts['F']['0'],
+                                    random_initialize = initialize_random_maps)
 
 
-        self.phi_E = {}
-        # TODO: Edge version!
+        if initialize_random_maps:
+            B_Gn = self.B['G']['n']['array']
+            phi = self.block_dict_to_matrix(self.phi['V'])['array']
+            B_F = self.B['F']['0']['array']
 
+            A = B_Gn.T @ (phi @ B_F)
+            A = np.floor(A/2)
+            self.phi['E'] = self.matrix_to_block_dict(A,  self.val_to_edges['G']['n'], self.val_to_edges['F']['0'])
+
+        else:
+            self.phi['E'] = self.map_dict_to_matrix(None, self.val_to_edges['G']['n'], self.val_to_edges['F']['0'])
 
         # End phi
         # ---
@@ -159,21 +173,56 @@ class Interleave:
         # psi: G -> F^n
         
         # Initialize the psi matrices. These will have all 0 entries.
-        self.psi_V = self.map_dict_to_matrix(None, self.val_to_verts['F']['n'], self.val_to_verts['G']['0'])
+        self.psi = {'V':{}, 'E':{}}
 
-        self.psi_E = {}
-        # TODO: Edge version!
+        self.psi['V'] = self.map_dict_to_matrix(None, 
+                                    self.val_to_verts['F']['n'], 
+                                    self.val_to_verts['G']['0'],
+                                    random_initialize = initialize_random_maps)
+
+        if initialize_random_maps:
+            B_Fn = self.B['F']['n']['array']
+            psi = self.block_dict_to_matrix(self.psi['V'])['array']
+            B_G = self.B['G']['0']['array']
+
+            A = B_Fn.T @ (psi @ B_G)
+            A = np.floor(A/2)
+            self.psi['E'] = self.matrix_to_block_dict(A,  self.val_to_edges['F']['n'], self.val_to_edges['G']['0'])
+
+        else:
+            self.psi['E'] = self.map_dict_to_matrix(None, self.val_to_edges['F']['n'], self.val_to_edges['G']['0'])
 
         # End psi
         # ---
+    
+    def random_initialize(self, block_dict, seed = None):
+        """
+        Randomly initialize the block dictionary.
+
+        Parameters:
+            block_dict : dict
+                A dictionary with keys 'rows', 'cols', and 'array' that are lists of rows, columns, and a numpy array respectively.
+        """
+        block_dict = block_dict.copy()
+        for i in block_dict.keys():
+            A = block_dict[i]['array']
+            
+            rng = np.random.default_rng(seed)
+            col_1s = rng.integers(0, A.shape[0], size = A.shape[1])
+            A[col_1s, list(range(A.shape[1]))] = 1
+            block_dict[i]['array'] = A
+
+        return block_dict
 
     def map_dict_to_matrix(self, map_dict, 
                            row_val_to_verts, 
-                           col_val_to_verts):
+                           col_val_to_verts,
+                           random_initialize = False,
+                           seed = None):
         """
         Convert a dictionary of maps to a matrix. 
         We have row objects and column objects (for example vertices from $F$ for columns and vertices from $G_n$ for rows although this all should work for edge versions as well).
-        Input 'map_dict' is a dictionary from column objects to row objects. However, 'map_dict' can also be passed in as None, in which case this will set up the structure of the block dictionary but not fill in the array.
+        Input 'map_dict' is a dictionary from column objects to row objects. However, 'map_dict' can also be passed in as None, in which case this will set up the structure of the block dictionary but not fill in the array. If `map_dict` is None and `random_initialize` is True, then the array will be filled with a random 1 in each column.
 
         Also provided are dictionaries from function values to a list of objects for the row and column objects.
 
@@ -205,9 +254,22 @@ class Interleave:
                 for col_i, vert in enumerate(matrix_dict['cols']):
                         row_j = matrix_dict['rows'].index(map_dict[vert])
                         matrix_dict['array'][row_j, col_i] = 1
+            else:
+                if random_initialize:
+                    A = matrix_dict['array']             
+                    rng = np.random.default_rng(seed = seed)
+                    col_1s = rng.integers(0, A.shape[0], size = A.shape[1])
+                    A[col_1s, list(range(A.shape[1]))] = 1
+                    matrix_dict['array'] = A
 
 
             Out[i] = matrix_dict
+
+        for i in row_val_to_verts.keys() ^ col_val_to_verts.keys():
+            if i in row_val_to_verts:
+                Out[i] = {'rows': row_val_to_verts[i], 'cols': [], 'array': []}
+            else:
+                raise ValueError('There is a bug, there are column function values not in the row values and this should not happen')
 
         return Out
 
@@ -240,6 +302,48 @@ class Interleave:
 
         return {'rows': rows, 'cols': cols, 'array': BigMatrix}
 
+    def matrix_to_block_dict(self, matrix, row_val_to_verts, col_val_to_verts):
+        """
+        Turn a matrix back into a block dictionary.
+
+        Parameters:
+            matrix : np.array
+                A matrix.
+            row_val_to_verts : dict
+                A dictionary from function values to a list of row objects.
+            col_val_to_verts : dict
+                A dictionary from function values to a list of column objects.
+        """
+        min_i = min(row_val_to_verts.keys() | col_val_to_verts.keys())
+        max_i = max(row_val_to_verts.keys() | col_val_to_verts.keys())
+
+        block_dict = {}
+
+        curr_row = 0
+        curr_col = 0
+
+        for i in range(min_i, max_i + 1):
+            try:
+                rows = row_val_to_verts[i]
+                next_row = curr_row + len(rows)
+            except KeyError:
+                rows = []
+                next_row = curr_row
+            
+            try:
+                cols = col_val_to_verts[i]
+                next_col = curr_col + len(col_val_to_verts[i])
+            except KeyError:
+                cols = []
+                next_col = curr_col 
+
+            A = matrix[curr_row:next_row, curr_col:next_col]
+            block_dict[i] = {'rows': rows, 'cols': cols, 'array':A}
+
+            curr_row = next_row
+            curr_col = next_col
+
+        return block_dict
 
     def check_column_sum(self, matrix_dict, verbose = False):
         """

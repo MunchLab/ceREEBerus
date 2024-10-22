@@ -100,11 +100,11 @@
 </div>
 <dl class="py class" id="module-cereeberus.distance.interleave">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.distance.interleave.</span></span><span class="sig-name descname"><span class="pre">Interleave</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.distance.interleave.</span></span><span class="sig-name descname"><span class="pre">Interleave</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_random_maps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave" title="Link to this definition"></a></dt>
 <dd><p>A class to bound the interleaving distance between two Mapper graphs.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_random_maps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initialize the Interleave object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -121,11 +121,23 @@ The interleaving parameter. The default is 1.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.random_initialize">
+<span class="sig-name descname"><span class="pre">random_initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.random_initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.random_initialize" title="Link to this definition"></a></dt>
+<dd><p>Randomly initialize the block dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>block_dict</strong> – dict
+A dictionary with keys ‘rows’, ‘cols’, and ‘array’ that are lists of rows, columns, and a numpy array respectively.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.map_dict_to_matrix">
-<span class="sig-name descname"><span class="pre">map_dict_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_val_to_verts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_val_to_verts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.map_dict_to_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.map_dict_to_matrix" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">map_dict_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_val_to_verts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_val_to_verts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_initialize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.map_dict_to_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.map_dict_to_matrix" title="Link to this definition"></a></dt>
 <dd><p>Convert a dictionary of maps to a matrix.
 We have row objects and column objects (for example vertices from $F$ for columns and vertices from $G_n$ for rows although this all should work for edge versions as well).
-Input ‘map_dict’ is a dictionary from column objects to row objects. However, ‘map_dict’ can also be passed in as None, in which case this will set up the structure of the block dictionary but not fill in the array.</p>
+Input ‘map_dict’ is a dictionary from column objects to row objects. However, ‘map_dict’ can also be passed in as None, in which case this will set up the structure of the block dictionary but not fill in the array. If <cite>map_dict</cite> is None and <cite>random_initialize</cite> is True, then the array will be filled with a random 1 in each column.</p>
 <p>Also provided are dictionaries from function values to a list of objects for the row and column objects.</p>
 <p>We will break this up into a dictionary of matrices, one for each function value. Out[i] has keys ‘rows’, ‘cols’, and ‘array’ for each function value i. The array should be a numpy array with the rows corresponding to the rows and the columns corresponding to the columns.</p>
 <dl class="field-list simple">
@@ -165,6 +177,24 @@ A dictionary of blocks.</p>
 </dd>
 </dl>
 </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.matrix_to_block_dict">
+<span class="sig-name descname"><span class="pre">matrix_to_block_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_val_to_verts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_val_to_verts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.matrix_to_block_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.matrix_to_block_dict" title="Link to this definition"></a></dt>
+<dd><p>Turn a matrix back into a block dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix</strong> – np.array
+A matrix.</p></li>
+<li><p><strong>row_val_to_verts</strong> – dict
+A dictionary from function values to a list of row objects.</p></li>
+<li><p><strong>col_val_to_verts</strong> – dict
+A dictionary from function values to a list of column objects.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
