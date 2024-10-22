@@ -377,7 +377,7 @@ class Interleave:
 
         return check
     
-    def draw_matrix(self, matrix_dict, **kwargs):
+    def draw_matrix(self, matrix_dict, ax = None,  colorbar = False, **kwargs):
         """
         Draw a matrix with row and column labels.
 
@@ -395,13 +395,21 @@ class Interleave:
         if 'array' not in matrix_dict:
             matrix_dict = self.block_dict_to_matrix(matrix_dict)
 
-        plt.matshow(matrix_dict['array'], **kwargs)
+        if ax is None:
+            ax = plt.gca()
+        
+        im = ax.matshow(matrix_dict['array'], **kwargs)
             
         # Add vertices as the row and column labels
-        plt.xticks(range(len(matrix_dict['cols'])), matrix_dict['cols'], rotation = 90)
-        plt.yticks(range(len(matrix_dict['rows'])), matrix_dict['rows'])
+        ax.set_xticks(range(len(matrix_dict['cols'])), matrix_dict['cols'], rotation = 90)
+        ax.set_yticks(range(len(matrix_dict['rows'])), matrix_dict['rows'])
 
-    def draw_I(self, graph = 'F', key = '0', type = 'V', **kwargs):
+        if colorbar:
+            plt.colorbar(im, ax = ax)
+
+        return ax
+
+    def draw_I(self, graph = 'F', key = '0', type = 'V', ax = None, **kwargs):
         """
         Draw the induced map from one Mapper graph to another.
 
@@ -411,15 +419,20 @@ class Interleave:
             key : str
                 The key for the induced map. Either '0' or 'n'.
         """
-        matrixDict = self.I[graph][key][type]
-        self.draw_matrix(matrixDict, **kwargs)
-        plt.xlabel(f"{graph}_{key}")
-        if key == '0':
-            plt.ylabel(f"{graph}_n")
-        else:
-            plt.ylabel(f"{graph}_2n")
+        if ax is None:
+            ax = plt.gca()
 
-    def draw_B(self, graph = 'F', key = '0', **kwargs):
+        matrixDict = self.I[graph][key][type]
+        self.draw_matrix(matrixDict, ax, **kwargs)
+        ax.set_xlabel(f"{graph}_{key}")
+        if key == '0':
+            ax.set_ylabel(f"{graph}_n")
+        else:
+            ax.set_ylabel(f"{graph}_2n")
+        
+        return ax
+
+    def draw_B(self, graph = 'F', key = '0', ax = None, **kwargs):
         """
         Draw the boundary matrix for a Mapper graph.
 
@@ -429,11 +442,17 @@ class Interleave:
             key : str
                 The key for the boundary matrix. Either '0', 'n', or '2n'.
         """
-        self.draw_matrix(self.B[graph][key], **kwargs)
-        plt.xlabel(f"E({graph}_{key})")
-        plt.ylabel(f"V({graph}_{key})")
+        if ax is None:
+            ax = plt.gca()
 
-    def draw_D(self, graph = 'F', key = '0', **kwargs):
+        self.draw_matrix(self.B[graph][key], ax = ax, **kwargs)
+        ax.set_title(f"B({graph}_{key})")
+        ax.set_xlabel(f"E({graph}_{key})")
+        ax.set_ylabel(f"V({graph}_{key})")
+
+        return ax
+
+    def draw_D(self, graph = 'F', key = '0', colorbar = True, ax = None,  **kwargs):
         """
         Draw the distance matrix for a Mapper graph.
 
@@ -443,7 +462,11 @@ class Interleave:
             key : str
                 The key for the distance matrix. Either '0', 'n', or '2n'.
         """
-        self.draw_matrix(self.D[graph][key], **kwargs)
-        plt.xlabel(f"V({graph}_{key})")
-        plt.ylabel(f"V({graph}_{key})")
-        plt.colorbar()
+        if ax is None:
+            ax = plt.gca()
+
+        self.draw_matrix(self.D[graph][key], ax = ax, colorbar = colorbar, **kwargs)
+        ax.set_xlabel(f"V({graph}_{key})")
+        ax.set_ylabel(f"V({graph}_{key})")
+
+        return ax
