@@ -470,3 +470,28 @@ class Interleave:
         ax.set_ylabel(f"V({graph}_{key})")
 
         return ax
+
+    # ==========
+    # Functions for checking commutative diagrams 
+
+    def parallelogram_matrix(self):
+        """
+        Check that the parallelogram commutes.
+        """
+        phiV_dict = self.block_dict_to_matrix(self.phi['V'])
+        phiV = phiV_dict['array']
+        rows = phiV_dict['rows']
+
+        B_F_dict = self.B['F']['0']
+        B_F = B_F_dict['array']
+        cols = B_F_dict['cols']
+
+        B_Gn = self.B['G']['n']['array']
+        phiE = self.block_dict_to_matrix(self.phi['E'])['array']
+
+        A = phiV @ B_F - B_Gn @ phiE
+
+        rows = self.block_dict_to_matrix(self.phi['V'])['rows']
+        return {'rows': rows, 'cols': cols, 'array': A}
+
+    

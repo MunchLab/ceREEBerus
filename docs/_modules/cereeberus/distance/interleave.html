@@ -577,6 +577,32 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;V(</span><span class="si">{</span><span class="n">graph</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ax</span></div>
+
+
+    <span class="c1"># ==========</span>
+    <span class="c1"># Functions for checking commutative diagrams </span>
+
+<div class="viewcode-block" id="Interleave.parallelogram_matrix">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">parallelogram_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check that the parallelogram commutes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">phiV_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">])</span>
+        <span class="n">phiV</span> <span class="o">=</span> <span class="n">phiV_dict</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">phiV_dict</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span>
+
+        <span class="n">B_F_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">]</span>
+        <span class="n">B_F</span> <span class="o">=</span> <span class="n">B_F_dict</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">B_F_dict</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">]</span>
+
+        <span class="n">B_Gn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
+        <span class="n">phiE</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">])[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
+
+        <span class="n">A</span> <span class="o">=</span> <span class="n">phiV</span> <span class="o">@</span> <span class="n">B_F</span> <span class="o">-</span> <span class="n">B_Gn</span> <span class="o">@</span> <span class="n">phiE</span>
+
+        <span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">])[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">rows</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="n">cols</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">}</span></div>
 </div>
 
 </pre></div>
