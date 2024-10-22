@@ -1,5 +1,6 @@
 from cereeberus import MapperGraph
 import numpy as np
+import networkx as nx
 from scipy.linalg import block_diag
 from matplotlib import pyplot as plt
 
@@ -26,7 +27,7 @@ class Interleave:
         # Containers for matrices for later 
         # self.A = {'F':{}, 'G':{}} # adjacency matrix
         self.B = {'F':{}, 'G':{}} # boundary matrix
-        # self.D = {'F':{}, 'G':{}} # distance matrix
+        self.D = {'F':{}, 'G':{}} # distance matrix
         self.I = {'F':{}, 'G':{}} # induced maps
 
         self.val_to_verts = {'F':{}, 'G':{}} # dictionaries from function values to vertices
@@ -98,24 +99,47 @@ class Interleave:
         self.I['G']['n']['E'] = self.map_dict_to_matrix(I_n_edges, 
                                 self.val_to_edges['G']['2n'], 
                                 self.val_to_edges['G']['n'])
-        #---old----
-        # self.G = {}
-        # self.G['0'] = G
-        # self.G['n'], I_0 = G.smoothing(self.n, return_map = True)
-        # self.G['2n'], I_n = self.G['n'].smoothing(self.n, return_map = True)
-
-        # # Get the dictionaries needed for the induced maps' block structure 
-        # for key in ['0', 'n', '2n']:
-        #     self.val_to_verts['G'][key] = self.G[key].func_to_vertex_dict()
-        #     self.val_to_edges['G'][key] = self.G[key].func_to_edge_dict()
         
-        # # Make the induced map from G_0 to G_n
-        # self.I['G']['0'] = self.map_dict_to_matrix(I_0, self.val_to_verts['G']['n'], self.val_to_verts['G']['0'])
-        
-
-        # # Make the induced map from G_n to G_2n
-        # self.I['G']['n'] = self.map_dict_to_matrix(I_n, self.val_to_verts['G']['2n'], self.val_to_verts['G']['n'])
+        # End making smoothings and induced maps
         # ----
+        # ---
+        # Build boundary matrices 
+
+        # Boundary matrix for F
+        for key in ['0', 'n', '2n']:
+            
+            self.B['F'][key] = self.F[key].boundary_matrix(astype = 'dict')
+
+        # Boundary matrix for G
+        for key in ['0', 'n', '2n']:
+            self.B['G'][key] = self.G[key].boundary_matrix(astype = 'dict')
+
+        # End boundary matrices
+        # ---
+
+        # ---
+        # Build the distance matrices 
+        for (metagraph, name) in [ (self.F,'F'), (self.G,'G')]:
+            for key in ['0', 'n', '2n']:
+                M = metagraph[key]
+
+                length = dict(nx.all_pairs_shortest_path_length(M.to_undirected()))
+
+                val_to_verts = self.val_to_verts[name][key]
+
+                block_dict = {}
+                for f_i in val_to_verts:
+                    vert_set = val_to_verts[f_i]
+                    D_i = np.zeros((len(vert_set), len(vert_set)))
+                    for i, v1 in enumerate(vert_set):
+                        for j, v2 in enumerate(vert_set):
+                            if i!=j:
+                                D_i[i, j] = length[v1][v2]/2
+                    block_dict[f_i] = {'rows': vert_set, 'cols': vert_set, 'array': D_i}
+                
+                self.D[name][key] = block_dict
+
+
 
         # ----
         # phi: F -> G^n
@@ -131,17 +155,7 @@ class Interleave:
         # End phi
         # ---
 
-        # ---
-        # Build boundary matrices 
 
-        # Boundary matrix for F
-        for key in ['0', 'n', '2n']:
-            
-            self.B['F'][key] = self.F[key].boundary_matrix(astype = 'dict')
-
-        # Boundary matrix for G
-        for key in ['0', 'n', '2n']:
-            self.B['G'][key] = self.G[key].boundary_matrix(astype = 'dict')
 
         # ----
         # psi: G -> F^n
@@ -228,7 +242,7 @@ class Interleave:
 
         return {'rows': rows, 'cols': cols, 'array': BigMatrix}
     
-    def draw_matrix(self, matrix_dict):
+    def draw_matrix(self, matrix_dict, **kwargs):
         """
         Draw a matrix with row and column labels.
 
@@ -246,13 +260,13 @@ class Interleave:
         if 'array' not in matrix_dict:
             matrix_dict = self.block_dict_to_matrix(matrix_dict)
 
-        plt.matshow(matrix_dict['array'])
+        plt.matshow(matrix_dict['array'], **kwargs)
             
         # Add vertices as the row and column labels
         plt.xticks(range(len(matrix_dict['cols'])), matrix_dict['cols'], rotation = 90)
         plt.yticks(range(len(matrix_dict['rows'])), matrix_dict['rows'])
 
-    def draw_I(self, graph = 'F', key = '0', type = 'V'):
+    def draw_I(self, graph = 'F', key = '0', type = 'V', **kwargs):
         """
         Draw the induced map from one Mapper graph to another.
 
@@ -263,14 +277,14 @@ class Interleave:
                 The key for the induced map. Either '0' or 'n'.
         """
         matrixDict = self.I[graph][key][type]
-        self.draw_matrix(matrixDict)
+        self.draw_matrix(matrixDict, **kwargs)
         plt.xlabel(f"{graph}_{key}")
         if key == '0':
             plt.ylabel(f"{graph}_n")
         else:
             plt.ylabel(f"{graph}_2n")
 
-    def draw_B(self, graph = 'F', key = '0'):
+    def draw_B(self, graph = 'F', key = '0', **kwargs):
         """
         Draw the boundary matrix for a Mapper graph.
 
@@ -280,6 +294,21 @@ class Interleave:
             key : str
                 The key for the boundary matrix. Either '0', 'n', or '2n'.
         """
-        self.draw_matrix(self.B[graph][key])
+        self.draw_matrix(self.B[graph][key], **kwargs)
         plt.xlabel(f"E({graph}_{key})")
         plt.ylabel(f"V({graph}_{key})")
+
+    def draw_D(self, graph = 'F', key = '0', **kwargs):
+        """
+        Draw the distance matrix for a Mapper graph.
+
+        Parameters:
+            graph : str
+                The graph to draw the distance matrix for. Either 'F' or 'G'.
+            key : str
+                The key for the distance matrix. Either '0', 'n', or '2n'.
+        """
+        self.draw_matrix(self.D[graph][key], **kwargs)
+        plt.xlabel(f"V({graph}_{key})")
+        plt.ylabel(f"V({graph}_{key})")
+        plt.colorbar()

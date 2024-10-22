@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interleave class &mdash; ceREEBerus 0.1.0 documentation</title>
+  <title>2.1. Interleave class &mdash; ceREEBerus 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
@@ -22,7 +22,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="3. Example Data and graphs" href="../data/index.html" />
+    <link rel="prev" title="2. ReebGraph and related classes" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,9 +46,21 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Modules and Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Modules and Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../reeb/index.html">1. ReebGraph and Related Classes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">2. Distances</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2.1. Interleave class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cereeberus.distance.interleave.Interleave"><code class="docutils literal notranslate"><span class="pre">Interleave</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data/index.html">3. Example data and graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compute/index.html">4. Compute</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Tutorial Notebooks</a></li>
 </ul>
 
@@ -64,7 +78,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Interleave class</li>
+          <li class="breadcrumb-item"><a href="../index.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">2. </span>ReebGraph and related classes</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">2.1. </span>Interleave class</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/modules/distance/interleave.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -75,7 +91,7 @@
            <div itemprop="articleBody">
              
   <section id="interleave-class">
-<h1>Interleave class<a class="headerlink" href="#interleave-class" title="Link to this heading"></a></h1>
+<h1><span class="section-number">2.1. </span>Interleave class<a class="headerlink" href="#interleave-class" title="Link to this heading"></a></h1>
 <p>This is the <cite>Interleave</cite> class which is used to construct an interleaving.</p>
 <p>Note that this class can be imported as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">Interleave</span>
@@ -155,7 +171,7 @@ A dictionary of blocks.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_matrix">
-<span class="sig-name descname"><span class="pre">draw_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_matrix" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_matrix" title="Link to this definition"></a></dt>
 <dd><p>Draw a matrix with row and column labels.</p>
 <p>The dictionary can either be passed in as a block dictionary or a matrix dictionary.</p>
 <p>A block dictionary has keys that are integers and values that are dictionaries with keys ‘rows’, ‘cols’, and ‘array’ that are lists of rows, columns, and a numpy array respectively.</p>
@@ -170,7 +186,7 @@ A dictionary (or dictionary of dictionaries) with keys ‘rows’, ‘cols’, a
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_I">
-<span class="sig-name descname"><span class="pre">draw_I</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_I"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_I" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw_I</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_I"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_I" title="Link to this definition"></a></dt>
 <dd><p>Draw the induced map from one Mapper graph to another.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -186,7 +202,7 @@ The key for the induced map. Either ‘0’ or ‘n’.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_B">
-<span class="sig-name descname"><span class="pre">draw_B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_B" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw_B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_B" title="Link to this definition"></a></dt>
 <dd><p>Draw the boundary matrix for a Mapper graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -200,6 +216,22 @@ The key for the boundary matrix. Either ‘0’, ‘n’, or ‘2n’.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_D">
+<span class="sig-name descname"><span class="pre">draw_D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_D" title="Link to this definition"></a></dt>
+<dd><p>Draw the distance matrix for a Mapper graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> – str
+The graph to draw the distance matrix for. Either ‘F’ or ‘G’.</p></li>
+<li><p><strong>key</strong> – str
+The key for the distance matrix. Either ‘0’, ‘n’, or ‘2n’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -207,7 +239,10 @@ The key for the boundary matrix. Either ‘0’, ‘n’, or ‘2n’.</p></li>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="2. ReebGraph and related classes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../data/index.html" class="btn btn-neutral float-right" title="3. Example Data and graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

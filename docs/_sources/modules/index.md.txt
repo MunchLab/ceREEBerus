@@ -8,7 +8,7 @@ See below for the full documentation of the modules available in `ceREEBerus`.
    :numbered:
 
    ReebGraph and Related Classes <reeb/index.rst>
-   Distances <dist/index.rst>
+   Distances <distance/index.rst>
    Example data and graphs <data/index.md>
    Compute <compute/index.md>
 ```
