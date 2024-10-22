@@ -556,7 +556,7 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 <p>and</p>
 <div class="math notranslate nohighlight">
 \[\psi_E = B_{F^n}^T \cdot \psi_V \cdot  B_G\]</div>
-<p>WARNING: I’m not convinced of this anymore since some columns are empty due to not having a vertex to map to, needs checking with fresh eyes in the morning.</p>
+<p>WARNING: I switched the random edge generator back to being completely random, so not sure if this will be a check or something else?</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
@@ -617,7 +617,7 @@ Text(0.5, 0.05, &#39;Intital random maps&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_matrix</span><span class="p">(</span><span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram_matrix</span><span class="p">(),</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_matrix</span><span class="p">(</span><span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram_matrix</span><span class="p">(),</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;PuOr&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -637,36 +637,28 @@ Text(0.5, 0.05, &#39;Intital random maps&#39;)
 <img alt="../_images/notebooks_interleaving_basics_43_1.png" src="../_images/notebooks_interleaving_basics_43_1.png" />
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_matrix</span><span class="p">(</span><span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram_dist</span><span class="p">(),</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;PuOr&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Axes: &gt;
+</pre></div></div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_interleaving_basics_44_1.png" src="../_images/notebooks_interleaving_basics_44_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">

@@ -151,18 +151,23 @@ class Interleave:
                                     self.val_to_verts['F']['0'],
                                     random_initialize = initialize_random_maps)
 
+        self.phi['E'] = self.map_dict_to_matrix(None,
+                                    self.val_to_edges['G']['n'],
+                                    self.val_to_edges['F']['0'],
+                                    random_initialize = initialize_random_maps)
 
-        if initialize_random_maps:
-            B_Gn = self.B['G']['n']['array']
-            phi = self.block_dict_to_matrix(self.phi['V'])['array']
-            B_F = self.B['F']['0']['array']
 
-            A = B_Gn.T @ (phi @ B_F)
-            A = np.floor(A/2)
-            self.phi['E'] = self.matrix_to_block_dict(A,  self.val_to_edges['G']['n'], self.val_to_edges['F']['0'])
+        # if initialize_random_maps:
+        #     B_Gn = self.B['G']['n']['array']
+        #     phi = self.block_dict_to_matrix(self.phi['V'])['array']
+        #     B_F = self.B['F']['0']['array']
 
-        else:
-            self.phi['E'] = self.map_dict_to_matrix(None, self.val_to_edges['G']['n'], self.val_to_edges['F']['0'])
+        #     A = B_Gn.T @ (phi @ B_F)
+        #     A = np.floor(A/2)
+        #     self.phi['E'] = self.matrix_to_block_dict(A,  self.val_to_edges['G']['n'], self.val_to_edges['F']['0'])
+
+        # else:
+        #     self.phi['E'] = self.map_dict_to_matrix(None, self.val_to_edges['G']['n'], self.val_to_edges['F']['0'])
 
         # End phi
         # ---
@@ -179,18 +184,22 @@ class Interleave:
                                     self.val_to_verts['F']['n'], 
                                     self.val_to_verts['G']['0'],
                                     random_initialize = initialize_random_maps)
+        self.psi['E'] = self.map_dict_to_matrix(None, 
+                                    self.val_to_edges['F']['n'], 
+                                    self.val_to_edges['G']['0'],
+                                    random_initialize = initialize_random_maps)
 
-        if initialize_random_maps:
-            B_Fn = self.B['F']['n']['array']
-            psi = self.block_dict_to_matrix(self.psi['V'])['array']
-            B_G = self.B['G']['0']['array']
+        # if initialize_random_maps:
+        #     B_Fn = self.B['F']['n']['array']
+        #     psi = self.block_dict_to_matrix(self.psi['V'])['array']
+        #     B_G = self.B['G']['0']['array']
 
-            A = B_Fn.T @ (psi @ B_G)
-            A = np.floor(A/2)
-            self.psi['E'] = self.matrix_to_block_dict(A,  self.val_to_edges['F']['n'], self.val_to_edges['G']['0'])
+        #     A = B_Fn.T @ (psi @ B_G)
+        #     A = np.floor(A/2)
+        #     self.psi['E'] = self.matrix_to_block_dict(A,  self.val_to_edges['F']['n'], self.val_to_edges['G']['0'])
 
-        else:
-            self.psi['E'] = self.map_dict_to_matrix(None, self.val_to_edges['F']['n'], self.val_to_edges['G']['0'])
+        # else:
+        #     self.psi['E'] = self.map_dict_to_matrix(None, self.val_to_edges['F']['n'], self.val_to_edges['G']['0'])
 
         # End psi
         # ---
@@ -495,3 +504,13 @@ class Interleave:
         return {'rows': rows, 'cols': cols, 'array': A}
 
     
+    def parallelogram_dist(self):
+        """
+        Get the matrix that has distance entries 
+        """
+
+        A_dict = self.parallelogram_matrix()
+        A = A_dict['array']
+        A_mult = self.block_dict_to_matrix(self.D['G']['n'])['array'] @ A
+        return {'rows':A_dict['rows'], 'cols' : A_dict['cols'], 'array': A_mult}
+
