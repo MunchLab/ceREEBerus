@@ -123,18 +123,16 @@ class Interleave:
             for key in ['0', 'n', '2n']:
                 M = metagraph[key]
 
-                length = dict(nx.all_pairs_shortest_path_length(M.to_undirected()))
-
                 val_to_verts = self.val_to_verts[name][key]
 
                 block_dict = {}
                 for f_i in val_to_verts:
                     vert_set = val_to_verts[f_i]
                     D_i = np.zeros((len(vert_set), len(vert_set)))
-                    for i, v1 in enumerate(vert_set):
-                        for j, v2 in enumerate(vert_set):
-                            if i!=j:
-                                D_i[i, j] = length[v1][v2]/2
+                    for i in range(len(vert_set)):
+                        for j in range(i+1, len(vert_set)):
+                            D_i[i, j] = M.thickening_distance(vert_set[i], vert_set[j])
+                            D_i[j, i] = D_i[i, j]
                     block_dict[f_i] = {'rows': vert_set, 'cols': vert_set, 'array': D_i}
                 
                 self.D[name][key] = block_dict

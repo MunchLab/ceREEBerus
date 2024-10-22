@@ -136,6 +136,36 @@ class ReebGraph(nx.MultiDiGraph):
             else:
                 f_to_e[f] = [e]
         return f_to_e
+
+    def thickening_distance(self, u, v):
+        """
+        Get the thickening distance between two vertices in the Reeb graph. This is the amount of thickening needed before the two vertices map to the same connected component. Note that u and v need to be at the same function value, so f(u) = f(v). 
+
+        Warning: This uses the command `nx.all_simple_paths` which can be very slow for dense graphs.
+
+        Parameters:
+            u, v : int. The vertices to get the thickening distance between.
+        
+        Returns:
+            int
+                The thickening distance between the two vertices.
+        """
+        if self.f[u] != self.f[v]:
+            raise ValueError(f"Vertices {u} and {v} are not at the same function value.")
+
+        a = self.f[u]
+
+        thickening_needed = []
+
+        # Check all paths (Is there a better way to do this?)
+        for P in nx.all_simple_paths(self.to_undirected(), u, v):
+            # Get the distance from function value a to each point in the path
+            P_f = [np.abs(self.f[v]-a) for v in P]
+            # Store the maximum thickening needed for that path
+            thickening_needed.append(max(P_f))
+
+        # Return the minimum thickening needed among all paths
+        return min(thickening_needed)
     
     #-----------------------------------------------#
     # Methods for adding and removing nodes and edges 

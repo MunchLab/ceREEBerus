@@ -235,6 +235,39 @@
                 <span class="n">f_to_e</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">f_to_e</span></div>
 
+
+<div class="viewcode-block" id="ReebGraph.thickening_distance">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.thickening_distance">[docs]</a>
+    <span class="k">def</span> <span class="nf">thickening_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the thickening distance between two vertices in the Reeb graph. This is the amount of thickening needed before the two vertices map to the same connected component. Note that u and v need to be at the same function value, so f(u) = f(v). </span>
+
+<span class="sd">        Warning: This uses the command `nx.all_simple_paths` which can be very slow for dense graphs.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            u, v : int. The vertices to get the thickening distance between.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            int</span>
+<span class="sd">                The thickening distance between the two vertices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vertices </span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2"> are not at the same function value.&quot;</span><span class="p">)</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span>
+
+        <span class="n">thickening_needed</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Check all paths (Is there a better way to do this?)</span>
+        <span class="k">for</span> <span class="n">P</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_undirected</span><span class="p">(),</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+            <span class="c1"># Get the distance from function value a to each point in the path</span>
+            <span class="n">P_f</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">-</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">P</span><span class="p">]</span>
+            <span class="c1"># Store the maximum thickening needed for that path</span>
+            <span class="n">thickening_needed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">P_f</span><span class="p">))</span>
+
+        <span class="c1"># Return the minimum thickening needed among all paths</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">thickening_needed</span><span class="p">)</span></div>
+
     
     <span class="c1">#-----------------------------------------------#</span>
     <span class="c1"># Methods for adding and removing nodes and edges </span>
