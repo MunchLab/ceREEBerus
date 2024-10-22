@@ -134,19 +134,19 @@ class TestReebClass(unittest.TestCase):
 
     def test_remove_regular_vertx(self):
         # This test makes sure you can remove a node from a Reeb graph.
-        R = ex_rg.torus()
+        R = ex_rg.torus(multigraph = False)
 
         # Error if passing in a vertex that isn't already there
         self.assertRaises(ValueError, R.remove_regular_vertex, 'chicken')
 
         # Error if passing in a vertex but its not regular
-        self.assertRaises(ValueError, R.remove_regular_vertex, 0)
-        self.assertRaises(ValueError, R.remove_regular_vertex, 1)
+        self.assertRaises(ValueError, R.remove_regular_vertex, 'a')
+        self.assertRaises(ValueError, R.remove_regular_vertex, 'b')
 
         # Ok, now actually do it
         n = len(R.nodes)
         m = len(R.edges)
-        R.remove_regular_vertex(2)
+        R.remove_regular_vertex('e')
         S = {'nodes': n-1, 'edges': m-1}
         self.assertEqual(S, R.summary())
 
@@ -154,7 +154,7 @@ class TestReebClass(unittest.TestCase):
         self.check_reeb(R)
 
         # One more time with all the regular vertices
-        R = ex_rg.torus()
+        R = ex_rg.torus(multigraph = False)
         n = len(R.nodes)
         m = len(R.edges)
         R.remove_all_regular_vertices()

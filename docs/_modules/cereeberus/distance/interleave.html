@@ -326,6 +326,42 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">rows</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="n">cols</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">BigMatrix</span><span class="p">}</span></div>
 
+
+
+<div class="viewcode-block" id="Interleave.check_column_sum">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.check_column_sum">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_column_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix_dict</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check that the sum of each column is 1.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            matrix_dict : dict</span>
+<span class="sd">                Either a dictionary with keys &#39;rows&#39;, &#39;cols&#39;, and &#39;array&#39; that are lists of rows, columns, and a numpy array respectively), or a block dictionary where keys are function values and output is a dictionary of the above form. </span>
+<span class="sd">            verbose : bool</span>
+<span class="sd">                Prints information on which matrices have columns that do not sum to 1 if True. The default is False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool</span>
+<span class="sd">                True if the columns sum to 1, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="s1">&#39;array&#39;</span> <span class="ow">in</span> <span class="n">matrix_dict</span><span class="p">:</span>
+            <span class="c1"># This will be false if any of the columns does not sum to 1</span>
+            <span class="n">check</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">check</span> <span class="ow">and</span> <span class="n">verbose</span> <span class="p">:</span> 
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The columns of the distance matrix do not sum to 1&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">matrix_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">D_small</span> <span class="o">=</span> <span class="n">matrix_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">check</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">D_small</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> 
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">check</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span> 
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The columns of the distance matrix for function value </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> do not sum to 1&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">check</span></div>
+
     
 <div class="viewcode-block" id="Interleave.draw_matrix">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_matrix">[docs]</a>

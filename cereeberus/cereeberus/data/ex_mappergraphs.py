@@ -2,11 +2,36 @@ from cereeberus import ReebGraph, MapperGraph
 from cereeberus.data import ex_graphs
 from cereeberus.data import ex_reebgraphs as ex_rg
 
-def torus(delta = .1, seed=None):
+
+def line(a = 0, b = 3, seed = None):
+    """
+    Returns the Mapper graph of a simple line as a MapperGraph class. The endpoints have function value a and b respectively.
+
+    Parameters:
+        a, b (int): The function values for the two vertices in increasing order.
+        seed (int): Optional. The seed to use for the random number generator, which only controls the layout function.
+
+    Returns:
+        MapperGraph: The Mapper graph of the line.
+
+        
+    .. figure:: ../../images/line_mapper.png
+        :figwidth: 400px
+
+    """
+
+    MG = ex_rg.line(a, b, seed = seed).to_mapper()
+    MG.set_pos_from_f(seed = seed)
+
+    return MG
+
+def torus(a = 0, b = 1, c = 4, d = 5, 
+            delta = .1, seed=None):
     '''
     Returns the Mapper graph of a simple upright torus as a MapperGraph class. 
 
     Parameters:
+        a ,b, c, d (int): The integer function values for the four vertices in increasing order.
         delta (float): Optional. The delta value to use for the Mapper graph.
         seed (int): Optional. The seed to use for the random number generator, which only controls the layout function.
 
@@ -18,7 +43,12 @@ def torus(delta = .1, seed=None):
         :figwidth: 400px
 
     '''
-    return ReebGraph(ex_graphs.torus_graph(), seed=seed).to_mapper(delta = delta)
+    # make sure a, b, c, and d are integers
+    if not all(isinstance(x, int) for x in [a, b, c, d]):
+        raise ValueError('a, b, c, and d must be integers.')
+    MG = ex_rg.torus(a,b,c,d, multigraph = True, seed = seed).to_mapper(delta = delta)
+    MG.set_pos_from_f(seed = seed)
+    return MG
 
 def dancing_man(delta = .1, seed=None):
     '''

@@ -170,6 +170,29 @@ A dictionary of blocks.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.check_column_sum">
+<span class="sig-name descname"><span class="pre">check_column_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.check_column_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.check_column_sum" title="Link to this definition"></a></dt>
+<dd><p>Check that the sum of each column is 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix_dict</strong> – dict
+Either a dictionary with keys ‘rows’, ‘cols’, and ‘array’ that are lists of rows, columns, and a numpy array respectively), or a block dictionary where keys are function values and output is a dictionary of the above form.</p></li>
+<li><p><strong>verbose</strong> – bool
+Prints information on which matrices have columns that do not sum to 1 if True. The default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>bool</dt><dd><p>True if the columns sum to 1, False otherwise.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_matrix">
 <span class="sig-name descname"><span class="pre">draw_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_matrix" title="Link to this definition"></a></dt>
 <dd><p>Draw a matrix with row and column labels.</p>

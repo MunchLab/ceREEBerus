@@ -239,6 +239,39 @@ class Interleave:
         BigMatrix = block_diag(*arrays)
 
         return {'rows': rows, 'cols': cols, 'array': BigMatrix}
+
+
+    def check_column_sum(self, matrix_dict, verbose = False):
+        """
+        Check that the sum of each column is 1.
+
+        Parameters:
+            matrix_dict : dict
+                Either a dictionary with keys 'rows', 'cols', and 'array' that are lists of rows, columns, and a numpy array respectively), or a block dictionary where keys are function values and output is a dictionary of the above form. 
+            verbose : bool
+                Prints information on which matrices have columns that do not sum to 1 if True. The default is False.
+
+        Returns:
+            bool
+                True if the columns sum to 1, False otherwise.
+        """
+        
+        if 'array' in matrix_dict:
+            # This will be false if any of the columns does not sum to 1
+            check = np.all(matrix_dict['array'].sum(axis = 0) == 1)
+
+            if not check and verbose : 
+                print('The columns of the distance matrix do not sum to 1')
+
+        else:
+            for i in matrix_dict.keys():
+                D_small = matrix_dict[i]
+                check = np.all(D_small['array'].sum(axis = 0) == 1) 
+
+                if not check and verbose: 
+                    print(f'The columns of the distance matrix for function value {i} do not sum to 1')
+
+        return check
     
     def draw_matrix(self, matrix_dict, **kwargs):
         """

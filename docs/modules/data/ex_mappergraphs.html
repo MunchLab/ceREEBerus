@@ -56,6 +56,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ex_mergetrees.html">3.2.  Example Merge Trees</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ex_embedgraphs.html">3.3.  Example Embedded Graphs</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">3.4.  Example Mapper Graphs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cereeberus.data.ex_mappergraphs.line"><code class="docutils literal notranslate"><span class="pre">line()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cereeberus.data.ex_mappergraphs.torus"><code class="docutils literal notranslate"><span class="pre">torus()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cereeberus.data.ex_mappergraphs.dancing_man"><code class="docutils literal notranslate"><span class="pre">dancing_man()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cereeberus.data.ex_mappergraphs.juggling_man"><code class="docutils literal notranslate"><span class="pre">juggling_man()</span></code></a></li>
@@ -103,12 +104,40 @@
 <h1><span class="section-number">3.4. </span>Example Mapper Graphs<a class="headerlink" href="#example-mapper-graphs" title="Link to this heading"></a></h1>
 <p>This module contains example graphs and data to use for Reeb graph computations. Pictures of these can be seen in <a class="reference external" href="../../notebooks/example_graphs.html">this notebook</a></p>
 <dl class="py function" id="module-cereeberus.data.ex_mappergraphs">
+<dt class="sig sig-object py" id="cereeberus.data.ex_mappergraphs.line">
+<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_mappergraphs.</span></span><span class="sig-name descname"><span class="pre">line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_mappergraphs.html#line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_mappergraphs.line" title="Link to this definition"></a></dt>
+<dd><p>Returns the Mapper graph of a simple line as a MapperGraph class. The endpoints have function value a and b respectively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>int</em>) – The function values for the two vertices in increasing order.</p></li>
+<li><p><strong>b</strong> (<em>int</em>) – The function values for the two vertices in increasing order.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Optional. The seed to use for the random number generator, which only controls the layout function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Mapper graph of the line.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph" title="cereeberus.reeb.mapper.MapperGraph">MapperGraph</a></p>
+</dd>
+</dl>
+<figure class="align-default" style="width: 400px">
+<img alt="../../_images/line_mapper.png" src="../../_images/line_mapper.png" />
+</figure>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="cereeberus.data.ex_mappergraphs.torus">
-<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_mappergraphs.</span></span><span class="sig-name descname"><span class="pre">torus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_mappergraphs.html#torus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_mappergraphs.torus" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cereeberus.data.ex_mappergraphs.</span></span><span class="sig-name descname"><span class="pre">torus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/data/ex_mappergraphs.html#torus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.data.ex_mappergraphs.torus" title="Link to this definition"></a></dt>
 <dd><p>Returns the Mapper graph of a simple upright torus as a MapperGraph class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>int</em>) – The integer function values for the four vertices in increasing order.</p></li>
+<li><p><strong>b</strong> (<em>int</em>) – The integer function values for the four vertices in increasing order.</p></li>
+<li><p><strong>c</strong> (<em>int</em>) – The integer function values for the four vertices in increasing order.</p></li>
+<li><p><strong>d</strong> (<em>int</em>) – The integer function values for the four vertices in increasing order.</p></li>
 <li><p><strong>delta</strong> (<em>float</em>) – Optional. The delta value to use for the Mapper graph.</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – Optional. The seed to use for the random number generator, which only controls the layout function.</p></li>
 </ul>
