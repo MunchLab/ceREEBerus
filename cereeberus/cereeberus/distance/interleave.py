@@ -145,15 +145,26 @@ class Interleave:
         # phi: F -> G^n
 
         # Initialize the phi matrices. These will have all 0 entries.
-        self.phi = {'V':{}, 'E':{}}
-        self.phi['V'] = self.map_dict_to_matrix(None, 
+        self.phi = {'0':{}, 'n':{}}
+        self.phi['0'] = {'V':{}, 'E':{}}
+        self.phi['0']['V'] = self.map_dict_to_matrix(None, 
                                     self.val_to_verts['G']['n'], 
                                     self.val_to_verts['F']['0'],
                                     random_initialize = initialize_random_maps)
 
-        self.phi['E'] = self.map_dict_to_matrix(None,
+        self.phi['0']['E'] = self.map_dict_to_matrix(None,
                                     self.val_to_edges['G']['n'],
                                     self.val_to_edges['F']['0'],
+                                    random_initialize = initialize_random_maps)
+        self.phi['n'] = {'V':{}, 'E':{}}
+        self.phi['n']['V'] = self.map_dict_to_matrix(None, 
+                                    self.val_to_verts['G']['2n'], 
+                                    self.val_to_verts['F']['n'],
+                                    random_initialize = initialize_random_maps)
+
+        self.phi['n']['E'] = self.map_dict_to_matrix(None,
+                                    self.val_to_edges['G']['2n'],
+                                    self.val_to_edges['F']['n'],
                                     random_initialize = initialize_random_maps)
 
 
@@ -178,28 +189,29 @@ class Interleave:
         # psi: G -> F^n
         
         # Initialize the psi matrices. These will have all 0 entries.
-        self.psi = {'V':{}, 'E':{}}
+        self.psi = {'0':{}, 'n':{}}
 
-        self.psi['V'] = self.map_dict_to_matrix(None, 
+        self.psi['0'] = {'V':{}, 'E':{}}
+
+        self.psi['0']['V'] = self.map_dict_to_matrix(None, 
                                     self.val_to_verts['F']['n'], 
                                     self.val_to_verts['G']['0'],
                                     random_initialize = initialize_random_maps)
-        self.psi['E'] = self.map_dict_to_matrix(None, 
+        self.psi['0']['E'] = self.map_dict_to_matrix(None, 
                                     self.val_to_edges['F']['n'], 
                                     self.val_to_edges['G']['0'],
                                     random_initialize = initialize_random_maps)
 
-        # if initialize_random_maps:
-        #     B_Fn = self.B['F']['n']['array']
-        #     psi = self.block_dict_to_matrix(self.psi['V'])['array']
-        #     B_G = self.B['G']['0']['array']
-
-        #     A = B_Fn.T @ (psi @ B_G)
-        #     A = np.floor(A/2)
-        #     self.psi['E'] = self.matrix_to_block_dict(A,  self.val_to_edges['F']['n'], self.val_to_edges['G']['0'])
-
-        # else:
-        #     self.psi['E'] = self.map_dict_to_matrix(None, self.val_to_edges['F']['n'], self.val_to_edges['G']['0'])
+        self.psi['n'] = {'V':{}, 'E':{}}
+        self.psi['n']['V'] = self.map_dict_to_matrix(None, 
+                                    self.val_to_verts['F']['2n'], 
+                                    self.val_to_verts['G']['n'],
+                                    random_initialize = initialize_random_maps)
+        self.psi['n']['E'] = self.map_dict_to_matrix(None, 
+                                    self.val_to_edges['F']['2n'], 
+                                    self.val_to_edges['G']['n'],
+                                    random_initialize = initialize_random_maps)
+        
 
         # End psi
         # ---
@@ -480,14 +492,36 @@ class Interleave:
 
         return ax
 
+    def draw_phi(self, key = '0', type = 'V', ax = None, **kwargs):
+        """
+        Draw the map from F to G^n.
+
+        Parameters:
+            key : str
+                The key for the map. Either '0' or 'n'.
+            type : str
+                The type of map. Either 'V' or 'E'.
+        """
+        if ax is None:
+            ax = plt.gca()
+
+        self.draw_matrix(self.phi[key][type], ax = ax, **kwargs)
+        ax.set_xlabel(f"G_n")
+        ax.set_ylabel(f"F_{key}")
+
+        return ax
+
     # ==========
     # Functions for checking commutative diagrams 
 
-    def parallelogram_matrix(self):
+    def parallelogram_matrix_Edge_Vert(self):
         """
-        Check that the parallelogram commutes.
+        Check that the parallelogram for the pair $(U_{\tau_I}\subset U_\sigma_i)$ commutes.
+        This is the one that relates the edge maps to the vertex maps.
+
+        TODO: This is just for phi, need the psi version. 
         """
-        phiV_dict = self.block_dict_to_matrix(self.phi['V'])
+        phiV_dict = self.block_dict_to_matrix(self.phi['0']['V'])
         phiV = phiV_dict['array']
         rows = phiV_dict['rows']
 
@@ -496,21 +530,79 @@ class Interleave:
         cols = B_F_dict['cols']
 
         B_Gn = self.B['G']['n']['array']
-        phiE = self.block_dict_to_matrix(self.phi['E'])['array']
+        phiE = self.block_dict_to_matrix(self.phi['0']['E'])['array']
 
         A = phiV @ B_F - B_Gn @ phiE
 
-        rows = self.block_dict_to_matrix(self.phi['V'])['rows']
+        rows = self.block_dict_to_matrix(self.phi['0']['V'])['rows']
         return {'rows': rows, 'cols': cols, 'array': A}
 
     
-    def parallelogram_dist(self):
+    def parallelogram_dist_Edge_Vert(self):
         """
         Get the matrix that has distance entries 
+
+        TODO: This is just for phi, need the psi version. 
         """
 
-        A_dict = self.parallelogram_matrix()
+        A_dict = self.parallelogram_matrix_Edge_Vert()
         A = A_dict['array']
         A_mult = self.block_dict_to_matrix(self.D['G']['n'])['array'] @ A
         return {'rows':A_dict['rows'], 'cols' : A_dict['cols'], 'array': A_mult}
 
+    def parallelogram_matrix_thickening(self):
+        """
+        Get the paralellogram induced by the pair $U_{\sigma_i} \subset U_{\sigma_i}^n$ commutes. 
+
+        TODO: This is just for phi, need the psi version. 
+        """
+
+        phi_Vn = self.block_dict_to_matrix(self.phi['n']['V'])
+        I_F = self.block_dict_to_matrix(self.I['F']['0']['V'])
+
+        I_Gn = self.block_dict_to_matrix(self.I['G']['n']['V'])
+        phi_V = self.block_dict_to_matrix(self.phi['0']['V'])
+
+        A = phi_Vn['array'] @ I_F['array']
+        B = I_Gn['array'] @ phi_V['array'] 
+
+        rows = phi_Vn['rows']
+        cols = I_F['cols']
+        return {'rows': rows, 'cols': cols, 'array': A-B}
+
+    def parallelogram_dist_thickening(self):
+        """
+        Get the matrix that has distance entries 
+
+        TODO: This is just for phi, need the psi version. 
+        TODO: This is also only for vertices, need the edge version.
+        """
+
+        A_dict = self.parallelogram_matrix_thickening()
+        A = A_dict['array']
+        A_mult = self.block_dict_to_matrix(self.D['G']['2n'])['array'] @ A
+        return {'rows':A_dict['rows'], 'cols' : A_dict['cols'], 'array': A_mult}
+
+    def triangle_matrix_vertex(self):
+        """
+        TODO 
+        """
+        pass 
+
+    def triangle_matrix_edge(self):
+        """
+        TODO 
+        """
+        pass
+
+    def triangle_dist_vertex(self):
+        """
+        TODO 
+        """
+        pass
+
+    def triangle_dist_edge(self):
+        """
+        TODO 
+        """
+        pass

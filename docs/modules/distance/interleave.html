@@ -286,15 +286,55 @@ The key for the distance matrix. Either ‘0’, ‘n’, or ‘2n’.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram_matrix">
-<span class="sig-name descname"><span class="pre">parallelogram_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram_matrix" title="Link to this definition"></a></dt>
-<dd><p>Check that the parallelogram commutes.</p>
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_phi">
+<span class="sig-name descname"><span class="pre">draw_phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_phi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_phi" title="Link to this definition"></a></dt>
+<dd><p>Draw the map from F to G^n.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – str
+The key for the map. Either ‘0’ or ‘n’.</p></li>
+<li><p><strong>type</strong> – str
+The type of map. Either ‘V’ or ‘E’.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram_dist">
-<span class="sig-name descname"><span class="pre">parallelogram_dist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram_dist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram_dist" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram_matrix_Edge_Vert">
+<span class="sig-name descname"><span class="pre">parallelogram_matrix_Edge_Vert</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram_matrix_Edge_Vert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram_matrix_Edge_Vert" title="Link to this definition"></a></dt>
+<dd><p>Check that the parallelogram for the pair $(U_{ au_I}subset <a href="#id1"><span class="problematic" id="id2">U_</span></a>sigma_i)$ commutes.
+This is the one that relates the edge maps to the vertex maps.</p>
+<p>TODO: This is just for phi, need the psi version.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram_dist_Edge_Vert">
+<span class="sig-name descname"><span class="pre">parallelogram_dist_Edge_Vert</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram_dist_Edge_Vert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram_dist_Edge_Vert" title="Link to this definition"></a></dt>
 <dd><p>Get the matrix that has distance entries</p>
+<p>TODO: This is just for phi, need the psi version.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram_matrix_thickening">
+<span class="sig-name descname"><span class="pre">parallelogram_matrix_thickening</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram_matrix_thickening"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram_matrix_thickening" title="Link to this definition"></a></dt>
+<dd><p>Get the paralellogram induced by the pair $U_{sigma_i} subset U_{sigma_i}^n$ commutes.</p>
+<p>TODO: This is just for phi, need the psi version.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram_dist_thickening">
+<span class="sig-name descname"><span class="pre">parallelogram_dist_thickening</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram_dist_thickening"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram_dist_thickening" title="Link to this definition"></a></dt>
+<dd><p>Get the matrix that has distance entries</p>
+<p>TODO: This is just for phi, need the psi version.
+TODO: This is also only for vertices, need the edge version.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.triangle_matrix_vertex">
+<span class="sig-name descname"><span class="pre">triangle_matrix_vertex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.triangle_matrix_vertex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.triangle_matrix_vertex" title="Link to this definition"></a></dt>
+<dd><p>TODO</p>
 </dd></dl>
 
 </dd></dl>

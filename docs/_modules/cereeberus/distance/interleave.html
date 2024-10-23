@@ -225,15 +225,26 @@
         <span class="c1"># phi: F -&gt; G^n</span>
 
         <span class="c1"># Initialize the phi matrices. These will have all 0 entries.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:{},</span> <span class="s1">&#39;E&#39;</span><span class="p">:{}}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:{},</span> <span class="s1">&#39;n&#39;</span><span class="p">:{}}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:{},</span> <span class="s1">&#39;E&#39;</span><span class="p">:{}}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> 
                                     <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
                                     <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
                                     <span class="n">random_initialize</span> <span class="o">=</span> <span class="n">initialize_random_maps</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                                    <span class="n">random_initialize</span> <span class="o">=</span> <span class="n">initialize_random_maps</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:{},</span> <span class="s1">&#39;E&#39;</span><span class="p">:{}}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> 
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span>
+                                    <span class="n">random_initialize</span> <span class="o">=</span> <span class="n">initialize_random_maps</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span>
                                     <span class="n">random_initialize</span> <span class="o">=</span> <span class="n">initialize_random_maps</span><span class="p">)</span>
 
 
@@ -258,29 +269,30 @@
         <span class="c1"># psi: G -&gt; F^n</span>
         
         <span class="c1"># Initialize the psi matrices. These will have all 0 entries.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:{},</span> <span class="s1">&#39;E&#39;</span><span class="p">:{}}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;0&#39;</span><span class="p">:{},</span> <span class="s1">&#39;n&#39;</span><span class="p">:{}}</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:{},</span> <span class="s1">&#39;E&#39;</span><span class="p">:{}}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> 
                                     <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
                                     <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
                                     <span class="n">random_initialize</span> <span class="o">=</span> <span class="n">initialize_random_maps</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> 
                                     <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
                                     <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">],</span>
+                                    <span class="n">random_initialize</span> <span class="o">=</span> <span class="n">initialize_random_maps</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:{},</span> <span class="s1">&#39;E&#39;</span><span class="p">:{}}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> 
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span>
+                                    <span class="n">random_initialize</span> <span class="o">=</span> <span class="n">initialize_random_maps</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict_to_matrix</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> 
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span>
                                     <span class="n">random_initialize</span> <span class="o">=</span> <span class="n">initialize_random_maps</span><span class="p">)</span></div>
 
-
-        <span class="c1"># if initialize_random_maps:</span>
-        <span class="c1">#     B_Fn = self.B[&#39;F&#39;][&#39;n&#39;][&#39;array&#39;]</span>
-        <span class="c1">#     psi = self.block_dict_to_matrix(self.psi[&#39;V&#39;])[&#39;array&#39;]</span>
-        <span class="c1">#     B_G = self.B[&#39;G&#39;][&#39;0&#39;][&#39;array&#39;]</span>
-
-        <span class="c1">#     A = B_Fn.T @ (psi @ B_G)</span>
-        <span class="c1">#     A = np.floor(A/2)</span>
-        <span class="c1">#     self.psi[&#39;E&#39;] = self.matrix_to_block_dict(A,  self.val_to_edges[&#39;F&#39;][&#39;n&#39;], self.val_to_edges[&#39;G&#39;][&#39;0&#39;])</span>
-
-        <span class="c1"># else:</span>
-        <span class="c1">#     self.psi[&#39;E&#39;] = self.map_dict_to_matrix(None, self.val_to_edges[&#39;F&#39;][&#39;n&#39;], self.val_to_edges[&#39;G&#39;][&#39;0&#39;])</span>
+        
 
         <span class="c1"># End psi</span>
         <span class="c1"># ---</span>
@@ -588,16 +600,41 @@
         <span class="k">return</span> <span class="n">ax</span></div>
 
 
+<div class="viewcode-block" id="Interleave.draw_phi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_phi">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the map from F to G^n.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key : str</span>
+<span class="sd">                The key for the map. Either &#39;0&#39; or &#39;n&#39;.</span>
+<span class="sd">            type : str</span>
+<span class="sd">                The type of map. Either &#39;V&#39; or &#39;E&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="nb">type</span><span class="p">],</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;G_n&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;F_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ax</span></div>
+
+
     <span class="c1"># ==========</span>
     <span class="c1"># Functions for checking commutative diagrams </span>
 
-<div class="viewcode-block" id="Interleave.parallelogram_matrix">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_matrix">[docs]</a>
-    <span class="k">def</span> <span class="nf">parallelogram_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Interleave.parallelogram_matrix_Edge_Vert">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_matrix_Edge_Vert">[docs]</a>
+    <span class="k">def</span> <span class="nf">parallelogram_matrix_Edge_Vert</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check that the parallelogram commutes.</span>
+<span class="sd">        Check that the parallelogram for the pair $(U_{\tau_I}\subset U_\sigma_i)$ commutes.</span>
+<span class="sd">        This is the one that relates the edge maps to the vertex maps.</span>
+
+<span class="sd">        TODO: This is just for phi, need the psi version. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">phiV_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">])</span>
+        <span class="n">phiV_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">])</span>
         <span class="n">phiV</span> <span class="o">=</span> <span class="n">phiV_dict</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
         <span class="n">rows</span> <span class="o">=</span> <span class="n">phiV_dict</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span>
 
@@ -606,28 +643,77 @@
         <span class="n">cols</span> <span class="o">=</span> <span class="n">B_F_dict</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">]</span>
 
         <span class="n">B_Gn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
-        <span class="n">phiE</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">])[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
+        <span class="n">phiE</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">])[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
 
         <span class="n">A</span> <span class="o">=</span> <span class="n">phiV</span> <span class="o">@</span> <span class="n">B_F</span> <span class="o">-</span> <span class="n">B_Gn</span> <span class="o">@</span> <span class="n">phiE</span>
 
-        <span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">])[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">])[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">rows</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="n">cols</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">}</span></div>
 
 
     
-<div class="viewcode-block" id="Interleave.parallelogram_dist">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_dist">[docs]</a>
-    <span class="k">def</span> <span class="nf">parallelogram_dist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Interleave.parallelogram_dist_Edge_Vert">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_dist_Edge_Vert">[docs]</a>
+    <span class="k">def</span> <span class="nf">parallelogram_dist_Edge_Vert</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the matrix that has distance entries </span>
+
+<span class="sd">        TODO: This is just for phi, need the psi version. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">A_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram_matrix</span><span class="p">()</span>
+        <span class="n">A_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram_matrix_Edge_Vert</span><span class="p">()</span>
         <span class="n">A</span> <span class="o">=</span> <span class="n">A_dict</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
         <span class="n">A_mult</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span> <span class="o">@</span> <span class="n">A</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span><span class="n">A_dict</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">],</span> <span class="s1">&#39;cols&#39;</span> <span class="p">:</span> <span class="n">A_dict</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">],</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">A_mult</span><span class="p">}</span></div>
-</div>
 
+
+<div class="viewcode-block" id="Interleave.parallelogram_matrix_thickening">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_matrix_thickening">[docs]</a>
+    <span class="k">def</span> <span class="nf">parallelogram_matrix_thickening</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the paralellogram induced by the pair $U_{\sigma_i} \subset U_{\sigma_i}^n$ commutes. </span>
+
+<span class="sd">        TODO: This is just for phi, need the psi version. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">phi_Vn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">])</span>
+        <span class="n">I_F</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">])</span>
+
+        <span class="n">I_Gn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">])</span>
+        <span class="n">phi_V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">])</span>
+
+        <span class="n">A</span> <span class="o">=</span> <span class="n">phi_Vn</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span> <span class="o">@</span> <span class="n">I_F</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">I_Gn</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span> <span class="o">@</span> <span class="n">phi_V</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span> 
+
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">phi_Vn</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">I_F</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">rows</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="n">cols</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">A</span><span class="o">-</span><span class="n">B</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="Interleave.parallelogram_dist_thickening">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_dist_thickening">[docs]</a>
+    <span class="k">def</span> <span class="nf">parallelogram_dist_thickening</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the matrix that has distance entries </span>
+
+<span class="sd">        TODO: This is just for phi, need the psi version. </span>
+<span class="sd">        TODO: This is also only for vertices, need the edge version.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">A_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram_matrix_thickening</span><span class="p">()</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">A_dict</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span>
+        <span class="n">A_mult</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_dict_to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">])[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span> <span class="o">@</span> <span class="n">A</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span><span class="n">A_dict</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">],</span> <span class="s1">&#39;cols&#39;</span> <span class="p">:</span> <span class="n">A_dict</span><span class="p">[</span><span class="s1">&#39;cols&#39;</span><span class="p">],</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">A_mult</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="Interleave.triangle_matrix_vertex">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.triangle_matrix_vertex">[docs]</a>
+    <span class="k">def</span> <span class="nf">triangle_matrix_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span> </div>
+</div>
 
 </pre></div>
 

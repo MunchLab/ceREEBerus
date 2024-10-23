@@ -422,7 +422,7 @@ class ReebGraph(nx.MultiDiGraph):
                 print('Function values:', self.f)
                 print('Positions:', self.pos_f)
 
-    def draw(self, with_labels = True, with_colorbar = False, cpx = .1):
+    def draw(self, with_labels = True, with_colorbar = False, cpx = .1, ax = None):
         """
         A drawing of the Reeb graph. Uses the fancy version from cereeberus.compute.draw.
 
@@ -434,6 +434,9 @@ class ReebGraph(nx.MultiDiGraph):
             None
         """
 
+        if ax is None:
+           ax = plt.gca()
+
         # This really shouldn't be called ever since this is supposed to be maintained by the class
         if not set(self.pos_f.keys()) == set(self.nodes()):
             print('The positions are not set correctly. Setting them now.')
@@ -442,7 +445,7 @@ class ReebGraph(nx.MultiDiGraph):
 
 
     
-        draw.reeb_plot(self, with_labels = with_labels, with_colorbar = with_colorbar, cpx=cpx, cpy=0)
+        draw.reeb_plot(self, with_labels = with_labels, with_colorbar = with_colorbar, cpx=cpx, cpy=0, ax = ax)
 
 
 
