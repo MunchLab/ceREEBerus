@@ -3,6 +3,8 @@ import numpy as np
 import networkx as nx
 from scipy.linalg import block_diag
 from matplotlib import pyplot as plt
+from .labeled_blocks import LabeledBlockMatrix as LBM
+from .labeled_blocks import LabeledMatrix as LM
 
 class Interleave:
     """
@@ -27,78 +29,84 @@ class Interleave:
 
         # ---
         # Containers for matrices for later 
+
+
         # self.A = {'F':{}, 'G':{}} # adjacency matrix
-        self.B = {'F':{}, 'G':{}} # boundary matrix
-        self.D = {'F':{}, 'G':{}} # distance matrix
-        self.I = {'F':{}, 'G':{}} # induced maps
+        self.B_ = {'F':{}, 'G':{}} # boundary matrix
+        self.D_ = {'F':{}, 'G':{}} # distance matrix
+        self.I_ = {'F':{}, 'G':{}} # induced maps
 
         self.val_to_verts = {'F':{}, 'G':{}} # dictionaries from function values to vertices
         self.val_to_edges = {'F':{}, 'G':{}} # dictionaries from function values to edges
 
         # ----
         # Make F graphs and smoothed versions
-        self.F = {}
-        self.F['0'] = F 
-        self.F['n'], I_0 = F.smoothing(self.n, return_map = True)
-        self.F['2n'], I_n = self.F['n'].smoothing(self.n, return_map = True)
+        self.F_ = {}
+        self.F_['0'] = F 
+        self.F_['n'], I_0 = F.smoothing(self.n, return_map = True)
+        self.F_['2n'], I_n = self.F('n').smoothing(self.n, return_map = True)
 
         # Get the dictionaries needed for the induced maps' block structure 
         for key in ['0', 'n', '2n']:
-            self.val_to_verts['F'][key] = self.F[key].func_to_vertex_dict()
-            self.val_to_edges['F'][key] = self.F[key].func_to_edge_dict()
+            self.val_to_verts['F'][key] = self.F(key).func_to_vertex_dict()
+            self.val_to_edges['F'][key] = self.F(key).func_to_edge_dict()
 
         
         
         # Make the induced map from F_0 to F_n
-        self.I['F']['0'] = {}
-        self.I['F']['0']['V'] = self.map_dict_to_matrix(I_0, 
-                                                        self.val_to_verts['F']['n'], 
-                                                        self.val_to_verts['F']['0'])
-        I_0_edges = {(e[0], e[1], 0): (I_0[e[0]], I_0[e[1]],0) for e in self.F['0'].edges()}
-        self.I['F']['0']['E'] = self.map_dict_to_matrix(I_0_edges, 
-                                                        self.val_to_edges['F']['n'], 
-                                                        self.val_to_edges['F']['0'])
+        self.I_['F']['0'] = {}
+        self.I_['F']['0']['V'] = LBM(map_dict = I_0, 
+                                     rows_dict = self.val_to_verts['F']['n'], 
+                                     cols_dict = self.val_to_verts['F']['0'])
+        I_0_edges = {(e[0], e[1], 0): (I_0[e[0]], I_0[e[1]],0) for e in self.F_['0'].edges()}
+        self.I_['F']['0']['E'] = LBM(map_dict = I_0_edges, 
+                                     rows_dict = self.val_to_edges['F']['n'], 
+                                     cols_dict = self.val_to_edges['F']['0'])
 
         # Make the induced map from F_n to F_2n
-        self.I['F']['n'] = {}
-        self.I['F']['n']['V'] = self.map_dict_to_matrix(I_n, 
-                                                        self.val_to_verts['F']['2n'], 
-                                                        self.val_to_verts['F']['n'])
+        self.I_['F']['n'] = {}
+        self.I_['F']['n']['V'] = LBM(I_n, 
+                                     self.val_to_verts['F']['2n'], 
+                                     self.val_to_verts['F']['n'])
         # Note that in this setting, the induced map on edges is the same as the map sending the edge to the edge with endpoints given by the vertices since there are no double edges for any smoothing >= 1. 
-        I_n_edges = {(e[0], e[1], 0): (I_n[e[0]], I_n[e[1]],0) for e in self.F['n'].edges()}
-        self.I['F']['n']['E'] = self.map_dict_to_matrix(I_n_edges, 
-                                                        self.val_to_edges['F']['2n'], 
-                                                        self.val_to_edges['F']['n'])
+        I_n_edges = {(e[0], e[1], 0): (I_n[e[0]], I_n[e[1]],0) for e in self.F('n').edges()}
+        self.I_['F']['n']['E'] = LBM(I_n_edges, 
+                                     self.val_to_edges['F']['2n'], 
+                                     self.val_to_edges['F']['n'])
 
         # ----
         # Now do the same for G
-        self.G = {}
-        self.G['0'] = G 
-        self.G['n'], I_0 = G.smoothing(self.n, return_map = True)
-        self.G['2n'], I_n = self.G['n'].smoothing(self.n, return_map = True)
+        self.G_ = {}
+        self.G_['0'] = G 
+        self.G_['n'], I_0 = G.smoothing(self.n, return_map = True)
+        self.G_['2n'], I_n = self.G_['n'].smoothing(self.n, return_map = True)
 
         # Get the dictionaries needed for the induced maps' block structure 
         for key in ['0', 'n', '2n']:
-            self.val_to_verts['G'][key] = self.G[key].func_to_vertex_dict()
-            self.val_to_edges['G'][key] = self.G[key].func_to_edge_dict()
+            self.val_to_verts['G'][key] = self.G_[key].func_to_vertex_dict()
+            self.val_to_edges['G'][key] = self.G_[key].func_to_edge_dict()
 
         # Make the induced map from G_0 to G_n
-        self.I['G']['0'] = {}
-        self.I['G']['0']['V'] = self.map_dict_to_matrix(I_0, 
-                                self.val_to_verts['G']['n'], 
-                                self.val_to_verts['G']['0'])
-        I_0_edges = {(e[0], e[1], 0): (I_0[e[0]], I_0[e[1]],0) for e in self.G['0'].edges()}
-        self.I['G']['0']['E'] = self.map_dict_to_matrix(I_0_edges, 
+        self.I_['G']['0'] = {}
+        self.I_['G']['0']['V'] = LBM( rows_dict = self.val_to_verts['G']['n'],
+                                    cols_dict = self.val_to_verts['G']['0'], 
+                                    map_dict = I_0)
+
+        # self.map_dict_to_matrix(I_0, 
+        #                         self.val_to_verts['G']['n'], 
+        #                         self.val_to_verts['G']['0'])
+        I_0_edges = {(e[0], e[1], 0): (I_0[e[0]], I_0[e[1]],0) for e in self.G_['0'].edges()}
+        self.I_['G']['0']['E'] = LBM(I_0_edges, 
                                 self.val_to_edges['G']['n'], 
                                 self.val_to_edges['G']['0'])
 
         # Make the induced map from G_n to G_2n
-        self.I['G']['n'] = {}
-        self.I['G']['n']['V'] = self.map_dict_to_matrix(I_n, 
+        self.I_['G']['n'] = {}
+        self.I_['G']['n']['V'] = LBM(I_n, 
                                 self.val_to_verts['G']['2n'], 
                                 self.val_to_verts['G']['n'])
-        I_n_edges = {(e[0], e[1], 0): (I_n[e[0]], I_n[e[1]],0) for e in self.G['n'].edges()}
-        self.I['G']['n']['E'] = self.map_dict_to_matrix(I_n_edges, 
+        I_n_edges = {(e[0], e[1], 0): (I_n[e[0]], I_n[e[1]],0) for e in self.G_['n'].edges()}
+        self.I_['G']['n']['E'] = LBM(I_n_edges, 
                                 self.val_to_edges['G']['2n'], 
                                 self.val_to_edges['G']['n'])
         
@@ -107,27 +115,30 @@ class Interleave:
         # ---
         # Build boundary matrices 
 
-        # Boundary matrix for F
         for key in ['0', 'n', '2n']:
-            
-            self.B['F'][key] = self.F[key].boundary_matrix(astype = 'dict')
+             B_dict = self.F(key).boundary_matrix(astype = 'dict')
+             self.B_['F'][key] = LM(B_dict['array'], B_dict['rows'], B_dict['cols'])
 
-        # Boundary matrix for G
         for key in ['0', 'n', '2n']:
-            self.B['G'][key] = self.G[key].boundary_matrix(astype = 'dict')
+            B_dict = self.G(key).boundary_matrix(astype = 'dict')
+            self.B_['G'][key] = LM(B_dict['array'], B_dict['rows'], B_dict['cols'])
 
         # End boundary matrices
         # ---
 
         # ---
         # Build the distance matrices 
-        for (metagraph, name) in [ (self.F,'F'), (self.G,'G')]:
+        # Note.... I don't think I actually need all of these, but I'm going to build them all anyway.
+        for (metagraph, name) in [ (self.F_,'F'), (self.G_,'G')]:
             for key in ['0', 'n', '2n']:
+                self.D_[name][key] = {'V':{}, 'E':{}}
+
+                # Vertex version 
                 M = metagraph[key]
 
                 val_to_verts = self.val_to_verts[name][key]
 
-                block_dict = {}
+                block_D = LBM()
                 for f_i in val_to_verts:
                     vert_set = val_to_verts[f_i]
                     D_i = np.zeros((len(vert_set), len(vert_set)))
@@ -135,9 +146,41 @@ class Interleave:
                         for j in range(i+1, len(vert_set)):
                             D_i[i, j] = M.thickening_distance(vert_set[i], vert_set[j])
                             D_i[j, i] = D_i[i, j]
-                    block_dict[f_i] = {'rows': vert_set, 'cols': vert_set, 'array': D_i}
+                    block_D[f_i] = LM( rows =  vert_set, cols =  vert_set,array =  D_i)
                 
-                self.D[name][key] = block_dict
+                self.D_[name][key]['V'] = block_D
+
+                # Edge version 
+                # Note that in this setting, the distance between two edges is the max distance between any pair of vertices in the two edges.
+                val_to_edges = self.val_to_edges[name][key]
+
+                block_D = LBM()
+                for f_i in val_to_edges:
+                    edge_set = val_to_edges[f_i]
+                    D_i = np.zeros((len(edge_set), len(edge_set)))
+                    for i in range(len(edge_set)):
+                        for j in range(i+1, len(edge_set)):
+                            u_i, v_i, _ = edge_set[i]
+                            u_j, v_j, _ = edge_set[j]
+
+                            # Lower vertex checking for u_i and u_v
+                            D_lower = self.D(name, key, 'V')[f_i]
+                            u_i_index = D_lower.rows.index(u_i)
+                            u_j_index = D_lower.rows.index(u_j)
+                            lower_k = D_lower.array[u_i_index, u_j_index]
+
+                            # Upper vertex checking 
+                            D_upper = self.D(name, key, 'V')[f_i+1]
+                            v_i_index = D_upper.rows.index(v_i)
+                            v_j_index = D_upper.rows.index(v_j)
+                            upper_k = D_upper.array[v_i_index, v_j_index]
+
+                            # Distance for the edge is the largest k so that both endpoints have mapped to the same thing. 
+                            D_i[i, j] = max(lower_k, upper_k)
+                            D_i[j, i] = D_i[i, j]
+                    block_D[f_i] = LM( rows =  edge_set, cols =  edge_set,array =  D_i)
+
+                self.D_[name][key]['E'] = block_D
 
 
 
@@ -145,40 +188,27 @@ class Interleave:
         # phi: F -> G^n
 
         # Initialize the phi matrices. These will have all 0 entries.
-        self.phi = {'0':{}, 'n':{}}
-        self.phi['0'] = {'V':{}, 'E':{}}
-        self.phi['0']['V'] = self.map_dict_to_matrix(None, 
+        self.phi_ = {'0':{}, 'n':{}}
+        self.phi_['0'] = {'V':{}, 'E':{}}
+        self.phi_['0']['V'] = LBM(None, 
                                     self.val_to_verts['G']['n'], 
                                     self.val_to_verts['F']['0'],
                                     random_initialize = initialize_random_maps)
 
-        self.phi['0']['E'] = self.map_dict_to_matrix(None,
+        self.phi_['0']['E'] = LBM(None,
                                     self.val_to_edges['G']['n'],
                                     self.val_to_edges['F']['0'],
                                     random_initialize = initialize_random_maps)
-        self.phi['n'] = {'V':{}, 'E':{}}
-        self.phi['n']['V'] = self.map_dict_to_matrix(None, 
+        self.phi_['n'] = {'V':{}, 'E':{}}
+        self.phi_['n']['V'] = LBM(None, 
                                     self.val_to_verts['G']['2n'], 
                                     self.val_to_verts['F']['n'],
                                     random_initialize = initialize_random_maps)
 
-        self.phi['n']['E'] = self.map_dict_to_matrix(None,
+        self.phi_['n']['E'] = LBM(None,
                                     self.val_to_edges['G']['2n'],
                                     self.val_to_edges['F']['n'],
                                     random_initialize = initialize_random_maps)
-
-
-        # if initialize_random_maps:
-        #     B_Gn = self.B['G']['n']['array']
-        #     phi = self.block_dict_to_matrix(self.phi['V'])['array']
-        #     B_F = self.B['F']['0']['array']
-
-        #     A = B_Gn.T @ (phi @ B_F)
-        #     A = np.floor(A/2)
-        #     self.phi['E'] = self.matrix_to_block_dict(A,  self.val_to_edges['G']['n'], self.val_to_edges['F']['0'])
-
-        # else:
-        #     self.phi['E'] = self.map_dict_to_matrix(None, self.val_to_edges['G']['n'], self.val_to_edges['F']['0'])
 
         # End phi
         # ---
@@ -189,25 +219,25 @@ class Interleave:
         # psi: G -> F^n
         
         # Initialize the psi matrices. These will have all 0 entries.
-        self.psi = {'0':{}, 'n':{}}
+        self.psi_ = {'0':{}, 'n':{}}
 
-        self.psi['0'] = {'V':{}, 'E':{}}
+        self.psi_['0'] = {'V':{}, 'E':{}}
 
-        self.psi['0']['V'] = self.map_dict_to_matrix(None, 
+        self.psi_['0']['V'] = LBM(None, 
                                     self.val_to_verts['F']['n'], 
                                     self.val_to_verts['G']['0'],
                                     random_initialize = initialize_random_maps)
-        self.psi['0']['E'] = self.map_dict_to_matrix(None, 
+        self.psi_['0']['E'] = LBM(None, 
                                     self.val_to_edges['F']['n'], 
                                     self.val_to_edges['G']['0'],
                                     random_initialize = initialize_random_maps)
 
-        self.psi['n'] = {'V':{}, 'E':{}}
-        self.psi['n']['V'] = self.map_dict_to_matrix(None, 
+        self.psi_['n'] = {'V':{}, 'E':{}}
+        self.psi_['n']['V'] = LBM(None, 
                                     self.val_to_verts['F']['2n'], 
                                     self.val_to_verts['G']['n'],
                                     random_initialize = initialize_random_maps)
-        self.psi['n']['E'] = self.map_dict_to_matrix(None, 
+        self.psi_['n']['E'] = LBM(None, 
                                     self.val_to_edges['F']['2n'], 
                                     self.val_to_edges['G']['n'],
                                     random_initialize = initialize_random_maps)
@@ -215,222 +245,146 @@ class Interleave:
 
         # End psi
         # ---
+
+    ### ----------------
+    # Functions for getting stuff out of all the dictionaries 
+    ### ----------------
+
+    def F(self, key = '0'):
+        """
+        Get the MapperGraph for F with key.
+
+        Parameters:
+            key : str
+                The key for the MapperGraph. Either '0', 'n', or '2n'. Default is '0'.
+        """
+        return self.F_[key]
     
-    def random_initialize(self, block_dict, seed = None):
+    def G(self, key = '0'):
         """
-        Randomly initialize the block dictionary.
+        Get the MapperGraph for G with key.
 
         Parameters:
-            block_dict : dict
-                A dictionary with keys 'rows', 'cols', and 'array' that are lists of rows, columns, and a numpy array respectively.
+            key : str
+                The key for the MapperGraph. Either '0', 'n', or '2n'. Default is '0'.
         """
-        block_dict = block_dict.copy()
-        for i in block_dict.keys():
-            A = block_dict[i]['array']
-            
-            rng = np.random.default_rng(seed)
-            col_1s = rng.integers(0, A.shape[0], size = A.shape[1])
-            A[col_1s, list(range(A.shape[1]))] = 1
-            block_dict[i]['array'] = A
+        return self.G_[key]
 
-        return block_dict
-
-    def map_dict_to_matrix(self, map_dict, 
-                           row_val_to_verts, 
-                           col_val_to_verts,
-                           random_initialize = False,
-                           seed = None):
+    def B(self, graph = 'F', key = '0'):
         """
-        Convert a dictionary of maps to a matrix. 
-        We have row objects and column objects (for example vertices from $F$ for columns and vertices from $G_n$ for rows although this all should work for edge versions as well).
-        Input 'map_dict' is a dictionary from column objects to row objects. However, 'map_dict' can also be passed in as None, in which case this will set up the structure of the block dictionary but not fill in the array. If `map_dict` is None and `random_initialize` is True, then the array will be filled with a random 1 in each column.
-
-        Also provided are dictionaries from function values to a list of objects for the row and column objects.
-
-        We will break this up into a dictionary of matrices, one for each function value. Out[i] has keys 'rows', 'cols', and 'array' for each function value i. The array should be a numpy array with the rows corresponding to the rows and the columns corresponding to the columns.
+        Get the boundary matrix for a Mapper graph.
 
         Parameters:
-            map_dict : dict
-                A dictionary from column objects to row objects.
-            row_val_to_verts : dict
-                A dictionary from function values to a list of row objects.
-            col_val_to_verts : dict
-                A dictionary from function values to a list of column objects.
+            graph : str
+                The graph to get the boundary matrix for. Either 'F' or 'G'.
+            key : str
+                The key for the boundary matrix. Either '0', 'n', or '2n'.
+        """
+        return self.B_[graph][key]
+
+    def I(self, graph = 'F', key = '0', obj_type = 'V'):
+        """
+        Get the induced map from one Mapper graph to another.
+
+        Parameters:
+            graph : str
+                The graph to get the induced map for. Either 'F' or 'G'.
+            key : str
+                The key for the induced map. Either '0' or 'n'.
+            obj_type : str
+                The type of map. Either 'V' or 'E'.
+        """
+        return self.I_[graph][key][obj_type]
         
-        Returns:
-            dict
-                A dictionary of matrices, one for each function value.
 
+    def D(self, graph = 'F', key = '0', obj_type = 'V'):
         """
-        Out = {}
-        for i in col_val_to_verts:
-            # i is the function value of the vertices 
-            matrix_dict = {}
-            matrix_dict['rows'] = row_val_to_verts[i]
-            matrix_dict['cols'] = col_val_to_verts[i]
-            matrix_dict['array'] = np.zeros((len(row_val_to_verts[i]), len(col_val_to_verts[i])))
-
-            if map_dict is not None:
-                # only fill in the array if map data is provided
-                for col_i, vert in enumerate(matrix_dict['cols']):
-                        row_j = matrix_dict['rows'].index(map_dict[vert])
-                        matrix_dict['array'][row_j, col_i] = 1
-            else:
-                if random_initialize:
-                    A = matrix_dict['array']             
-                    rng = np.random.default_rng(seed = seed)
-                    col_1s = rng.integers(0, A.shape[0], size = A.shape[1])
-                    A[col_1s, list(range(A.shape[1]))] = 1
-                    matrix_dict['array'] = A
-
-
-            Out[i] = matrix_dict
-
-        for i in row_val_to_verts.keys() ^ col_val_to_verts.keys():
-            if i in row_val_to_verts:
-                Out[i] = {'rows': row_val_to_verts[i], 'cols': [], 'array': []}
-            else:
-                raise ValueError('There is a bug, there are column function values not in the row values and this should not happen')
-
-        return Out
-
-    def block_dict_to_matrix(self, block_dict):
-        """
-        Convert a dictionary of blocks to a block diagonal matrix.
-        The dictionary should have keys that are integers and values that are dictionaries with keys 'rows', 'cols', and 'array' that are lists of rows, columns, and a numpy array respectively.
-
-        parameters:
-            block_dict : dict
-                A dictionary of blocks.
-        
-        returns:
-            dict
-                A dictionary with keys 'rows', 'cols', and 'array' that are lists of rows, columns, and a numpy array respectively.
-        """
-        Blocks = block_dict
-
-        a = np.min(list(Blocks.keys()) )
-        b = np.max(list(Blocks.keys()) )
-
-        rows = [Blocks[i]['rows'] for i in range(a, b+1)]
-        rows = sum(rows, []) # flatten the list
-        cols = [Blocks[i]['cols'] for i in range(a, b+1)]
-        cols = sum(cols, []) # flatten the list
-
-        arrays = [ Blocks[i]['array'] for i in range(a, b+1)]
-
-        BigMatrix = block_diag(*arrays)
-
-        return {'rows': rows, 'cols': cols, 'array': BigMatrix}
-
-    def matrix_to_block_dict(self, matrix, row_val_to_verts, col_val_to_verts):
-        """
-        Turn a matrix back into a block dictionary.
+        Get the distance matrix for a Mapper graph.
 
         Parameters:
-            matrix : np.array
-                A matrix.
-            row_val_to_verts : dict
-                A dictionary from function values to a list of row objects.
-            col_val_to_verts : dict
-                A dictionary from function values to a list of column objects.
+            graph : str
+                The graph to get the distance matrix for. Either 'F' or 'G'.
+            key : str
+                The key for the distance matrix. Either '0', 'n', or '2n'.
         """
-        min_i = min(row_val_to_verts.keys() | col_val_to_verts.keys())
-        max_i = max(row_val_to_verts.keys() | col_val_to_verts.keys())
+        return self.D_[graph][key][obj_type]
 
-        block_dict = {}
-
-        curr_row = 0
-        curr_col = 0
-
-        for i in range(min_i, max_i + 1):
-            try:
-                rows = row_val_to_verts[i]
-                next_row = curr_row + len(rows)
-            except KeyError:
-                rows = []
-                next_row = curr_row
-            
-            try:
-                cols = col_val_to_verts[i]
-                next_col = curr_col + len(col_val_to_verts[i])
-            except KeyError:
-                cols = []
-                next_col = curr_col 
-
-            A = matrix[curr_row:next_row, curr_col:next_col]
-            block_dict[i] = {'rows': rows, 'cols': cols, 'array':A}
-
-            curr_row = next_row
-            curr_col = next_col
-
-        return block_dict
-
-    def check_column_sum(self, matrix_dict, verbose = False):
+    def phi(self, key = '0', obj_type = 'V'):
         """
-        Check that the sum of each column is 1.
+        Get the map from F to G^n.
 
         Parameters:
-            matrix_dict : dict
-                Either a dictionary with keys 'rows', 'cols', and 'array' that are lists of rows, columns, and a numpy array respectively), or a block dictionary where keys are function values and output is a dictionary of the above form. 
-            verbose : bool
-                Prints information on which matrices have columns that do not sum to 1 if True. The default is False.
-
-        Returns:
-            bool
-                True if the columns sum to 1, False otherwise.
+            key : str
+                The key for the map. Either '0' or 'n'.
+            obj_type : str
+                The type of map. Either 'V' or 'E'.
         """
+        return self.phi_[key][obj_type]
+
+    def psi(self, key = '0', obj_type = 'V'):
+        """
+        Get the map from G to F^n.
+
+        Parameters:
+            key : str
+                The key for the map. Either '0' or 'n'.
+            obj_type : str
+                The type of map. Either 'V' or 'E'.
+        """
+        return self.psi_[key][obj_type]
+
+    def get_interleaving_map(self, maptype = 'phi', key = '0', obj_type = 'V'):
+        """
+        Get the interleaving map (either phi or psi) for the relevant key and type. Useful for iterating over all the maps.
         
-        if 'array' in matrix_dict:
-            # This will be false if any of the columns does not sum to 1
-            check = np.all(matrix_dict['array'].sum(axis = 0) == 1)
-
-            if not check and verbose : 
-                print('The columns of the distance matrix do not sum to 1')
-
+        Parameters:
+            map_type : str
+                The type of map. Either 'phi' or 'psi'.
+            key : str
+                The key for the map. Either '0' or 'n'.
+            obj_type : str
+                The type of map. Either 'V' or 'E'.
+        """
+        if maptype == 'phi':
+            return self.phi(key, obj_type)
+        elif maptype == 'psi':
+            return self.psi(key, obj_type)
         else:
-            for i in matrix_dict.keys():
-                D_small = matrix_dict[i]
-                check = np.all(D_small['array'].sum(axis = 0) == 1) 
+            raise ValueError(f"Unknown maptype {maptype}. Must be 'phi' or 'psi'.")
 
-                if not check and verbose: 
-                    print(f'The columns of the distance matrix for function value {i} do not sum to 1')
-
-        return check
+    ### ----------------
+    #
+    ### ----------------
     
-    def draw_matrix(self, matrix_dict, ax = None,  colorbar = False, **kwargs):
-        """
-        Draw a matrix with row and column labels.
 
-        The dictionary can either be passed in as a block dictionary or a matrix dictionary.
 
-        A block dictionary has keys that are integers and values that are dictionaries with keys 'rows', 'cols', and 'array' that are lists of rows, columns, and a numpy array respectively.
 
-        A matrix dictionary has keys 'rows', 'cols', and 'array' that are lists of rows, columns, and a numpy array respectively.
-        
-        Parameters:
-            matrix_dict : dict
-                A dictionary (or dictionary of dictionaries) with keys 'rows', 'cols', and 'array' that are lists of rows, columns, and a numpy array respectively.
-        """
+    ### ----------------
+    # Functions for drawing stuff
+    ### ----------------
 
-        if 'array' not in matrix_dict:
-            matrix_dict = self.block_dict_to_matrix(matrix_dict)
+    def draw_all_graphs(self):
+        fig, axs = plt.subplots(2, 3, figsize=(15, 10), sharey = True)
 
-        if ax is None:
-            ax = plt.gca()
-        
-        im = ax.matshow(matrix_dict['array'], **kwargs)
-            
-        # Add vertices as the row and column labels
-        ax.set_xticks(range(len(matrix_dict['cols'])), matrix_dict['cols'], rotation = 90)
-        ax.set_yticks(range(len(matrix_dict['rows'])), matrix_dict['rows'])
+        self.F().draw(ax = axs[0,0])
+        axs[0,0].set_title(r'$F_0$')
 
-        if colorbar:
-            plt.colorbar(im, ax = ax)
+        self.F('n').draw(ax = axs[0,1])
+        axs[0,1].set_title(r'$F_n$')
 
-        return ax
+        self.F('2n').draw(ax = axs[0,2])
+        axs[0,2].set_title(r'$F_{2n}$')
 
-    def draw_I(self, graph = 'F', key = '0', type = 'V', ax = None, **kwargs):
+        self.G().draw(ax = axs[1,0])
+        axs[1,0].set_title(r'$G_0$')
+
+        self.G('n').draw(ax = axs[1,1])
+        axs[1,1].set_title(r'$G_n$')
+
+        self.G('2n').draw(ax = axs[1,2])
+        axs[1,2].set_title(r'$G_{2n}$')
+
+    def draw_I(self, graph = 'F', key = '0', obj_type = 'V', ax = None, **kwargs):
         """
         Draw the induced map from one Mapper graph to another.
 
@@ -443,8 +397,8 @@ class Interleave:
         if ax is None:
             ax = plt.gca()
 
-        matrixDict = self.I[graph][key][type]
-        self.draw_matrix(matrixDict, ax, **kwargs)
+        self.I(graph, key, obj_type).draw(ax, **kwargs)
+
         ax.set_xlabel(f"{graph}_{key}")
         if key == '0':
             ax.set_ylabel(f"{graph}_n")
@@ -452,6 +406,22 @@ class Interleave:
             ax.set_ylabel(f"{graph}_2n")
         
         return ax
+
+    def draw_all_I(self):
+        """
+        Draw all the induced maps.
+        """
+        fig, axs = plt.subplots(2, 2, figsize=(13, 13))
+        plt.subplots_adjust(wspace=.4, hspace=.4)
+        self.draw_I('G', '0', 'V', ax = axs[0, 0])
+        axs[0,0].set_title(r'Vertices: $G_0 \to G_{n}$')
+        self.draw_I('G', '0', 'E', ax = axs[1,0])
+        axs[1,0].set_title(r'Edges: $G_0 \to G_{n}$')
+
+        self.draw_I('G', 'n', 'V', ax = axs[0, 1])
+        axs[0,1].set_title(r'Vertices: $G_n \to G_{2n}$')
+        self.draw_I('G', 'n', 'E', ax = axs[1,1])
+        axs[1,1].set_title(r'Edges: $G_n \to G_{2n}$')
 
     def draw_B(self, graph = 'F', key = '0', ax = None, **kwargs):
         """
@@ -466,14 +436,35 @@ class Interleave:
         if ax is None:
             ax = plt.gca()
 
-        self.draw_matrix(self.B[graph][key], ax = ax, **kwargs)
+        self.B(graph,key).draw(ax = ax, **kwargs)
         ax.set_title(f"B({graph}_{key})")
         ax.set_xlabel(f"E({graph}_{key})")
         ax.set_ylabel(f"V({graph}_{key})")
 
         return ax
 
-    def draw_D(self, graph = 'F', key = '0', colorbar = True, ax = None,  **kwargs):
+    def draw_all_B(self, figsize = (24,18), spacing = (.1,.1)):
+        """
+        Draw all the boundary matrices.
+        """
+        fig, axs = plt.subplots(2, 3, figsize=figsize)
+        plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
+        self.draw_B('F', '0', ax = axs[0, 0])
+        axs[0,0].set_title(r'$B(F_0)$')
+        self.draw_B('F', 'n', ax = axs[0, 1])
+        axs[0,1].set_title(r'$B(F_n)$')
+        self.draw_B('F', '2n', ax = axs[0, 2])
+        axs[0,2].set_title(r'$B(F_{2n})$')
+
+        self.draw_B('G', '0', ax = axs[1, 0])
+        axs[1,0].set_title(r'$B(G_0)$')
+        self.draw_B('G', 'n', ax = axs[1, 1])
+        axs[1,1].set_title(r'$B(G_n)$')
+        self.draw_B('G', '2n', ax = axs[1, 2])
+        axs[1,2].set_title(r'$B(G_{2n})$')
+
+    def draw_D(self, graph = 'F', key = '0', obj_type = 'V', 
+                    colorbar = True, ax = None,  **kwargs):
         """
         Draw the distance matrix for a Mapper graph.
 
@@ -482,127 +473,325 @@ class Interleave:
                 The graph to draw the distance matrix for. Either 'F' or 'G'.
             key : str
                 The key for the distance matrix. Either '0', 'n', or '2n'.
+            obj_type : str
+                The type of matrix. Either 'V' or 'E'.
+            colorbar : bool
+                Whether to draw a colorbar. Default is True.
+            ax : matplotlib.axes.Axes
+                The axes to draw the matrix on. If None, the current axes will be used.
+            **kwargs : dict
+                Additional keyword arguments to pass to the drawing function.
+
+        Returns:
+            matplotlib.axes.Axes
+                The axes the matrix was drawn on.
+
         """
         if ax is None:
             ax = plt.gca()
 
-        self.draw_matrix(self.D[graph][key], ax = ax, colorbar = colorbar, **kwargs)
+        
+        
+        self.D(graph, key, obj_type).draw(ax = ax, colorbar = colorbar, **kwargs)
         ax.set_xlabel(f"V({graph}_{key})")
         ax.set_ylabel(f"V({graph}_{key})")
 
         return ax
 
-    def draw_phi(self, key = '0', type = 'V', ax = None, **kwargs):
+    def draw_phi(self, key = '0', obj_type = 'V', ax = None, **kwargs):
         """
         Draw the map from F to G^n.
 
         Parameters:
             key : str
                 The key for the map. Either '0' or 'n'.
-            type : str
+            obj_type : str
                 The type of map. Either 'V' or 'E'.
         """
         if ax is None:
             ax = plt.gca()
 
-        self.draw_matrix(self.phi[key][type], ax = ax, **kwargs)
-        ax.set_xlabel(f"G_n")
-        ax.set_ylabel(f"F_{key}")
+        
+        self.phi(key = key, obj_type = obj_type).draw(ax = ax, **kwargs)
+
+        if key == '0':
+            G_key = ''
+            F_key = '_n'
+        elif key == 'n':
+            G_key = '_n'
+            F_key = '_2n'
+
+        ax.set_ylabel(f"{type}(G{F_key})")
+        ax.set_xlabel(f"{type}(F{G_key})")
 
         return ax
+    
+    def draw_psi(self, key = '0', obj_type = 'V', ax = None, **kwargs):
+        """
+        Draw the map from G to F^n.
+
+        Parameters:
+            key : str
+                The key for the map. Either '0' or 'n'.
+            obj_type : str
+                The type of map. Either 'V' or 'E'.
+        """
+        if ax is None:
+            ax = plt.gca()
+
+        self.psi(key = key, obj_type = obj_type).draw(ax = ax, **kwargs)
+        if key == '0':
+            F_key = ''
+            G_key = '_n'
+        elif key == 'n':
+            F_key = '_n'
+            G_key = '_2n'
+            
+        ax.set_ylabel(f"{type}(G{G_key})")
+        ax.set_xlabel(f"{type}(F{F_key})")
+
+        return ax
+
+    def draw_all_phi(self, figsize = (10,10), spacing = (0,.5), **kwargs):
+        """
+        Draw all the phi maps.
+        """
+        fig, axs = plt.subplots(2, 2, figsize=figsize)
+        plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
+        self.draw_phi('0', 'V', ax = axs[0, 0], **kwargs)
+        axs[0, 0].set_title(r'$\varphi_0^V$')
+        self.draw_phi('n', 'V', ax = axs[0, 1], **kwargs)
+        axs[0, 1].set_title(r'$\varphi_n^V$')
+
+        self.draw_phi('0', 'E', ax = axs[1, 0], **kwargs)
+        axs[1, 0].set_title(r'$\varphi_0^E$')
+        self.draw_phi('n', 'E', ax = axs[1, 1], **kwargs)
+        axs[1, 1].set_title(r'$\varphi_n^E$')
+
+    def draw_all_psi(self, figsize = (10,10), spacing = (0,.5),     **kwargs):
+        """
+        Draw all the psi maps.
+        """
+        fig, axs = plt.subplots(2, 2, figsize=figsize)
+        plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
+        self.draw_psi('0', 'V', ax = axs[0,0],  **kwargs)
+        axs[0,0].set_title(r'$\psi_0^V$')
+        self.draw_psi('n', 'V', ax = axs[0,1],  **kwargs)
+        axs[0,1].set_title(r'$\psi_n^V$')
+
+        self.draw_psi('0', 'E', ax = axs[1,0],  **kwargs)
+        axs[1,0].set_title(r'$\psi_0^E$')
+        self.draw_psi('n', 'E', ax = axs[1,1],  **kwargs)
+        axs[1,1].set_title(r'$\psi_n^E$')
 
     # ==========
     # Functions for checking commutative diagrams 
 
-    def parallelogram_matrix_Edge_Vert(self):
+    def parallelogram_Edge_Vert(self, maptype = 'phi', returntype = 'dist', 
+                                    draw = False, drawtype = 'all', 
+                                    **kwargs):
         """
         Check that the parallelogram for the pair $(U_{\tau_I}\subset U_\sigma_i)$ commutes.
         This is the one that relates the edge maps to the vertex maps.
+        (These are types 1 (when maptype = 'phi') and 2 (when maptype = 'psi') from Liz's Big List )
 
-        TODO: This is just for phi, need the psi version. 
-        """
-        phiV_dict = self.block_dict_to_matrix(self.phi['0']['V'])
-        phiV = phiV_dict['array']
-        rows = phiV_dict['rows']
-
-        B_F_dict = self.B['F']['0']
-        B_F = B_F_dict['array']
-        cols = B_F_dict['cols']
-
-        B_Gn = self.B['G']['n']['array']
-        phiE = self.block_dict_to_matrix(self.phi['0']['E'])['array']
-
-        A = phiV @ B_F - B_Gn @ phiE
-
-        rows = self.block_dict_to_matrix(self.phi['0']['V'])['rows']
-        return {'rows': rows, 'cols': cols, 'array': A}
-
-    
-    def parallelogram_dist_Edge_Vert(self):
-        """
-        Get the matrix that has distance entries 
-
-        TODO: This is just for phi, need the psi version. 
         """
 
-        A_dict = self.parallelogram_matrix_Edge_Vert()
-        A = A_dict['array']
-        A_mult = self.block_dict_to_matrix(self.D['G']['n'])['array'] @ A
-        return {'rows':A_dict['rows'], 'cols' : A_dict['cols'], 'array': A_mult}
+        if maptype == 'phi':
+            start_graph = 'F'
+            end_graph = 'G'
+            maptype_latex = r'\varphi'
+        elif maptype == 'psi':
+            start_graph = 'G'
+            end_graph = 'F'
+            maptype_latex = r'\psi'
 
-    def parallelogram_matrix_thickening(self):
+        Top = self.get_interleaving_map(maptype, '0', 'V') @ self.B(start_graph, '0')
+
+        Bottom = self.B(end_graph, 'n') @ self.get_interleaving_map(maptype, '0', 'E') 
+        Result = Top - Bottom
+
+        Result_Dist = self.D(end_graph, 'n', 'V') @ Result
+
+        if draw and drawtype == 'all':
+            fig, axs = plt.subplots(1, 4, figsize = (15, 5))
+            Top.draw(ax = axs[0], vmin = -1, vmax = 1)
+            Top_title = f"${maptype_latex}_{{0,V}} \cdot B_{start_graph}$"
+            axs[0].set_title(Top_title)
+
+            Bottom.draw(axs[1], vmin = -1, vmax = 1)
+            Bottom_title = f"$B_{end_graph} \cdot {maptype_latex}_{{0,E}}$"
+            axs[1].set_title(Bottom_title)
+
+            Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
+            Result_title = Top_title[:-1] + ' - ' + Bottom_title[1:]
+            axs[2].set_title(Result_title)
+
+            Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr')
+            Result_Dist_title = f"$D_{{{end_graph},n,V}} \cdot ({Result_title[1:-1]})$"
+            axs[3].set_title(Result_Dist_title)
+
+        elif draw and drawtype == 'result':
+            fig, ax = plt.subplots(1, 1, figsize = (5, 5))
+            Result_Dist.draw(ax = ax, colorbar = True, cmap = 'PuOr')
+            ax.set_title(f"Parallelogram for ${maptype_latex}$ (Edge-Vertex)")
+
+        if returntype == 'dist':
+            return Result_Dist
+        elif returntype == 'commute':
+            return Result
+        else:
+            raise ValueError(f"Unknown returntype {returntype}. Must be 'dist' or 'commute'.")
+
+    #---
+
+    def parallelogram(self, maptype = 'phi', obj_type = 'V', 
+                            returntype = 'dist', 
+                            draw = False, 
+                            drawtype = 'all'):
+                            
         """
-        Get the paralellogram induced by the pair $U_{\sigma_i} \subset U_{\sigma_i}^n$ commutes. 
+        Get the paralellograms for checking that it's a nat trans.
+        These are types 3-6 from Liz's Big List. 
 
-        TODO: This is just for phi, need the psi version. 
+        Parameters:
+            maptype : str
+                The type of map. Either 'phi' or 'psi'.
+            obj_type : str
+                The type of object. Either 'V' or 'E'.
+            returntype : str
+                The type of return. Either 'dist' if you want the matrix that gives the thickenin grequired to make the diagram commute; or 'commute' to just give the map mismatch.
+            draw : bool
+                Whether to draw the maps. Default is False.
+            drawtype : str
+                The type of drawing. Either 'all' or 'result'. Default is 'all'.
         """
 
-        phi_Vn = self.block_dict_to_matrix(self.phi['n']['V'])
-        I_F = self.block_dict_to_matrix(self.I['F']['0']['V'])
+        if maptype == 'phi':
+            start_graph = 'F'
+            end_graph = 'G'
+            maptype_latex = r'\varphi'
+        elif maptype == 'psi':
+            start_graph = 'G'
+            end_graph = 'F'
+            maptype_latex = r'\psi'
 
-        I_Gn = self.block_dict_to_matrix(self.I['G']['n']['V'])
-        phi_V = self.block_dict_to_matrix(self.phi['0']['V'])
+        Top = self.get_interleaving_map(maptype, 'n', obj_type) @ self.I(start_graph, '0', obj_type)
+        Bottom = self.I(end_graph, 'n', obj_type) @ self.get_interleaving_map(maptype, '0', obj_type)
+        Result = Top - Bottom
+        Result_Dist = self.D(end_graph, '2n', obj_type) @ Result
 
-        A = phi_Vn['array'] @ I_F['array']
-        B = I_Gn['array'] @ phi_V['array'] 
 
-        rows = phi_Vn['rows']
-        cols = I_F['cols']
-        return {'rows': rows, 'cols': cols, 'array': A-B}
+        if draw and drawtype == 'all':
+            fig, axs = plt.subplots(1, 4, figsize = (15, 5))
+            Top.draw(ax = axs[0], vmin = -1, vmax = 1)
+            Top_title = f"${maptype_latex}_{{n,{obj_type}}} \cdot I_{{0,{obj_type}}}$"
+            axs[0].set_title(Top_title)
 
-    def parallelogram_dist_thickening(self):
-        """
-        Get the matrix that has distance entries 
+            Bottom.draw(axs[1], vmin = -1, vmax = 1)
+            Bottom_title = f"$I_{{n,{obj_type}}} \cdot {maptype_latex}_{{0,{obj_type}}}$"
+            axs[1].set_title(Bottom_title)
 
-        TODO: This is just for phi, need the psi version. 
-        TODO: This is also only for vertices, need the edge version.
+            Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
+            Result_title = Top_title[:-1] + ' - ' + Bottom_title[1:]
+            axs[2].set_title(Result_title)
+
+            Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr')
+            Result_dist_title = f"$D_{{{end_graph},2n,{obj_type}}} \cdot ({Result_title[1:-1]})$"
+            axs[3].set_title(Result_dist_title)
+
+        elif draw and drawtype == 'result':
+            fig, ax = plt.subplots(1, 1, figsize = (5, 5))
+            Result_Dist.draw(ax = ax, colorbar = True, cmap = 'PuOr')
+            ax.set_title(f"Parallelogram for ${maptype_latex}$ (Edge-Vertex)")
+
+
+        if returntype == 'dist':
+            return Result_Dist
+        elif returntype == 'commute':
+            return Result
+        else:
+            raise ValueError(f"Unknown returntype {returntype}. Must be 'dist' or 'commute'.")
+
+    def triangle(self, start_graph = 'F', obj_type = 'V', returntype = 'dist',  draw = False, drawtype = 'all'):
+        """
+        Get the triangle for checking that it's a
+        nat
         """
 
-        A_dict = self.parallelogram_matrix_thickening()
-        A = A_dict['array']
-        A_mult = self.block_dict_to_matrix(self.D['G']['2n'])['array'] @ A
-        return {'rows':A_dict['rows'], 'cols' : A_dict['cols'], 'array': A_mult}
+        if start_graph == 'F':
+            end_graph = 'G'
+            map1 = 'phi'
+            map2 = 'psi'
+        elif start_graph == 'G':
+            end_graph = 'F'
+            map1 = 'psi'
+            map2 = 'phi'
+        else:
+            raise ValueError(f"Unknown start_graph {start_graph}. Must be 'F' or 'G'.")
 
-    def triangle_matrix_vertex(self):
-        """
-        TODO 
-        """
-        pass 
+        Top = self.I(start_graph, 'n', obj_type) @ self.I(start_graph, '0', obj_type)
+        Bottom = self.get_interleaving_map(maptype = map2, key = 'n', obj_type = obj_type) @ self.get_interleaving_map(maptype = map1, key = '0', obj_type = obj_type)
+        Result = Top - Bottom
 
-    def triangle_matrix_edge(self):
-        """
-        TODO 
-        """
-        pass
+        Result_Dist = self.D(start_graph, '2n', obj_type) @ Result
 
-    def triangle_dist_vertex(self):
-        """
-        TODO 
-        """
-        pass
+        if draw and drawtype == 'all':
+            fig, axs = plt.subplots(1, 4, figsize = (15, 5))
+            Top.draw(ax = axs[0], vmin = -1, vmax = 1)
+            Top_title = f"$I_{{0,{obj_type}}} \cdot I_{{n,{obj_type}}}$"
+            axs[0].set_title(Top_title)
 
-    def triangle_dist_edge(self):
+            Bottom.draw(axs[1], vmin = -1, vmax = 1)
+            Bottom_title = f"$I_{{n,{obj_type}}} \cdot I_{{2n,{obj_type}}}$"
+            axs[1].set_title(Bottom_title)
+
+            Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
+            Result_title = Top_title[:-1] + ' - ' + Bottom_title[1:]
+            axs[2].set_title(Result_title)
+
+            Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr')
+            Result_dist_title = f"$D_{{{start_graph},2n,{obj_type}}} \cdot ({Result_title[1:-1]})$"
+            axs[3].set_title(Result_dist_title)
+
+        elif draw and drawtype == 'result':
+            fig, ax = plt.subplots(1, 1, figsize = (5, 5))
+            Result.draw(ax = ax, colorbar = True)
+            ax.set_title(f"Triangle for {start_graph} (Edge-Vertex)")
+
+        if returntype == 'dist':
+            return Result_Dist
+        elif returntype == 'commute':
+            return Result
+        else:
+            raise ValueError(f"Unknown returntype {returntype}. Must be 'dist' or 'commute'.")
+
+    def loss(self):
         """
-        TODO 
+        Computes the actual loss $k$ for the interleaving distance. This means that there is an (n+k)-interleaving. 
         """
-        pass
+
+        loss_list = []
+
+        # All the edge-vertex parallelogram maps 
+        for maptype in ['phi', 'psi']:
+            result = self.parallelogram_Edge_Vert(maptype = maptype)
+            loss = result.absmax()
+            loss_list.append(loss)
+
+        # All the parallelogram maps 
+        for maptype in ['phi', 'psi']:
+            for obj_type in ['V', 'E']:
+                result = self.parallelogram(maptype = maptype, obj_type = obj_type)
+                loss = result.absmax()
+                loss_list.append(loss)
+
+        # ALl the triangle maps
+        for obj_type in ['V', 'E']:
+            for drawtype in ['all', 'result']:
+                result = self.triangle(start_graph = 'F', obj_type = obj_type)
+                loss = result.absmax()
+                loss_list.append(loss)
+
+        return max(loss_list)
+        

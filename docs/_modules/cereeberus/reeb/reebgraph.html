@@ -798,8 +798,7 @@
 <span class="sd">        Creates an boundary matrix for the graph, where :math:`B[v,e] = 1` if vertex :math:`v` is an endpoint of edge :math:`e` and :math:`B[v,e] = 0` otherwise.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            G (networkx.Graph): The graph.</span>
-<span class="sd">            node_subset (list): A list of nodes representing the subset.</span>
+<span class="sd">            astype (str): Optional. The type of output to return. Can be &#39;numpy&#39;, or &#39;dict&#39;. Default is &#39;numpy&#39;. </span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            numpy.ndarray: The boundary matrix.</span>
@@ -823,8 +822,11 @@
 
             <span class="k">return</span> <span class="n">B</span>
 
-        <span class="k">if</span> <span class="n">astype</span> <span class="o">==</span> <span class="s1">&#39;dict&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">V</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">B</span><span class="p">}</span></div>
+        <span class="k">elif</span> <span class="n">astype</span> <span class="o">==</span> <span class="s1">&#39;dict&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">V</span><span class="p">,</span> <span class="s1">&#39;cols&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">B</span><span class="p">}</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;astype must be either &quot;numpy&quot; or &quot;dict&quot;.&#39;</span><span class="p">)</span></div>
 
 
     

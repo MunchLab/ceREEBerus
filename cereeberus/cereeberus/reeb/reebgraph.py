@@ -634,8 +634,7 @@ class ReebGraph(nx.MultiDiGraph):
         Creates an boundary matrix for the graph, where :math:`B[v,e] = 1` if vertex :math:`v` is an endpoint of edge :math:`e` and :math:`B[v,e] = 0` otherwise.
 
         Args:
-            G (networkx.Graph): The graph.
-            node_subset (list): A list of nodes representing the subset.
+            astype (str): Optional. The type of output to return. Can be 'numpy', or 'dict'. Default is 'numpy'. 
 
         Returns:
             numpy.ndarray: The boundary matrix.
@@ -659,8 +658,11 @@ class ReebGraph(nx.MultiDiGraph):
 
             return B
 
-        if astype == 'dict':
+        elif astype == 'dict':
             return {'rows': V, 'cols': E, 'array': B}
+
+        else:
+            raise ValueError('astype must be either "numpy" or "dict".')
 
     
     def plot_boundary_matrix(self):
