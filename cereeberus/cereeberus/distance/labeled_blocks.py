@@ -4,9 +4,40 @@ from scipy.linalg import block_diag
 
 class LabeledMatrix:
     """
-    A class to store a matrix with row and column labels.
+    A class to store a matrix with row and column labels. The matrix is stored as a numpy array, and the row and columns are stored as lists. For example, we could store the 2 x 3 matrix below as a LabeledMatrix.
+
+    +-------+---+---+---+
+    |       | a | b | c |
+    +=======+===+===+===+
+    | **u** | 0 | 1 | 0 |
+    +-------+---+---+---+
+    | **v** | 1 | 0 | 0 |
+    +-------+---+---+---+
+
+    Where the matrix would be initialized by 
+
+    .. code-block:: python
+
+        Mat = LabeledMatrix([[0, 1, 0], [1, 0, 0]], ['u', 'v'], ['a', 'b', 'c'])
+
+    This class supports matrix multiplication, addition, and subtraction, as well as transposition and getting the maximum (absolute) value of the matrix. Note that calling for an entry in the matrix is done by the labels of the row and column, not the indices. For example, to get the entry in the first row and second column from the example above, you could call either of the following options. 
+
+    .. code-block:: python
+
+        Mat['u', 'b']
+        Mat.array[0, 1]
+
+    Visualization can be done with the draw method, which will draw the matrix with the row and column labels.
+
+    .. code-block:: python 
+
+        Mat.draw(colorbar = True)
+
+    .. figure:: ../../images/labeled_matrix_ex_Mat.png
+        :figwidth: 400px    
+
     """
-    def __init__(self, array = None, rows = None, cols = None):
+    def __init__(self, array = None, rows = None, cols = None, map_dict = None):
         """
         Initialize the LabeledMatrix with a numpy array, row labels, and column labels.
 
@@ -20,10 +51,19 @@ class LabeledMatrix:
 
         if array is not None:
             self.array = np.array(array)
+        elif map_dict is not None:
+            self.array = np.zeros((len(rows), len(cols)))
+            for c in cols:
+                r = map_dict[c]
+                print (f"r = {r}, c = {c}")
+                print(f"rows: {rows}, cols: {cols}")
+                self.array[rows.index(r), cols.index(c)] = 1
         elif rows is not None and  cols is not None:
             self.array = np.zeros((len(rows), len(cols)))
         else:
             self.array = None
+
+        
 
     def __matmul__(self, other):
         """
@@ -37,6 +77,7 @@ class LabeledMatrix:
 
         Raises:
             ValueError: If the other object is not a LabeledMatrix.
+            ValueError: If the matrix sizes are incompatable, or if they are but the row labels of the first matrix do not match the column labels of the second (including ordering).
         """
 
         if isinstance(other, LabeledBlockMatrix):
@@ -44,6 +85,8 @@ class LabeledMatrix:
         elif not isinstance(other, LabeledMatrix):
             raise ValueError("Can only multiply with another LabeledMatrix or LabeledBlockMatrix")
         
+        if self.cols != other.rows:
+            raise ValueError(f"Matrix labels do not match.\nCols of first matrix: {self.cols}\nRows of second matrix: {other.rows}")
 
         # Perform matrix multiplication
         result_array = self.array @ other.array
@@ -71,6 +114,9 @@ class LabeledMatrix:
         """
         if not isinstance(other, LabeledMatrix):
             raise ValueError("Can only add with another LabeledMatrix")
+
+        if not (self.rows == other.rows and self.cols == other.cols):
+            raise ValueError("Cannot add matrices with different row or column labels.")
         
         # Perform matrix addition
         result_array = self.array + other.array
@@ -97,6 +143,34 @@ class LabeledMatrix:
         result_array = self.array - other.array
         
         return LabeledMatrix(result_array, self.rows, self.cols)
+
+    def __getitem__(self, key):
+        """
+        Get an item from the matrix, where ``key = [row_key, col_key]`` are the **labels** of the row and columns respectively.
+
+        Parameters:
+            key: The keys for the row and column to get from the matrix.
+
+        Returns:
+            The item from the matrix.
+        """
+        row_key, col_key = key
+        i = self.rows.index(row_key)
+        j = self.cols.index(col_key)
+        return self.array[i,j]
+    
+    def __setitem__(self, key , value):
+        """
+        Set an item in the matrix, where ``key = [row_key, col_key]`` are the **labels** of the row and columns respectively.
+
+        Parameters:
+            key: The row and column keys to set in the matrix.
+            value: The value to set.
+        """
+        row_key, col_key = key
+        i = self.rows.index(row_key)
+        j = self.cols.index(col_key)
+        self.array[i,j] = value
 
     def max(self):
         """
@@ -129,7 +203,22 @@ class LabeledMatrix:
         Returns:
             tuple: The shape of the matrix (rows, columns).
         """
-        return self.array.shape
+        try:
+            return self.array.shape
+        except:
+            return (0,0)
+
+    def size(self):
+        """
+        Return the size of the matrix.
+
+        Returns:
+            int: The size of the matrix.
+        """
+        try:
+            return self.array.size
+        except:
+            return 0
 
     def __repr__(self):
         """
@@ -140,27 +229,6 @@ class LabeledMatrix:
         """
         return f"LabeledMatrix(\narray=\n{self.array}, \nrows={self.rows}, \ncols={self.cols})"
 
-    def __getitem__(self, key):
-        """
-        Get an item from the matrix.
-
-        Parameters:
-            key: The key to get from the matrix.
-
-        Returns:
-            The item from the matrix.
-        """
-        return self.array[key]
-    
-    def __setitem__(self, key, value):
-        """
-        Set an item in the matrix.
-
-        Parameters:
-            key: The key to set in the matrix.
-            value: The value to set.
-        """
-        self.array[key] = value
 
     def T(self):
         """
@@ -170,24 +238,6 @@ class LabeledMatrix:
             LabeledMatrix: The labeled transposed matrix.
         """
         return LabeledMatrix(self.array.T, self.cols, self.rows)
-
-    def f_min (self):
-        """
-        Return the minimum function value.
-
-        Returns:
-            float: The minimum value of the matrix.
-        """
-        return np.min(list(self.blocks.keys()))
-    
-    def f_max (self):
-        """
-        Return the maximum function value.
-
-        Returns:
-            float: The maximum value of the matrix.
-        """
-        return np.max(list(self.blocks.keys()))
 
     def to_labeled_block(self, row_val_to_verts, col_val_to_verts):
         """
@@ -233,6 +283,16 @@ class LabeledMatrix:
             curr_col = next_col
 
         return blocks_out
+
+    def col_sum(self):
+        """
+        Returns the sum of each column in the matrix.
+        """
+        try:
+            return self.array.sum(axis = 0)
+        except:
+            return []
+
     
     def is_col_sum_1(self):
         """
@@ -241,7 +301,10 @@ class LabeledMatrix:
         Returns:
             bool: True if the sum of each column is 1, False otherwise.
         """
-        return np.all(self.array.sum(axis = 0) == 1)
+        try:
+            return np.all(self.array.sum(axis = 0) == 1)
+        except:
+            return False
     
     def draw(self, ax = None,  colorbar = False, **kwargs):
         """
@@ -271,7 +334,56 @@ class LabeledMatrix:
 
 class LabeledBlockMatrix:
     """
-    A class to store a block matrix with row and column labels.
+    A class to store a block matrix with row and column labels. This is built with the assumption that we have a function value for each object in the labels, and we initialize this with a dictionary for rows and columns that sends function value ``i`` to a list of row or column labels, respectively. 
+    
+    For example, we could store the block matrix below as a ``LabeledBlockMatrix``. The outside rows give the function values of the vertices, and the inside rows and columns give the labels of the vertices.
+
+    +--------+-------+---+---+---+---+---+
+    |                |   1   |   2       |
+    +                +---+---+---+---+---+
+    |                | a | b | c | d | e |
+    +========+=======+===+===+===+===+===+
+    | **0**  | **u** | 0 | 0 | 0 | 0 | 0 |
+    +--------+-------+---+---+---+---+---+
+    | **1**  | **v** | 1 | 1 | 0 | 0 | 0 |
+    +        +-------+---+---+---+---+---+
+    |        | **w** | 0 | 0 | 0 | 0 | 0 |
+    +--------+-------+---+---+---+---+---+
+    | **2**  | **x** | 0 | 0 | 1 | 1 | 1 |
+    +--------+-------+---+---+---+---+---+
+    
+    The matrix is stored as a dictionary of LabeledMatrix objects, where the keys are the function values of the vertices. For example, we could store the block matrix below as a ``LabeledBlockMatrix``
+
+    .. code-block:: python
+
+        cols_dict = {1: ['a','b'], 2: ['c','d','e']}
+        rows_dict = {0: ['u'], 1: ['v','w'], 2: ['x']}
+        map_dict = {'a': 'v', 'b':'v', 'c': 'x', 'd':'x', 'e':'x'}
+        lbm = LabeledBlockMatrix(map_dict, rows_dict, cols_dict)
+
+    Note that this can either be drawn with entries filled with either 0's or ``np.nan``. 
+
+    .. code-block:: python
+
+        lbm.draw(colorbar = True)
+    
+    .. figure:: ../../images/labeled_matrix_ex_BlockMat_0.png
+        :figwidth: 400px    
+
+    .. code-block:: python
+
+        lbm.draw(filltype = 'nan', colorbar = True)
+    
+    .. figure:: ../../images/labeled_matrix_ex_BlockMat_nan.png
+        :figwidth: 400px    
+
+    This class supports matrix multiplication, addition, and subtraction, as well as transposition and getting the maximum (absolute) value of the matrix. Note that calling for an item returns the i'th block as a ``LabeledMatrix``. So we could get an entry in the matrix by first calling the block number, and then the row and column labels.
+
+    .. code-block:: python
+    
+            lbm[1]['v', 'b']
+
+
     """
     def __init__(self, map_dict = None, rows_dict = None, cols_dict = None, 
                         random_initialize = False, 
@@ -301,7 +413,8 @@ class LabeledBlockMatrix:
 
 
         if rows_dict is not None:
-            all_keys = set(rows_dict.keys()) | set(cols_dict.keys())
+            all_keys = list(set(rows_dict.keys()) | set(cols_dict.keys()))
+            all_keys.sort()
 
             for i in all_keys:
                 # i is the function value of the vertices 
@@ -323,9 +436,10 @@ class LabeledBlockMatrix:
 
                 # If a map from column objects to row objects is provided, fill in the matrix
                 if map_dict is not None:
-                    for col_i, label in enumerate(self.blocks[i].cols):
-                            row_j = self.blocks[i].rows.index(map_dict[label])
-                            self.blocks[i][row_j, col_i] = 1
+                        if cols_ and rows_:
+                            for c in cols_:
+                                r = map_dict[c]
+                                self.blocks[i][r,c]  = 1 
                 elif random_initialize:
                     A = self.blocks[i].array            
                     rng = np.random.default_rng(seed = seed)

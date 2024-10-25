@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.2. Classes for labeled block matrices &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="3. Example Data and graphs" href="../data/index.html" />
+    <link rel="prev" title="2.1. Interleave class" href="interleave.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Modules and Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../reeb/index.html">1. ReebGraph and Related Classes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">2. Distances</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="interleave.html">2.1. Interleave class</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2.2. Classes for labeled block matrices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledMatrix"><code class="docutils literal notranslate"><span class="pre">LabeledMatrix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix"><code class="docutils literal notranslate"><span class="pre">LabeledBlockMatrix</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data/index.html">3. Example data and graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compute/index.html">4. Compute</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">2. </span>ReebGraph and related classes</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">2.2. </span>Classes for labeled block matrices</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/modules/distance/labeled_blocks.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="classes-for-labeled-block-matrices">
+<h1><span class="section-number">2.2. </span>Classes for labeled block matrices<a class="headerlink" href="#classes-for-labeled-block-matrices" title="Link to this heading"></a></h1>
+<p>This page contains information for the <cite>LabeledMatrix</cite> and <cite>LabeledBlockMatrix</cite> classes which are used heavily inside the <cite>cereeberus.distance.Interleaving</cite> class.</p>
+<p>Note that these class can be imported as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.distance.labeled_blocks</span> <span class="kn">import</span> <span class="n">LabeledMatrix</span><span class="p">,</span> <span class="n">LabeledBlockMatrix</span>
+</pre></div>
+</div>
+<dl class="py class" id="module-cereeberus.distance.labeled_blocks">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.distance.labeled_blocks.</span></span><span class="sig-name descname"><span class="pre">LabeledMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix" title="Link to this definition"></a></dt>
+<dd><p>A class to store a matrix with row and column labels. The matrix is stored as a numpy array, and the row and columns are stored as lists. For example, we could store the 2 x 3 matrix below as a LabeledMatrix.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>a</p></th>
+<th class="head"><p>b</p></th>
+<th class="head"><p>c</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>u</strong></p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>v</strong></p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<p>Where the matrix would be initialized by</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Mat</span> <span class="o">=</span> <span class="n">LabeledMatrix</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This class supports matrix multiplication, addition, and subtraction, as well as transposition and getting the maximum (absolute) value of the matrix. Note that calling for an entry in the matrix is done by the labels of the row and column, not the indices. For example, to get the entry in the first row and second column from the example above, you could call either of the following options.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Mat</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+<span class="n">Mat</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Visualization can be done with the draw method, which will draw the matrix with the row and column labels.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Mat</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" style="width: 400px">
+<img alt="../../_images/labeled_matrix_ex_Mat.png" src="../../_images/labeled_matrix_ex_Mat.png" />
+</figure>
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the LabeledMatrix with a numpy array, row labels, and column labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>array-like</em>) – The matrix data.</p></li>
+<li><p><strong>rows</strong> (<em>list</em>) – The labels for the rows.</p></li>
+<li><p><strong>cols</strong> (<em>list</em>) – The labels for the columns.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.__matmul__">
+<span class="sig-name descname"><span class="pre">__matmul__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.__matmul__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.__matmul__" title="Link to this definition"></a></dt>
+<dd><p>Multiply two LabeledMatrix objects using the &#64; operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix"><em>LabeledMatrix</em></a>) – The other LabeledMatrix to multiply with.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the matrix multiplication.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix">LabeledMatrix</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the other object is not a LabeledMatrix.</p></li>
+<li><p><strong>ValueError</strong> – If the matrix sizes are incompatable, or if they are but the row labels of the first matrix do not match the column labels of the second (including ordering).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.__add__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.__add__" title="Link to this definition"></a></dt>
+<dd><p>Add two LabeledMatrix objects using the + operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix"><em>LabeledMatrix</em></a>) – The other LabeledMatrix to add.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the matrix addition.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix">LabeledMatrix</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the other object is not a LabeledMatrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.__sub__">
+<span class="sig-name descname"><span class="pre">__sub__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.__sub__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.__sub__" title="Link to this definition"></a></dt>
+<dd><p>Subtract two LabeledMatrix objects using the - operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix"><em>LabeledMatrix</em></a>) – The other LabeledMatrix to subtract.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the matrix subtraction.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix">LabeledMatrix</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the other object is not a LabeledMatrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.__getitem__" title="Link to this definition"></a></dt>
+<dd><p>Get an item from the matrix, where <code class="docutils literal notranslate"><span class="pre">key</span> <span class="pre">=</span> <span class="pre">[row_key,</span> <span class="pre">col_key]</span></code> are the <strong>labels</strong> of the row and columns respectively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> – The keys for the row and column to get from the matrix.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The item from the matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.__setitem__">
+<span class="sig-name descname"><span class="pre">__setitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.__setitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.__setitem__" title="Link to this definition"></a></dt>
+<dd><p>Set an item in the matrix, where <code class="docutils literal notranslate"><span class="pre">key</span> <span class="pre">=</span> <span class="pre">[row_key,</span> <span class="pre">col_key]</span></code> are the <strong>labels</strong> of the row and columns respectively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – The row and column keys to set in the matrix.</p></li>
+<li><p><strong>value</strong> – The value to set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.max">
+<span class="sig-name descname"><span class="pre">max</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.max" title="Link to this definition"></a></dt>
+<dd><p>Get the maximum value of the matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum value of the matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.absmax">
+<span class="sig-name descname"><span class="pre">absmax</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.absmax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.absmax" title="Link to this definition"></a></dt>
+<dd><p>Get the maximum absolute value of the matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum absolute value of the matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.shape">
+<span class="sig-name descname"><span class="pre">shape</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.shape" title="Link to this definition"></a></dt>
+<dd><p>Return the shape of the matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The shape of the matrix (rows, columns).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.size">
+<span class="sig-name descname"><span class="pre">size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.size" title="Link to this definition"></a></dt>
+<dd><p>Return the size of the matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The size of the matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.T">
+<span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.T"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.T" title="Link to this definition"></a></dt>
+<dd><p>Transpose the matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The labeled transposed matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix">LabeledMatrix</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.to_labeled_block">
+<span class="sig-name descname"><span class="pre">to_labeled_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row_val_to_verts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_val_to_verts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.to_labeled_block"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.to_labeled_block" title="Link to this definition"></a></dt>
+<dd><p>Turns this matrix back into a block dictionary.</p>
+<p>Note this assumes that the row and column labels are already in order from the block dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row_val_to_verts</strong> – dict
+A dictionary from function values to a list of row objects.</p></li>
+<li><p><strong>col_val_to_verts</strong> – dict
+A dictionary from function values to a list of column objects.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.col_sum">
+<span class="sig-name descname"><span class="pre">col_sum</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.col_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.col_sum" title="Link to this definition"></a></dt>
+<dd><p>Returns the sum of each column in the matrix.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.is_col_sum_1">
+<span class="sig-name descname"><span class="pre">is_col_sum_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.is_col_sum_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.is_col_sum_1" title="Link to this definition"></a></dt>
+<dd><p>Check if the sum of each column is 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the sum of each column is 1, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledMatrix.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledMatrix.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledMatrix.draw" title="Link to this definition"></a></dt>
+<dd><p>Draw the matrix with row and column labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The axes to draw the matrix on. If None, the current axes will be used.</p></li>
+<li><p><strong>colorbar</strong> (<em>bool</em>) – Whether to draw a colorbar.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments to pass to ax.matshow.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.distance.labeled_blocks.</span></span><span class="sig-name descname"><span class="pre">LabeledBlockMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_initialize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="Link to this definition"></a></dt>
+<dd><p>A class to store a block matrix with row and column labels. This is built with the assumption that we have a function value for each object in the labels, and we initialize this with a dictionary for rows and columns that sends function value <code class="docutils literal notranslate"><span class="pre">i</span></code> to a list of row or column labels, respectively.</p>
+<p>For example, we could store the block matrix below as a <code class="docutils literal notranslate"><span class="pre">LabeledBlockMatrix</span></code>. The outside rows give the function values of the vertices, and the inside rows and columns give the labels of the vertices.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head" colspan="2" rowspan="2"></th>
+<th class="head" colspan="2"><p>1</p></th>
+<th class="head" colspan="3"><p>2</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>a</p></th>
+<th class="head"><p>b</p></th>
+<th class="head"><p>c</p></th>
+<th class="head"><p>d</p></th>
+<th class="head"><p>e</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p><strong>0</strong></p></td>
+<td><p><strong>u</strong></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p><strong>1</strong></p></td>
+<td><p><strong>v</strong></p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>w</strong></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>2</strong></p></td>
+<td><p><strong>x</strong></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+<p>The matrix is stored as a dictionary of LabeledMatrix objects, where the keys are the function values of the vertices. For example, we could store the block matrix below as a <code class="docutils literal notranslate"><span class="pre">LabeledBlockMatrix</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cols_dict</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;e&#39;</span><span class="p">]}</span>
+<span class="n">rows_dict</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]}</span>
+<span class="n">map_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span><span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span><span class="s1">&#39;x&#39;</span><span class="p">}</span>
+<span class="n">lbm</span> <span class="o">=</span> <span class="n">LabeledBlockMatrix</span><span class="p">(</span><span class="n">map_dict</span><span class="p">,</span> <span class="n">rows_dict</span><span class="p">,</span> <span class="n">cols_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that this can either be drawn with entries filled with either 0’s or <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lbm</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" style="width: 400px">
+<img alt="../../_images/labeled_matrix_ex_BlockMat_0.png" src="../../_images/labeled_matrix_ex_BlockMat_0.png" />
+</figure>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lbm</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" style="width: 400px">
+<img alt="../../_images/labeled_matrix_ex_BlockMat_nan.png" src="../../_images/labeled_matrix_ex_BlockMat_nan.png" />
+</figure>
+<p>This class supports matrix multiplication, addition, and subtraction, as well as transposition and getting the maximum (absolute) value of the matrix. Note that calling for an item returns the i’th block as a <code class="docutils literal notranslate"><span class="pre">LabeledMatrix</span></code>. So we could get an entry in the matrix by first calling the block number, and then the row and column labels.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lbm</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_initialize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the LabeledBlockMatrix with LabeledMatrix objects for each integer.</p>
+<p>rows_dict and cols_dict are dictionaries from integers to lists of row labels and column labels respectively. The keys of the dictionaries are the function values of the vertices.</p>
+<p>If map_dict is provided, it is a dictionary from column objects to row objects. The matrix will be filled in with 1s where the column object maps to the row object. If map_dict is None, the matrix will be filled in with random 1s in each column if random_initialize is True. If none of these are provided, the matrix will be filled with zeros.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rows_dict</strong> – dict
+A dictionary from integers to lists of row labels.</p></li>
+<li><p><strong>cols_dict</strong> – dict
+A dictionary from integers to lists of column labels.</p></li>
+<li><p><strong>map_dict</strong> – dict
+A dictionary from column objects to row objects.</p></li>
+<li><p><strong>random_initialize</strong> – bool
+Whether to randomly initialize the matrix.</p></li>
+<li><p><strong>seed</strong> – int
+The seed for the random number generator.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__getitem__" title="Link to this definition"></a></dt>
+<dd><p>Get the i’th block matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> – The key to get from the block matrix.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The item from the block matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__setitem__">
+<span class="sig-name descname"><span class="pre">__setitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.__setitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__setitem__" title="Link to this definition"></a></dt>
+<dd><p>Set the i’th block matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – The key to set in the block matrix.</p></li>
+<li><p><strong>value</strong> – The value to set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__matmul__">
+<span class="sig-name descname"><span class="pre">__matmul__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.__matmul__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__matmul__" title="Link to this definition"></a></dt>
+<dd><p>Multiply two LabeledBlockMatrix objects using the &#64; operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix"><em>LabeledBlockMatrix</em></a>) – The other LabeledBlockMatrix to multiply with.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the matrix multiplication.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the other object is not a LabeledBlockMatrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.__add__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__add__" title="Link to this definition"></a></dt>
+<dd><p>Add two LabeledBlockMatrix objects using the + operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix"><em>LabeledBlockMatrix</em></a>) – The other LabeledBlockMatrix to add.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the matrix addition.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the other object is not a LabeledBlockMatrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__sub__">
+<span class="sig-name descname"><span class="pre">__sub__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.__sub__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__sub__" title="Link to this definition"></a></dt>
+<dd><p>Subtract two LabeledBlockMatrix objects using the - operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix"><em>LabeledBlockMatrix</em></a>) – The other LabeledBlockMatrix to subtract.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the matrix subtraction.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the other object is not a LabeledBlockMatrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.max">
+<span class="sig-name descname"><span class="pre">max</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.max" title="Link to this definition"></a></dt>
+<dd><p>Get the maximum value of the block matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum value of the block matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.absmax">
+<span class="sig-name descname"><span class="pre">absmax</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.absmax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.absmax" title="Link to this definition"></a></dt>
+<dd><p>Get the maximum absolute value of the block matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum absolute value of the block matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_rows">
+<span class="sig-name descname"><span class="pre">get_all_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.get_all_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_rows" title="Link to this definition"></a></dt>
+<dd><p>Get all the row labels of the block matrix in order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The row labels.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_cols">
+<span class="sig-name descname"><span class="pre">get_all_cols</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.get_all_cols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_cols" title="Link to this definition"></a></dt>
+<dd><p>Get all the col labels of the block matrix in order .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The col labels.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_labels">
+<span class="sig-name descname"><span class="pre">get_all_labels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.get_all_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_labels" title="Link to this definition"></a></dt>
+<dd><p>Get all the row and column of the block matrix in function value order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The row and column labels.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.block_diag_NaN">
+<span class="sig-name descname"><span class="pre">block_diag_NaN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">arrs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.block_diag_NaN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.block_diag_NaN" title="Link to this definition"></a></dt>
+<dd><p>Create a block diagonal matrix from provided arrays. Modified from <cite>scipy.linalg.block_diag</cite> to put np.nan in the off-diagonal blocks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.to_labeled_matrix">
+<span class="sig-name descname"><span class="pre">to_labeled_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filltype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zero'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.to_labeled_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.to_labeled_matrix" title="Link to this definition"></a></dt>
+<dd><p>Convert to a single block diagonal matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>LabeledMatrix</dt><dd><p>A labeled matrix with the same data as the block matrix.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.check_column_sum">
+<span class="sig-name descname"><span class="pre">check_column_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.check_column_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.check_column_sum" title="Link to this definition"></a></dt>
+<dd><p>Check that the sum of each column is 1. TODO NOT YET UPDATED</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix_dict</strong> – dict
+Either a dictionary with keys ‘rows’, ‘cols’, and ‘array’ that are lists of rows, columns, and a numpy array respectively), or a block dictionary where keys are function values and output is a dictionary of the above form.</p></li>
+<li><p><strong>verbose</strong> – bool
+Prints information on which matrices have columns that do not sum to 1 if True. The default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>bool</dt><dd><p>True if the columns sum to 1, False otherwise.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filltype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zero'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.draw" title="Link to this definition"></a></dt>
+<dd><p>Draw the block matrix with row and column labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The axes to draw the matrix on. If None, the current axes will be used.</p></li>
+<li><p><strong>colorbar</strong> (<em>bool</em>) – Whether to draw a colorbar.</p></li>
+<li><p><strong>filltype</strong> (<em>str</em>) – Either ‘zeros’ or ‘nan’. If ‘zeros’, the off-diagonal blocks will be filled with zeros. If ‘nan’, the off-diagonal blocks will be filled with np.nan.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments to pass to ax.matshow.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="interleave.html" class="btn btn-neutral float-left" title="2.1. Interleave class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../data/index.html" class="btn btn-neutral float-right" title="3. Example Data and graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -8,4 +8,5 @@ The module `cereeberus.distance` contains classes computing distances between gr
     :maxdepth: 2
 
     interleave.rst
+    labeled_blocks.rst
     

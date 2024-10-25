@@ -631,10 +631,10 @@ class ReebGraph(nx.MultiDiGraph):
     
     def boundary_matrix(self, astype = 'numpy'):
         """
-        Creates an boundary matrix for the graph, where :math:`B[v,e] = 1` if vertex :math:`v` is an endpoint of edge :math:`e` and :math:`B[v,e] = 0` otherwise.
+        Creates an boundary matrix for the graph, where :math:`B[v,e] = 1` if vertex :math:`v` is an endpoint of edge :math:`e` and :math:`B[v,e] = 0` otherwise. If astype is `map`, it will return a dictionary with keys as edges and values as lists of vertices that are endpoints of that edge.
 
         Args:
-            astype (str): Optional. The type of output to return. Can be 'numpy', or 'dict'. Default is 'numpy'. 
+            astype (str): Optional. The type of output to return. Can be 'numpy', or 'map'. Default is 'numpy'. 
 
         Returns:
             numpy.ndarray: The boundary matrix.
@@ -644,25 +644,28 @@ class ReebGraph(nx.MultiDiGraph):
         V.sort(key = lambda x: self.f[x])
         E = list(self.edges())
         E.sort(key = lambda x: self.f[x[0]])
-
-        B = np.zeros((len(V), len(E)))
-
-        for j, e in enumerate(E):
-            i = V.index(e[0])
-            B[i, j] = 1
-
-            i = V.index(e[1])
-            B[i, j] = 1
-
         if astype == 'numpy':
+            B = np.zeros((len(V), len(E)))
+
+            for j, e in enumerate(E):
+                i = V.index(e[0])
+                B[i, j] = 1
+
+                i = V.index(e[1])
+                B[i, j] = 1
 
             return B
 
-        elif astype == 'dict':
-            return {'rows': V, 'cols': E, 'array': B}
+        elif astype == 'map':
+            B = {}
+            for e in E:
+                if not len(e)== 3:
+                    e = (e[0], e[1], 0) 
+                B[e] = [e[0], e[1]]
+            return B
 
         else:
-            raise ValueError('astype must be either "numpy" or "dict".')
+            raise ValueError('astype must be either "numpy" or "map".')
 
     
     def plot_boundary_matrix(self):

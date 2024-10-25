@@ -116,12 +116,23 @@ class Interleave:
         # Build boundary matrices 
 
         for key in ['0', 'n', '2n']:
-             B_dict = self.F(key).boundary_matrix(astype = 'dict')
-             self.B_['F'][key] = LM(B_dict['array'], B_dict['rows'], B_dict['cols'])
+            print(f"Building boundary matrix for F_{key}")
+            B_dict = self.F(key).boundary_matrix(astype = 'map')
+            rows = list(self.F(key).nodes)
+            cols = list(self.F(key).edges)
+            self.B_['F'][key] = LM(rows = rows, cols = cols)
+            for e in cols:
+                self.B_['F'][key][e[0], e] = 1
+                self.B_['F'][key][e[1], e] = 1
 
         for key in ['0', 'n', '2n']:
-            B_dict = self.G(key).boundary_matrix(astype = 'dict')
-            self.B_['G'][key] = LM(B_dict['array'], B_dict['rows'], B_dict['cols'])
+            B_dict = self.G(key).boundary_matrix(astype = 'map')
+            rows = list(self.F(key).nodes)
+            cols = list(self.F(key).edges)
+            self.B_['G'][key] = LM(rows = rows, cols = cols)
+            for e in cols:
+                self.B_['G'][key][e[0], e] = 1
+                self.B_['G'][key][e[1], e] = 1
 
         # End boundary matrices
         # ---
@@ -555,6 +566,7 @@ class Interleave:
     def draw_all_phi(self, figsize = (10,10), spacing = (0,.5), **kwargs):
         """
         Draw all the phi maps.
+
         """
         fig, axs = plt.subplots(2, 2, figsize=figsize)
         plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])

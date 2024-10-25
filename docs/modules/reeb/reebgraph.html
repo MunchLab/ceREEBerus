@@ -525,10 +525,10 @@ This will convert any edges that cross the slice into vertices.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.boundary_matrix">
 <span class="sig-name descname"><span class="pre">boundary_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">astype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'numpy'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.boundary_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.boundary_matrix" title="Link to this definition"></a></dt>
-<dd><p>Creates an boundary matrix for the graph, where <span class="math notranslate nohighlight">\(B[v,e] = 1\)</span> if vertex <span class="math notranslate nohighlight">\(v\)</span> is an endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and <span class="math notranslate nohighlight">\(B[v,e] = 0\)</span> otherwise.</p>
+<dd><p>Creates an boundary matrix for the graph, where <span class="math notranslate nohighlight">\(B[v,e] = 1\)</span> if vertex <span class="math notranslate nohighlight">\(v\)</span> is an endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and <span class="math notranslate nohighlight">\(B[v,e] = 0\)</span> otherwise. If astype is <cite>map</cite>, it will return a dictionary with keys as edges and values as lists of vertices that are endpoints of that edge.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>astype</strong> (<em>str</em>) – Optional. The type of output to return. Can be ‘numpy’, or ‘dict’. Default is ‘numpy’.</p>
+<dd class="field-odd"><p><strong>astype</strong> (<em>str</em>) – Optional. The type of output to return. Can be ‘numpy’, or ‘map’. Default is ‘numpy’.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The boundary matrix.</p>

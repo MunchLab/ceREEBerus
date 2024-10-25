@@ -169,7 +169,7 @@ Text(0.5, 1.0, &#39;M_2&#39;)
 </div>
 </div>
 <p>We can create an instance of the interleaving class to store all the relevant matrices and smoothed graphs.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
@@ -177,11 +177,54 @@ Text(0.5, 1.0, &#39;M_2&#39;)
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[4], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> myInt <span style="color: rgb(98,98,98)">=</span> Interleave(M1, M2)
+
+File <span class="ansi-green-fg">~/Library/CloudStorage/Dropbox/Math/Code/ceREEBerus/cereeberus/cereeberus/distance/interleave.py:58</span>, in <span class="ansi-cyan-fg">Interleave.__init__</span><span class="ansi-blue-fg">(self, F, G, n, initialize_random_maps, seed)</span>
+<span class="ansi-green-intense-fg ansi-bold">     56</span> <span style="color: rgb(95,135,135)"># Make the induced map from F_0 to F_n</span>
+<span class="ansi-green-intense-fg ansi-bold">     57</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>I_[<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">F</span><span style="color: rgb(175,0,0)">&#39;</span>][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">0</span><span style="color: rgb(175,0,0)">&#39;</span>] <span style="color: rgb(98,98,98)">=</span> {}
+<span class="ansi-green-fg">---&gt; 58</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>I_[<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">F</span><span style="color: rgb(175,0,0)">&#39;</span>][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">0</span><span style="color: rgb(175,0,0)">&#39;</span>][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">V</span><span style="color: rgb(175,0,0)">&#39;</span>] <span style="color: rgb(98,98,98)">=</span> LBM(map_dict <span style="color: rgb(98,98,98)">=</span> I_0,
+<span class="ansi-green-intense-fg ansi-bold">     59</span>                              rows_dict <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>val_to_verts[<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">F</span><span style="color: rgb(175,0,0)">&#39;</span>][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">n</span><span style="color: rgb(175,0,0)">&#39;</span>],
+<span class="ansi-green-intense-fg ansi-bold">     60</span>                              cols_dict <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>val_to_verts[<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">F</span><span style="color: rgb(175,0,0)">&#39;</span>][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">0</span><span style="color: rgb(175,0,0)">&#39;</span>])
+<span class="ansi-green-intense-fg ansi-bold">     61</span> I_0_edges <span style="color: rgb(98,98,98)">=</span> {(e[<span style="color: rgb(98,98,98)">0</span>], e[<span style="color: rgb(98,98,98)">1</span>], <span style="color: rgb(98,98,98)">0</span>): (I_0[e[<span style="color: rgb(98,98,98)">0</span>]], I_0[e[<span style="color: rgb(98,98,98)">1</span>]],<span style="color: rgb(98,98,98)">0</span>) <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> e <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>F_[<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">0</span><span style="color: rgb(175,0,0)">&#39;</span>]<span style="color: rgb(98,98,98)">.</span>edges()}
+<span class="ansi-green-intense-fg ansi-bold">     62</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>I_[<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">F</span><span style="color: rgb(175,0,0)">&#39;</span>][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">0</span><span style="color: rgb(175,0,0)">&#39;</span>][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">E</span><span style="color: rgb(175,0,0)">&#39;</span>] <span style="color: rgb(98,98,98)">=</span> LBM(map_dict <span style="color: rgb(98,98,98)">=</span> I_0_edges,
+<span class="ansi-green-intense-fg ansi-bold">     63</span>                              rows_dict <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>val_to_edges[<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">F</span><span style="color: rgb(175,0,0)">&#39;</span>][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">n</span><span style="color: rgb(175,0,0)">&#39;</span>],
+<span class="ansi-green-intense-fg ansi-bold">     64</span>                              cols_dict <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>val_to_edges[<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">F</span><span style="color: rgb(175,0,0)">&#39;</span>][<span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">0</span><span style="color: rgb(175,0,0)">&#39;</span>])
+
+File <span class="ansi-green-fg">~/Library/CloudStorage/Dropbox/Math/Code/ceREEBerus/cereeberus/cereeberus/distance/labeled_blocks.py:398</span>, in <span class="ansi-cyan-fg">LabeledBlockMatrix.__init__</span><span class="ansi-blue-fg">(self, map_dict, rows_dict, cols_dict, random_initialize, seed)</span>
+<span class="ansi-green-intense-fg ansi-bold">    396</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> col_i, label <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">enumerate</span>(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>blocks[i]<span style="color: rgb(98,98,98)">.</span>cols):
+<span class="ansi-green-intense-fg ansi-bold">    397</span>             row_j <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>blocks[i]<span style="color: rgb(98,98,98)">.</span>rows<span style="color: rgb(98,98,98)">.</span>index(map_dict[label])
+<span class="ansi-green-fg">--&gt; 398</span>             <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>blocks[i][row_j, col_i] <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(98,98,98)">1</span>
+<span class="ansi-green-intense-fg ansi-bold">    399</span> <span class="ansi-bold" style="color: rgb(0,135,0)">elif</span> random_initialize:
+<span class="ansi-green-intense-fg ansi-bold">    400</span>     A <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>blocks[i]<span style="color: rgb(98,98,98)">.</span>array
+
+File <span class="ansi-green-fg">~/Library/CloudStorage/Dropbox/Math/Code/ceREEBerus/cereeberus/cereeberus/distance/labeled_blocks.py:162</span>, in <span class="ansi-cyan-fg">LabeledMatrix.__setitem__</span><span class="ansi-blue-fg">(self, key, value)</span>
+<span class="ansi-green-intense-fg ansi-bold">    154</span> <span style="color: rgb(175,0,0)">&#34;&#34;&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">    155</span> <span style="color: rgb(175,0,0)">Set an item in the matrix, where ``key = [row_key, col_key]`` are the **labels** of the row and columns respectively.</span>
+<span class="ansi-green-intense-fg ansi-bold">    156</span>
+<span class="ansi-green-fg">   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    159</span> <span style="color: rgb(175,0,0)">    value: The value to set.</span>
+<span class="ansi-green-intense-fg ansi-bold">    160</span> <span style="color: rgb(175,0,0)">&#34;&#34;&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">    161</span> row_key, col_key <span style="color: rgb(98,98,98)">=</span> key
+<span class="ansi-green-fg">--&gt; 162</span> i <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>rows<span style="color: rgb(98,98,98)">.</span>index(row_key)
+<span class="ansi-green-intense-fg ansi-bold">    163</span> j <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>cols<span style="color: rgb(98,98,98)">.</span>index(col_key)
+<span class="ansi-green-intense-fg ansi-bold">    164</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>array[i,j] <span style="color: rgb(98,98,98)">=</span> value
+
+<span class="ansi-red-fg">ValueError</span>: 0 is not in list
+</pre></div></div>
+</div>
 <p>Inside of the <code class="docutils literal notranslate"><span class="pre">Interleave</span></code> class, we have lots of setup data ready to go.</p>
 <p>Internally, the two graphs are labeled as <span class="math notranslate nohighlight">\(F\)</span> and <span class="math notranslate nohighlight">\(G\)</span>, and an interleaving itself is a pair of maps <span class="math notranslate nohighlight">\(\phi:F \to G^n\)</span> and <span class="math notranslate nohighlight">\(\psi: G \to F^n\)</span>.</p>
 <p>First we have the two original graphs stored as follows. The <span class="math notranslate nohighlight">\(F\)</span> graphs for <span class="math notranslate nohighlight">\(0\)</span>, <span class="math notranslate nohighlight">\(n\)</span>, and <span class="math notranslate nohighlight">\(2n\)</span> are in a dictionary <code class="docutils literal notranslate"><span class="pre">myInt.F</span></code> with keys <code class="docutils literal notranslate"><span class="pre">['0','n','2n']</span></code>. (Note the <code class="docutils literal notranslate"><span class="pre">0</span></code> is a string, not an integer).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
@@ -196,7 +239,7 @@ Text(0.5, 1.0, &#39;M_2&#39;)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
@@ -216,7 +259,7 @@ F_2n: {&#39;nodes&#39;: 22, &#39;edges&#39;: 22}
 </div>
 <p>Similarly, we have a dictionary of the <span class="math notranslate nohighlight">\(G\)</span> graphs.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
@@ -242,7 +285,7 @@ G_2n: {&#39;nodes&#39;: 32, &#39;edges&#39;: 32}
 <h3><span class="section-number">6.1.1. </span>Matrices for Maps Induced by Inclusion<a class="headerlink" href="#Matrices-for-Maps-Induced-by-Inclusion" title="Link to this heading"></a></h3>
 <p>The first block matrices are the inclusion matrices, which can be accessed by calling <code class="docutils literal notranslate"><span class="pre">Interleave.I</span></code>. These matrices give the maps <span class="math notranslate nohighlight">\(F \to F_n \to F_{2n}\)</span> and <span class="math notranslate nohighlight">\(G \to G_n \to G_{2n}\)</span>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># For example, the induced inclusion map from $G$ to $G_{n}$ for the vertices is given by:</span>
@@ -254,8 +297,7 @@ G_2n: {&#39;nodes&#39;: 32, &#39;edges&#39;: 32}
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -270,7 +312,7 @@ cols=[6, 7])
 <p>Reading the output above, we see that vertex 6 in <span class="math notranslate nohighlight">\(F_n\)</span> is sent to vertex <span class="math notranslate nohighlight">\(9\)</span> in <span class="math notranslate nohighlight">\(F_{2n}\)</span>, while vertex 7 in <span class="math notranslate nohighlight">\(F_n\)</span> is sent to vertex <span class="math notranslate nohighlight">\(8\)</span> in <span class="math notranslate nohighlight">\(F_{2n}\)</span></p>
 <p>Each map is stored as a <code class="docutils literal notranslate"><span class="pre">LabeledBlockMatrix</span></code> type. The full matrix with all the blocks in place can be accessed as follows.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="s1">&#39;V&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_labeled_matrix</span><span class="p">()</span>
@@ -278,8 +320,7 @@ cols=[6, 7])
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -313,7 +354,7 @@ cols=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
 </div>
 <p>And for visualizing, we can use the draw function to plot the matrix with rows and columns labeled accordingly.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="s1">&#39;V&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
@@ -322,8 +363,7 @@ cols=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -339,7 +379,7 @@ Text(0.5, 1.0, &#39;Induced Inclusion Map from $F_n$ to $F_{2n}$ for Vertices&#3
 </div>
 <p>We also have the induced maps for edges. This can be found as follows, or the full matrix can be drawn directly using the <code class="docutils literal notranslate"><span class="pre">draw_I</span></code> command. Note that the third entry for edge labels comes from the <code class="docutils literal notranslate"><span class="pre">nx.MultiDiGraph</span></code> parent class.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">myInt</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">)[</span><span class="mi">8</span><span class="p">])</span>
@@ -363,8 +403,7 @@ cols=[(8, 11, 0), (9, 11, 0), (10, 12, 0)])
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -380,7 +419,7 @@ Text(0.5, 1.0, &#39;Induced Inclusion Map from $F_n$ to $F_{2n}$ for Edges with 
 </div>
 <p>There are also commands to draw individual <span class="math notranslate nohighlight">\(I\)</span> maps using <code class="docutils literal notranslate"><span class="pre">Interleave.drawI</span></code>. The command below draws all of these at once for convenience.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_all_I</span><span class="p">()</span>
@@ -399,7 +438,7 @@ Text(0.5, 1.0, &#39;Induced Inclusion Map from $F_n$ to $F_{2n}$ for Edges with 
 <h3><span class="section-number">6.1.2. </span>Boundary Matrices<a class="headerlink" href="#Boundary-Matrices" title="Link to this heading"></a></h3>
 <p>We also have boundary matrices for each graph, where <span class="math notranslate nohighlight">\(B[v,e] = 1\)</span> iff <span class="math notranslate nohighlight">\(v\)</span> is a vertex of edge <span class="math notranslate nohighlight">\(e\)</span>. Note that unlike the inclusion matrices, we don’t have separate vertex and edge versions, and we don’t have the nice block structure, so this can be found as follows.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;n&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
@@ -407,8 +446,7 @@ Text(0.5, 1.0, &#39;Induced Inclusion Map from $F_n$ to $F_{2n}$ for Edges with 
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -424,7 +462,7 @@ Text(0.5, 1.0, &#39;Induced Inclusion Map from $F_n$ to $F_{2n}$ for Edges with 
 </div>
 <p>We also have a drawing command, <code class="docutils literal notranslate"><span class="pre">Interleave.draw_B</span></code> to simplify the process, and <code class="docutils literal notranslate"><span class="pre">Interleave.draw_all_B</span></code> to show them all at once.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_all_B</span><span class="p">()</span>
@@ -443,7 +481,7 @@ Text(0.5, 1.0, &#39;Induced Inclusion Map from $F_n$ to $F_{2n}$ for Edges with 
 <h3><span class="section-number">6.1.3. </span>Distance matrix<a class="headerlink" href="#Distance-matrix" title="Link to this heading"></a></h3>
 <p>Following (our arXiv paper that we should cite), there is a distance between any vertices at the same level defined to be the amount of smoothing needed for the two vertices to be mapped to the same vertex. This block matrix is stored in <code class="docutils literal notranslate"><span class="pre">Interleave.D</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here&#39;s the distance between the vertices at function value 9 in $F$</span>
@@ -467,7 +505,7 @@ cols=[13, 14, 15, 22])
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># and here&#39;s a visual for the same distance matrix</span>
@@ -477,8 +515,7 @@ cols=[13, 14, 15, 22])
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -494,7 +531,7 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 </div>
 <p>As before, we can easily draw the full distance matrix using the <code class="docutils literal notranslate"><span class="pre">draw_D</span></code> command. Here’s the full matrix for <span class="math notranslate nohighlight">\(G_{n}\)</span>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_D</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="s1">&#39;V&#39;</span><span class="p">)</span>
@@ -502,8 +539,7 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -519,7 +555,7 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 </div>
 <p>And here’s how we can have just the blocks showing up.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_D</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;nan&#39;</span><span class="p">)</span>
@@ -535,8 +571,7 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -550,13 +585,46 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 <img alt="../_images/notebooks_interleaving_basics_36_2.png" src="../_images/notebooks_interleaving_basics_36_2.png" />
 </div>
 </div>
+<p>Here’s an edge version too.</p>
+<p>TODO: This needs to be checked because I think there’s something funny with indexing? This whole thing needs testing in any case.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_D</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;class &#39;numpy.ndarray&#39;&gt;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Axes: xlabel=&#39;V(G_n)&#39;, ylabel=&#39;V(G_n)&#39;&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_interleaving_basics_38_2.png" src="../_images/notebooks_interleaving_basics_38_2.png" />
+</div>
+</div>
 </section>
 </section>
 <section id="Initializing-a-random-interleaving">
 <h2><span class="section-number">6.2. </span>Initializing a random interleaving<a class="headerlink" href="#Initializing-a-random-interleaving" title="Link to this heading"></a></h2>
 <p>Let’s go back to a simpler example for a while. We’ll compare the distance between a torus and a line graph.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="n">ex_mg</span><span class="o">.</span><span class="n">torus</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">delta</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">17</span><span class="p">)</span>
@@ -566,7 +634,7 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 </div>
 <p>As before, we can intialize the interleaving. This time, however, we ask for randomly generated maps <span class="math notranslate nohighlight">\(\varphi: F \to G^n\)</span> and <span class="math notranslate nohighlight">\(\psi: G \to F^n\)</span>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span> <span class="o">=</span> <span class="n">Interleave</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">T</span><span class="p">,</span> <span class="n">initialize_random_maps</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
@@ -575,7 +643,7 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 </div>
 <p>Let’s draw all the relevant graphs just to be able to look at what’s going on here.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_all_graphs</span><span class="p">()</span>
@@ -586,12 +654,12 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_42_0.png" src="../_images/notebooks_interleaving_basics_42_0.png" />
+<img alt="../_images/notebooks_interleaving_basics_44_0.png" src="../_images/notebooks_interleaving_basics_44_0.png" />
 </div>
 </div>
 <p>These can be accessed using the <code class="docutils literal notranslate"><span class="pre">Interleave.phi</span></code> and <code class="docutils literal notranslate"><span class="pre">Interleave.psi</span></code> functions. As before, these are stored as <code class="docutils literal notranslate"><span class="pre">LabeledBlockMatrix</span></code> types.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">psi</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="s1">&#39;V&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
@@ -602,11 +670,11 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_44_0.png" src="../_images/notebooks_interleaving_basics_44_0.png" />
+<img alt="../_images/notebooks_interleaving_basics_46_0.png" src="../_images/notebooks_interleaving_basics_46_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_psi</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">)</span>
@@ -614,8 +682,7 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -626,11 +693,11 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_45_1.png" src="../_images/notebooks_interleaving_basics_45_1.png" />
+<img alt="../_images/notebooks_interleaving_basics_47_1.png" src="../_images/notebooks_interleaving_basics_47_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_all_phi</span><span class="p">(</span><span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
@@ -652,11 +719,11 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_46_1.png" src="../_images/notebooks_interleaving_basics_46_1.png" />
+<img alt="../_images/notebooks_interleaving_basics_48_1.png" src="../_images/notebooks_interleaving_basics_48_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_all_psi</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
@@ -667,7 +734,7 @@ Text(0.5, 1.0, &#39;Distance Matrix for Vertices with Function Value 9 in $F$&#3
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_47_0.png" src="../_images/notebooks_interleaving_basics_47_0.png" />
+<img alt="../_images/notebooks_interleaving_basics_49_0.png" src="../_images/notebooks_interleaving_basics_49_0.png" />
 </div>
 </div>
 </section>
@@ -685,7 +752,7 @@ G(U_\tau^n) --B_G--&gt; G(U_\sigma^n)
 </div>
 <p>can be checked for commutativity by checking if this matrix multiplication is 0.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Top</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="n">myInt</span><span class="o">.</span><span class="n">B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
@@ -701,8 +768,7 @@ G(U_\tau^n) --B_G--&gt; G(U_\sigma^n)
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -713,14 +779,14 @@ Text(0.5, 1.0, &#39;$\\varphi_{0,V} \\cdot B_F - B_G \\cdot \\varphi_{0,E}$&#39;
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_49_1.png" src="../_images/notebooks_interleaving_basics_49_1.png" />
+<img alt="../_images/notebooks_interleaving_basics_51_1.png" src="../_images/notebooks_interleaving_basics_51_1.png" />
 </div>
 </div>
 <section id="Parallelograms---Edge-vertex">
 <h3><span class="section-number">6.3.1. </span>Parallelograms - Edge vertex<a class="headerlink" href="#Parallelograms---Edge-vertex" title="Link to this heading"></a></h3>
 <p>The first shown example is the same one done with the <code class="docutils literal notranslate"><span class="pre">myInt.parallelogram_matrix_Edge_Vert</span></code> command. Note that we can either pass in <code class="docutils literal notranslate"><span class="pre">phi</span></code> or <code class="docutils literal notranslate"><span class="pre">psi</span></code> to get the relevant diagrams. The <code class="docutils literal notranslate"><span class="pre">draw</span> <span class="pre">=</span> <span class="pre">True</span></code> is helpful for debugging and visualization.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Result</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram_Edge_Vert</span><span class="p">(</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
@@ -741,11 +807,11 @@ Maximum absolute value in the parallelogram matrix: 3.0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_51_1.png" src="../_images/notebooks_interleaving_basics_51_1.png" />
+<img alt="../_images/notebooks_interleaving_basics_53_1.png" src="../_images/notebooks_interleaving_basics_53_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Result</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram_Edge_Vert</span><span class="p">(</span><span class="s1">&#39;psi&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
@@ -765,7 +831,7 @@ Maximum absolute value in the parallelogram matrix: 0.0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_52_1.png" src="../_images/notebooks_interleaving_basics_52_1.png" />
+<img alt="../_images/notebooks_interleaving_basics_54_1.png" src="../_images/notebooks_interleaving_basics_54_1.png" />
 </div>
 </div>
 </section>
@@ -773,58 +839,10 @@ Maximum absolute value in the parallelogram matrix: 0.0
 <h3><span class="section-number">6.3.2. </span>Parallelograms - Thickening<a class="headerlink" href="#Parallelograms---Thickening" title="Link to this heading"></a></h3>
 <p>These are the parallelograms that keep track of whether the maps from <span class="math notranslate nohighlight">\(U \to U^n\)</span> form a natural transformation.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Result</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum absolute value in the parallelogram matrix: </span><span class="si">{</span><span class="n">Result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Maximum absolute value in the parallelogram matrix: 2.0
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_54_1.png" src="../_images/notebooks_interleaving_basics_54_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Result</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="s1">&#39;psi&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum absolute value in the parallelogram matrix: </span><span class="si">{</span><span class="n">Result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Maximum absolute value in the parallelogram matrix: 0.0
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_55_1.png" src="../_images/notebooks_interleaving_basics_55_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Result</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum absolute value in the parallelogram matrix: </span><span class="si">{</span><span class="n">Result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -845,10 +863,10 @@ Maximum absolute value in the parallelogram matrix: 2.0
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Result</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="s1">&#39;psi&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Result</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="s1">&#39;psi&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum absolute value in the parallelogram matrix: </span><span class="si">{</span><span class="n">Result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -869,7 +887,55 @@ Maximum absolute value in the parallelogram matrix: 0.0
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Result</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum absolute value in the parallelogram matrix: </span><span class="si">{</span><span class="n">Result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Maximum absolute value in the parallelogram matrix: 2.0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_interleaving_basics_58_1.png" src="../_images/notebooks_interleaving_basics_58_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Result</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="s1">&#39;psi&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum absolute value in the parallelogram matrix: </span><span class="si">{</span><span class="n">Result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Maximum absolute value in the parallelogram matrix: 0.0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_interleaving_basics_59_1.png" src="../_images/notebooks_interleaving_basics_59_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="n">myInt</span><span class="o">.</span><span class="n">loss</span><span class="p">()</span>

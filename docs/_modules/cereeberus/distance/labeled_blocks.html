@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cereeberus.distance.labeled_blocks &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cereeberus.distance.labeled_blocks</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cereeberus.distance.labeled_blocks</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">block_diag</span>
+
+<div class="viewcode-block" id="LabeledMatrix">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix">[docs]</a>
+<span class="k">class</span> <span class="nc">LabeledMatrix</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to store a matrix with row and column labels. The matrix is stored as a numpy array, and the row and columns are stored as lists. For example, we could store the 2 x 3 matrix below as a LabeledMatrix.</span>
+
+<span class="sd">    +-------+---+---+---+</span>
+<span class="sd">    |       | a | b | c |</span>
+<span class="sd">    +=======+===+===+===+</span>
+<span class="sd">    | **u** | 0 | 1 | 0 |</span>
+<span class="sd">    +-------+---+---+---+</span>
+<span class="sd">    | **v** | 1 | 0 | 0 |</span>
+<span class="sd">    +-------+---+---+---+</span>
+
+<span class="sd">    Where the matrix would be initialized by </span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        Mat = LabeledMatrix([[0, 1, 0], [1, 0, 0]], [&#39;u&#39;, &#39;v&#39;], [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;])</span>
+
+<span class="sd">    This class supports matrix multiplication, addition, and subtraction, as well as transposition and getting the maximum (absolute) value of the matrix. Note that calling for an entry in the matrix is done by the labels of the row and column, not the indices. For example, to get the entry in the first row and second column from the example above, you could call either of the following options. </span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        Mat[&#39;u&#39;, &#39;b&#39;]</span>
+<span class="sd">        Mat.array[0, 1]</span>
+
+<span class="sd">    Visualization can be done with the draw method, which will draw the matrix with the row and column labels.</span>
+
+<span class="sd">    .. code-block:: python </span>
+
+<span class="sd">        Mat.draw(colorbar = True)</span>
+
+<span class="sd">    .. figure:: ../../images/labeled_matrix_ex_Mat.png</span>
+<span class="sd">        :figwidth: 400px    </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LabeledMatrix.__init__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rows</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">map_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the LabeledMatrix with a numpy array, row labels, and column labels.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            array (array-like): The matrix data.</span>
+<span class="sd">            rows (list): The labels for the rows.</span>
+<span class="sd">            cols (list): The labels for the columns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="n">rows</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">cols</span>
+
+        <span class="k">if</span> <span class="n">array</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">map_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)))</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">map_dict</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r = </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">, c = </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rows: </span><span class="si">{</span><span class="n">rows</span><span class="si">}</span><span class="s2">, cols: </span><span class="si">{</span><span class="n">cols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">rows</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">cols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">c</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">rows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>  <span class="n">cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+        
+
+<div class="viewcode-block" id="LabeledMatrix.__matmul__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.__matmul__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__matmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Multiply two LabeledMatrix objects using the @ operator.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            other (LabeledMatrix): The other LabeledMatrix to multiply with.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledMatrix: The result of the matrix multiplication.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the other object is not a LabeledMatrix.</span>
+<span class="sd">            ValueError: If the matrix sizes are incompatable, or if they are but the row labels of the first matrix do not match the column labels of the second (including ordering).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LabeledBlockMatrix</span><span class="p">):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">to_labeled_matrix</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LabeledMatrix</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only multiply with another LabeledMatrix or LabeledBlockMatrix&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">rows</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Matrix labels do not match.</span><span class="se">\n</span><span class="s2">Cols of first matrix: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="si">}</span><span class="se">\n</span><span class="s2">Rows of second matrix: </span><span class="si">{</span><span class="n">other</span><span class="o">.</span><span class="n">rows</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Perform matrix multiplication</span>
+        <span class="n">result_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">@</span> <span class="n">other</span><span class="o">.</span><span class="n">array</span>
+        
+        <span class="c1"># The row labels of the result are the row labels of the first matrix</span>
+        <span class="n">result_rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span>
+        
+        <span class="c1"># The column labels of the result are the column labels of the second matrix</span>
+        <span class="n">result_cols</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">cols</span>
+        
+        <span class="k">return</span> <span class="n">LabeledMatrix</span><span class="p">(</span><span class="n">result_array</span><span class="p">,</span> <span class="n">result_rows</span><span class="p">,</span> <span class="n">result_cols</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LabeledMatrix.__add__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.__add__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add two LabeledMatrix objects using the + operator.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            other (LabeledMatrix): The other LabeledMatrix to add.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledMatrix: The result of the matrix addition.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the other object is not a LabeledMatrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LabeledMatrix</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only add with another LabeledMatrix&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">rows</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot add matrices with different row or column labels.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Perform matrix addition</span>
+        <span class="n">result_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">array</span>
+        
+        <span class="k">return</span> <span class="n">LabeledMatrix</span><span class="p">(</span><span class="n">result_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LabeledMatrix.__sub__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.__sub__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Subtract two LabeledMatrix objects using the - operator.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            other (LabeledMatrix): The other LabeledMatrix to subtract.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledMatrix: The result of the matrix subtraction.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the other object is not a LabeledMatrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LabeledMatrix</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only subtract with another LabeledMatrix&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Perform matrix subtraction</span>
+        <span class="n">result_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">array</span>
+        
+        <span class="k">return</span> <span class="n">LabeledMatrix</span><span class="p">(</span><span class="n">result_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LabeledMatrix.__getitem__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get an item from the matrix, where ``key = [row_key, col_key]`` are the **labels** of the row and columns respectively.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key: The keys for the row and column to get from the matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The item from the matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">row_key</span><span class="p">,</span> <span class="n">col_key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">row_key</span><span class="p">)</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">col_key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span></div>
+
+    
+<div class="viewcode-block" id="LabeledMatrix.__setitem__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.__setitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set an item in the matrix, where ``key = [row_key, col_key]`` are the **labels** of the row and columns respectively.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key: The row and column keys to set in the matrix.</span>
+<span class="sd">            value: The value to set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">row_key</span><span class="p">,</span> <span class="n">col_key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">row_key</span><span class="p">)</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">col_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="LabeledMatrix.max">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.max">[docs]</a>
+    <span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the maximum value of the matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The maximum value of the matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
+
+
+<div class="viewcode-block" id="LabeledMatrix.absmax">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.absmax">[docs]</a>
+    <span class="k">def</span> <span class="nf">absmax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the maximum absolute value of the matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The maximum absolute value of the matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
+
+
+<div class="viewcode-block" id="LabeledMatrix.shape">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.shape">[docs]</a>
+    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the shape of the matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: The shape of the matrix (rows, columns).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LabeledMatrix.size">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.size">[docs]</a>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the size of the matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The size of the matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a string representation of the LabeledMatrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of the LabeledMatrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;LabeledMatrix(</span><span class="se">\n</span><span class="s2">array=</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="si">}</span><span class="s2">, </span><span class="se">\n</span><span class="s2">rows=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="si">}</span><span class="s2">, </span><span class="se">\n</span><span class="s2">cols=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+
+<div class="viewcode-block" id="LabeledMatrix.T">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.T">[docs]</a>
+    <span class="k">def</span> <span class="nf">T</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transpose the matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledMatrix: The labeled transposed matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LabeledMatrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LabeledMatrix.to_labeled_block">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.to_labeled_block">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_labeled_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row_val_to_verts</span><span class="p">,</span> <span class="n">col_val_to_verts</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Turns this matrix back into a block dictionary.</span>
+
+<span class="sd">        Note this assumes that the row and column labels are already in order from the block dictionary.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            row_val_to_verts : dict</span>
+<span class="sd">                A dictionary from function values to a list of row objects.</span>
+<span class="sd">            col_val_to_verts : dict</span>
+<span class="sd">                A dictionary from function values to a list of column objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">row_val_to_verts</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">col_val_to_verts</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">all_keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+
+        <span class="n">blocks_out</span> <span class="o">=</span> <span class="n">LabeledBlockMatrix</span><span class="p">()</span>
+
+        <span class="n">curr_row</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">curr_col</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">rows</span> <span class="o">=</span> <span class="n">row_val_to_verts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">next_row</span> <span class="o">=</span> <span class="n">curr_row</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">next_row</span> <span class="o">=</span> <span class="n">curr_row</span>
+            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="n">col_val_to_verts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">next_col</span> <span class="o">=</span> <span class="n">curr_col</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_val_to_verts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">next_col</span> <span class="o">=</span> <span class="n">curr_col</span> 
+
+            <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">curr_row</span><span class="p">:</span><span class="n">next_row</span><span class="p">,</span> <span class="n">curr_col</span><span class="p">:</span><span class="n">next_col</span><span class="p">]</span>
+            <span class="n">blocks_out</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabeledMatrix</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+
+            <span class="n">curr_row</span> <span class="o">=</span> <span class="n">next_row</span>
+            <span class="n">curr_col</span> <span class="o">=</span> <span class="n">next_col</span>
+
+        <span class="k">return</span> <span class="n">blocks_out</span></div>
+
+
+<div class="viewcode-block" id="LabeledMatrix.col_sum">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.col_sum">[docs]</a>
+    <span class="k">def</span> <span class="nf">col_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the sum of each column in the matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span></div>
+
+
+    
+<div class="viewcode-block" id="LabeledMatrix.is_col_sum_1">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.is_col_sum_1">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_col_sum_1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the sum of each column is 1.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the sum of each column is 1, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<div class="viewcode-block" id="LabeledMatrix.draw">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the matrix with row and column labels.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            ax (matplotlib.axes.Axes): The axes to draw the matrix on. If None, the current axes will be used.</span>
+<span class="sd">            colorbar (bool): Whether to draw a colorbar.</span>
+<span class="sd">            **kwargs: Additional keyword arguments to pass to ax.matshow.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        
+        <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            
+        <span class="c1"># Add vertices as the row and column labels</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">colorbar</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ax</span></div>
+</div>
+
+
+<span class="c1">########################################################################################</span>
+
+<div class="viewcode-block" id="LabeledBlockMatrix">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix">[docs]</a>
+<span class="k">class</span> <span class="nc">LabeledBlockMatrix</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to store a block matrix with row and column labels. This is built with the assumption that we have a function value for each object in the labels, and we initialize this with a dictionary for rows and columns that sends function value ``i`` to a list of row or column labels, respectively. </span>
+<span class="sd">    </span>
+<span class="sd">    For example, we could store the block matrix below as a ``LabeledBlockMatrix``. The outside rows give the function values of the vertices, and the inside rows and columns give the labels of the vertices.</span>
+
+<span class="sd">    +--------+-------+---+---+---+---+---+</span>
+<span class="sd">    |                |   1   |   2       |</span>
+<span class="sd">    +                +---+---+---+---+---+</span>
+<span class="sd">    |                | a | b | c | d | e |</span>
+<span class="sd">    +========+=======+===+===+===+===+===+</span>
+<span class="sd">    | **0**  | **u** | 0 | 0 | 0 | 0 | 0 |</span>
+<span class="sd">    +--------+-------+---+---+---+---+---+</span>
+<span class="sd">    | **1**  | **v** | 1 | 1 | 0 | 0 | 0 |</span>
+<span class="sd">    +        +-------+---+---+---+---+---+</span>
+<span class="sd">    |        | **w** | 0 | 0 | 0 | 0 | 0 |</span>
+<span class="sd">    +--------+-------+---+---+---+---+---+</span>
+<span class="sd">    | **2**  | **x** | 0 | 0 | 1 | 1 | 1 |</span>
+<span class="sd">    +--------+-------+---+---+---+---+---+</span>
+<span class="sd">    </span>
+<span class="sd">    The matrix is stored as a dictionary of LabeledMatrix objects, where the keys are the function values of the vertices. For example, we could store the block matrix below as a ``LabeledBlockMatrix``</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        cols_dict = {1: [&#39;a&#39;,&#39;b&#39;], 2: [&#39;c&#39;,&#39;d&#39;,&#39;e&#39;]}</span>
+<span class="sd">        rows_dict = {0: [&#39;u&#39;], 1: [&#39;v&#39;,&#39;w&#39;], 2: [&#39;x&#39;]}</span>
+<span class="sd">        map_dict = {&#39;a&#39;: &#39;v&#39;, &#39;b&#39;:&#39;v&#39;, &#39;c&#39;: &#39;x&#39;, &#39;d&#39;:&#39;x&#39;, &#39;e&#39;:&#39;x&#39;}</span>
+<span class="sd">        lbm = LabeledBlockMatrix(map_dict, rows_dict, cols_dict)</span>
+
+<span class="sd">    Note that this can either be drawn with entries filled with either 0&#39;s or ``np.nan``. </span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        lbm.draw(colorbar = True)</span>
+<span class="sd">    </span>
+<span class="sd">    .. figure:: ../../images/labeled_matrix_ex_BlockMat_0.png</span>
+<span class="sd">        :figwidth: 400px    </span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        lbm.draw(filltype = &#39;nan&#39;, colorbar = True)</span>
+<span class="sd">    </span>
+<span class="sd">    .. figure:: ../../images/labeled_matrix_ex_BlockMat_nan.png</span>
+<span class="sd">        :figwidth: 400px    </span>
+
+<span class="sd">    This class supports matrix multiplication, addition, and subtraction, as well as transposition and getting the maximum (absolute) value of the matrix. Note that calling for an item returns the i&#39;th block as a ``LabeledMatrix``. So we could get an entry in the matrix by first calling the block number, and then the row and column labels.</span>
+
+<span class="sd">    .. code-block:: python</span>
+<span class="sd">    </span>
+<span class="sd">            lbm[1][&#39;v&#39;, &#39;b&#39;]</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LabeledBlockMatrix.__init__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rows_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cols_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+                        <span class="n">random_initialize</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                        <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the LabeledBlockMatrix with LabeledMatrix objects for each integer.</span>
+
+<span class="sd">        rows_dict and cols_dict are dictionaries from integers to lists of row labels and column labels respectively. The keys of the dictionaries are the function values of the vertices. </span>
+<span class="sd">        </span>
+<span class="sd">        If map_dict is provided, it is a dictionary from column objects to row objects. The matrix will be filled in with 1s where the column object maps to the row object. If map_dict is None, the matrix will be filled in with random 1s in each column if random_initialize is True. If none of these are provided, the matrix will be filled with zeros.</span>
+
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            rows_dict : dict</span>
+<span class="sd">                A dictionary from integers to lists of row labels.</span>
+<span class="sd">            cols_dict : dict</span>
+<span class="sd">                A dictionary from integers to lists of column labels.</span>
+<span class="sd">            map_dict : dict</span>
+<span class="sd">                A dictionary from column objects to row objects.</span>
+<span class="sd">            random_initialize : bool</span>
+<span class="sd">                Whether to randomly initialize the matrix.</span>
+<span class="sd">            seed : int</span>
+<span class="sd">                The seed for the random number generator.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+        <span class="k">if</span> <span class="n">rows_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">rows_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="n">all_keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">:</span>
+                <span class="c1"># i is the function value of the vertices </span>
+
+                <span class="c1"># Initialize the block and fill with empty matrices</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rows_dict</span><span class="p">:</span>
+                    <span class="n">rows_</span> <span class="o">=</span> <span class="n">rows_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">rows_</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cols_dict</span><span class="p">:</span>
+                    <span class="n">cols_</span> <span class="o">=</span> <span class="n">cols_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cols_</span> <span class="o">=</span> <span class="p">[]</span>
+
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabeledMatrix</span><span class="p">(</span><span class="n">rows</span> <span class="o">=</span> <span class="n">rows_</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">cols_</span><span class="p">)</span>
+
+
+                <span class="c1"># If a map from column objects to row objects is provided, fill in the matrix</span>
+                <span class="k">if</span> <span class="n">map_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">cols_</span> <span class="ow">and</span> <span class="n">rows_</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols_</span><span class="p">:</span>
+                                <span class="n">r</span> <span class="o">=</span> <span class="n">map_dict</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">r</span><span class="p">,</span><span class="n">c</span><span class="p">]</span>  <span class="o">=</span> <span class="mi">1</span> 
+                <span class="k">elif</span> <span class="n">random_initialize</span><span class="p">:</span>
+                    <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">array</span>            
+                    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span><span class="p">)</span>
+                    <span class="n">col_1s</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">A</span><span class="p">[</span><span class="n">col_1s</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))]</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">A</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a string representation of the LabeledBlockMatrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        str: A string representation of the LabeledBlockMatrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;LabeledBlockMatrix(matrices=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+<div class="viewcode-block" id="LabeledBlockMatrix.__getitem__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the i&#39;th block matrix.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key: The key to get from the block matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The item from the block matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="LabeledBlockMatrix.__setitem__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__setitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the i&#39;th block matrix.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key: The key to set in the block matrix.</span>
+<span class="sd">            value: The value to set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+    
+<div class="viewcode-block" id="LabeledBlockMatrix.__matmul__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__matmul__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__matmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Multiply two LabeledBlockMatrix objects using the @ operator.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            other (LabeledBlockMatrix): The other LabeledBlockMatrix to multiply with.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix: The result of the matrix multiplication.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the other object is not a LabeledBlockMatrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LabeledBlockMatrix</span><span class="p">):</span>
+        
+            <span class="c1"># Perform matrix multiplication</span>
+            <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            
+            <span class="n">result</span> <span class="o">=</span> <span class="n">LabeledBlockMatrix</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+                    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabeledMatrix</span><span class="p">(</span><span class="n">cols</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span> <span class="o">=</span> <span class="p">[])</span>
+                <span class="k">elif</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+                    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabeledMatrix</span><span class="p">(</span><span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="p">[])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">@</span> <span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LabeledMatrix</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_labeled_matrix</span><span class="p">()</span> <span class="o">@</span> <span class="n">other</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only multiply with another LabeledBlockMatrix or LabeledMatrix&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="LabeledBlockMatrix.__add__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__add__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add two LabeledBlockMatrix objects using the + operator.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            other (LabeledBlockMatrix): The other LabeledBlockMatrix to add.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix: The result of the matrix addition.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the other object is not a LabeledBlockMatrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LabeledBlockMatrix</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only add with another LabeledBlockMatrix&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Perform matrix addition</span>
+        <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="n">LabeledBlockMatrix</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="LabeledBlockMatrix.__sub__">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__sub__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Subtract two LabeledBlockMatrix objects using the - operator.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            other (LabeledBlockMatrix): The other LabeledBlockMatrix to subtract.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix: The result of the matrix subtraction.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the other object is not a LabeledBlockMatrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LabeledBlockMatrix</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only subtract with another LabeledBlockMatrix&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Perform matrix subtraction</span>
+        <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="n">LabeledBlockMatrix</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="LabeledBlockMatrix.max">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.max">[docs]</a>
+    <span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the maximum value of the block matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The maximum value of the block matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span></div>
+
+    
+<div class="viewcode-block" id="LabeledBlockMatrix.absmax">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.absmax">[docs]</a>
+    <span class="k">def</span> <span class="nf">absmax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the maximum absolute value of the block matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The maximum absolute value of the block matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span></div>
+
+    
+<div class="viewcode-block" id="LabeledBlockMatrix.get_all_rows">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_rows">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_all_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all the row labels of the block matrix in order.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: The row labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">all_keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">rows</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">]</span>
+
+        <span class="c1"># flatten the rows list</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">label</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">rows</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="LabeledBlockMatrix.get_all_cols">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_cols">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_all_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all the col labels of the block matrix in order .</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: The col labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">all_keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cols</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">label</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">cols</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span></div>
+
+    
+<div class="viewcode-block" id="LabeledBlockMatrix.get_all_labels">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_labels">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_all_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all the row and column of the block matrix in function value order.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: The row and column labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_rows</span><span class="p">(),</span>  <span class="bp">self</span><span class="o">.</span><span class="n">get_all_cols</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LabeledBlockMatrix.block_diag_NaN">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.block_diag_NaN">[docs]</a>
+    <span class="k">def</span> <span class="nf">block_diag_NaN</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">arrs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a block diagonal matrix from provided arrays. Modified from `scipy.linalg.block_diag` to put np.nan in the off-diagonal blocks.</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">arrs</span> <span class="o">==</span> <span class="p">():</span>
+            <span class="n">arrs</span> <span class="o">=</span> <span class="p">([],)</span>
+        <span class="n">arrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arrs</span><span class="p">]</span>
+
+        <span class="n">bad_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arrs</span><span class="p">))</span> <span class="k">if</span> <span class="n">arrs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">bad_args</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;arguments in the following positions have dimension &quot;</span>
+                            <span class="s2">&quot;greater than 2: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">bad_args</span><span class="p">)</span>
+
+        <span class="n">shapes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arrs</span><span class="p">])</span>
+        <span class="c1"># out_dtype = np.result_type(*[arr.dtype for arr in arrs])</span>
+        <span class="c1"># out = np.empty(np.sum(shapes, axis=0), dtype=out_dtype)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">shapes</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> 
+        <span class="n">out</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+        <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shapes</span><span class="p">):</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">r</span><span class="p">:</span><span class="n">r</span> <span class="o">+</span> <span class="n">rr</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span><span class="n">c</span> <span class="o">+</span> <span class="n">cc</span><span class="p">]</span> <span class="o">=</span> <span class="n">arrs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="n">rr</span>
+            <span class="n">c</span> <span class="o">+=</span> <span class="n">cc</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="LabeledBlockMatrix.to_labeled_matrix">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.to_labeled_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_labeled_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;zero&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert to a single block diagonal matrix.</span>
+<span class="sd">        </span>
+<span class="sd">        returns:</span>
+<span class="sd">            LabeledMatrix </span>
+<span class="sd">                A labeled matrix with the same data as the block matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">arrays</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">array</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+
+        <span class="k">if</span> <span class="n">filltype</span> <span class="o">==</span> <span class="s1">&#39;zero&#39;</span><span class="p">:</span>
+            <span class="n">BigMatrix</span> <span class="o">=</span> <span class="n">block_diag</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">filltype</span> <span class="o">==</span> <span class="s1">&#39;nan&#39;</span><span class="p">:</span>
+            <span class="n">BigMatrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_diag_NaN</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">BigMatrix</span><span class="p">))</span>
+
+        <span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_rows</span><span class="p">()</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_cols</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">LabeledMatrix</span><span class="p">(</span><span class="n">BigMatrix</span><span class="p">,</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span></div>
+
+
+
+    
+<div class="viewcode-block" id="LabeledBlockMatrix.check_column_sum">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.check_column_sum">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_column_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix_dict</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check that the sum of each column is 1. TODO NOT YET UPDATED</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            matrix_dict : dict</span>
+<span class="sd">                Either a dictionary with keys &#39;rows&#39;, &#39;cols&#39;, and &#39;array&#39; that are lists of rows, columns, and a numpy array respectively), or a block dictionary where keys are function values and output is a dictionary of the above form. </span>
+<span class="sd">            verbose : bool</span>
+<span class="sd">                Prints information on which matrices have columns that do not sum to 1 if True. The default is False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool</span>
+<span class="sd">                True if the columns sum to 1, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="s1">&#39;array&#39;</span> <span class="ow">in</span> <span class="n">matrix_dict</span><span class="p">:</span>
+            <span class="c1"># This will be false if any of the columns does not sum to 1</span>
+            <span class="n">check</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">matrix_dict</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">check</span> <span class="ow">and</span> <span class="n">verbose</span> <span class="p">:</span> 
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The columns of the distance matrix do not sum to 1&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">matrix_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">D_small</span> <span class="o">=</span> <span class="n">matrix_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">check</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">D_small</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> 
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">check</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span> 
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The columns of the distance matrix for function value </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> do not sum to 1&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">check</span></div>
+
+
+<div class="viewcode-block" id="LabeledBlockMatrix.draw">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;zero&#39;</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the block matrix with row and column labels.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            ax (matplotlib.axes.Axes): The axes to draw the matrix on. If None, the current axes will be used.</span>
+<span class="sd">            colorbar (bool): Whether to draw a colorbar.</span>
+<span class="sd">            filltype (str): Either &#39;zeros&#39; or &#39;nan&#39;. If &#39;zeros&#39;, the off-diagonal blocks will be filled with zeros. If &#39;nan&#39;, the off-diagonal blocks will be filled with np.nan.</span>
+<span class="sd">            **kwargs: Additional keyword arguments to pass to ax.matshow.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_labeled_matrix</span><span class="p">(</span><span class="n">filltype</span> <span class="o">=</span> <span class="n">filltype</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="n">colorbar</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ax</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
