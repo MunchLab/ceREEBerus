@@ -16,7 +16,7 @@
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -455,6 +455,18 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="LabeledMatrix.to_indicator">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.to_indicator">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_indicator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the matrix to an indicator matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledMatrix: The indicator matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LabeledMatrix</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span></div>
 </div>
 
 
@@ -635,7 +647,8 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">LabeledBlockMatrix</span><span class="p">):</span>
         
             <span class="c1"># Perform matrix multiplication</span>
-            <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="n">all_keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
             
             <span class="n">result</span> <span class="o">=</span> <span class="n">LabeledBlockMatrix</span><span class="p">()</span>
 
@@ -896,6 +909,23 @@
         <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_cols</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">LabeledMatrix</span><span class="p">(</span><span class="n">BigMatrix</span><span class="p">,</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="LabeledBlockMatrix.to_indicator">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.to_indicator">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_indicator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the block matrix to an indicator matrix.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix: The indicator matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">LabeledBlockMatrix</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">to_indicator</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">result</span></div>
 
 
 

@@ -118,19 +118,9 @@ class Interleave:
         # Build boundary matrices 
 
         for key in ['0', 'n', '2n']:
-            B_dict = self.F(key).boundary_matrix(astype = 'map')
 
-            vert_dict = self.val_to_verts['F'][key]
-            func_vals = list(vert_dict.keys())
-            func_vals.sort()
-            rows = [vert_dict[f] for f in func_vals]
-            rows = [item for sublist in rows for item in sublist]
-
-            edge_dict =  self.val_to_edges['F'][key]
-            func_vals = list(edge_dict.keys())
-            func_vals.sort()
-            cols = [edge_dict[f] for f in func_vals]
-            cols = [item for sublist in cols for item in sublist]
+            rows = self.F(key).sorted_vertices()
+            cols = self.F(key).sorted_edges()
 
             self.B_['F'][key] = LM(rows = rows, cols = cols)
             for e in cols:
@@ -138,19 +128,9 @@ class Interleave:
                 self.B_['F'][key][e[1], e] = 1
 
         for key in ['0', 'n', '2n']:
-            B_dict = self.G(key).boundary_matrix(astype = 'map')
 
-            vert_dict = self.val_to_verts['G'][key]
-            func_vals = list(vert_dict.keys())
-            func_vals.sort()
-            rows = [vert_dict[f] for f in func_vals]
-            rows = [item for sublist in rows for item in sublist]
-
-            edge_dict =  self.val_to_edges['G'][key]
-            func_vals = list(edge_dict.keys())
-            func_vals.sort()
-            cols = [edge_dict[f] for f in func_vals]
-            cols = [item for sublist in cols for item in sublist]
+            rows = self.G(key).sorted_vertices()
+            cols = self.G(key).sorted_edges()
 
             self.B_['G'][key] = LM(rows = rows, cols = cols)
             for e in cols:
@@ -397,7 +377,76 @@ class Interleave:
     #
     ### ----------------
     
+    
+    def set_random_assignment(self, random_n = True):
+        """
+        Set the phi and psi matrices to random values. No matter what, the maps from F to Gn and G to Fn will be randomly set.  If ``'random_n'`` is True, the maps from Fn to G2n and Gn to F2n will also be randomly set. Otherwise, we will use matrix tricks to figure out the later from the former. 
 
+        Note this functions assumes the phi and psi dictionaries were set on initialization. It will overwrite any contents that are there. 
+        """
+        # ----
+        # phi: F -> G^n
+
+        # Set the phi matrices. These will have all random entries.
+        self.phi_['0']['V'] = LBM(None, 
+                                    self.val_to_verts['G']['n'], 
+                                    self.val_to_verts['F']['0'],
+                                    random_initialize = True)
+
+        self.phi_['0']['E'] = LBM(None,
+                                    self.val_to_edges['G']['n'],
+                                    self.val_to_edges['F']['0'],
+                                    random_initialize = True)
+        
+        if random_n:
+            self.phi_['n']['V'] = LBM(None, 
+                                    self.val_to_verts['G']['2n'], 
+                                    self.val_to_verts['F']['n'],
+                                    random_initialize = random_n)
+
+            self.phi_['n']['E'] = LBM(None,
+                                    self.val_to_edges['G']['2n'],
+                                    self.val_to_edges['F']['n'],
+                                    random_initialize = random_n)
+        else:
+            for obj_type in ['V', 'E']:
+                self.phi_['n'][obj_type] = self.I('G', 'n', obj_type) @ self.phi('0', obj_type) @ self.I('F', '0', obj_type).T()
+                self.phi_['n'][obj_type] = self.phi_['n'][obj_type].to_indicator()
+
+        # End phi
+        # ---
+
+        # ----
+        # psi: G -> F^n
+
+        # Set the psi matrices. These will have all random entries.
+        self.psi_['0']['V'] = LBM(None, 
+                                    self.val_to_verts['F']['n'], 
+                                    self.val_to_verts['G']['0'],
+                                    random_initialize = True)
+
+        self.psi_['0']['E'] = LBM(None,
+                                    self.val_to_edges['F']['n'],
+                                    self.val_to_edges['G']['0'],
+                                    random_initialize = True)
+        
+        if random_n:
+            self.psi_['n']['V'] = LBM(None, 
+                                    self.val_to_verts['F']['2n'], 
+                                    self.val_to_verts['G']['n'],
+                                    random_initialize = random_n)
+
+            self.psi_['n']['E'] = LBM(None,
+                                    self.val_to_edges['F']['2n'],
+                                    self.val_to_edges['G']['n'],
+                                    random_initialize = random_n)
+        else:
+            for obj_type in ['V', 'E']:
+                self.psi_['n'][obj_type] = self.I('F', 'n', obj_type) @ self.psi('0', obj_type) @ self.I('G', '0', obj_type).T()
+                self.psi_['n'][obj_type] = self.psi_['n'][obj_type].to_indicator()
+
+        # End psi
+        # ---
 
 
     ### ----------------

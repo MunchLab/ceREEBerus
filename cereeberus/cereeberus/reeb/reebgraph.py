@@ -120,6 +120,24 @@ class ReebGraph(nx.MultiDiGraph):
                 f_to_v[f] = [v]
         return f_to_v
 
+    def sorted_vertices(self):
+        """
+        Get a list of vertices sorted by function value. Same order as passed by the func_to_vertex_dict method.
+
+        Returns:
+            list
+                A list of vertices sorted by function value.
+        """
+        
+        func_dict = self.func_to_vertex_dict()
+        keys = list(func_dict.keys())
+        keys.sort()
+        vertices = [ func_dict[k] for k in keys]
+        vertices = [v for sublist in vertices for v in sublist]
+
+        return vertices 
+
+
     def func_to_edge_dict(self):
         """
         Get a dictionary mapping function values to all edges with lower endpoint at that height.
@@ -136,6 +154,22 @@ class ReebGraph(nx.MultiDiGraph):
             else:
                 f_to_e[f] = [e]
         return f_to_e
+    
+    def sorted_edges(self):
+        """
+        Get a list of edges sorted by function value. Same order as passed by the func_to_edge_dict method.
+
+        Returns:
+            list
+                A list of edges sorted by function value.
+        """
+        func_dict = self.func_to_edge_dict()
+        keys = list(func_dict.keys())
+        keys.sort()
+        edges = [ func_dict[k] for k in keys]
+        edges = [item for row in edges for item in row]
+
+        return edges
 
     def thickening_distance(self, u, v):
         """

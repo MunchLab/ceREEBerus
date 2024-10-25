@@ -334,6 +334,15 @@ class LabeledMatrix:
 
         return ax
 
+    def to_indicator(self):
+        """
+        Convert the matrix to an indicator matrix.
+
+        Returns:
+            LabeledMatrix: The indicator matrix.
+        """
+        return LabeledMatrix((self.array > 0).astype(int), self.rows, self.cols)
+
 ########################################################################################
 
 class LabeledBlockMatrix:
@@ -498,7 +507,8 @@ class LabeledBlockMatrix:
         if isinstance(other, LabeledBlockMatrix):
         
             # Perform matrix multiplication
-            all_keys = set(self.blocks.keys()) | set(other.blocks.keys())
+            all_keys = list(set(self.blocks.keys()) | set(other.blocks.keys()))
+            all_keys.sort()
             
             result = LabeledBlockMatrix()
 
@@ -726,6 +736,20 @@ class LabeledBlockMatrix:
         cols = self.get_all_cols()
 
         return LabeledMatrix(BigMatrix,rows, cols)
+    
+    def to_indicator(self):
+        """
+        Convert the block matrix to an indicator matrix.
+
+        Returns:
+            LabeledBlockMatrix: The indicator matrix.
+        """
+        result = LabeledBlockMatrix()
+
+        for i in self.blocks.keys():
+            result[i] = self.blocks[i].to_indicator()
+        
+        return result
 
 
     def col_sum(self):
