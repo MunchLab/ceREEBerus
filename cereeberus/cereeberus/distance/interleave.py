@@ -8,7 +8,9 @@ from .labeled_blocks import LabeledMatrix as LM
 
 class Interleave:
     """
-    A class to bound the interleaving distance between two Mapper graphs.
+    A class to bound the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G` throughout.
+
+    We use keys ``['0', 'n', '2n']`` to denote the Mapper graphs :math:`F = F_0`, :math:`F_n`, and :math:`F_{2n}` and similarly for :math:`G`.
     """
     def __init__(self, F, G, 
                         n = 1, 
@@ -17,11 +19,11 @@ class Interleave:
         Initialize the Interleave object.
         
         Parameters:
-            F : MapperGraph
+            F (MapperGraph):
                 The first Mapper graph.
-            G : MapperGraph
+            G (MapperGraph):
                 The second Mapper graph.
-            n : int
+            n (int):
                 The interleaving parameter. The default is 1.
         """
         
@@ -284,99 +286,106 @@ class Interleave:
 
     def F(self, key = '0'):
         """
-        Get the MapperGraph for F with key.
+        Get the MapperGraph for :math:`F` with key.
 
         Parameters:
-            key : str
-                The key for the MapperGraph. Either '0', 'n', or '2n'. Default is '0'.
+            key (str) :
+                The key for the MapperGraph. Either ``'0'``, ``'n'``, or ``'2n'``. Default is ``'0'``.
         """
         return self.F_[key]
     
     def G(self, key = '0'):
         """
-        Get the MapperGraph for G with key.
+        Get the MapperGraph for :math:`G` with key.
 
         Parameters:
-            key : str
-                The key for the MapperGraph. Either '0', 'n', or '2n'. Default is '0'.
+            key (str) : 
+                The key for the MapperGraph. Either ``'0'``, ``'n'``, or ``'2n'``. Default is ``'0'``.
         """
         return self.G_[key]
 
     def B(self, graph = 'F', key = '0'):
         """
-        Get the boundary matrix for a Mapper graph.
+        Get the boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an endpoint of edge :math:`e` and 0 otherwise.
 
         Parameters:
-            graph : str
-                The graph to get the boundary matrix for. Either 'F' or 'G'.
-            key : str
-                The key for the boundary matrix. Either '0', 'n', or '2n'.
+            graph (str) : 
+                The graph to get the boundary matrix for. Either ``'F'`` or ``'G'``.
+            key (str) : 
+                The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
         """
         return self.B_[graph][key]
 
     def I(self, graph = 'F', key = '0', obj_type = 'V'):
         """
-        Get the induced map from one Mapper graph to another.
+        Get the induced map from one Mapper graph to another, specifically from ``graph_key`` to ``graph_(key+n)`` sending ``obj_type`` to the same type. For example, ``I('G', 'n', 'E')`` is the map for edges from :math:`G_n` to :math:`G_{2n}`.
+        
+        This is the matrix with entry :math:`I[u, v] = 1` if vertex :math:`v` in the first graph maps to vertex :math:`u` in the second graph.
 
         Parameters:
-            graph : str
-                The graph to get the induced map for. Either 'F' or 'G'.
-            key : str
-                The key for the induced map. Either '0' or 'n'.
-            obj_type : str
-                The type of map. Either 'V' or 'E'.
+            graph (str) : 
+                The graph to get the induced map for. Either ``'F'`` or ``'G'``.
+            key (str) : 
+                The key for the induced map. Either ``'0'`` or ``'n'``.
+            obj_type (str) : 
+                The type of map. Either ``'V'`` or ``'E'``.
         """
         return self.I_[graph][key][obj_type]
         
 
     def D(self, graph = 'F', key = '0', obj_type = 'V'):
         """
-        Get the distance matrix for a Mapper graph.
+        Get the distance matrix for a Mapper graph. This is the matrix with entry :math:`D[u, v]` equal to the minimum thickening needed for vertices :math:`u` and :math:`v` to map to the same connected component (similarly for edges). Note this distance is only defined for vertices or edges at the same function value. 
 
         Parameters:
-            graph : str
-                The graph to get the distance matrix for. Either 'F' or 'G'.
-            key : str
-                The key for the distance matrix. Either '0', 'n', or '2n'.
+            graph (str) : 
+                The graph to get the distance matrix for. Either ``'F'`` or ``'G'``.
+            key (str) : 
+                The key for the distance matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
         """
         return self.D_[graph][key][obj_type]
 
     def phi(self, key = '0', obj_type = 'V'):
         """
-        Get the map from F to G^n.
+        Get the interleaving map :math:`F \\to G^n`.
 
         Parameters:
-            key : str
-                The key for the map. Either '0' or 'n'.
-            obj_type : str
-                The type of map. Either 'V' or 'E'.
+            key (str) : 
+                The key for the map. Either ``'0'`` or ``'n'``.
+            obj_type (str) : 
+                The type of map. Either ``'V'`` or ``'E'``.
         """
         return self.phi_[key][obj_type]
 
     def psi(self, key = '0', obj_type = 'V'):
         """
-        Get the map from G to F^n.
+        Get the interleaving map :math:`\psi: G  \\to F^n` on either vertices or edges.
 
         Parameters:
-            key : str
-                The key for the map. Either '0' or 'n'.
-            obj_type : str
-                The type of map. Either 'V' or 'E'.
+            key (str) : 
+                The key for the map. Either ``'0'`` or ``'n'``.
+            obj_type (str) : 
+                The type of map. Either ``'V'`` or ``'E'``.
         """
         return self.psi_[key][obj_type]
 
     def get_interleaving_map(self, maptype = 'phi', key = '0', obj_type = 'V'):
         """
-        Get the interleaving map (either phi or psi) for the relevant key and type. Useful for iterating over all the maps.
-        
+        Get the relevant interleaving map. Helpful for iterating over options. 
+
         Parameters:
-            map_type : str
-                The type of map. Either 'phi' or 'psi'.
-            key : str
-                The key for the map. Either '0' or 'n'.
-            obj_type : str
-                The type of map. Either 'V' or 'E'.
+            maptype (str) : 
+                The type of map. Either ``'phi'`` or ``'psi'``.
+            key (str) : 
+                The key for the map. Either ``'0'`` or ``'n'``.
+            obj_type (str) : 
+                The type of map. Either ``'V'`` or ``'E'``.
+
+        Returns:
+            LabeledBlockMatrix : 
+                The relevant interleaving map.
         """
+
         if maptype == 'phi':
             return self.phi(key, obj_type)
         elif maptype == 'psi':
@@ -421,10 +430,10 @@ class Interleave:
         Draw the induced map from one Mapper graph to another.
 
         Parameters:
-            graph : str
-                The graph to draw the induced map for. Either 'F' or 'G'.
-            key : str
-                The key for the induced map. Either '0' or 'n'.
+            graph (str) : 
+                The graph to draw the induced map for. Either ``'F'`` or ``'G'``.
+            key (str) : 
+                The key for the induced map. Either ``'0'`` or ``'n'``.
         """
         if ax is None:
             ax = plt.gca()
@@ -460,10 +469,10 @@ class Interleave:
         Draw the boundary matrix for a Mapper graph.
 
         Parameters:
-            graph : str
-                The graph to draw the boundary matrix for. Either 'F' or 'G'.
-            key : str
-                The key for the boundary matrix. Either '0', 'n', or '2n'.
+            graph (str) : 
+                The graph to draw the boundary matrix for. Either ``'F'`` or ``'G'``.
+            key (str) : 
+                The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
         """
         if ax is None:
             ax = plt.gca()
@@ -501,17 +510,17 @@ class Interleave:
         Draw the distance matrix for a Mapper graph.
 
         Parameters:
-            graph : str
-                The graph to draw the distance matrix for. Either 'F' or 'G'.
-            key : str
-                The key for the distance matrix. Either '0', 'n', or '2n'.
-            obj_type : str
-                The type of matrix. Either 'V' or 'E'.
-            colorbar : bool
+            graph (str) : 
+                The graph to draw the distance matrix for. Either ``'F'`` or ``'G'``.
+            key (str) : 
+                The key for the distance matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+            obj_type (str) : 
+                The type of matrix. Either ``'V'`` or ``'E'``.
+            colorbar (bool) : 
                 Whether to draw a colorbar. Default is True.
-            ax : matplotlib.axes.Axes
+            ax ( matplotlib.axes.Axes) :
                 The axes to draw the matrix on. If None, the current axes will be used.
-            **kwargs : dict
+            **kwargs (dict) : 
                 Additional keyword arguments to pass to the drawing function.
 
         Returns:
@@ -532,13 +541,13 @@ class Interleave:
 
     def draw_phi(self, key = '0', obj_type = 'V', ax = None, **kwargs):
         """
-        Draw the map from F to G^n.
+        Draw the map :math:`\psi: F \\to G^n`.
 
         Parameters:
-            key : str
-                The key for the map. Either '0' or 'n'.
-            obj_type : str
-                The type of map. Either 'V' or 'E'.
+            key (str) : 
+                The key for the map. Either ``'0'`` or ``'n'``.
+            obj_type (str) : 
+                The type of map. Either ``'V'`` or ``'E'``.
         """
         if ax is None:
             ax = plt.gca()
@@ -560,13 +569,13 @@ class Interleave:
     
     def draw_psi(self, key = '0', obj_type = 'V', ax = None, **kwargs):
         """
-        Draw the map from G to F^n.
+        Draw the map :math:`\psi: G \\to F^n`.
 
         Parameters:
-            key : str
-                The key for the map. Either '0' or 'n'.
-            obj_type : str
-                The type of map. Either 'V' or 'E'.
+            key (str) : 
+                The key for the map. Either ``'0'`` or ``'n'``.
+            obj_type (str) : 
+                The type of map. Either ``'V'`` or ``'E'``.
         """
         if ax is None:
             ax = plt.gca()
@@ -586,7 +595,7 @@ class Interleave:
 
     def draw_all_phi(self, figsize = (10,10), spacing = (0,.5), **kwargs):
         """
-        Draw all the phi maps.
+        Draw all the ``phi`` maps.
 
         """
         fig, axs = plt.subplots(2, 2, figsize=figsize)
@@ -603,7 +612,7 @@ class Interleave:
 
     def draw_all_psi(self, figsize = (10,10), spacing = (0,.5),     **kwargs):
         """
-        Draw all the psi maps.
+        Draw all the ``psi`` maps.
         """
         fig, axs = plt.subplots(2, 2, figsize=figsize)
         plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
@@ -624,10 +633,25 @@ class Interleave:
                                     draw = False, drawtype = 'all', 
                                     **kwargs):
         """
-        Check that the parallelogram for the pair $(U_{\tau_I}\subset U_\sigma_i)$ commutes.
+        Check that the parallelogram for the pair :math:`(U_{\\tau_I}\subset U_{\sigma_i})` commutes.
         This is the one that relates the edge maps to the vertex maps.
         (These are types 1 (when maptype = 'phi') and 2 (when maptype = 'psi') from Liz's Big List )
 
+        Parameters:
+            maptype (str) : 
+                The type of map. Either ``'phi'`` or ``'psi'``.
+            returntype (str) : 
+                The type of return. Either ``'dist'`` if you want the matrix that gives the thickening required to make the diagram commute; or ``'commute'`` to just give the map mismatch.
+            draw (bool) : 
+                Whether to draw the maps. Default is ``False``.
+            drawtype (str) : 
+                The type of drawing. Either ``'all'`` or ``'result'``. Default is ``'all'``.
+            **kwargs : 
+                Additional keyword arguments to pass to the drawing function.
+        
+        Returns:
+            LabeledMatrix : 
+                The matrix that gives the thickenin grequired to make the diagram commute if returntype is ``'dist'``; or the map mismatch if returntype is ``'commute'``
         """
 
         if maptype == 'phi':
@@ -688,16 +712,20 @@ class Interleave:
         These are types 3-6 from Liz's Big List. 
 
         Parameters:
-            maptype : str
+            maptype (str) : 
                 The type of map. Either 'phi' or 'psi'.
-            obj_type : str
-                The type of object. Either 'V' or 'E'.
-            returntype : str
-                The type of return. Either 'dist' if you want the matrix that gives the thickenin grequired to make the diagram commute; or 'commute' to just give the map mismatch.
-            draw : bool
+            obj_type (str) : 
+                The type of object. Either ``'V'`` or ``'E'``.
+            returntype (str) : 
+                The type of return. Either ``'dist'`` if you want the matrix that gives the thickenin grequired to make the diagram commute; or ``'commute'`` to just give the map mismatch.
+            draw (bool) : 
                 Whether to draw the maps. Default is False.
-            drawtype : str
+            drawtype (str) : 
                 The type of drawing. Either 'all' or 'result'. Default is 'all'.
+        
+        Returns:
+            LabeledMatrix : 
+                The matrix that gives the thickening required to make the diagram commute if returntype is ``'dist'``; or the map mismatch if returntype is ``'commute'``.
         """
 
         if maptype == 'phi':
@@ -748,8 +776,23 @@ class Interleave:
 
     def triangle(self, start_graph = 'F', obj_type = 'V', returntype = 'dist',  draw = False, drawtype = 'all'):
         """
-        Get the triangle for checking that it's a
-        nat
+        Get the triangle for checking that it's an interleaving 
+
+        Parameters:
+            start_graph (str) : 
+                The starting graph. Either 'F' or 'G'.
+            obj_type (str) : 
+                The type of object. Either ``'V'`` or ``'E'``.
+            returntype (str) : 
+                The type of return. Either ``'dist'`` if you want the matrix that gives the thickenin grequired to make the diagram commute; or ``'commute'`` to just give the map mismatch.
+            draw (bool) : 
+                Whether to draw the maps. Default is False.
+            drawtype (str) : 
+                The type of drawing. Either 'all' or 'result'. Default is 'all'.
+        
+        Returns:
+            LabeledMatrix : 
+                The matrix that gives the thickenin grequired to make the diagram commute if returntype is ``'dist'``; or the map mismatch if returntype is ``'commute'``.
         """
 
         if start_graph == 'F':
@@ -801,7 +844,11 @@ class Interleave:
 
     def loss(self):
         """
-        Computes the actual loss $k$ for the interleaving distance. This means that there is an (n+k)-interleaving. 
+        Computes the actual loss :math:`k` for the interleaving distance. This means that there is an :math:`(n+k)`-interleaving. 
+
+        Returns:
+            float : 
+                The loss value.
         """
 
         loss_list = []

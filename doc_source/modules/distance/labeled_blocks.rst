@@ -1,7 +1,7 @@
 Classes for labeled block matrices
 ==================================
 
-This page contains information for the `LabeledMatrix` and `LabeledBlockMatrix` classes which are used heavily inside the `cereeberus.distance.Interleaving` class.  
+This page contains information for the ``LabeledMatrix`` and ``LabeledBlockMatrix`` classes which are used heavily inside the ``cereeberus.distance.Interleaving`` class.  
 
 Note that these class can be imported as::
 

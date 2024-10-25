@@ -685,7 +685,7 @@ class ReebGraph(nx.MultiDiGraph):
                   map_type = 'dict',
                   verbose = False):
         """
-        Builds the `eps`-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. 
+        Builds the ``eps``-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. 
 
         Parameters:
             eps (float): The amount of smoothing to apply.
