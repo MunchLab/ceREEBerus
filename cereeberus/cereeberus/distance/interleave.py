@@ -116,10 +116,20 @@ class Interleave:
         # Build boundary matrices 
 
         for key in ['0', 'n', '2n']:
-            print(f"Building boundary matrix for F_{key}")
             B_dict = self.F(key).boundary_matrix(astype = 'map')
-            rows = list(self.F(key).nodes)
-            cols = list(self.F(key).edges)
+
+            vert_dict = self.val_to_verts['F'][key]
+            func_vals = list(vert_dict.keys())
+            func_vals.sort()
+            rows = [vert_dict[f] for f in func_vals]
+            rows = [item for sublist in rows for item in sublist]
+
+            edge_dict =  self.val_to_edges['F'][key]
+            func_vals = list(edge_dict.keys())
+            func_vals.sort()
+            cols = [edge_dict[f] for f in func_vals]
+            cols = [item for sublist in cols for item in sublist]
+
             self.B_['F'][key] = LM(rows = rows, cols = cols)
             for e in cols:
                 self.B_['F'][key][e[0], e] = 1
@@ -127,8 +137,19 @@ class Interleave:
 
         for key in ['0', 'n', '2n']:
             B_dict = self.G(key).boundary_matrix(astype = 'map')
-            rows = list(self.F(key).nodes)
-            cols = list(self.F(key).edges)
+
+            vert_dict = self.val_to_verts['G'][key]
+            func_vals = list(vert_dict.keys())
+            func_vals.sort()
+            rows = [vert_dict[f] for f in func_vals]
+            rows = [item for sublist in rows for item in sublist]
+
+            edge_dict =  self.val_to_edges['G'][key]
+            func_vals = list(edge_dict.keys())
+            func_vals.sort()
+            cols = [edge_dict[f] for f in func_vals]
+            cols = [item for sublist in cols for item in sublist]
+
             self.B_['G'][key] = LM(rows = rows, cols = cols)
             for e in cols:
                 self.B_['G'][key][e[0], e] = 1

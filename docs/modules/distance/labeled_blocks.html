@@ -330,6 +330,13 @@ A dictionary from function values to a list of row objects.</p></li>
 A dictionary from function values to a list of column objects.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>LabeledBlockMatrix</dt><dd><p>A block matrix with the same data as the labeled matrix.</p>
+</dd>
+</dl>
+</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -559,6 +566,34 @@ The seed for the random number generator.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.shape">
+<span class="sig-name descname"><span class="pre">shape</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.shape" title="Link to this definition"></a></dt>
+<dd><p>Return the shape of the block matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The shape of the block matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.T">
+<span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.T"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.T" title="Link to this definition"></a></dt>
+<dd><p>Transpose the block matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The labeled transposed block matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.max">
 <span class="sig-name descname"><span class="pre">max</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.max" title="Link to this definition"></a></dt>
 <dd><p>Get the maximum value of the block matrix.</p>
@@ -631,7 +666,19 @@ The seed for the random number generator.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.block_diag_NaN">
 <span class="sig-name descname"><span class="pre">block_diag_NaN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">arrs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.block_diag_NaN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.block_diag_NaN" title="Link to this definition"></a></dt>
-<dd><p>Create a block diagonal matrix from provided arrays. Modified from <cite>scipy.linalg.block_diag</cite> to put np.nan in the off-diagonal blocks.</p>
+<dd><p>Create a single matrix from provided arrays on the blocks. Modified from <cite>scipy.linalg.block_diag</cite> to put np.nan in the off-diagonal blocks instead of 0’s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*arrs</strong> – array-like
+The arrays to put on the diagonal.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The block diagonal matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -640,27 +687,35 @@ The seed for the random number generator.</p></li>
 <dd><p>Convert to a single block diagonal matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>LabeledMatrix</dt><dd><p>A labeled matrix with the same data as the block matrix.</p>
+<dd class="field-odd"><p>A labeled matrix with the same data as the block matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix">LabeledMatrix</a></p>
 </dd>
 </dl>
-</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.col_sum">
+<span class="sig-name descname"><span class="pre">col_sum</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.col_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.col_sum" title="Link to this definition"></a></dt>
+<dd><p>Returns the sum of each column in the block matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sum of each column in the block matrix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.array</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.check_column_sum">
-<span class="sig-name descname"><span class="pre">check_column_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.check_column_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.check_column_sum" title="Link to this definition"></a></dt>
-<dd><p>Check that the sum of each column is 1. TODO NOT YET UPDATED</p>
+<span class="sig-name descname"><span class="pre">check_column_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.check_column_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.check_column_sum" title="Link to this definition"></a></dt>
+<dd><p>Check that the sum of each column is 1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>matrix_dict</strong> – dict
-Either a dictionary with keys ‘rows’, ‘cols’, and ‘array’ that are lists of rows, columns, and a numpy array respectively), or a block dictionary where keys are function values and output is a dictionary of the above form.</p></li>
-<li><p><strong>verbose</strong> – bool
-Prints information on which matrices have columns that do not sum to 1 if True. The default is False.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>verbose</strong> (<em>bool</em>) – Prints information on which matrices have columns that do not sum to 1 if True. The default is False.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
@@ -681,8 +736,8 @@ Prints information on which matrices have columns that do not sum to 1 if True. 
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The axes to draw the matrix on. If None, the current axes will be used.</p></li>
 <li><p><strong>colorbar</strong> (<em>bool</em>) – Whether to draw a colorbar.</p></li>
-<li><p><strong>filltype</strong> (<em>str</em>) – Either ‘zeros’ or ‘nan’. If ‘zeros’, the off-diagonal blocks will be filled with zeros. If ‘nan’, the off-diagonal blocks will be filled with np.nan.</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword arguments to pass to ax.matshow.</p></li>
+<li><p><strong>filltype</strong> (<em>str</em>) – Either <code class="docutils literal notranslate"><span class="pre">zeros</span></code> or <code class="docutils literal notranslate"><span class="pre">nan</span></code>. If <code class="docutils literal notranslate"><span class="pre">zeros</span></code>, the off-diagonal blocks will be filled with zeros prior to drawing. If <code class="docutils literal notranslate"><span class="pre">nan</span></code>, the off-diagonal blocks will be filled with <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>, resulting in them showing up white.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments to pass to <code class="docutils literal notranslate"><span class="pre">ax.matshow</span></code>.</p></li>
 </ul>
 </dd>
 </dl>

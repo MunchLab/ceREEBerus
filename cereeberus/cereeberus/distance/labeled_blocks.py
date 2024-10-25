@@ -250,6 +250,10 @@ class LabeledMatrix:
                 A dictionary from function values to a list of row objects.
             col_val_to_verts : dict
                 A dictionary from function values to a list of column objects.
+        
+        Returns:
+            LabeledBlockMatrix
+                A block matrix with the same data as the labeled matrix.
         """
 
         all_keys = list(row_val_to_verts.keys()) | set(col_val_to_verts.keys())
@@ -575,6 +579,34 @@ class LabeledBlockMatrix:
                 result[i] = self.blocks[i] - other.blocks[i]
         
         return result
+    
+    def shape(self):
+        """
+        Return the shape of the block matrix.
+
+        Returns:
+            tuple: The shape of the block matrix.
+        """
+        try:
+            return (sum([self.blocks[i].shape()[0] for i in self.blocks.keys()]), sum([self.blocks[i].shape()[1] for i in self.blocks.keys()]))
+        except:
+            return (0,0)
+
+
+
+    def T(self):
+        """
+        Transpose the block matrix.
+
+        Returns:
+            LabeledBlockMatrix: The labeled transposed block matrix.
+        """
+        result = LabeledBlockMatrix()
+
+        for i in self.blocks.keys():
+            result[i] = self.blocks[i].T()
+        
+        return result
 
     def max(self):
         """
@@ -583,7 +615,10 @@ class LabeledBlockMatrix:
         Returns:
             float: The maximum value of the block matrix.
         """
-        return max([self.blocks[i].max() for i in self.blocks.keys()])
+        try :
+            return max([self.blocks[i].max() for i in self.blocks.keys()])
+        except:
+            return np.nan
     
     def absmax(self):
         """
@@ -592,7 +627,10 @@ class LabeledBlockMatrix:
         Returns:
             float: The maximum absolute value of the block matrix.
         """
-        return max([self.blocks[i].absmax() for i in self.blocks.keys()])
+        try:
+            return max([self.blocks[i].absmax() for i in self.blocks.keys()])
+        except:
+            return np.nan
     
     def get_all_rows(self):
         """
@@ -635,8 +673,14 @@ class LabeledBlockMatrix:
 
     def block_diag_NaN(self, *arrs):
         """
-        Create a block diagonal matrix from provided arrays. Modified from `scipy.linalg.block_diag` to put np.nan in the off-diagonal blocks.
+        Create a single matrix from provided arrays on the blocks. Modified from `scipy.linalg.block_diag` to put np.nan in the off-diagonal blocks instead of 0's.
 
+        Parameters:
+            *arrs : array-like
+                The arrays to put on the diagonal.
+    
+        Returns:
+            np.array: The block diagonal matrix.
 
         """
         if arrs == ():
@@ -666,7 +710,7 @@ class LabeledBlockMatrix:
         Convert to a single block diagonal matrix.
         
         returns:
-            LabeledMatrix 
+            LabeledMatrix :
                 A labeled matrix with the same data as the block matrix.
         """
 
@@ -684,15 +728,26 @@ class LabeledBlockMatrix:
         return LabeledMatrix(BigMatrix,rows, cols)
 
 
-    
-    def check_column_sum(self, matrix_dict, verbose = False):
+    def col_sum(self):
         """
-        Check that the sum of each column is 1. TODO NOT YET UPDATED
+        Returns the sum of each column in the block matrix.
+
+        Returns:
+            np.array: The sum of each column in the block matrix.
+        """
+        try:
+            sorted_keys = list(self.blocks.keys())
+            sorted_keys.sort()
+            return np.concatenate([self.blocks[i].col_sum() for i in sorted_keys])
+        except:
+            return []
+    
+    def check_column_sum(self, verbose = False):
+        """
+        Check that the sum of each column is 1.
 
         Parameters:
-            matrix_dict : dict
-                Either a dictionary with keys 'rows', 'cols', and 'array' that are lists of rows, columns, and a numpy array respectively), or a block dictionary where keys are function values and output is a dictionary of the above form. 
-            verbose : bool
+            verbose (bool):
                 Prints information on which matrices have columns that do not sum to 1 if True. The default is False.
 
         Returns:
@@ -700,22 +755,13 @@ class LabeledBlockMatrix:
                 True if the columns sum to 1, False otherwise.
         """
         
-        if 'array' in matrix_dict:
-            # This will be false if any of the columns does not sum to 1
-            check = np.all(matrix_dict['array'].sum(axis = 0) == 1)
-
-            if not check and verbose : 
-                print('The columns of the distance matrix do not sum to 1')
-
-        else:
-            for i in matrix_dict.keys():
-                D_small = matrix_dict[i]
-                check = np.all(D_small['array'].sum(axis = 0) == 1) 
-
-                if not check and verbose: 
-                    print(f'The columns of the distance matrix for function value {i} do not sum to 1')
-
-        return check
+        for i in self.blocks.keys():
+            if not self.blocks[i].is_col_sum_1():
+                if verbose:
+                    print(f"Column sum is not 1 for block {i}")
+                return False
+        
+        return True
 
     def draw(self, ax = None, colorbar = False, filltype = 'zero',  **kwargs):
         """
@@ -724,8 +770,8 @@ class LabeledBlockMatrix:
         Parameters:
             ax (matplotlib.axes.Axes): The axes to draw the matrix on. If None, the current axes will be used.
             colorbar (bool): Whether to draw a colorbar.
-            filltype (str): Either 'zeros' or 'nan'. If 'zeros', the off-diagonal blocks will be filled with zeros. If 'nan', the off-diagonal blocks will be filled with np.nan.
-            **kwargs: Additional keyword arguments to pass to ax.matshow.
+            filltype (str): Either ``zeros`` or ``nan``. If ``zeros``, the off-diagonal blocks will be filled with zeros prior to drawing. If ``nan``, the off-diagonal blocks will be filled with ``np.nan``, resulting in them showing up white.
+            **kwargs: Additional keyword arguments to pass to ``ax.matshow``.
         """
 
         self.to_labeled_matrix(filltype = filltype).draw(ax = ax, colorbar = colorbar, **kwargs)

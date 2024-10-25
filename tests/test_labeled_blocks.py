@@ -79,5 +79,39 @@ class TestBlockMatrixClasses(unittest.TestCase):
         self.assertTrue(np.isnan(EmptyMat.max()))
         print('got here')
 
-    def check_block_labeled_matrix(self):
-        pass
+    def test_block_labeled_matrix(self):
+        # Make the example from the front of the documentation 
+        cols_dict = {1: ['a','b'], 2: ['c','d','e']}
+        rows_dict = {0: ['u'], 1: ['v','w'], 2: ['x']}
+        map_dict = {'a': 'v', 'b':'v', 'c': 'x', 'd':'x', 'e':'x'}
+        lbm = LBM(map_dict, rows_dict, cols_dict)
+
+        # A second example with rows and columns switched
+        cols_dict = {0: ['u'], 1: ['v','w'], 2: ['x']}
+        rows_dict = {0: ['x','y'], 1: ['z','a','b'], 2: ['c'], 3: ['d','e']}
+        map_dict = {'u': 'y', 'v':'z', 'w': 'b', 'x':'c'}
+        lbm2 = LBM(map_dict, rows_dict, cols_dict)
+
+
+        # Check that the block matrix is the right size
+        self.assertEqual(lbm.shape(), (4,5))
+
+        # Make sure we can take a transpose 
+        lbm2T = lbm2.T()
+
+        # Make sure we can add 
+        lbm + lbm
+
+        # Make sure we can't add if the labels are different
+        with self.assertRaises(ValueError):
+            lbm + lbm2
+
+        # Make sure we can multiply, and that nothing freaks out if we have 
+        # both a block matrix and a labeled matrix in the multiplication 
+        lbm @ lbm.T() # Both block matrices
+
+        bm = lbm.to_labeled_matrix()
+
+        bm @ lbm.T() # Block matrix @ labeled matrix
+
+        lbm @ bm.T() # Labeled matrix @ block matrix
