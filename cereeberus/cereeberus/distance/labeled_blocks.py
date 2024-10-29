@@ -641,6 +641,35 @@ class LabeledBlockMatrix:
             return max([self.blocks[i].absmax() for i in self.blocks.keys()])
         except:
             return np.nan
+
+    def get_all_block_indices(self):
+        """
+        Get all the block indices in order.
+
+        Returns:
+            list: The block indices.
+        """
+        L = list(self.blocks.keys())
+        L.sort()
+        return L
+
+    def min_block_index(self):
+        """
+        Get the minimum block index.
+
+        Returns:
+            int: The minimum block index.
+        """
+        return min(self.blocks.keys())
+    
+    def max_block_index(self):
+        """
+        Get the maximum block index.
+
+        Returns:
+            int: The maximum block index.
+        """
+        return max(self.blocks.keys())
     
     def get_all_rows(self):
         """
@@ -649,8 +678,7 @@ class LabeledBlockMatrix:
         Returns:
             list: The row labels.
         """
-        all_keys = list(self.blocks.keys())
-        all_keys.sort()
+        all_keys =  self.get_all_block_indices()
 
         rows = [self.blocks[i].rows for i in all_keys]
 
@@ -665,8 +693,7 @@ class LabeledBlockMatrix:
         Returns:
             list: The col labels.
         """
-        all_keys = list(self.blocks.keys())
-        all_keys.sort()
+        all_keys =  self.get_all_block_indices()
 
         cols = [self.blocks[i].cols for i in all_keys]
 
@@ -724,7 +751,9 @@ class LabeledBlockMatrix:
                 A labeled matrix with the same data as the block matrix.
         """
 
-        arrays = [ self.blocks[i].array for i in self.blocks.keys()]
+
+        all_keys =  self.get_all_block_indices()
+        arrays = [ self.blocks[i].array for i in all_keys]
 
         if filltype == 'zero':
             BigMatrix = block_diag(*arrays)
@@ -748,6 +777,23 @@ class LabeledBlockMatrix:
 
         for i in self.blocks.keys():
             result[i] = self.blocks[i].to_indicator()
+        
+        return result
+
+    def to_shifted_blocks(self, shift):
+        """
+        Shift the blocks in the block matrix.
+
+        Parameters:
+            shift (int): The amount to shift the blocks.
+
+        Returns:
+            LabeledBlockMatrix: The block matrix with shifted blocks.
+        """
+        result = LabeledBlockMatrix()
+
+        for i in self.blocks.keys():
+            result[i + shift] = self.blocks[i]
         
         return result
 

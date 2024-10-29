@@ -34,7 +34,8 @@ class Interleave:
 
 
         # self.A = {'F':{}, 'G':{}} # adjacency matrix
-        self.B_ = {'F':{}, 'G':{}} # boundary matrix
+        self.B_down_ = {'F':{}, 'G':{}} # boundary matrix
+        self.B_up_ = {'F':{}, 'G':{}} # boundary matrix
         self.D_ = {'F':{}, 'G':{}} # distance matrix
         self.I_ = {'F':{}, 'G':{}} # induced maps
 
@@ -117,25 +118,47 @@ class Interleave:
         # ---
         # Build boundary matrices 
 
-        for key in ['0', 'n', '2n']:
+        for Graph, graph_name in [(self.F, 'F'), (self.G, 'G')]:
+            for key in ['0', 'n', '2n']:
 
-            rows = self.F(key).sorted_vertices()
-            cols = self.F(key).sorted_edges()
+                B_down = LBM()
+                B_up = LBM()
 
-            self.B_['F'][key] = LM(rows = rows, cols = cols)
-            for e in cols:
-                self.B_['F'][key][e[0], e] = 1
-                self.B_['F'][key][e[1], e] = 1
+                for i in self.val_to_verts[graph_name][key]:
+                    if i in self.val_to_edges[graph_name][key]:
+                        edges = self.val_to_edges[graph_name][key][i]
+                        verts_down = self.val_to_verts[graph_name][key][i]
+                        verts_up = self.val_to_verts[graph_name][key][i+1]
+                        B_down[i] = LM(rows = verts_down, cols = edges)
+                        B_up[i] = LM(rows = verts_up, cols = edges)
 
-        for key in ['0', 'n', '2n']:
+                        for e in edges:
+                            B_down[i][e[0],e] = 1
+                            B_up[i][e[1],e] = 1
 
-            rows = self.G(key).sorted_vertices()
-            cols = self.G(key).sorted_edges()
+                min_i = min(list(self.val_to_verts[graph_name][key].keys()))
+                max_i = max(list(self.val_to_verts[graph_name][key].keys()))
 
-            self.B_['G'][key] = LM(rows = rows, cols = cols)
-            for e in cols:
-                self.B_['G'][key][e[0], e] = 1
-                self.B_['G'][key][e[1], e] = 1
+                min_verts = self.val_to_verts[graph_name][key][min_i]
+                max_verts = self.val_to_verts[graph_name][key][max_i]
+
+                B_up[min_i-1] = LM(rows = min_verts, cols = [])
+                B_down[max_i] = LM(rows = max_verts, cols = [])
+
+                self.B_down_[graph_name][key] = B_down
+                self.B_up_[graph_name][key] = B_up
+
+                
+
+        # for key in ['0', 'n', '2n']:
+
+        #     rows = self.G(key).sorted_vertices()
+        #     cols = self.G(key).sorted_edges()
+
+        #     self.B_['G'][key] = LM(rows = rows, cols = cols)
+        #     for e in cols:
+        #         self.B_['G'][key][e[0], e] = 1
+        #         self.B_['G'][key][e[1], e] = 1
 
         # End boundary matrices
         # ---
@@ -294,7 +317,34 @@ class Interleave:
             key (str) : 
                 The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
         """
-        return self.B_[graph][key]
+        return self.B_down_[graph][key].to_labeled_matrix() + self.B_up_[graph][key].to_labeled_matrix()
+
+    def B_down(self, graph = 'F', key = '0'):
+        """
+        Get the downward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is a *lower* endpoint of edge :math:`e` and 0 otherwise.
+
+
+        Parameters:
+            graph (str) : 
+                The graph to get the boundary matrix for. Either ``'F'`` or ``'G'``.
+            key (str) : 
+                The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+        """
+        return self.B_down_[graph][key]
+
+    def B_up(self, graph = 'F', key = '0'):
+        """
+        Get the upward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an *upper* endpoint of edge :math:`e` and 0 otherwise.
+
+        Warning: This is stored as a block matrix but we need to be careful when multiplying due to the index shift! TODO TODO TODO 
+
+        Parameters:
+            graph (str) : 
+                The graph to get the boundary matrix for. Either ``'F'`` or ``'G'``.
+            key (str) : 
+                The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+        """
+        return self.B_up_[graph][key]
 
     def I(self, graph = 'F', key = '0', obj_type = 'V'):
         """
@@ -339,7 +389,7 @@ class Interleave:
 
     def psi(self, key = '0', obj_type = 'V'):
         """
-        Get the interleaving map :math:`\psi: G  \\to F^n` on either vertices or edges.
+        Get the interleaving map :math:`\\psi: G  \\to F^n` on either vertices or edges.
 
         Parameters:
             key (str) : 
@@ -590,7 +640,7 @@ class Interleave:
 
     def draw_phi(self, key = '0', obj_type = 'V', ax = None, **kwargs):
         """
-        Draw the map :math:`\psi: F \\to G^n`.
+        Draw the map :math:`\\psi: F \\to G^n`.
 
         Parameters:
             key (str) : 
@@ -618,7 +668,7 @@ class Interleave:
     
     def draw_psi(self, key = '0', obj_type = 'V', ax = None, **kwargs):
         """
-        Draw the map :math:`\psi: G \\to F^n`.
+        Draw the map :math:`\\psi: G \\to F^n`.
 
         Parameters:
             key (str) : 
@@ -682,7 +732,7 @@ class Interleave:
                                     draw = False, drawtype = 'all', 
                                     **kwargs):
         """
-        Check that the parallelogram for the pair :math:`(U_{\\tau_I}\subset U_{\sigma_i})` commutes.
+        Check that the parallelogram for the pair :math:`(U_{\\tau_I}\\subset U_{\\sigma_i})` commutes.
         This is the one that relates the edge maps to the vertex maps.
         (These are types 1 (when maptype = 'phi') and 2 (when maptype = 'psi') from Liz's Big List )
 
@@ -722,11 +772,11 @@ class Interleave:
         if draw and drawtype == 'all':
             fig, axs = plt.subplots(1, 4, figsize = (15, 5))
             Top.draw(ax = axs[0], vmin = -1, vmax = 1)
-            Top_title = f"${maptype_latex}_{{0,V}} \cdot B_{start_graph}$"
+            Top_title = f"${maptype_latex}_{{0,V}} \\cdot B_{start_graph}$"
             axs[0].set_title(Top_title)
 
             Bottom.draw(axs[1], vmin = -1, vmax = 1)
-            Bottom_title = f"$B_{end_graph} \cdot {maptype_latex}_{{0,E}}$"
+            Bottom_title = f"$B_{end_graph} \\cdot {maptype_latex}_{{0,E}}$"
             axs[1].set_title(Bottom_title)
 
             Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
@@ -734,7 +784,7 @@ class Interleave:
             axs[2].set_title(Result_title)
 
             Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr')
-            Result_Dist_title = f"$D_{{{end_graph},n,V}} \cdot ({Result_title[1:-1]})$"
+            Result_Dist_title = f"$D_{{{end_graph},n,V}} \\cdot ({Result_title[1:-1]})$"
             axs[3].set_title(Result_Dist_title)
 
         elif draw and drawtype == 'result':
@@ -795,11 +845,11 @@ class Interleave:
         if draw and drawtype == 'all':
             fig, axs = plt.subplots(1, 4, figsize = (15, 5))
             Top.draw(ax = axs[0], vmin = -1, vmax = 1)
-            Top_title = f"${maptype_latex}_{{n,{obj_type}}} \cdot I_{{0,{obj_type}}}$"
+            Top_title = f"${maptype_latex}_{{n,{obj_type}}} \\cdot I_{{0,{obj_type}}}$"
             axs[0].set_title(Top_title)
 
             Bottom.draw(axs[1], vmin = -1, vmax = 1)
-            Bottom_title = f"$I_{{n,{obj_type}}} \cdot {maptype_latex}_{{0,{obj_type}}}$"
+            Bottom_title = f"$I_{{n,{obj_type}}} \\cdot {maptype_latex}_{{0,{obj_type}}}$"
             axs[1].set_title(Bottom_title)
 
             Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
@@ -807,7 +857,7 @@ class Interleave:
             axs[2].set_title(Result_title)
 
             Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr')
-            Result_dist_title = f"$D_{{{end_graph},2n,{obj_type}}} \cdot ({Result_title[1:-1]})$"
+            Result_dist_title = f"$D_{{{end_graph},2n,{obj_type}}} \\cdot ({Result_title[1:-1]})$"
             axs[3].set_title(Result_dist_title)
 
         elif draw and drawtype == 'result':
@@ -864,11 +914,11 @@ class Interleave:
         if draw and drawtype == 'all':
             fig, axs = plt.subplots(1, 4, figsize = (15, 5))
             Top.draw(ax = axs[0], vmin = -1, vmax = 1)
-            Top_title = f"$I_{{0,{obj_type}}} \cdot I_{{n,{obj_type}}}$"
+            Top_title = f"$I_{{0,{obj_type}}} \\cdot I_{{n,{obj_type}}}$"
             axs[0].set_title(Top_title)
 
             Bottom.draw(axs[1], vmin = -1, vmax = 1)
-            Bottom_title = f"$I_{{n,{obj_type}}} \cdot I_{{2n,{obj_type}}}$"
+            Bottom_title = f"$I_{{n,{obj_type}}} \\cdot I_{{2n,{obj_type}}}$"
             axs[1].set_title(Bottom_title)
 
             Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
@@ -876,7 +926,7 @@ class Interleave:
             axs[2].set_title(Result_title)
 
             Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr')
-            Result_dist_title = f"$D_{{{start_graph},2n,{obj_type}}} \cdot ({Result_title[1:-1]})$"
+            Result_dist_title = f"$D_{{{start_graph},2n,{obj_type}}} \\cdot ({Result_title[1:-1]})$"
             axs[3].set_title(Result_dist_title)
 
         elif draw and drawtype == 'result':
