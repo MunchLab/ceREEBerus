@@ -800,6 +800,44 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
 
+
+<div class="viewcode-block" id="LabeledBlockMatrix.get_all_block_indices">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_block_indices">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_all_block_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all the block indices in order.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: The block indices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">L</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">L</span></div>
+
+
+<div class="viewcode-block" id="LabeledBlockMatrix.min_block_index">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.min_block_index">[docs]</a>
+    <span class="k">def</span> <span class="nf">min_block_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the minimum block index.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The minimum block index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+    
+<div class="viewcode-block" id="LabeledBlockMatrix.max_block_index">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.max_block_index">[docs]</a>
+    <span class="k">def</span> <span class="nf">max_block_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the maximum block index.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The maximum block index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
     
 <div class="viewcode-block" id="LabeledBlockMatrix.get_all_rows">
 <a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_rows">[docs]</a>
@@ -810,8 +848,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            list: The row labels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">all_keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">all_keys</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">get_all_block_indices</span><span class="p">()</span>
 
         <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">rows</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">]</span>
 
@@ -829,8 +866,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            list: The col labels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">all_keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">all_keys</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">get_all_block_indices</span><span class="p">()</span>
 
         <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cols</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">]</span>
 
@@ -897,7 +933,9 @@
 <span class="sd">                A labeled matrix with the same data as the block matrix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">arrays</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">array</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+
+        <span class="n">all_keys</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">get_all_block_indices</span><span class="p">()</span>
+        <span class="n">arrays</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">array</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">filltype</span> <span class="o">==</span> <span class="s1">&#39;zero&#39;</span><span class="p">:</span>
             <span class="n">BigMatrix</span> <span class="o">=</span> <span class="n">block_diag</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">)</span>
@@ -924,6 +962,26 @@
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">to_indicator</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="LabeledBlockMatrix.to_shifted_blocks">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.to_shifted_blocks">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_shifted_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shift</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shift the blocks in the block matrix.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            shift (int): The amount to shift the blocks.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix: The block matrix with shifted blocks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">LabeledBlockMatrix</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">shift</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         
         <span class="k">return</span> <span class="n">result</span></div>
 

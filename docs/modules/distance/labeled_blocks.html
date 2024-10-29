@@ -636,6 +636,48 @@ The seed for the random number generator.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_block_indices">
+<span class="sig-name descname"><span class="pre">get_all_block_indices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.get_all_block_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_block_indices" title="Link to this definition"></a></dt>
+<dd><p>Get all the block indices in order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The block indices.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.min_block_index">
+<span class="sig-name descname"><span class="pre">min_block_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.min_block_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.min_block_index" title="Link to this definition"></a></dt>
+<dd><p>Get the minimum block index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum block index.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.max_block_index">
+<span class="sig-name descname"><span class="pre">max_block_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.max_block_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.max_block_index" title="Link to this definition"></a></dt>
+<dd><p>Get the maximum block index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum block index.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_rows">
 <span class="sig-name descname"><span class="pre">get_all_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.get_all_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_all_rows" title="Link to this definition"></a></dt>
 <dd><p>Get all the row labels of the block matrix in order.</p>
@@ -719,6 +761,23 @@ The arrays to put on the diagonal.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.labeled_blocks.LabeledBlockMatrix.to_shifted_blocks">
+<span class="sig-name descname"><span class="pre">to_shifted_blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shift</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/labeled_blocks.html#LabeledBlockMatrix.to_shifted_blocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.to_shifted_blocks" title="Link to this definition"></a></dt>
+<dd><p>Shift the blocks in the block matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>shift</strong> (<em>int</em>) – The amount to shift the blocks.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The block matrix with shifted blocks.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
 </dd>
 </dl>
 </dd></dl>

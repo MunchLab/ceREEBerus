@@ -159,6 +159,35 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.B_down">
+<span class="sig-name descname"><span class="pre">B_down</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.B_down"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.B_down" title="Link to this definition"></a></dt>
+<dd><p>Get the downward boundary matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(B[v,e]\)</span> equal to 1 if vertex <span class="math notranslate nohighlight">\(v\)</span> is a <em>lower</em> endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and 0 otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<em>str</em>) – The graph to get the boundary matrix for. Either <code class="docutils literal notranslate"><span class="pre">'F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'G'</span></code>.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.B_up">
+<span class="sig-name descname"><span class="pre">B_up</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.B_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.B_up" title="Link to this definition"></a></dt>
+<dd><p>Get the upward boundary matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(B[v,e]\)</span> equal to 1 if vertex <span class="math notranslate nohighlight">\(v\)</span> is an <em>upper</em> endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and 0 otherwise.</p>
+<p>Warning: This is stored as a block matrix but we need to be careful when multiplying due to the index shift! TODO TODO TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<em>str</em>) – The graph to get the boundary matrix for. Either <code class="docutils literal notranslate"><span class="pre">'F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'G'</span></code>.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.I">
 <span class="sig-name descname"><span class="pre">I</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.I"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.I" title="Link to this definition"></a></dt>
 <dd><p>Get the induced map from one Mapper graph to another, specifically from <code class="docutils literal notranslate"><span class="pre">graph_key</span></code> to <code class="docutils literal notranslate"><span class="pre">graph_(key+n)</span></code> sending <code class="docutils literal notranslate"><span class="pre">obj_type</span></code> to the same type. For example, <code class="docutils literal notranslate"><span class="pre">I('G',</span> <span class="pre">'n',</span> <span class="pre">'E')</span></code> is the map for edges from <span class="math notranslate nohighlight">\(G_n\)</span> to <span class="math notranslate nohighlight">\(G_{2n}\)</span>.</p>
