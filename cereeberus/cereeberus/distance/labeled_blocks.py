@@ -172,6 +172,16 @@ class LabeledMatrix:
         j = self.cols.index(col_key)
         self.array[i,j] = value
 
+    def get_array(self):
+        """
+        Get the array of the matrix.
+
+        Returns:
+            np.array: The array of the matrix.
+        """
+        return self.array
+
+    
     def max(self):
         """
         Get the maximum value of the matrix.
@@ -617,6 +627,18 @@ class LabeledBlockMatrix:
             result[i] = self.blocks[i].T()
         
         return result
+    
+    def get_array(self, block_index):
+        """
+        Get the array of the block matrix at the given block index.
+
+        Parameters:
+            block_index (int): The block index to get the array from.
+
+        Returns:
+            np.array: The array of the block matrix at the given block index.
+        """
+        return self.blocks[block_index].array
 
     def max(self):
         """
