@@ -174,7 +174,7 @@ class LabeledMatrix:
 
     def get_array(self):
         """
-        Get the array of the matrix.
+        Get the array of the matrix. Works on the big matrix as well as the blocks.
 
         Returns:
             np.array: The array of the matrix.
