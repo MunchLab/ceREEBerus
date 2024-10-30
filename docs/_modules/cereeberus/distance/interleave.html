@@ -1,24 +1,22 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>cereeberus.distance.interleave &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -89,6 +87,8 @@
 <span class="sd">    A class to bound the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G` throughout.</span>
 
 <span class="sd">    We use keys ``[&#39;0&#39;, &#39;n&#39;, &#39;2n&#39;]`` to denote the Mapper graphs :math:`F = F_0`, :math:`F_n`, and :math:`F_{2n}` and similarly for :math:`G`.</span>
+
+<span class="sd">    Note that the difference in the ranges of the two Mapper graphs must be within ``&#39;n&#39;``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Interleave.__init__">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.__init__">[docs]</a>
@@ -108,6 +108,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+
+        <span class="c1"># --- Check that the ranges are compatible</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">min_f</span><span class="p">()</span><span class="o">-</span><span class="n">G</span><span class="o">.</span><span class="n">min_f</span><span class="p">())</span> <span class="o">&gt;</span> <span class="n">n</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">max_f</span><span class="p">()</span><span class="o">-</span><span class="n">G</span><span class="o">.</span><span class="n">max_f</span><span class="p">())</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Function values for F and G are too far apart to interleave with n = </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">. Try initializing with a larger n.&quot;</span><span class="p">)</span>
 
         <span class="c1"># ---</span>
         <span class="c1"># Containers for matrices for later </span>
@@ -874,19 +878,26 @@
 
 <div class="viewcode-block" id="Interleave.parallelogram_Edge_Vert">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert">[docs]</a>
-    <span class="k">def</span> <span class="nf">parallelogram_Edge_Vert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> 
-                                    <span class="n">draw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">drawtype</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">parallelogram_Edge_Vert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">up_or_down</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span>
+                                    <span class="n">draw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  
+                                    <span class="n">drawtype</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span> 
                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check that the parallelogram for the pair :math:`(U_{\\tau_I}\\subset U_{\\sigma_i})` commutes.</span>
 <span class="sd">        This is the one that relates the edge maps to the vertex maps.</span>
 <span class="sd">        (These are types 1 (when maptype = &#39;phi&#39;) and 2 (when maptype = &#39;psi&#39;) from Liz&#39;s Big List )</span>
 
+<span class="sd">        If ``func_val`` is not None, we will only check the parallelogram for that function value. Because a function value has both an up and down version, we need to specify which one we want to check with the ``up_or_down`` parameter.</span>
+
 <span class="sd">        Parameters:</span>
 <span class="sd">            maptype (str) : </span>
 <span class="sd">                The type of map. Either ``&#39;phi&#39;`` or ``&#39;psi&#39;``.</span>
 <span class="sd">            returntype (str) : </span>
 <span class="sd">                The type of return. Either ``&#39;dist&#39;`` if you want the matrix that gives the thickening required to make the diagram commute; or ``&#39;commute&#39;`` to just give the map mismatch.</span>
+<span class="sd">            func_val (int) :</span>
+<span class="sd">                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</span>
+<span class="sd">            up_or_down (str) :</span>
+<span class="sd">                Whether to check the up or down version of the parallelogram. Either ``&#39;up&#39;`` or ``&#39;down&#39;``. Default is ``&#39;down&#39;``.</span>
 <span class="sd">            draw (bool) : </span>
 <span class="sd">                Whether to draw the maps. Default is ``False``.</span>
 <span class="sd">            drawtype (str) : </span>
@@ -908,12 +919,27 @@
             <span class="n">end_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span>
             <span class="n">maptype_latex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\psi&#39;</span>
 
-        <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">func_val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
 
-        <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span> 
-        <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
+            <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span> 
+            <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
 
-        <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="n">Result</span>
+            <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="n">Result</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">if</span> <span class="n">up_or_down</span> <span class="o">==</span> <span class="s1">&#39;down&#39;</span><span class="p">:</span> <span class="c1"># tau_i \to \sigma_i</span>
+                <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_down</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span>
+                <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_down</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span>
+                <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
+                <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="n">Result</span>
+            <span class="k">elif</span> <span class="n">up_or_down</span> <span class="o">==</span> <span class="s1">&#39;up&#39;</span><span class="p">:</span> <span class="c1"># \tau_i \to \sigma_{i+1}</span>
+                <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)[</span><span class="n">func_val</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_up</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span>
+                <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_up</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span>
+                <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
+                <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)[</span><span class="n">func_val</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">@</span> <span class="n">Result</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown up_or_down </span><span class="si">{</span><span class="n">up_or_down</span><span class="si">}</span><span class="s2">. Must be &#39;up&#39; or &#39;down&#39;.&quot;</span><span class="p">)</span>
+
 
         <span class="k">if</span> <span class="n">draw</span> <span class="ow">and</span> <span class="n">drawtype</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
             <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -951,13 +977,15 @@
 <div class="viewcode-block" id="Interleave.parallelogram">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram">[docs]</a>
     <span class="k">def</span> <span class="nf">parallelogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
-                            <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> 
+                            <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                             <span class="n">draw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
                             <span class="n">drawtype</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">):</span>
 <span class="w">                            </span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the paralellograms for checking that it&#39;s a nat trans.</span>
 <span class="sd">        These are types 3-6 from Liz&#39;s Big List. </span>
+
+<span class="sd">        If ``func_val`` is not None, we will only check the parallelogram for that function value.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            maptype (str) : </span>
@@ -966,6 +994,8 @@
 <span class="sd">                The type of object. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
 <span class="sd">            returntype (str) : </span>
 <span class="sd">                The type of return. Either ``&#39;dist&#39;`` if you want the matrix that gives the thickenin grequired to make the diagram commute; or ``&#39;commute&#39;`` to just give the map mismatch.</span>
+<span class="sd">            func_val (int) :</span>
+<span class="sd">                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</span>
 <span class="sd">            draw (bool) : </span>
 <span class="sd">                Whether to draw the maps. Default is False.</span>
 <span class="sd">            drawtype (str) : </span>
@@ -985,12 +1015,19 @@
             <span class="n">end_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span>
             <span class="n">maptype_latex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\psi&#39;</span>
 
-        <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
-        <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
-        <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
-        <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="n">Result</span>
+        <span class="k">if</span> <span class="n">func_val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
+            <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
+            <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
+            <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="n">Result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Do this for a single input function value</span>
+            <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span>
+            <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span>
+            <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
+            <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="n">Result</span>
 
-
+        <span class="c1"># --- Drawing--- #</span>
         <span class="k">if</span> <span class="n">draw</span> <span class="ow">and</span> <span class="n">drawtype</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
             <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
             <span class="n">Top</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
@@ -1025,9 +1062,13 @@
 
 <div class="viewcode-block" id="Interleave.triangle">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.triangle">[docs]</a>
-    <span class="k">def</span> <span class="nf">triangle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span>  <span class="n">draw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">drawtype</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">triangle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
+                        <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+                        <span class="n">draw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">drawtype</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the triangle for checking that it&#39;s an interleaving </span>
+<span class="sd">        Get the triangle for checking that it&#39;s an interleaving. </span>
+
+<span class="sd">        If ``func_val`` is not None, we will only check the parallelogram for that function value.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            start_graph (str) : </span>
@@ -1036,6 +1077,8 @@
 <span class="sd">                The type of object. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
 <span class="sd">            returntype (str) : </span>
 <span class="sd">                The type of return. Either ``&#39;dist&#39;`` if you want the matrix that gives the thickenin grequired to make the diagram commute; or ``&#39;commute&#39;`` to just give the map mismatch.</span>
+<span class="sd">            func_val (int) :</span>
+<span class="sd">                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</span>
 <span class="sd">            draw (bool) : </span>
 <span class="sd">                Whether to draw the maps. Default is False.</span>
 <span class="sd">            drawtype (str) : </span>
@@ -1057,11 +1100,19 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown start_graph </span><span class="si">{</span><span class="n">start_graph</span><span class="si">}</span><span class="s2">. Must be &#39;F&#39; or &#39;G&#39;.&quot;</span><span class="p">)</span>
 
-        <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
-        <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">map2</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">map1</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)</span>
-        <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
+        <span class="k">if</span> <span class="n">func_val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
+            <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">map2</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">map1</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)</span>
+            <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
 
-        <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="n">Result</span>
+            <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="n">Result</span>
+        
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span>
+            <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">map2</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">map1</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span>
+            <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
+
+            <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="n">Result</span>
 
         <span class="k">if</span> <span class="n">draw</span> <span class="ow">and</span> <span class="n">drawtype</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
             <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -1128,9 +1179,108 @@
                 <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">loss_list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Interleave.loss_by_block">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.loss_by_block">[docs]</a>
+    <span class="k">def</span> <span class="nf">loss_by_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the loss for each block of the interleaving distance. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict : </span>
+<span class="sd">                A dictionary with the loss for each block.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># This is not at all done yet, consider this a placeholder!</span>
+        <span class="n">all_func_vals</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">()</span><span class="o">.</span><span class="n">get_function_values</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">()</span><span class="o">.</span><span class="n">get_function_values</span><span class="p">())</span> 
+        <span class="n">all_func_vals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">all_func_vals</span><span class="p">)</span>
+        <span class="n">all_func_vals</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="n">loss_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_func_vals</span><span class="p">:</span>
+            <span class="c1">#====</span>
+            <span class="c1"># Check the matrices with F(\sigma_i) or G(\sigma_i) in the top left </span>
+            <span class="c1">#====</span>
+            <span class="n">loss_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># -- Type 3, 5. Vertex type parallelogram </span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Graph</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">,</span> <span class="n">maptype</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;phi&#39;</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;psi&#39;</span><span class="p">)]:</span>
+                <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">get_function_values</span><span class="p">():</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">maptype</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+                    <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># This catch is because the two graphs might have different ranges of function values</span>
+                    <span class="k">pass</span> 
+
+            <span class="c1"># -- Type 7, 9. Vertex type triangle</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Graph</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">)]:</span>
+                <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">get_function_values</span><span class="p">():</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">triangle</span><span class="p">(</span><span class="n">start_graph</span> <span class="o">=</span> <span class="n">graph_name</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+                    <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># This catch is because the two graphs might have different ranges of function values</span>
+                    <span class="k">pass</span>
+            
+            <span class="c1">#====</span>
+            <span class="c1"># Check the matrices with F(\tau_i) or G(\tau_i) in the top left </span>
+            <span class="c1">#====</span>
+
+            <span class="c1"># -- Type 1, 2. Mixed type parallelogram </span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Graph</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">,</span> <span class="n">maptype</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;phi&#39;</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;psi&#39;</span><span class="p">)]:</span>
+                <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span>
+                <span class="n">edge_vals</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">get_function_values</span><span class="p">()</span>
+                <span class="n">edge_vals</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">edge_vals</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">edge_vals</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">edge_vals</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram_Edge_Vert</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">maptype</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+                    <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># This catch is because the two graphs might have different ranges of function values</span>
+                    <span class="k">pass</span>
+
+            <span class="c1"># -- Type 4, 6. Edge type parallelogram</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Graph</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">,</span> <span class="n">maptype</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s2">&quot;phi&quot;</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s2">&quot;psi&quot;</span><span class="p">)]:</span>
+                <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span>
+                <span class="n">edge_vals</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">get_function_values</span><span class="p">()</span>
+                <span class="n">edge_vals</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">edge_vals</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">edge_vals</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">edge_vals</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">maptype</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+                    <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># This catch is because the two graphs might have different ranges of function values </span>
+                    <span class="k">pass</span>
+
+            <span class="c1"># -- Type 8, 10. Edge type triangle </span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Graph</span><span class="p">,</span> <span class="n">graph_name</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">)]:</span>
+                <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span>
+                <span class="n">edge_vals</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">get_function_values</span><span class="p">()</span>
+                <span class="n">edge_vals</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">edge_vals</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">edge_vals</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">edge_vals</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">triangle</span><span class="p">(</span><span class="n">start_graph</span> <span class="o">=</span> <span class="n">graph_name</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+                    <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># This catch is because the two graphs might have different ranges of function values</span>
+                    <span class="k">pass</span>
+
+            <span class="c1"># Store the max loss for this function value </span>
+            <span class="n">loss_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">loss_list</span><span class="p">)</span>
+
+
+        <span class="c1"># Get max loss over all function values</span>
+        <span class="c1"># flatten the dictionary</span>
+        <span class="n">loss_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">loss_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">loss_list</span><span class="p">)</span></div>
 </div>
 
-        
+
 </pre></div>
 
            </div>

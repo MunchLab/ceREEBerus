@@ -11,6 +11,8 @@ class Interleave:
     A class to bound the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G` throughout.
 
     We use keys ``['0', 'n', '2n']`` to denote the Mapper graphs :math:`F = F_0`, :math:`F_n`, and :math:`F_{2n}` and similarly for :math:`G`.
+
+    Note that the difference in the ranges of the two Mapper graphs must be within ``'n'``.
     """
     def __init__(self, F, G, 
                         n = 1, 
@@ -28,6 +30,10 @@ class Interleave:
         """
         
         self.n = n
+
+        # --- Check that the ranges are compatible
+        if np.abs(F.min_f()-G.min_f()) > n or np.abs(F.max_f()-G.max_f()) > n:
+            raise ValueError(f"Function values for F and G are too far apart to interleave with n = {n}. Try initializing with a larger n.")
 
         # ---
         # Containers for matrices for later 
@@ -728,19 +734,26 @@ class Interleave:
     # ==========
     # Functions for checking commutative diagrams 
 
-    def parallelogram_Edge_Vert(self, maptype = 'phi', returntype = 'dist', 
-                                    draw = False, drawtype = 'all', 
+    def parallelogram_Edge_Vert(self, maptype = 'phi', returntype = 'dist', func_val = None, up_or_down = 'down',
+                                    draw = False,  
+                                    drawtype = 'all', 
                                     **kwargs):
         """
         Check that the parallelogram for the pair :math:`(U_{\\tau_I}\\subset U_{\\sigma_i})` commutes.
         This is the one that relates the edge maps to the vertex maps.
         (These are types 1 (when maptype = 'phi') and 2 (when maptype = 'psi') from Liz's Big List )
 
+        If ``func_val`` is not None, we will only check the parallelogram for that function value. Because a function value has both an up and down version, we need to specify which one we want to check with the ``up_or_down`` parameter.
+
         Parameters:
             maptype (str) : 
                 The type of map. Either ``'phi'`` or ``'psi'``.
             returntype (str) : 
                 The type of return. Either ``'dist'`` if you want the matrix that gives the thickening required to make the diagram commute; or ``'commute'`` to just give the map mismatch.
+            func_val (int) :
+                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.
+            up_or_down (str) :
+                Whether to check the up or down version of the parallelogram. Either ``'up'`` or ``'down'``. Default is ``'down'``.
             draw (bool) : 
                 Whether to draw the maps. Default is ``False``.
             drawtype (str) : 
@@ -762,12 +775,27 @@ class Interleave:
             end_graph = 'F'
             maptype_latex = r'\psi'
 
-        Top = self.get_interleaving_map(maptype, '0', 'V') @ self.B(start_graph, '0')
+        if func_val is None:
+            Top = self.get_interleaving_map(maptype, '0', 'V') @ self.B(start_graph, '0')
 
-        Bottom = self.B(end_graph, 'n') @ self.get_interleaving_map(maptype, '0', 'E') 
-        Result = Top - Bottom
+            Bottom = self.B(end_graph, 'n') @ self.get_interleaving_map(maptype, '0', 'E') 
+            Result = Top - Bottom
 
-        Result_Dist = self.D(end_graph, 'n', 'V') @ Result
+            Result_Dist = self.D(end_graph, 'n', 'V') @ Result
+        else: 
+            if up_or_down == 'down': # tau_i \to \sigma_i
+                Top = self.get_interleaving_map(maptype, '0', 'V')[func_val] @ self.B_down(start_graph, '0')[func_val]
+                Bottom = self.B_down(end_graph, 'n')[func_val] @ self.get_interleaving_map(maptype, '0', 'E')[func_val]
+                Result = Top - Bottom
+                Result_Dist = self.D(end_graph, 'n', 'V')[func_val] @ Result
+            elif up_or_down == 'up': # \tau_i \to \sigma_{i+1}
+                Top = self.get_interleaving_map(maptype, '0', 'V')[func_val+1] @ self.B_up(start_graph, '0')[func_val]
+                Bottom = self.B_up(end_graph, 'n')[func_val] @ self.get_interleaving_map(maptype, '0', 'E')[func_val]
+                Result = Top - Bottom
+                Result_Dist = self.D(end_graph, 'n', 'V')[func_val+1] @ Result
+            else:
+                raise ValueError(f"Unknown up_or_down {up_or_down}. Must be 'up' or 'down'.")
+
 
         if draw and drawtype == 'all':
             fig, axs = plt.subplots(1, 4, figsize = (15, 5))
@@ -802,13 +830,15 @@ class Interleave:
     #---
 
     def parallelogram(self, maptype = 'phi', obj_type = 'V', 
-                            returntype = 'dist', 
+                            returntype = 'dist', func_val = None, 
                             draw = False, 
                             drawtype = 'all'):
                             
         """
         Get the paralellograms for checking that it's a nat trans.
         These are types 3-6 from Liz's Big List. 
+
+        If ``func_val`` is not None, we will only check the parallelogram for that function value.
 
         Parameters:
             maptype (str) : 
@@ -817,6 +847,8 @@ class Interleave:
                 The type of object. Either ``'V'`` or ``'E'``.
             returntype (str) : 
                 The type of return. Either ``'dist'`` if you want the matrix that gives the thickenin grequired to make the diagram commute; or ``'commute'`` to just give the map mismatch.
+            func_val (int) :
+                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.
             draw (bool) : 
                 Whether to draw the maps. Default is False.
             drawtype (str) : 
@@ -836,12 +868,19 @@ class Interleave:
             end_graph = 'F'
             maptype_latex = r'\psi'
 
-        Top = self.get_interleaving_map(maptype, 'n', obj_type) @ self.I(start_graph, '0', obj_type)
-        Bottom = self.I(end_graph, 'n', obj_type) @ self.get_interleaving_map(maptype, '0', obj_type)
-        Result = Top - Bottom
-        Result_Dist = self.D(end_graph, '2n', obj_type) @ Result
+        if func_val is None:
+            Top = self.get_interleaving_map(maptype, 'n', obj_type) @ self.I(start_graph, '0', obj_type)
+            Bottom = self.I(end_graph, 'n', obj_type) @ self.get_interleaving_map(maptype, '0', obj_type)
+            Result = Top - Bottom
+            Result_Dist = self.D(end_graph, '2n', obj_type) @ Result
+        else:
+            # Do this for a single input function value
+            Top = self.get_interleaving_map(maptype, 'n', obj_type)[func_val] @ self.I(start_graph, '0', obj_type)[func_val]
+            Bottom = self.I(end_graph, 'n', obj_type)[func_val] @ self.get_interleaving_map(maptype, '0', obj_type)[func_val]
+            Result = Top - Bottom
+            Result_Dist = self.D(end_graph, '2n', obj_type)[func_val] @ Result
 
-
+        # --- Drawing--- #
         if draw and drawtype == 'all':
             fig, axs = plt.subplots(1, 4, figsize = (15, 5))
             Top.draw(ax = axs[0], vmin = -1, vmax = 1)
@@ -873,9 +912,13 @@ class Interleave:
         else:
             raise ValueError(f"Unknown returntype {returntype}. Must be 'dist' or 'commute'.")
 
-    def triangle(self, start_graph = 'F', obj_type = 'V', returntype = 'dist',  draw = False, drawtype = 'all'):
+    def triangle(self, start_graph = 'F', obj_type = 'V', 
+                        returntype = 'dist', func_val = None, 
+                        draw = False, drawtype = 'all'):
         """
-        Get the triangle for checking that it's an interleaving 
+        Get the triangle for checking that it's an interleaving. 
+
+        If ``func_val`` is not None, we will only check the parallelogram for that function value.
 
         Parameters:
             start_graph (str) : 
@@ -884,6 +927,8 @@ class Interleave:
                 The type of object. Either ``'V'`` or ``'E'``.
             returntype (str) : 
                 The type of return. Either ``'dist'`` if you want the matrix that gives the thickenin grequired to make the diagram commute; or ``'commute'`` to just give the map mismatch.
+            func_val (int) :
+                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.
             draw (bool) : 
                 Whether to draw the maps. Default is False.
             drawtype (str) : 
@@ -905,11 +950,19 @@ class Interleave:
         else:
             raise ValueError(f"Unknown start_graph {start_graph}. Must be 'F' or 'G'.")
 
-        Top = self.I(start_graph, 'n', obj_type) @ self.I(start_graph, '0', obj_type)
-        Bottom = self.get_interleaving_map(maptype = map2, key = 'n', obj_type = obj_type) @ self.get_interleaving_map(maptype = map1, key = '0', obj_type = obj_type)
-        Result = Top - Bottom
+        if func_val is None:
+            Top = self.I(start_graph, 'n', obj_type) @ self.I(start_graph, '0', obj_type)
+            Bottom = self.get_interleaving_map(maptype = map2, key = 'n', obj_type = obj_type) @ self.get_interleaving_map(maptype = map1, key = '0', obj_type = obj_type)
+            Result = Top - Bottom
 
-        Result_Dist = self.D(start_graph, '2n', obj_type) @ Result
+            Result_Dist = self.D(start_graph, '2n', obj_type) @ Result
+        
+        else:
+            Top = self.I(start_graph, 'n', obj_type)[func_val] @ self.I(start_graph, '0', obj_type)[func_val]
+            Bottom = self.get_interleaving_map(maptype = map2, key = 'n', obj_type = obj_type)[func_val] @ self.get_interleaving_map(maptype = map1, key = '0', obj_type = obj_type)[func_val]
+            Result = Top - Bottom
+
+            Result_Dist = self.D(start_graph, '2n', obj_type)[func_val] @ Result
 
         if draw and drawtype == 'all':
             fig, axs = plt.subplots(1, 4, figsize = (15, 5))
@@ -973,4 +1026,100 @@ class Interleave:
                 loss_list.append(loss)
 
         return max(loss_list)
-        
+
+    def loss_by_block(self):
+        """
+        Computes the loss for each block of the interleaving distance. 
+
+        Returns:
+            dict : 
+                A dictionary with the loss for each block.
+        """
+
+        # This is not at all done yet, consider this a placeholder!
+        all_func_vals = set(self.F().get_function_values()) | set(self.G().get_function_values()) 
+        all_func_vals = list(all_func_vals)
+        all_func_vals.sort()
+
+        loss_dict = {}
+
+        for i in all_func_vals:
+            #====
+            # Check the matrices with F(\sigma_i) or G(\sigma_i) in the top left 
+            #====
+            loss_list = []
+
+            # -- Type 3, 5. Vertex type parallelogram 
+            for (Graph, graph_name, maptype) in [(self.F, 'F', 'phi'), (self.G, 'G', 'psi')]:
+                obj_type = 'V'
+                if i in Graph().get_function_values():
+                    result = self.parallelogram(maptype = maptype, obj_type = obj_type, func_val = i)
+                    loss = result.absmax()
+                    loss_list.append(loss)
+                else:
+                    # This catch is because the two graphs might have different ranges of function values
+                    pass 
+
+            # -- Type 7, 9. Vertex type triangle
+            for (Graph, graph_name) in [(self.F, 'F'), (self.G, 'G')]:
+                obj_type = 'V'
+                if i in Graph().get_function_values():
+                    result = self.triangle(start_graph = graph_name, obj_type = obj_type, func_val = i)
+                    loss = result.absmax()
+                    loss_list.append(loss)
+                else:
+                    # This catch is because the two graphs might have different ranges of function values
+                    pass
+            
+            #====
+            # Check the matrices with F(\tau_i) or G(\tau_i) in the top left 
+            #====
+
+            # -- Type 1, 2. Mixed type parallelogram 
+            for (Graph, graph_name, maptype) in [(self.F, 'F', 'phi'), (self.G, 'G', 'psi')]:
+                obj_type = 'E'
+                edge_vals = Graph().get_function_values()
+                edge_vals.pop(edge_vals.index(max(edge_vals)))
+                if i in edge_vals:
+                    result = self.parallelogram_Edge_Vert(maptype = maptype, obj_type = obj_type, func_val = i)
+                    loss = result.absmax()
+                    loss_list.append(loss)
+                else:
+                    # This catch is because the two graphs might have different ranges of function values
+                    pass
+
+            # -- Type 4, 6. Edge type parallelogram
+            for (Graph, graph_name, maptype) in [(self.F, 'F', "phi"), (self.G, 'G', "psi")]:
+                obj_type = 'E'
+                edge_vals = Graph().get_function_values()
+                edge_vals.pop(edge_vals.index(max(edge_vals)))
+                if i in edge_vals:
+                    result = self.parallelogram(maptype = maptype, obj_type = obj_type, func_val = i)
+                    loss = result.absmax()
+                    loss_list.append(loss)
+                else:
+                    # This catch is because the two graphs might have different ranges of function values 
+                    pass
+
+            # -- Type 8, 10. Edge type triangle 
+            for (Graph, graph_name) in [(self.F, 'F'), (self.G, 'G')]:
+                obj_type = 'E'
+                edge_vals = Graph().get_function_values()
+                edge_vals.pop(edge_vals.index(max(edge_vals)))
+                if i in edge_vals:
+                    result = self.triangle(start_graph = graph_name, obj_type = obj_type, func_val = i)
+                    loss = result.absmax()
+                    loss_list.append(loss)
+                else:
+                    # This catch is because the two graphs might have different ranges of function values
+                    pass
+
+            # Store the max loss for this function value 
+            loss_dict[i] = max(loss_list)
+
+
+        # Get max loss over all function values
+        # flatten the dictionary
+        loss_list = list(loss_dict.values())
+        return max(loss_list)
+

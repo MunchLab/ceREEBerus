@@ -67,6 +67,39 @@ class ReebGraph(nx.MultiDiGraph):
     # Methods for getting info about the Reeb graph and its nodes
     #-----------------#
 
+    def get_function_values(self):
+        """
+        Get the function values of the nodes in the Reeb graph.
+
+        Returns:
+            list
+                A sorted list of function values.
+        """
+        L =  [self.f[v] for v in self.nodes]
+        L.sort()
+        return L
+
+    def min_f(self):
+        """
+        Get the minimum function value in the Reeb graph.
+
+        Returns:
+            float
+                The minimum function value.
+        """
+        return min(self.f.values())
+        
+    def max_f(self):
+        """
+        Get the maximum function value in the Reeb graph.
+
+        Returns:
+            float
+                The maximum function value.
+        """
+        return max(self.f.values())
+    
+
     def up_degree(self, node):
         """Get the up degree of a node.
 
