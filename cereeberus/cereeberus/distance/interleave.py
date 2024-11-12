@@ -1123,3 +1123,18 @@ class Interleave:
         loss_list = list(loss_dict.values())
         return max(loss_list)
 
+
+    def all_func_vals(self):
+        """
+        Get all the function values that are in the graphs. 
+
+        Returns:
+            list : 
+                A list of all the function values.
+        """
+
+        all_func_vals = set(self.F().get_function_values()) | set(self.G().get_function_values()) 
+        all_func_vals = list(all_func_vals)
+        all_func_vals.sort()
+
+        return all_func_vals
