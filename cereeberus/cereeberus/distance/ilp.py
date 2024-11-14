@@ -292,7 +292,7 @@ def solve_ilp(myInt):
 
     
 
-    prob.writeLP("model.lp")  # Write the model in LP format
+    # prob.writeLP("model.lp")  # Write the model in LP format
 
 
 
