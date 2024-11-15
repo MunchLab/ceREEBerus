@@ -409,7 +409,7 @@ class LabeledBlockMatrix:
 
     """
     def __init__(self, map_dict = None, rows_dict = None, cols_dict = None, 
-                        random_initialize = False, 
+                        random_initialize = False, labled_matrix_dict = None,
                         seed = None):
         """
         Initialize the LabeledBlockMatrix with LabeledMatrix objects for each integer.
@@ -428,16 +428,27 @@ class LabeledBlockMatrix:
                 A dictionary from column objects to row objects.
             random_initialize : bool
                 Whether to randomly initialize the matrix.
+            labeled_matrix_dict : bool
+                Whether to initialize the block matrix from a dictionary of LabeledMatrix objects.
             seed : int
                 The seed for the random number generator.
         """
 
         self.blocks = {}
 
+        if labled_matrix_dict is not None: # Initialize from a dictionary of LabeledMatrix objects
+            # make sure all the other dicts are none
+            if rows_dict is not None or cols_dict is not None or map_dict is not None or random_initialize:
+                raise ValueError("Cannot initialize from a dictionary of LabeledMatrix objects and other dictionaries. random initialization must be False.")
+            
+            for i in labled_matrix_dict.keys():
+                self.blocks[i] = labled_matrix_dict[i]
 
         if rows_dict is not None:
             all_keys = list(set(rows_dict.keys()) | set(cols_dict.keys()))
             all_keys.sort()
+
+
 
             for i in all_keys:
                 # i is the function value of the vertices 
@@ -869,3 +880,30 @@ class LabeledBlockMatrix:
         self.to_labeled_matrix(filltype = filltype).draw(ax = ax, colorbar = colorbar, **kwargs)
 
         return ax
+
+    def get_rows_dict(self):
+        """
+        Get the rows dictionary.
+
+        Returns:
+            dict: The rows dictionary.
+        """
+        result = {}
+        for i in self.blocks.keys():
+            result[i] = self.blocks[i].rows
+        
+        return result
+    
+    def get_cols_dict(self):
+        """
+        Get the columns dictionary.
+
+        Returns:
+            dict: The columns dictionary.
+        """
+        result = {}
+        for i in self.blocks.keys():
+            result[i] = self.blocks[i].cols
+        
+        return result
+    
