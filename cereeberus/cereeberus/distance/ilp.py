@@ -79,13 +79,89 @@ def build_map_matrices(myInt, map_results):
     return final_LBMs
     
 
+def plot_map_matrix(myInt, final_maps, map_name=None, all_maps=True, before_after=True):
+    """
+    Function to plot the map matrices after the ILP optimization. It can either plot all the maps or a specific map. It can also plot the maps before and after the optimization.
+
+    Parameters:
+        final_maps (dict): the dictionary containing the final map matrices
+        map_name (str): the name of the map to plot
+        all_maps (bool): whether to plot all the maps
+        before_after (bool): whether to plot the maps before and after the optimization
+    """
+
                     
-                        
-                
+    # if not all_maps:
+    #     if map_name is None:
+    #         raise ValueError("Please provide a map name to plot")
+    #     else:
+    #         if before_after:
+    #             # draw map before and after optimization
+    #             plt.figure(figsize=(15, 7))
+    #             plt.subplot(121)
+    #             name, obj_type = map_name.split('_')
+    #             name = name.lower()
+    #             myInt.name('0').draw()
+    #             plt.title("Before optimization")
+    #             plt.subplot(122)
+    #             final_maps[map_name].draw()
+    #             plt.title("After optimization")
+    #             plt.show()
+    #         else:
+    #             # draw map after optimization
+    #             final_maps[map_name].draw()
+    #             plt.title(map_name)
+    #             plt.show()
+                            
+
+    # draw maps before and after optimization
+    plt.figure(figsize=(15, 32))
+    plt.subplot(421)
+    myInt.phi('0','V').draw()
+    plt.title('Phi vertex before optimization')
+    plt.subplot(422)
+    final_maps['Phi_V'].draw()
+    plt.title('Phi vertex after optimization')
+    plt.subplot(423)
+    myInt.phi('0','E').draw()
+    plt.title('Phi edge before optimization')
+    plt.subplot(424)
+    final_maps['Phi_E'].draw()
+    plt.title('Phi edge after optimization')
+    plt.subplot(425)
+    myInt.psi('0','V').draw()
+    plt.title('Psi vertex before optimization')
+    plt.subplot(426)
+    final_maps['Psi_V'].draw()
+    plt.title('Psi vertex after optimization')
+    plt.subplot(427)
+    myInt.psi('0','E').draw()
+    plt.title('Psi edge before optimization')
+    plt.subplot(428)
+    final_maps['Psi_E'].draw()
+    plt.title('Psi edge after optimization')
+    plt.show()
+        # else:
+        #     # draw all maps after optimization
+        #     plt.figure(figsize=(15, 14))
+        #     plt.subplot(221)
+        #     final_maps['Phi_V'].draw()
+        #     plt.title('Phi vertex')
+        #     plt.subplot(222)
+        #     final_maps['Phi_E'].draw()
+        #     plt.title('Phi edge')
+        #     plt.subplot(223)
+        #     final_maps['Psi_V'].draw()
+        #     plt.title('Psi vertex')
+        #     plt.subplot(224)
+        #     final_maps['Psi_E'].draw()
+        #     plt.title('Psi edge')
+        #     plt.show()
+    
 ##------------------- ILP Optimization -------------------##
 
 
-def solve_ilp(myInt, verbose=False):
+def solve_ilp(myInt, verbose=False, plot=False):
 
     # function values
     func_vals = myInt.all_func_vals()
@@ -109,10 +185,10 @@ def solve_ilp(myInt, verbose=False):
 
                 Phi_vars[block][thickening][obj_type] = pulp.LpVariable.dicts('Phi_'+thickening+obj_type+'_'+str(block), ((a, b) for a in range(n_rows) for b in range(n_cols)), cat='Binary')
 
-                # set the initial values
-                for a in range(n_rows):
-                    for b in range(n_cols):
-                        prob += Phi_vars[block][thickening][obj_type][(a,b)] == myInt.phi(thickening, obj_type)[block].get_array()[a][b]
+                # # set the initial values
+                # for a in range(n_rows):
+                #     for b in range(n_cols):
+                #         prob += Phi_vars[block][thickening][obj_type][(a,b)] == myInt.phi(thickening, obj_type)[block].get_array()[a][b]
 
 
                 # create lp variables for psi
@@ -121,10 +197,10 @@ def solve_ilp(myInt, verbose=False):
 
                 Psi_vars[block][thickening][obj_type] = pulp.LpVariable.dicts('Psi_'+thickening+obj_type+'_'+str(block), ((a, b) for a in range(n_rows) for b in range(n_cols)), cat='Binary')
 
-                # set the initial values
-                for a in range(n_rows):
-                    for b in range(n_cols):
-                        prob += Psi_vars[block][thickening][obj_type][(a,b)] == myInt.psi(thickening, obj_type)[block].get_array()[a][b]
+                # # set the initial values
+                # for a in range(n_rows):
+                #     for b in range(n_cols):
+                #         prob += Psi_vars[block][thickening][obj_type][(a,b)] == myInt.psi(thickening, obj_type)[block].get_array()[a][b]
 
     # create the other decision variables
     z_vars = {block :  {starting_map: {obj_type: {} for obj_type in ['V', 'E']} for starting_map in ['F', 'G']} for block in func_vals}
@@ -159,10 +235,8 @@ def solve_ilp(myInt, verbose=False):
                     z_vars[block][starting_map][obj_type] = pulp.LpVariable.dicts('z_'+starting_map+'_'+obj_type+'_'+str(block), ((a, b, c) for a in range(n_rows_1) for b in range(n_rowcol_2) for c in range(n_cols_1)), cat='Binary')
 
     # create the minmax variable
-    minmax_var = pulp.LpVariable('minmax_var', lowBound=0, cat='Continuous')
+    minmax_var = pulp.LpVariable('minmax_var', cat='Integer')
 
-    # Set the objective function
-    prob += minmax_var, "Objective Function"
     
     # create the constraints
 
@@ -357,12 +431,16 @@ def solve_ilp(myInt, verbose=False):
                     for k in range(shape_p_para):
                         prob += pulp.lpSum(Psi_vars[block]['0'][obj_type][j,k] for j in range(shape_o_para)) == 1
 
-                
-    # save the initial loss
-    initial_loss = pulp.value(prob.objective)
+    
+    # Set the objective function
+    prob += minmax_var
+
 
     # solve the problem
-    prob.solve(pulp.PULP_CBC_CMD(msg=0))
+    if verbose:
+        prob.solve(pulp.PULP_CBC_CMD(msg=0))
+    else:
+        prob.solve()
 
     # create a dictionary to store the results
     map_results = {'Phi_vars': Phi_vars, 'Psi_vars': Psi_vars}
@@ -371,11 +449,16 @@ def solve_ilp(myInt, verbose=False):
     final_maps = build_map_matrices(myInt, map_results)
         
     if verbose:
-        print(f"Initial loss is: {initial_loss}")
         print(f"The optimized loss is: {pulp.value(minmax_var)}")
         print("Status:", pulp.LpStatus[prob.status])
         prob.writeLP("model.lp")  # Write the model in LP format
+    
+     # plot the maps
+    if plot:
+        plot_map_matrix(myInt, final_maps)  
+
 
     # return results
     return final_maps, pulp.value(minmax_var)
 
+   
