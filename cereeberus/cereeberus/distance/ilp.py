@@ -438,9 +438,10 @@ def solve_ilp(myInt, verbose=False, plot=False):
 
     # solve the problem
     if verbose:
-        prob.solve(pulp.PULP_CBC_CMD(msg=0))
-    else:
         prob.solve()
+    else:
+        prob.solve(pulp.PULP_CBC_CMD(msg=0)
+                   )
 
     # create a dictionary to store the results
     map_results = {'Phi_vars': Phi_vars, 'Psi_vars': Psi_vars}
