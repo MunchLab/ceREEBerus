@@ -266,6 +266,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
+<div class="viewcode-block" id="LabeledMatrix.get_array">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.get_array">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the array of the matrix. Works on the big matrix as well as the blocks.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.array: The array of the matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span></div>
+
+
+    
 <div class="viewcode-block" id="LabeledMatrix.max">
 <a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix.max">[docs]</a>
     <span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -446,8 +459,23 @@
         <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             
         <span class="c1"># Add vertices as the row and column labels</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">:</span>
+            <span class="n">row_labels</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Row labels are tuples. Only printing entries 0 and 1. &#39;</span><span class="p">)</span>
+            <span class="c1"># This is done because in multigraphs, edges are (u,v,count) and we only want to print u and v</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">row_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">:</span>
+            <span class="n">col_labels</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Col labels are tuples. Only printing entries 0 and 1. &#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">col_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)),</span> <span class="n">col_labels</span><span class="p">,</span> <span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">)),</span> <span class="n">row_labels</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">colorbar</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">)</span>
@@ -528,7 +556,7 @@
 <div class="viewcode-block" id="LabeledBlockMatrix.__init__">
 <a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rows_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cols_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-                        <span class="n">random_initialize</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                        <span class="n">random_initialize</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">labled_matrix_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                         <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the LabeledBlockMatrix with LabeledMatrix objects for each integer.</span>
@@ -547,16 +575,27 @@
 <span class="sd">                A dictionary from column objects to row objects.</span>
 <span class="sd">            random_initialize : bool</span>
 <span class="sd">                Whether to randomly initialize the matrix.</span>
+<span class="sd">            labeled_matrix_dict : bool</span>
+<span class="sd">                Whether to initialize the block matrix from a dictionary of LabeledMatrix objects.</span>
 <span class="sd">            seed : int</span>
 <span class="sd">                The seed for the random number generator.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="p">{}</span>
 
+        <span class="k">if</span> <span class="n">labled_matrix_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># Initialize from a dictionary of LabeledMatrix objects</span>
+            <span class="c1"># make sure all the other dicts are none</span>
+            <span class="k">if</span> <span class="n">rows_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">cols_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">map_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">random_initialize</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot initialize from a dictionary of LabeledMatrix objects and other dictionaries. random initialization must be False.&quot;</span><span class="p">)</span>
+            
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labled_matrix_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">labled_matrix_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">rows_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">rows_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
             <span class="n">all_keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+
 
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">all_keys</span><span class="p">:</span>
                 <span class="c1"># i is the function value of the vertices </span>
@@ -767,6 +806,21 @@
             <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
         
         <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="LabeledBlockMatrix.get_array">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_array">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_index</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the array of the block matrix at the given block index.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            block_index (int): The block index to get the array from.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.array: The array of the block matrix at the given block index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">block_index</span><span class="p">]</span><span class="o">.</span><span class="n">array</span></div>
 
 
 <div class="viewcode-block" id="LabeledBlockMatrix.max">
@@ -1042,8 +1096,41 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">to_labeled_matrix</span><span class="p">(</span><span class="n">filltype</span> <span class="o">=</span> <span class="n">filltype</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="n">colorbar</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="LabeledBlockMatrix.get_rows_dict">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_rows_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_rows_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the rows dictionary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The rows dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">rows</span>
+        
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    
+<div class="viewcode-block" id="LabeledBlockMatrix.get_cols_dict">
+<a class="viewcode-back" href="../../../modules/distance/labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix.get_cols_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_cols_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the columns dictionary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The columns dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cols</span>
+        
+        <span class="k">return</span> <span class="n">result</span></div>
 </div>
 
+    
 </pre></div>
 
            </div>

@@ -1,4 +1,8 @@
 from cereeberus import ReebGraph
+from ..distance.labeled_blocks import LabeledBlockMatrix as LBM
+from ..distance.labeled_blocks import LabeledMatrix as LM
+from ..compute.unionfind import UnionFind
+import numpy as np
 
 class MapperGraph(ReebGraph):
     """
@@ -110,4 +114,97 @@ class MapperGraph(ReebGraph):
             return M_n.to_mapper(self.delta), induced_map
         else:
             return super().smoothing(n, return_map = False).to_mapper(self.delta)
+
+    #------------------------------#
+    # Functions for computing thickening distance matrix
+    #------------------------------#
+    def thickening_distance_by_level(self, level):
+        """
+        Get the thickening distance matrix at a given level. This distance is the amount of thickening needed before the given pair of vertices at that level map to the same connected component.
+
+        Parameters:
+
+            level : int. The level to get the thickening distance matrix at.
+            
+        """
+        # Dict to get list of vertices at a level
+        LevelVerts = self.func_to_vertex_dict()
+
+        # Dict to get lists of edges at a level 
+        LevelEdges = self.func_to_edge_dict()
+
+        # Current level to be checking 
+        L = level 
+        # Vertices at the current level
+        V = LevelVerts[L]
+
+        # If there's only one vertex, the distance is 0. 
+        # Return the little matrix block
+        if len(V) == 1:
+            D = LM(rows = V, cols = V)
+            return D
+
+        # Max difference to check 
+        max_diff = max(L-self.min_f(), self.max_f()-L)
+
+
+        # Distance matrix for this level
+        D = np.zeros(shape = (len(V), len(V))) - 1
+        D += np.identity(len(V))
+        D = LM(D, rows = V, cols = V)
+
+        # Initialize a union find object
+        UF = UnionFind(list(self.nodes()))
+
+        for k in range(1, max_diff+1):
+            # print(f"k: {k}")
+            
+            U = []
+            # Add edges at each level L+k and L-k
+            # try/except is to ignore entries without vertices
+            try:
+                # up verts 
+                U.extend(LevelEdges[L+k-1])
+            except:
+                pass
+
+            try:
+                # down verts
+                U.extend(LevelEdges[L-k])
+            except:
+                pass
+
+            # Add these edges to the union find object
+            for e in U:
+                UF.union(e[0], e[1])
+
+            for v in V:
+                for u in V:
+                    if v != u and D.array[V.index(v)][V.index(u)] == -1:
+                        if UF.find(v) == UF.find(u):
+                            # print(f"found {v} and {u}")
+                            D.array[V.index(v)][V.index(u)] = k
+                            D.array[V.index(u)][V.index(v)] = k
+            
+            # Check if there are still any entries of -1 
+            # If there are none, no need to keep adding edges 
+            if not np.any(D.array == -1):
+                break
+
+        return D
+    
+    def thickening_distance_matrix(self):
+        """
+        Get the thickening distance matrix for the entire mapper graph. This is a labeled block matrix with rows and columns indexed by vertices, and entries given by the thickening distance between the two vertices.
+        Returns:
+            LabeledBlockMatrix
+        """
+        V_dict = self.func_to_vertex_dict()
+        DistMat = LBM(rows_dict= V_dict, cols_dict = V_dict)
+
+        for i in V_dict.keys():
+            D = self.thickening_distance_by_level(i)
+            DistMat[i] = D
+
+        return DistMat
     

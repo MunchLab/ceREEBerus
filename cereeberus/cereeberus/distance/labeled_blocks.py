@@ -336,8 +336,23 @@ class LabeledMatrix:
         im = ax.matshow(self.array, **kwargs)
             
         # Add vertices as the row and column labels
-        ax.set_xticks(range(len(self.cols)), self.cols, rotation = 90)
-        ax.set_yticks(range(len(self.rows)), self.rows)
+
+        if type(self.rows[0]) == tuple:
+            row_labels = [ str(row[0]) + ', ' + str(row[1]) for row in self.rows]
+            print('Warning: Row labels are tuples. Only printing entries 0 and 1. ')
+            # This is done because in multigraphs, edges are (u,v,count) and we only want to print u and v
+
+        else:
+            row_labels = self.rows
+
+        if type(self.cols[0]) == tuple:
+            col_labels = [ str(col[0]) + ', ' + str(col[1]) for col in self.cols]
+            print('Warning: Col labels are tuples. Only printing entries 0 and 1. ')
+        else:
+            col_labels = self.cols
+
+        ax.set_xticks(range(len(self.cols)), col_labels, rotation = 90)
+        ax.set_yticks(range(len(self.rows)), row_labels)
 
         if colorbar:
             plt.colorbar(im, ax = ax)

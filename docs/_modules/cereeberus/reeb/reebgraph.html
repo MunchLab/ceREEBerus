@@ -77,6 +77,7 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+
 <div class="viewcode-block" id="ReebGraph">
 <a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph">[docs]</a>
 <span class="k">class</span> <span class="nc">ReebGraph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">):</span>
@@ -316,39 +317,49 @@
         <span class="k">return</span> <span class="n">edges</span></div>
 
 
+    <span class="c1">#-----------------------------------------------#</span>
+    <span class="c1"># Methods for getting distances in the Reeb graph</span>
+    <span class="c1">#-----------------------------------------------#</span>
+
 <div class="viewcode-block" id="ReebGraph.thickening_distance">
 <a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.thickening_distance">[docs]</a>
     <span class="k">def</span> <span class="nf">thickening_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the thickening distance between two vertices in the Reeb graph. This is the amount of thickening needed before the two vertices map to the same connected component. Note that u and v need to be at the same function value, so f(u) = f(v). </span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Get the thickening distance between two vertices in the Reeb graph. This is the amount of thickening needed before the two vertices map to the same connected component. Note that u and v need to be at the same function value, so f(u) = f(v). </span>
 
-<span class="sd">        Warning: This uses the command `nx.all_simple_paths` which can be very slow for dense graphs.</span>
+<span class="sd">            Parameters:</span>
+<span class="sd">                u, v : int. The vertices to get the thickening distance between.</span>
+<span class="sd">            </span>
+<span class="sd">            Returns:</span>
+<span class="sd">                int</span>
+<span class="sd">                    The thickening distance between the two vertices.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vertices </span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2"> are not at the same function value.&quot;</span><span class="p">)</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">            u, v : int. The vertices to get the thickening distance between.</span>
-<span class="sd">        </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            int</span>
-<span class="sd">                The thickening distance between the two vertices.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vertices </span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2"> are not at the same function value.&quot;</span><span class="p">)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span>
 
-        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span>
+            <span class="c1"># Get function values </span>
+            <span class="n">all_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_function_values</span><span class="p">()</span>
+            <span class="n">all_f</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_f</span><span class="p">))</span>
+            <span class="n">all_f</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 
-        <span class="n">thickening_needed</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># Get differences between the function value and all other function values</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_f</span><span class="p">)</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">diff</span><span class="p">[</span><span class="n">diff</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">diff</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 
-        <span class="c1"># Check all paths (Is there a better way to do this?)</span>
-        <span class="k">for</span> <span class="n">P</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_undirected</span><span class="p">(),</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-            <span class="c1"># Get the distance from function value a to each point in the path</span>
-            <span class="n">P_f</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">-</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">P</span><span class="p">]</span>
-            <span class="c1"># Store the maximum thickening needed for that path</span>
-            <span class="n">thickening_needed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">P_f</span><span class="p">))</span>
+            <span class="c1"># For each difference, build the slice and see if the two vertices are in the same connected component</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">diff</span><span class="p">:</span>
+                <span class="n">S</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">n</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">n</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;closed&#39;</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">to_undirected</span><span class="p">(),</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">n</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span></div>
 
-        <span class="c1"># Return the minimum thickening needed among all paths</span>
-        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">thickening_needed</span><span class="p">)</span></div>
 
-    
+   
     <span class="c1">#-----------------------------------------------#</span>
     <span class="c1"># Methods for adding and removing nodes and edges </span>
     <span class="c1">#-----------------------------------------------#</span>
@@ -645,7 +656,7 @@
 
 <div class="viewcode-block" id="ReebGraph.draw">
 <a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.draw">[docs]</a>
-    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">with_colorbar</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cpx</span> <span class="o">=</span> <span class="mf">.1</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_labels</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">with_colorbar</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cpx</span> <span class="o">=</span> <span class="mf">.1</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A drawing of the Reeb graph. Uses the fancy version from cereeberus.compute.draw.</span>
 
@@ -668,7 +679,7 @@
 
 
     
-        <span class="n">draw</span><span class="o">.</span><span class="n">reeb_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_labels</span> <span class="o">=</span> <span class="n">with_labels</span><span class="p">,</span> <span class="n">with_colorbar</span> <span class="o">=</span> <span class="n">with_colorbar</span><span class="p">,</span> <span class="n">cpx</span><span class="o">=</span><span class="n">cpx</span><span class="p">,</span> <span class="n">cpy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">)</span></div>
+        <span class="n">draw</span><span class="o">.</span><span class="n">reeb_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_labels</span> <span class="o">=</span> <span class="n">with_labels</span><span class="p">,</span> <span class="n">with_colorbar</span> <span class="o">=</span> <span class="n">with_colorbar</span><span class="p">,</span> <span class="n">cpx</span><span class="o">=</span><span class="n">cpx</span><span class="p">,</span> <span class="n">cpy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 

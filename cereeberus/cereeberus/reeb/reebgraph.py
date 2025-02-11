@@ -3,6 +3,7 @@ import cereeberus.compute.draw as draw
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 class ReebGraph(nx.MultiDiGraph):
     """
     A Reeb graph stored as a networkx ``MultiDiGraph``. The function values are stored as a dictionary. The directedness of the edges follows the convention that the edge goes from the lower function value to the higher function value node.
@@ -204,6 +205,10 @@ class ReebGraph(nx.MultiDiGraph):
 
         return edges
 
+    #-----------------------------------------------#
+    # Methods for getting distances in the Reeb graph
+    #-----------------------------------------------#
+
     def thickening_distance(self, u, v):
             """
             Get the thickening distance between two vertices in the Reeb graph. This is the amount of thickening needed before the two vertices map to the same connected component. Note that u and v need to be at the same function value, so f(u) = f(v). 
@@ -238,7 +243,8 @@ class ReebGraph(nx.MultiDiGraph):
                     return n
                 except:
                     pass
-    
+
+   
     #-----------------------------------------------#
     # Methods for adding and removing nodes and edges 
     #-----------------------------------------------#
@@ -494,7 +500,7 @@ class ReebGraph(nx.MultiDiGraph):
                 print('Function values:', self.f)
                 print('Positions:', self.pos_f)
 
-    def draw(self, with_labels = True, with_colorbar = False, cpx = .1, ax = None):
+    def draw(self, with_labels = True, with_colorbar = False, cpx = .1, ax = None, **kwargs):
         """
         A drawing of the Reeb graph. Uses the fancy version from cereeberus.compute.draw.
 
@@ -517,7 +523,7 @@ class ReebGraph(nx.MultiDiGraph):
 
 
     
-        draw.reeb_plot(self, with_labels = with_labels, with_colorbar = with_colorbar, cpx=cpx, cpy=0, ax = ax)
+        draw.reeb_plot(self, with_labels = with_labels, with_colorbar = with_colorbar, cpx=cpx, cpy=0, ax = ax, **kwargs)
 
 
 

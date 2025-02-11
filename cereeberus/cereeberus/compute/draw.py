@@ -81,7 +81,7 @@ def bezier_curve(pt0, midpt, pt1):
         y2 = a2*x2 + b2
     return points    
 
-def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1, ax = None):
+def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1, ax = None, **kwargs):
     """Main plotting function for the Reeb Graph Class
 
     Parameters: 
@@ -105,7 +105,7 @@ def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1, ax =
     # Some weird plotting to make the colored and labeled nodes work.
     # Taking the list of function values from the pos_f dicationary since the infinite node should already have a position set.
     color_map = [R.pos_f[v][1] for v in R.nodes]
-    pathcollection = nx.draw_networkx_nodes(R, R.pos_f, node_color=color_map, ax = ax)
+    pathcollection = nx.draw_networkx_nodes(R, R.pos_f, node_color=color_map, ax = ax, **kwargs)
     if with_labels:
         nx.draw_networkx_labels(R, pos=R.pos_f, font_color='black', ax = ax)
     if with_colorbar:
