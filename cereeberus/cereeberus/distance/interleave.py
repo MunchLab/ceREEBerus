@@ -175,55 +175,61 @@ class Interleave:
         for (metagraph, name) in [ (self.F_,'F'), (self.G_,'G')]:
             for key in ['0', 'n', '2n']:
                 self.D_[name][key] = {'V':{}, 'E':{}}
+                print(f"Building distance matrix for {name}_{key}")
+                self.D_[name][key]['V'] = metagraph[key].thickening_distance_matrix(obj_type = 'V')
+                print(f"Built vertex distance matrix for {name}_{key}")
+                print(f"Building edge distance matrix for {name}_{key}")
+                self.D_[name][key]['E'] = metagraph[key].thickening_distance_matrix(obj_type = 'E')
+                print(f"Built edge distance matrix for {name}_{key}")
 
-                # Vertex version 
-                M = metagraph[key]
+                # # Vertex version 
+                # M = metagraph[key]
 
-                val_to_verts = self.val_to_verts[name][key]
+                # val_to_verts = self.val_to_verts[name][key]
 
-                block_D = LBM()
-                for f_i in val_to_verts:
-                    vert_set = val_to_verts[f_i]
-                    D_i = np.zeros((len(vert_set), len(vert_set)))
-                    for i in range(len(vert_set)):
-                        for j in range(i+1, len(vert_set)):
-                            D_i[i, j] = M.thickening_distance(vert_set[i], vert_set[j])
-                            D_i[j, i] = D_i[i, j]
-                    block_D[f_i] = LM( rows =  vert_set, cols =  vert_set,array =  D_i)
+                # block_D = LBM()
+                # for f_i in val_to_verts:
+                #     vert_set = val_to_verts[f_i]
+                #     D_i = np.zeros((len(vert_set), len(vert_set)))
+                #     for i in range(len(vert_set)):
+                #         for j in range(i+1, len(vert_set)):
+                #             D_i[i, j] = M.thickening_distance(vert_set[i], vert_set[j])
+                #             D_i[j, i] = D_i[i, j]
+                #     block_D[f_i] = LM( rows =  vert_set, cols =  vert_set,array =  D_i)
                 
-                self.D_[name][key]['V'] = block_D
+                # self.D_[name][key]['V'] = block_D
 
-                # Edge version 
-                # Note that in this setting, the distance between two edges is the max distance between any pair of vertices in the two edges.
-                val_to_edges = self.val_to_edges[name][key]
+                # # Edge version 
+                # # Note that in this setting, the distance between two edges is the max distance between any pair of vertices in the two edges.
+                # val_to_edges = self.val_to_edges[name][key]
 
-                block_D = LBM()
-                for f_i in val_to_edges:
-                    edge_set = val_to_edges[f_i]
-                    D_i = np.zeros((len(edge_set), len(edge_set)))
-                    for i in range(len(edge_set)):
-                        for j in range(i+1, len(edge_set)):
-                            u_i, v_i, _ = edge_set[i]
-                            u_j, v_j, _ = edge_set[j]
+                # block_D = LBM()
+                # for f_i in val_to_edges:
+                #     edge_set = val_to_edges[f_i]
+                #     D_i = np.zeros((len(edge_set), len(edge_set)))
+                #     for i in range(len(edge_set)):
+                #         for j in range(i+1, len(edge_set)):
+                #             u_i, v_i, _ = edge_set[i]
+                #             u_j, v_j, _ = edge_set[j]
 
-                            # Lower vertex checking for u_i and u_v
-                            D_lower = self.D(name, key, 'V')[f_i]
-                            u_i_index = D_lower.rows.index(u_i)
-                            u_j_index = D_lower.rows.index(u_j)
-                            lower_k = D_lower.array[u_i_index, u_j_index]
+                #             # Lower vertex checking for u_i and u_v
+                #             D_lower = self.D(name, key, 'V')[f_i]
+                #             u_i_index = D_lower.rows.index(u_i)
+                #             u_j_index = D_lower.rows.index(u_j)
+                #             lower_k = D_lower.array[u_i_index, u_j_index]
 
-                            # Upper vertex checking 
-                            D_upper = self.D(name, key, 'V')[f_i+1]
-                            v_i_index = D_upper.rows.index(v_i)
-                            v_j_index = D_upper.rows.index(v_j)
-                            upper_k = D_upper.array[v_i_index, v_j_index]
+                #             # Upper vertex checking 
+                #             D_upper = self.D(name, key, 'V')[f_i+1]
+                #             v_i_index = D_upper.rows.index(v_i)
+                #             v_j_index = D_upper.rows.index(v_j)
+                #             upper_k = D_upper.array[v_i_index, v_j_index]
 
-                            # Distance for the edge is the largest k so that both endpoints have mapped to the same thing. 
-                            D_i[i, j] = max(lower_k, upper_k)
-                            D_i[j, i] = D_i[i, j]
-                    block_D[f_i] = LM( rows =  edge_set, cols =  edge_set,array =  D_i)
+                #             # Distance for the edge is the largest k so that both endpoints have mapped to the same thing. 
+                #             D_i[i, j] = max(lower_k, upper_k)
+                #             D_i[j, i] = D_i[i, j]
+                #     block_D[f_i] = LM( rows =  edge_set, cols =  edge_set,array =  D_i)
 
-                self.D_[name][key]['E'] = block_D
+                # self.D_[name][key]['E'] = block_D
 
 
 
