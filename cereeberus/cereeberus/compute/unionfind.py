@@ -3,7 +3,7 @@
 class UnionFind:
     def __init__(self, vertices):
         self.parent = {vertex: vertex for vertex in vertices}
-        self.size = [1]*len(vertices)
+        self.size = {vertex: 1 for vertex in vertices}
         self.count = len(vertices)
     
 

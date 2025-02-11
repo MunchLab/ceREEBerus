@@ -213,7 +213,7 @@ class MapperGraph(ReebGraph):
                     for j, f in enumerate(rowLabels):
                         if e != f and D.array[i][j] == -1:
                             if UF.find(e[0]) == UF.find(f[0]): # and UF.find(e[1]) == UF.find(f[1]):
-                                print(f"found {e} and {f}")
+                                # print(f"found {e} and {f}")
                                 D.array[i][j] = k
                                 D.array[j][i] = k
                 

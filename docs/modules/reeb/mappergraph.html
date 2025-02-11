@@ -183,18 +183,24 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.mapper.MapperGraph.thickening_distance_by_level">
-<span class="sig-name descname"><span class="pre">thickening_distance_by_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/mapper.html#MapperGraph.thickening_distance_by_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.mapper.MapperGraph.thickening_distance_by_level" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">thickening_distance_by_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/mapper.html#MapperGraph.thickening_distance_by_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.mapper.MapperGraph.thickening_distance_by_level" title="Link to this definition"></a></dt>
 <dd><p>Get the thickening distance matrix at a given level. This distance is the amount of thickening needed before the given pair of vertices at that level map to the same connected component.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>level</strong> – int. The level to get the thickening distance matrix at.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>level</strong> – int. The level to get the thickening distance matrix at.</p></li>
+<li><p><strong>obj_type</strong> – str. ‘V’ or ‘E’ to get the distance matrix for vertices or edges, respectively. Default is ‘V’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LabeledMatrix</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.mapper.MapperGraph.thickening_distance_matrix">
-<span class="sig-name descname"><span class="pre">thickening_distance_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/mapper.html#MapperGraph.thickening_distance_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.mapper.MapperGraph.thickening_distance_matrix" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">thickening_distance_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/mapper.html#MapperGraph.thickening_distance_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.mapper.MapperGraph.thickening_distance_matrix" title="Link to this definition"></a></dt>
 <dd><p>Get the thickening distance matrix for the entire mapper graph. This is a labeled block matrix with rows and columns indexed by vertices, and entries given by the thickening distance between the two vertices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
