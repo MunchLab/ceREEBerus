@@ -61,7 +61,6 @@ class Interleave:
             self.val_to_edges['F'][key] = self.F(key).func_to_edge_dict()
 
         
-        
         # Make the induced map from F_0 to F_n
         self.I_['F']['0'] = {}
         self.I_['F']['0']['V'] = LBM(map_dict = I_0, 
@@ -175,8 +174,57 @@ class Interleave:
         for (metagraph, name) in [ (self.F_,'F'), (self.G_,'G')]:
             for key in ['0', 'n', '2n']:
                 self.D_[name][key] = {'V':{}, 'E':{}}
-                self.D_[name][key]['V'] = metagraph[key].thickening_distance_matrix(obj_type = 'V')
-                self.D_[name][key]['E'] = metagraph[key].thickening_distance_matrix(obj_type = 'E')
+
+                # Vertex version 
+                M = metagraph[key]
+
+                val_to_verts = self.val_to_verts[name][key]
+
+                block_D = LBM()
+                for f_i in val_to_verts:
+                    vert_set = val_to_verts[f_i]
+                    D_i = np.zeros((len(vert_set), len(vert_set)))
+                    for i in range(len(vert_set)):
+                        for j in range(i+1, len(vert_set)):
+                            D_i[i, j] = M.thickening_distance(vert_set[i], vert_set[j])
+                            D_i[j, i] = D_i[i, j]
+                    block_D[f_i] = LM( rows =  vert_set, cols =  vert_set,array =  D_i)
+                
+                self.D_[name][key]['V'] = block_D
+
+                # Edge version 
+                # Note that in this setting, the distance between two edges is the max distance between any pair of vertices in the two edges.
+                val_to_edges = self.val_to_edges[name][key]
+
+                block_D = LBM()
+                for f_i in val_to_edges:
+                    edge_set = val_to_edges[f_i]
+                    D_i = np.zeros((len(edge_set), len(edge_set)))
+                    for i in range(len(edge_set)):
+                        for j in range(i+1, len(edge_set)):
+                            u_i, v_i, _ = edge_set[i]
+                            u_j, v_j, _ = edge_set[j]
+
+                            # Lower vertex checking for u_i and u_v
+                            D_lower = self.D(name, key, 'V')[f_i]
+                            u_i_index = D_lower.rows.index(u_i)
+                            u_j_index = D_lower.rows.index(u_j)
+                            lower_k = D_lower.array[u_i_index, u_j_index]
+
+                            # Upper vertex checking 
+                            D_upper = self.D(name, key, 'V')[f_i+1]
+                            v_i_index = D_upper.rows.index(v_i)
+                            v_j_index = D_upper.rows.index(v_j)
+                            upper_k = D_upper.array[v_i_index, v_j_index]
+
+                            # Distance for the edge is the largest k so that both endpoints have mapped to the same thing. 
+                            D_i[i, j] = max(lower_k, upper_k)
+                            D_i[j, i] = D_i[i, j]
+                    block_D[f_i] = LM( rows =  edge_set, cols =  edge_set,array =  D_i)
+
+                self.D_[name][key]['E'] = block_D
+
+
 
         # ----
         # phi: F -> G^n
@@ -239,6 +287,26 @@ class Interleave:
 
         # End psi
         # ---
+
+    ### ----------------
+    # Function to set phi and psi matrices for the interleaving (instead of random)
+    ### ----------------
+
+    def set_interleaving_maps(self, phi = None, psi = None):
+        """
+        Set the phi and psi matrices to a given value. 
+
+        Parameters:
+            phi (dict): 
+                A dictionary of the form ``{'0': {'V': phi_0_V, 'E': phi_0_E}, 'n': {'V': phi_n_V, 'E': phi_n_E}}`` where each ``phi_i_j`` is a LabeledBlockMatrix.
+            psi (dict): 
+                A dictionary of the form ``{'0': {'V': psi_0_V, 'E': psi_0_E}, 'n': {'V': psi_n_V, 'E': psi_n_E}}`` where each ``psi_i_j`` is a LabeledBlockMatrix.
+        """
+        if phi is not None:
+            self.phi_ = phi
+
+        if psi is not None:
+            self.psi_ = psi
 
     ### ----------------
     # Functions for getting stuff out of all the dictionaries 
@@ -460,39 +528,26 @@ class Interleave:
     # Functions for drawing stuff
     ### ----------------
 
-    def draw_all_graphs(self, figsize = (15,10), **kwargs):
-        """
-        Draw all the Mapper graphs.
+    def draw_all_graphs(self):
+        fig, axs = plt.subplots(2, 3, figsize=(15, 10), sharey = True)
 
-        Parameters:
-            figsize (tuple) :
-                The size of the figure to draw. Default is (15,10).
-
-        Returns:
-            matplotlib.figure.Figure, numpy.ndarray: The figure and axes the graphs were drawn on.
-
-        """
-        fig, axs = plt.subplots(2, 3, figsize=figsize, sharey = True, layout = 'constrained')
-
-        self.F().draw(ax = axs[0,0], **kwargs)
+        self.F().draw(ax = axs[0,0])
         axs[0,0].set_title(r'$F_0$')
 
-        self.F('n').draw(ax = axs[0,1], **kwargs)
+        self.F('n').draw(ax = axs[0,1])
         axs[0,1].set_title(r'$F_n$')
 
-        self.F('2n').draw(ax = axs[0,2], **kwargs)
+        self.F('2n').draw(ax = axs[0,2])
         axs[0,2].set_title(r'$F_{2n}$')
 
-        self.G().draw(ax = axs[1,0], **kwargs)
+        self.G().draw(ax = axs[1,0])
         axs[1,0].set_title(r'$G_0$')
 
-        self.G('n').draw(ax = axs[1,1], **kwargs)
+        self.G('n').draw(ax = axs[1,1])
         axs[1,1].set_title(r'$G_n$')
 
-        self.G('2n').draw(ax = axs[1,2], **kwargs)
+        self.G('2n').draw(ax = axs[1,2])
         axs[1,2].set_title(r'$G_{2n}$')
-
-        return fig, axs
 
     def draw_I(self, graph = 'F', key = '0', obj_type = 'V', ax = None, **kwargs):
         """
@@ -517,27 +572,21 @@ class Interleave:
         
         return ax
 
-    def draw_all_I(self, graph = 'F', figsize = (13,13),  **kwargs):
+    def draw_all_I(self):
         """
         Draw all the induced maps.
-
-        Parameters:
-            graph (str) : 
-                The graph to draw the induced maps for. Either ``'F'`` or ``'G'``.
-            figsize (tuple) :
-                The size of the figure to draw. Default is (13,13).
         """
-        fig, axs = plt.subplots(2, 2, figsize=figsize, layout = 'constrained')
-        # plt.subplots_adjust(wspace=.4, hspace=.4)
-        self.draw_I(graph, '0', 'V', ax = axs[0, 0], **kwargs)
-        axs[0,0].set_title(r'Vertices: $' + graph + r'_0 \to '+ graph + r'_{n}$')
-        self.draw_I(graph, '0', 'E', ax = axs[1,0], **kwargs)
-        axs[1,0].set_title(r'Edges: $' + graph + r'_0 \to ' + graph + r'_{n}$')
+        fig, axs = plt.subplots(2, 2, figsize=(13, 13))
+        plt.subplots_adjust(wspace=.4, hspace=.4)
+        self.draw_I('G', '0', 'V', ax = axs[0, 0])
+        axs[0,0].set_title(r'Vertices: $G_0 \to G_{n}$')
+        self.draw_I('G', '0', 'E', ax = axs[1,0])
+        axs[1,0].set_title(r'Edges: $G_0 \to G_{n}$')
 
-        self.draw_I(graph, 'n', 'V', ax = axs[0, 1], **kwargs)
-        axs[0,1].set_title(r'Vertices: $' + graph + r'_n \to '+ graph + r'_{2n}$')
-        self.draw_I(graph, 'n', 'E', ax = axs[1,1], **kwargs)
-        axs[1,1].set_title(r'Edges: $' + graph + r'_n \to ' + graph + r'_{2n}$')
+        self.draw_I('G', 'n', 'V', ax = axs[0, 1])
+        axs[0,1].set_title(r'Vertices: $G_n \to G_{2n}$')
+        self.draw_I('G', 'n', 'E', ax = axs[1,1])
+        axs[1,1].set_title(r'Edges: $G_n \to G_{2n}$')
 
     def draw_B(self, graph = 'F', key = '0', ax = None, **kwargs):
         """
@@ -559,28 +608,24 @@ class Interleave:
 
         return ax
 
-    def draw_all_B(self, figsize = (12,9), **kwargs):
+    def draw_all_B(self, figsize = (24,18), spacing = (.1,.1)):
         """
         Draw all the boundary matrices.
-
-        Parameters:
-            figsize (tuple) :
-                The size of the figure to draw. Default is (12,9).
         """
-        fig, axs = plt.subplots(2, 3, figsize=figsize, layout = 'constrained')
-        # plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
-        self.draw_B('F', '0', ax = axs[0, 0], **kwargs)
+        fig, axs = plt.subplots(2, 3, figsize=figsize)
+        plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
+        self.draw_B('F', '0', ax = axs[0, 0])
         axs[0,0].set_title(r'$B(F_0)$')
-        self.draw_B('F', 'n', ax = axs[0, 1], **kwargs)
+        self.draw_B('F', 'n', ax = axs[0, 1])
         axs[0,1].set_title(r'$B(F_n)$')
-        self.draw_B('F', '2n', ax = axs[0, 2], **kwargs)
+        self.draw_B('F', '2n', ax = axs[0, 2])
         axs[0,2].set_title(r'$B(F_{2n})$')
 
-        self.draw_B('G', '0', ax = axs[1, 0], **kwargs)
+        self.draw_B('G', '0', ax = axs[1, 0])
         axs[1,0].set_title(r'$B(G_0)$')
-        self.draw_B('G', 'n', ax = axs[1, 1], **kwargs)
+        self.draw_B('G', 'n', ax = axs[1, 1])
         axs[1,1].set_title(r'$B(G_n)$')
-        self.draw_B('G', '2n', ax = axs[1, 2], **kwargs)
+        self.draw_B('G', '2n', ax = axs[1, 2])
         axs[1,2].set_title(r'$B(G_{2n})$')
 
     def draw_D(self, graph = 'F', key = '0', obj_type = 'V', 
@@ -672,17 +717,13 @@ class Interleave:
 
         return ax
 
-    def draw_all_phi(self, figsize = (10,10),  **kwargs):
+    def draw_all_phi(self, figsize = (10,10), spacing = (0,.5), **kwargs):
         """
         Draw all the ``phi`` maps.
 
-        Parameters:
-            figsize (tuple) :
-                The size of the figure to draw. Default is (10,10).
-
         """
-        fig, axs = plt.subplots(2, 2, figsize=figsize, layout = 'constrained')
-        # plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
+        fig, axs = plt.subplots(2, 2, figsize=figsize)
+        plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
         self.draw_phi('0', 'V', ax = axs[0, 0], **kwargs)
         axs[0, 0].set_title(r'$\varphi_0^V$')
         self.draw_phi('n', 'V', ax = axs[0, 1], **kwargs)
@@ -693,12 +734,12 @@ class Interleave:
         self.draw_phi('n', 'E', ax = axs[1, 1], **kwargs)
         axs[1, 1].set_title(r'$\varphi_n^E$')
 
-    def draw_all_psi(self, figsize = (10,10),   **kwargs):
+    def draw_all_psi(self, figsize = (10,10), spacing = (0,.5),     **kwargs):
         """
         Draw all the ``psi`` maps.
         """
-        fig, axs = plt.subplots(2, 2, figsize=figsize, layout = 'constrained')
-        # plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
+        fig, axs = plt.subplots(2, 2, figsize=figsize)
+        plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
         self.draw_psi('0', 'V', ax = axs[0,0],  **kwargs)
         axs[0,0].set_title(r'$\psi_0^V$')
         self.draw_psi('n', 'V', ax = axs[0,1],  **kwargs)
@@ -998,8 +1039,10 @@ class Interleave:
 
         # ALl the triangle maps
         for obj_type in ['V', 'E']:
-            for drawtype in ['all', 'result']:
-                result = self.triangle(start_graph = 'F', obj_type = obj_type)
+            for start_graph in ['F', 'G']:
+                result = self.triangle(start_graph = start_graph, obj_type = obj_type)
+
+                ######## Something is wrong here. ############
                 loss = result.absmax()
                 loss_list.append(loss)
 
@@ -1032,7 +1075,8 @@ class Interleave:
                 obj_type = 'V'
                 if i in Graph().get_function_values():
                     result = self.parallelogram(maptype = maptype, obj_type = obj_type, func_val = i)
-                    loss = result.absmax()
+                    loss = result.absmax() 
+                    # print(f"parallelogram loss for {graph_name} {obj_type} {i} is {loss}")
                     loss_list.append(loss)
                 else:
                     # This catch is because the two graphs might have different ranges of function values
@@ -1044,6 +1088,7 @@ class Interleave:
                 if i in Graph().get_function_values():
                     result = self.triangle(start_graph = graph_name, obj_type = obj_type, func_val = i)
                     loss = result.absmax()
+                    print(f" triangle loss for {graph_name} {obj_type} {i} is {loss}")
                     loss_list.append(loss)
                 else:
                     # This catch is because the two graphs might have different ranges of function values
@@ -1059,9 +1104,11 @@ class Interleave:
                 edge_vals = Graph().get_function_values()
                 edge_vals.pop(edge_vals.index(max(edge_vals)))
                 if i in edge_vals:
-                    result = self.parallelogram_Edge_Vert(maptype = maptype, obj_type = obj_type, func_val = i)
-                    loss = result.absmax()
-                    loss_list.append(loss)
+                    for up_or_down in ['up', 'down']:
+                        result = self.parallelogram_Edge_Vert(maptype = maptype, obj_type = obj_type, func_val = i, up_or_down=up_or_down)
+                        loss = result.absmax()
+                        # print(f"mixed parallelogram loss for {graph_name} {obj_type} {i} is {loss}")
+                        loss_list.append(loss)
                 else:
                     # This catch is because the two graphs might have different ranges of function values
                     pass
@@ -1074,6 +1121,7 @@ class Interleave:
                 if i in edge_vals:
                     result = self.parallelogram(maptype = maptype, obj_type = obj_type, func_val = i)
                     loss = result.absmax()
+                    # print(f"parallelogram loss for {graph_name} {obj_type} {i} is {loss}")
                     loss_list.append(loss)
                 else:
                     # This catch is because the two graphs might have different ranges of function values 
@@ -1087,6 +1135,7 @@ class Interleave:
                 if i in edge_vals:
                     result = self.triangle(start_graph = graph_name, obj_type = obj_type, func_val = i)
                     loss = result.absmax()
+                    # print(f"triangle loss for {graph_name} {obj_type} {i} is {loss}")
                     loss_list.append(loss)
                 else:
                     # This catch is because the two graphs might have different ranges of function values
