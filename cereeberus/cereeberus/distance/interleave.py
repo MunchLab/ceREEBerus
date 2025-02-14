@@ -528,26 +528,28 @@ class Interleave:
     # Functions for drawing stuff
     ### ----------------
 
-    def draw_all_graphs(self):
-        fig, axs = plt.subplots(2, 3, figsize=(15, 10), sharey = True)
+    def draw_all_graphs(self, figsize = (15,10), **kwargs):
+        fig, axs = plt.subplots(2, 3, figsize=figsize, constrained_layout = True, sharey = True)
 
-        self.F().draw(ax = axs[0,0])
+        self.F().draw(ax = axs[0,0], **kwargs)
         axs[0,0].set_title(r'$F_0$')
 
-        self.F('n').draw(ax = axs[0,1])
+        self.F('n').draw(ax = axs[0,1], **kwargs)
         axs[0,1].set_title(r'$F_n$')
 
-        self.F('2n').draw(ax = axs[0,2])
+        self.F('2n').draw(ax = axs[0,2], **kwargs)
         axs[0,2].set_title(r'$F_{2n}$')
 
-        self.G().draw(ax = axs[1,0])
+        self.G().draw(ax = axs[1,0], **kwargs)
         axs[1,0].set_title(r'$G_0$')
 
-        self.G('n').draw(ax = axs[1,1])
+        self.G('n').draw(ax = axs[1,1], **kwargs)
         axs[1,1].set_title(r'$G_n$')
 
-        self.G('2n').draw(ax = axs[1,2])
+        self.G('2n').draw(ax = axs[1,2], **kwargs)
         axs[1,2].set_title(r'$G_{2n}$')
+
+        return fig, axs
 
     def draw_I(self, graph = 'F', key = '0', obj_type = 'V', ax = None, **kwargs):
         """
@@ -572,12 +574,11 @@ class Interleave:
         
         return ax
 
-    def draw_all_I(self):
+    def draw_all_I(self, figsize = (10,10),  **kwargs):
         """
         Draw all the induced maps.
         """
-        fig, axs = plt.subplots(2, 2, figsize=(13, 13))
-        plt.subplots_adjust(wspace=.4, hspace=.4)
+        fig, axs = plt.subplots(2, 2, figsize=figsize, constrained_layout=True)
         self.draw_I('G', '0', 'V', ax = axs[0, 0])
         axs[0,0].set_title(r'Vertices: $G_0 \to G_{n}$')
         self.draw_I('G', '0', 'E', ax = axs[1,0])
@@ -608,12 +609,11 @@ class Interleave:
 
         return ax
 
-    def draw_all_B(self, figsize = (24,18), spacing = (.1,.1)):
+    def draw_all_B(self, figsize = (24,18)):
         """
         Draw all the boundary matrices.
         """
-        fig, axs = plt.subplots(2, 3, figsize=figsize)
-        plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
+        fig, axs = plt.subplots(2, 3, figsize=figsize, constrained_layout=True)
         self.draw_B('F', '0', ax = axs[0, 0])
         axs[0,0].set_title(r'$B(F_0)$')
         self.draw_B('F', 'n', ax = axs[0, 1])
@@ -654,8 +654,6 @@ class Interleave:
         """
         if ax is None:
             ax = plt.gca()
-
-        
         
         self.D(graph, key, obj_type).draw(ax = ax, colorbar = colorbar, **kwargs)
         ax.set_xlabel(f"V({graph}_{key})")
@@ -717,13 +715,12 @@ class Interleave:
 
         return ax
 
-    def draw_all_phi(self, figsize = (10,10), spacing = (0,.5), **kwargs):
+    def draw_all_phi(self, figsize = (10,10), **kwargs):
         """
         Draw all the ``phi`` maps.
 
         """
-        fig, axs = plt.subplots(2, 2, figsize=figsize)
-        plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
+        fig, axs = plt.subplots(2, 2, figsize=figsize, constrained_layout=True)
         self.draw_phi('0', 'V', ax = axs[0, 0], **kwargs)
         axs[0, 0].set_title(r'$\varphi_0^V$')
         self.draw_phi('n', 'V', ax = axs[0, 1], **kwargs)
@@ -734,12 +731,11 @@ class Interleave:
         self.draw_phi('n', 'E', ax = axs[1, 1], **kwargs)
         axs[1, 1].set_title(r'$\varphi_n^E$')
 
-    def draw_all_psi(self, figsize = (10,10), spacing = (0,.5),     **kwargs):
+    def draw_all_psi(self, figsize = (10,10), **kwargs):
         """
         Draw all the ``psi`` maps.
         """
-        fig, axs = plt.subplots(2, 2, figsize=figsize)
-        plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])
+        fig, axs = plt.subplots(2, 2, figsize=figsize, constrained_layout=True)
         self.draw_psi('0', 'V', ax = axs[0,0],  **kwargs)
         axs[0,0].set_title(r'$\psi_0^V$')
         self.draw_psi('n', 'V', ax = axs[0,1],  **kwargs)
