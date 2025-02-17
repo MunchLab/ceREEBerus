@@ -206,6 +206,18 @@ class LabeledMatrix:
         except:
             return np.nan
 
+    def min(self):
+        """
+        Get the minimum value of the matrix.
+
+        Returns:
+            float: The minimum value of the matrix.
+        """
+        try :
+            return np.min(self.array)
+        except:
+            return np.nan
+
     def shape(self):
         """
         Return the shape of the matrix.
@@ -674,7 +686,7 @@ class LabeledBlockMatrix:
             float: The maximum value of the block matrix.
         """
         try :
-            return max([self.blocks[i].max() for i in self.blocks.keys()])
+            return np.nanmax([self.blocks[i].max() for i in self.blocks.keys()])
         except:
             return np.nan
     
@@ -686,7 +698,20 @@ class LabeledBlockMatrix:
             float: The maximum absolute value of the block matrix.
         """
         try:
-            return max([self.blocks[i].absmax() for i in self.blocks.keys()])
+            return np.nanmax([self.blocks[i].absmax() for i in self.blocks.keys()])
+        except:
+            return np.nan
+
+    
+    def min(self):
+        """
+        Get the minimum value of the block matrix.
+
+        Returns:
+            float: The minimum value of the block matrix.
+        """
+        try :
+            return np.nanmin([self.blocks[i].min() for i in self.blocks.keys()])
         except:
             return np.nan
 

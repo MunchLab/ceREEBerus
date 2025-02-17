@@ -96,6 +96,10 @@ class TestBlockMatrixClasses(unittest.TestCase):
         # Check that the block matrix is the right size
         self.assertEqual(lbm.shape(), (4,5))
 
+        # Check that the max and min functions work correctly 
+        self.assertEqual(lbm.max(), 1)
+        self.assertEqual(lbm.min(), 0)
+
         # Make sure we can take a transpose 
         lbm2T = lbm2.T()
 
