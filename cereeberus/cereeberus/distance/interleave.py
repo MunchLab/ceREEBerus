@@ -292,21 +292,41 @@ class Interleave:
     # Function to set phi and psi matrices for the interleaving (instead of random)
     ### ----------------
 
-    def set_interleaving_maps(self, phi = None, psi = None):
+    def set_interleaving_maps(self, phi_dict = None, psi_dict = None):
         """
-        Set the phi and psi matrices to a given value. 
+        Set the phi and psi matrices to a given value. Instead of replacing the matrices, set the values block by block.
 
         Parameters:
-            phi (dict): 
+            phi_dict (dict): 
                 A dictionary of the form ``{'0': {'V': phi_0_V, 'E': phi_0_E}, 'n': {'V': phi_n_V, 'E': phi_n_E}}`` where each ``phi_i_j`` is a LabeledBlockMatrix.
-            psi (dict): 
+            psi_dict (dict): 
                 A dictionary of the form ``{'0': {'V': psi_0_V, 'E': psi_0_E}, 'n': {'V': psi_n_V, 'E': psi_n_E}}`` where each ``psi_i_j`` is a LabeledBlockMatrix.
         """
-        if phi is not None:
-            self.phi_ = phi
+        
+        if phi_dict is not None:
+            for thickening in ['0', 'n']:
+                for obj_type in ['V', 'E']:
 
-        if psi is not None:
-            self.psi_ = psi
+                    # fist get the funciton values of the map that's coming in
+                    keys = phi_dict[thickening][obj_type].get_all_block_indices()
+
+                    # Now set the values
+                    for key in keys:
+                        self.phi_[thickening][obj_type][key] = phi_dict[thickening][obj_type][key]
+
+        if psi_dict is not None:
+            for thickening in ['0', 'n']:
+                for obj_type in ['V', 'E']:
+
+                    # fist get the funciton values of the map that's coming in
+                    keys = psi_dict[thickening][obj_type].get_all_block_indices()
+
+                    # Now set the values
+                    for key in keys:
+                        self.psi_[thickening][obj_type][key] = psi_dict[thickening][obj_type][key]
+
+
+        
 
     ### ----------------
     # Functions for getting stuff out of all the dictionaries 
@@ -793,7 +813,9 @@ class Interleave:
         if func_val is None:
             Top = self.get_interleaving_map(maptype, '0', 'V') @ self.B(start_graph, '0')
 
-            Bottom = self.B(end_graph, 'n') @ self.get_interleaving_map(maptype, '0', 'E') 
+            Bottom = self.B(end_graph, 'n') @ self.get_interleaving_map(maptype, '0', 'E')
+
+
             Result = Top - Bottom
 
             Result_Dist = self.D(end_graph, 'n', 'V') @ Result
@@ -887,6 +909,9 @@ class Interleave:
             Top = self.get_interleaving_map(maptype, 'n', obj_type) @ self.I(start_graph, '0', obj_type)
             Bottom = self.I(end_graph, 'n', obj_type) @ self.get_interleaving_map(maptype, '0', obj_type)
             Result = Top - Bottom
+            Result= Result.to_labeled_matrix() # To make the matrix labeledmatrix
+            
+            
             Result_Dist = self.D(end_graph, '2n', obj_type) @ Result
         else:
             # Do this for a single input function value
@@ -958,10 +983,14 @@ class Interleave:
             end_graph = 'G'
             map1 = 'phi'
             map2 = 'psi'
+            map1_latex = r'\varphi'
+            map2_latex = r'\psi'
         elif start_graph == 'G':
             end_graph = 'F'
             map1 = 'psi'
             map2 = 'phi'
+            map1_latex = r'\psi'
+            map2_latex = r'\varphi'
         else:
             raise ValueError(f"Unknown start_graph {start_graph}. Must be 'F' or 'G'.")
 
@@ -969,6 +998,7 @@ class Interleave:
             Top = self.I(start_graph, 'n', obj_type) @ self.I(start_graph, '0', obj_type)
             Bottom = self.get_interleaving_map(maptype = map2, key = 'n', obj_type = obj_type) @ self.get_interleaving_map(maptype = map1, key = '0', obj_type = obj_type)
             Result = Top - Bottom
+            Result = Result.to_labeled_matrix() # To make the matrix labeledmatrix
 
             Result_Dist = self.D(start_graph, '2n', obj_type) @ Result
         
@@ -976,17 +1006,17 @@ class Interleave:
             Top = self.I(start_graph, 'n', obj_type)[func_val] @ self.I(start_graph, '0', obj_type)[func_val]
             Bottom = self.get_interleaving_map(maptype = map2, key = 'n', obj_type = obj_type)[func_val] @ self.get_interleaving_map(maptype = map1, key = '0', obj_type = obj_type)[func_val]
             Result = Top - Bottom
-
+            
             Result_Dist = self.D(start_graph, '2n', obj_type)[func_val] @ Result
 
         if draw and drawtype == 'all':
             fig, axs = plt.subplots(1, 4, figsize = (15, 5))
             Top.draw(ax = axs[0], vmin = -1, vmax = 1)
-            Top_title = f"$I_{{0,{obj_type}}} \\cdot I_{{n,{obj_type}}}$"
+            Top_title = f"$I_{{n,{obj_type}}} \\cdot I_{{0,{obj_type}}}$"
             axs[0].set_title(Top_title)
 
             Bottom.draw(axs[1], vmin = -1, vmax = 1)
-            Bottom_title = f"$I_{{n,{obj_type}}} \\cdot I_{{2n,{obj_type}}}$"
+            Bottom_title = f"${map2_latex}_{{n,{obj_type}}} \\cdot {map1_latex}_{{0,{obj_type}}}$"
             axs[1].set_title(Bottom_title)
 
             Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
@@ -1037,8 +1067,6 @@ class Interleave:
         for obj_type in ['V', 'E']:
             for start_graph in ['F', 'G']:
                 result = self.triangle(start_graph = start_graph, obj_type = obj_type)
-
-                ######## Something is wrong here. ############
                 loss = result.absmax()
                 loss_list.append(loss)
 
@@ -1084,7 +1112,6 @@ class Interleave:
                 if i in Graph().get_function_values():
                     result = self.triangle(start_graph = graph_name, obj_type = obj_type, func_val = i)
                     loss = result.absmax()
-                    print(f" triangle loss for {graph_name} {obj_type} {i} is {loss}")
                     loss_list.append(loss)
                 else:
                     # This catch is because the two graphs might have different ranges of function values
@@ -1144,6 +1171,7 @@ class Interleave:
         # Get max loss over all function values
         # flatten the dictionary
         loss_list = list(loss_dict.values())
+        print(loss_list)
         return max(loss_list)
 
 

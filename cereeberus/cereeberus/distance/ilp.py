@@ -32,8 +32,9 @@ def build_map_matrices(myInt, map_results):
 
     # create the final map matrices
     
-    final_maps = {obj_type: {map_type:{} for map_type in ['Phi','Psi']}  for obj_type in ['V', 'E']}
-    for thickening in ['0']:
+    final_maps = {thickening: {obj_type: {map_type: {} for map_type in ['Phi', 'Psi']} for obj_type in ['V', 'E']} for thickening in ['0', 'n']}
+    #final_maps = {obj_type: {map_type:{} for map_type in ['Phi','Psi']}  for obj_type in ['V', 'E']}
+    for thickening in ['0', 'n']:
         for obj_type in ['V', 'E']:
             for map_type in ['Phi', 'Psi']:
                 
@@ -64,104 +65,31 @@ def build_map_matrices(myInt, map_results):
 
                     
                     # store the final map matrix
-                    final_maps[obj_type][map_type][block] = final_block_map
+                    final_maps[thickening][obj_type][map_type][block] = final_block_map
 
     # make labeled block matrices
-    Phi_V_LBM = LBM(labled_matrix_dict=final_maps['V']['Phi'])
-    Phi_E_LBM = LBM(labled_matrix_dict=final_maps['E']['Phi'])
-    Psi_V_LBM = LBM(labled_matrix_dict=final_maps['V']['Psi'])
-    Psi_E_LBM = LBM(labled_matrix_dict=final_maps['E']['Psi'])
+    Phi_0_V_LBM = LBM(labled_matrix_dict=final_maps['0']['V']['Phi'])
+    Phi_0_E_LBM = LBM(labled_matrix_dict=final_maps['0']['E']['Phi'])
+    Phi_n_V_LBM = LBM(labled_matrix_dict=final_maps['n']['V']['Phi'])
+    Phi_n_E_LBM = LBM(labled_matrix_dict=final_maps['n']['E']['Phi'])
+    Psi_0_V_LBM = LBM(labled_matrix_dict=final_maps['0']['V']['Psi'])
+    Psi_0_E_LBM = LBM(labled_matrix_dict=final_maps['0']['E']['Psi'])
+    Psi_n_V_LBM = LBM(labled_matrix_dict=final_maps['n']['V']['Psi'])
+    Psi_n_E_LBM = LBM(labled_matrix_dict=final_maps['n']['E']['Psi'])
 
-    final_LBMs = {'Phi_V': Phi_V_LBM, 'Phi_E': Phi_E_LBM, 'Psi_V': Psi_V_LBM, 'Psi_E': Psi_E_LBM}
+    final_LBMs = {'Phi_0_V': Phi_0_V_LBM, 'Phi_0_E': Phi_0_E_LBM, 'Phi_n_V': Phi_n_V_LBM, 'Phi_n_E': Phi_n_E_LBM, 'Psi_0_V': Psi_0_V_LBM, 'Psi_0_E': Psi_0_E_LBM, 'Psi_n_V': Psi_n_V_LBM, 'Psi_n_E': Psi_n_E_LBM}
 
 
 
     return final_LBMs
     
 
-def plot_map_matrix(myInt, final_maps, map_name=None, all_maps=True, before_after=True):
-    """
-    Function to plot the map matrices after the ILP optimization. It can either plot all the maps or a specific map. It can also plot the maps before and after the optimization.
 
-    Parameters:
-        final_maps (dict): the dictionary containing the final map matrices
-        map_name (str): the name of the map to plot
-        all_maps (bool): whether to plot all the maps
-        before_after (bool): whether to plot the maps before and after the optimization
-    """
-
-                    
-    # if not all_maps:
-    #     if map_name is None:
-    #         raise ValueError("Please provide a map name to plot")
-    #     else:
-    #         if before_after:
-    #             # draw map before and after optimization
-    #             plt.figure(figsize=(15, 7))
-    #             plt.subplot(121)
-    #             name, obj_type = map_name.split('_')
-    #             name = name.lower()
-    #             myInt.name('0').draw()
-    #             plt.title("Before optimization")
-    #             plt.subplot(122)
-    #             final_maps[map_name].draw()
-    #             plt.title("After optimization")
-    #             plt.show()
-    #         else:
-    #             # draw map after optimization
-    #             final_maps[map_name].draw()
-    #             plt.title(map_name)
-    #             plt.show()
-                            
-
-    # draw maps before and after optimization
-    plt.figure(figsize=(15, 32))
-    plt.subplot(421)
-    myInt.phi('0','V').draw()
-    plt.title('Phi vertex before optimization')
-    plt.subplot(422)
-    final_maps['Phi_V'].draw()
-    plt.title('Phi vertex after optimization')
-    plt.subplot(423)
-    myInt.phi('0','E').draw()
-    plt.title('Phi edge before optimization')
-    plt.subplot(424)
-    final_maps['Phi_E'].draw()
-    plt.title('Phi edge after optimization')
-    plt.subplot(425)
-    myInt.psi('0','V').draw()
-    plt.title('Psi vertex before optimization')
-    plt.subplot(426)
-    final_maps['Psi_V'].draw()
-    plt.title('Psi vertex after optimization')
-    plt.subplot(427)
-    myInt.psi('0','E').draw()
-    plt.title('Psi edge before optimization')
-    plt.subplot(428)
-    final_maps['Psi_E'].draw()
-    plt.title('Psi edge after optimization')
-    plt.show()
-        # else:
-        #     # draw all maps after optimization
-        #     plt.figure(figsize=(15, 14))
-        #     plt.subplot(221)
-        #     final_maps['Phi_V'].draw()
-        #     plt.title('Phi vertex')
-        #     plt.subplot(222)
-        #     final_maps['Phi_E'].draw()
-        #     plt.title('Phi edge')
-        #     plt.subplot(223)
-        #     final_maps['Psi_V'].draw()
-        #     plt.title('Psi vertex')
-        #     plt.subplot(224)
-        #     final_maps['Psi_E'].draw()
-        #     plt.title('Psi edge')
-        #     plt.show()
     
 ##------------------- ILP Optimization -------------------##
 
 
-def solve_ilp(myInt, verbose=False, plot=False):
+def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
 
     # function values
     func_vals = myInt.all_func_vals()
@@ -440,11 +368,12 @@ def solve_ilp(myInt, verbose=False, plot=False):
     if verbose:
         prob.solve()
     else:
-        prob.solve(pulp.PULP_CBC_CMD(msg=0)
+        prob.solve(pulp.GUROBI_CMD(msg=0)
                    )
 
     # create a dictionary to store the results
     map_results = {'Phi_vars': Phi_vars, 'Psi_vars': Psi_vars}
+
 
     # make the results a LabeledBlockMatrix
     final_maps = build_map_matrices(myInt, map_results)
@@ -454,12 +383,10 @@ def solve_ilp(myInt, verbose=False, plot=False):
         print("Status:", pulp.LpStatus[prob.status])
         prob.writeLP("model.lp")  # Write the model in LP format
     
-     # plot the maps
-    if plot:
-        plot_map_matrix(myInt, final_maps)  
+    if get_thickened_maps:
+        final_maps = build_map_matrices(myInt, map_results, thickening = 'n')
 
+        return final_maps, pulp.value(minmax_var)
 
     # return results
     return final_maps, pulp.value(minmax_var)
-
-   
