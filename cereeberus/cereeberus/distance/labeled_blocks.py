@@ -832,7 +832,6 @@ class LabeledBlockMatrix:
             BigMatrix = block_diag(*arrays)
         elif filltype == 'nan':
             BigMatrix = self.block_diag_NaN(*arrays)
-            print(type(BigMatrix))
 
         rows = self.get_all_rows()
         cols = self.get_all_cols()

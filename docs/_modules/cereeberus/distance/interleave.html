@@ -1,24 +1,22 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>cereeberus.distance.interleave &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -141,7 +139,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">func_to_edge_dict</span><span class="p">()</span>
 
         
-        
         <span class="c1"># Make the induced map from F_0 to F_n</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">map_dict</span> <span class="o">=</span> <span class="n">I_0</span><span class="p">,</span> 
@@ -234,18 +231,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">B_down_</span><span class="p">[</span><span class="n">graph_name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">B_down</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">B_up_</span><span class="p">[</span><span class="n">graph_name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">B_up</span>
 
-                
-
-        <span class="c1"># for key in [&#39;0&#39;, &#39;n&#39;, &#39;2n&#39;]:</span>
-
-        <span class="c1">#     rows = self.G(key).sorted_vertices()</span>
-        <span class="c1">#     cols = self.G(key).sorted_edges()</span>
-
-        <span class="c1">#     self.B_[&#39;G&#39;][key] = LM(rows = rows, cols = cols)</span>
-        <span class="c1">#     for e in cols:</span>
-        <span class="c1">#         self.B_[&#39;G&#39;][key][e[0], e] = 1</span>
-        <span class="c1">#         self.B_[&#39;G&#39;][key][e[1], e] = 1</span>
-
         <span class="c1"># End boundary matrices</span>
         <span class="c1"># ---</span>
 
@@ -255,8 +240,11 @@
         <span class="k">for</span> <span class="p">(</span><span class="n">metagraph</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F_</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">,</span><span class="s1">&#39;G&#39;</span><span class="p">)]:</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">D_</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:{},</span> <span class="s1">&#39;E&#39;</span><span class="p">:{}}</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">D_</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metagraph</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">thickening_distance_matrix</span><span class="p">(</span><span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">D_</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metagraph</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">thickening_distance_matrix</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">D_</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metagraph</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">thickening_distance_matrix</span><span class="p">(</span><span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span>
+
+        <span class="c1"># End distance matrices</span>
 
         <span class="c1"># ----</span>
         <span class="c1"># phi: F -&gt; G^n</span>
@@ -320,6 +308,49 @@
 
         <span class="c1"># End psi</span>
         <span class="c1"># ---</span>
+
+    <span class="c1">### ----------------</span>
+    <span class="c1"># Function to set phi and psi matrices for the interleaving (instead of random)</span>
+    <span class="c1">### ----------------</span>
+
+<div class="viewcode-block" id="Interleave.set_interleaving_maps">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.set_interleaving_maps">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_interleaving_maps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phi_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">psi_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the phi and psi matrices to a given value. Instead of replacing the matrices, set the values block by block.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            phi_dict (dict): </span>
+<span class="sd">                A dictionary of the form ``{&#39;0&#39;: {&#39;V&#39;: phi_0_V, &#39;E&#39;: phi_0_E}, &#39;n&#39;: {&#39;V&#39;: phi_n_V, &#39;E&#39;: phi_n_E}}`` where each ``phi_i_j`` is a LabeledBlockMatrix.</span>
+<span class="sd">            psi_dict (dict): </span>
+<span class="sd">                A dictionary of the form ``{&#39;0&#39;: {&#39;V&#39;: psi_0_V, &#39;E&#39;: psi_0_E}, &#39;n&#39;: {&#39;V&#39;: psi_n_V, &#39;E&#39;: psi_n_E}}`` where each ``psi_i_j`` is a LabeledBlockMatrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">phi_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">thickening</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]:</span>
+
+                    <span class="c1"># fist get the funciton values of the map that&#39;s coming in</span>
+                    <span class="n">keys</span> <span class="o">=</span> <span class="n">phi_dict</span><span class="p">[</span><span class="n">thickening</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span><span class="o">.</span><span class="n">get_all_block_indices</span><span class="p">()</span>
+
+                    <span class="c1"># Now set the values</span>
+                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="n">thickening</span><span class="p">][</span><span class="n">obj_type</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi_dict</span><span class="p">[</span><span class="n">thickening</span><span class="p">][</span><span class="n">obj_type</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">psi_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">thickening</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]:</span>
+
+                    <span class="c1"># fist get the funciton values of the map that&#39;s coming in</span>
+                    <span class="n">keys</span> <span class="o">=</span> <span class="n">psi_dict</span><span class="p">[</span><span class="n">thickening</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span><span class="o">.</span><span class="n">get_all_block_indices</span><span class="p">()</span>
+
+                    <span class="c1"># Now set the values</span>
+                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="n">thickening</span><span class="p">][</span><span class="n">obj_type</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">psi_dict</span><span class="p">[</span><span class="n">thickening</span><span class="p">][</span><span class="n">obj_type</span><span class="p">][</span><span class="n">key</span><span class="p">]</span></div>
+
+
+
+        
 
     <span class="c1">### ----------------</span>
     <span class="c1"># Functions for getting stuff out of all the dictionaries </span>
@@ -577,18 +608,7 @@
 <div class="viewcode-block" id="Interleave.draw_all_graphs">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_graphs">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_all_graphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Draw all the Mapper graphs.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            figsize (tuple) :</span>
-<span class="sd">                The size of the figure to draw. Default is (15,10).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            matplotlib.figure.Figure, numpy.ndarray: The figure and axes the graphs were drawn on.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">sharey</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">layout</span> <span class="o">=</span> <span class="s1">&#39;constrained&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">constrained_layout</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$F_0$&#39;</span><span class="p">)</span>
@@ -639,27 +659,20 @@
 
 <div class="viewcode-block" id="Interleave.draw_all_I">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_I">[docs]</a>
-    <span class="k">def</span> <span class="nf">draw_all_I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">13</span><span class="p">),</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw_all_I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw all the induced maps.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            graph (str) : </span>
-<span class="sd">                The graph to draw the induced maps for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
-<span class="sd">            figsize (tuple) :</span>
-<span class="sd">                The size of the figure to draw. Default is (13,13).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">layout</span> <span class="o">=</span> <span class="s1">&#39;constrained&#39;</span><span class="p">)</span>
-        <span class="c1"># plt.subplots_adjust(wspace=.4, hspace=.4)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_I</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Vertices: $&#39;</span> <span class="o">+</span> <span class="n">graph</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;_0 \to &#39;</span><span class="o">+</span> <span class="n">graph</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;_</span><span class="si">{n}</span><span class="s1">$&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_I</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Edges: $&#39;</span> <span class="o">+</span> <span class="n">graph</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;_0 \to &#39;</span> <span class="o">+</span> <span class="n">graph</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;_</span><span class="si">{n}</span><span class="s1">$&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_I</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Vertices: $G_0 \to G_</span><span class="si">{n}</span><span class="s1">$&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_I</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Edges: $G_0 \to G_</span><span class="si">{n}</span><span class="s1">$&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_I</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Vertices: $&#39;</span> <span class="o">+</span> <span class="n">graph</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;_n \to &#39;</span><span class="o">+</span> <span class="n">graph</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;_</span><span class="si">{2n}</span><span class="s1">$&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_I</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Edges: $&#39;</span> <span class="o">+</span> <span class="n">graph</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;_n \to &#39;</span> <span class="o">+</span> <span class="n">graph</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;_</span><span class="si">{2n}</span><span class="s1">$&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_I</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Vertices: $G_n \to G_</span><span class="si">{2n}</span><span class="s1">$&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_I</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Edges: $G_n \to G_</span><span class="si">{2n}</span><span class="s1">$&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Interleave.draw_B">
@@ -687,28 +700,23 @@
 
 <div class="viewcode-block" id="Interleave.draw_all_B">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_B">[docs]</a>
-    <span class="k">def</span> <span class="nf">draw_all_B</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">9</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw_all_B</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">24</span><span class="p">,</span><span class="mi">18</span><span class="p">)):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw all the boundary matrices.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            figsize (tuple) :</span>
-<span class="sd">                The size of the figure to draw. Default is (12,9).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">layout</span> <span class="o">=</span> <span class="s1">&#39;constrained&#39;</span><span class="p">)</span>
-        <span class="c1"># plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(F_0)$&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(F_n)$&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(F_</span><span class="si">{2n}</span><span class="s1">)$&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(G_0)$&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(G_n)$&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(G_</span><span class="si">{2n}</span><span class="s1">)$&#39;</span><span class="p">)</span></div>
 
 
@@ -740,8 +748,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
-
-        
         
         <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="n">colorbar</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;V(</span><span class="si">{</span><span class="n">graph</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
@@ -775,8 +781,8 @@
             <span class="n">G_key</span> <span class="o">=</span> <span class="s1">&#39;_n&#39;</span>
             <span class="n">F_key</span> <span class="o">=</span> <span class="s1">&#39;_2n&#39;</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s2">(G</span><span class="si">{</span><span class="n">F_key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s2">(F</span><span class="si">{</span><span class="n">G_key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="s2">(G</span><span class="si">{</span><span class="n">F_key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="s2">(F</span><span class="si">{</span><span class="n">G_key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ax</span></div>
 
@@ -804,25 +810,20 @@
             <span class="n">F_key</span> <span class="o">=</span> <span class="s1">&#39;_n&#39;</span>
             <span class="n">G_key</span> <span class="o">=</span> <span class="s1">&#39;_2n&#39;</span>
             
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s2">(G</span><span class="si">{</span><span class="n">G_key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s2">(F</span><span class="si">{</span><span class="n">F_key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="s2">(G</span><span class="si">{</span><span class="n">G_key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="s2">(F</span><span class="si">{</span><span class="n">F_key</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ax</span></div>
 
 
 <div class="viewcode-block" id="Interleave.draw_all_phi">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_phi">[docs]</a>
-    <span class="k">def</span> <span class="nf">draw_all_phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw_all_phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw all the ``phi`` maps.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">            figsize (tuple) :</span>
-<span class="sd">                The size of the figure to draw. Default is (10,10).</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">layout</span> <span class="o">=</span> <span class="s1">&#39;constrained&#39;</span><span class="p">)</span>
-        <span class="c1"># plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_phi</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\varphi_0^V$&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_phi</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -836,12 +837,11 @@
 
 <div class="viewcode-block" id="Interleave.draw_all_psi">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_psi">[docs]</a>
-    <span class="k">def</span> <span class="nf">draw_all_psi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span>   <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw_all_psi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw all the ``psi`` maps.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">layout</span> <span class="o">=</span> <span class="s1">&#39;constrained&#39;</span><span class="p">)</span>
-        <span class="c1"># plt.subplots_adjust(wspace=spacing[0], hspace=spacing[1])</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_psi</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\psi_0^V$&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_psi</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -853,41 +853,58 @@
         <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\psi_n^E$&#39;</span><span class="p">)</span></div>
 
 
-    <span class="c1"># ==========</span>
+    <span class="c1"># =======================</span>
     <span class="c1"># Functions for checking commutative diagrams </span>
+    <span class="c1"># =======================</span>
 
-<div class="viewcode-block" id="Interleave.parallelogram_Edge_Vert">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert">[docs]</a>
-    <span class="k">def</span> <span class="nf">parallelogram_Edge_Vert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">up_or_down</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span>
-                                    <span class="n">draw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  
-                                    <span class="n">drawtype</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span> 
-                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_draw_matrix_debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> 
+                           <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span> 
+                           <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">)):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        A debugging drawing function to check the matrix mutliplications for each of the three diagram types. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="n">figsize</span><span class="p">)</span>
+        <span class="n">A</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">titles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">B</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">titles</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">C</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">titles</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">D</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>  <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;PuOr&#39;</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">titles</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span>
+
+    <span class="c1">#---- Parallelogram: Edge-Vertex ----</span>
+
+<div class="viewcode-block" id="Interleave.parallelogram_Edge_Vert_matrix">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">parallelogram_Edge_Vert_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                                <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> 
+                                <span class="n">up_or_down</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span>
+                                <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+                                <span class="n">draw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  
+                                <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check that the parallelogram for the pair :math:`(U_{\\tau_I}\\subset U_{\\sigma_i})` commutes.</span>
-<span class="sd">        This is the one that relates the edge maps to the vertex maps.</span>
-<span class="sd">        (These are types 1 (when maptype = &#39;phi&#39;) and 2 (when maptype = &#39;psi&#39;) from Liz&#39;s Big List )</span>
+<span class="sd">        Check that the parallelogram for the pair :math:`(S_{\\tau_i}\\subset S_{\\sigma_i})` commutes.</span>
+<span class="sd">        This is the one that relates the edge maps to the vertex maps. Because a function value has both an up and down version, we need to specify which one we want to check with the ``up_or_down`` parameter.</span>
 
-<span class="sd">        If ``func_val`` is not None, we will only check the parallelogram for that function value. Because a function value has both an up and down version, we need to specify which one we want to check with the ``up_or_down`` parameter.</span>
+<span class="sd">        If ``func_val`` is not None, we will only check the parallelogram for that function value. </span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            maptype (str) : </span>
-<span class="sd">                The type of map. Either ``&#39;phi&#39;`` or ``&#39;psi&#39;``.</span>
-<span class="sd">            returntype (str) : </span>
-<span class="sd">                The type of return. Either ``&#39;dist&#39;`` if you want the matrix that gives the thickening required to make the diagram commute; or ``&#39;commute&#39;`` to just give the map mismatch.</span>
-<span class="sd">            func_val (int) :</span>
-<span class="sd">                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</span>
+<span class="sd">                The type of map for the relevant diagram. Either ``&#39;phi&#39;`` or ``&#39;psi&#39;``.</span>
 <span class="sd">            up_or_down (str) :</span>
 <span class="sd">                Whether to check the up or down version of the parallelogram. Either ``&#39;up&#39;`` or ``&#39;down&#39;``. Default is ``&#39;down&#39;``.</span>
+<span class="sd">            func_val (int) :</span>
+<span class="sd">                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</span>
 <span class="sd">            draw (bool) : </span>
 <span class="sd">                Whether to draw the maps. Default is ``False``.</span>
-<span class="sd">            drawtype (str) : </span>
-<span class="sd">                The type of drawing. Either ``&#39;all&#39;`` or ``&#39;result&#39;``. Default is ``&#39;all&#39;``.</span>
-<span class="sd">            **kwargs : </span>
-<span class="sd">                Additional keyword arguments to pass to the drawing function.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            LabeledMatrix : </span>
-<span class="sd">                The matrix that gives the thickenin grequired to make the diagram commute if returntype is ``&#39;dist&#39;``; or the map mismatch if returntype is ``&#39;commute&#39;``</span>
+<span class="sd">                The matrix that gives the thickening required to make the diagram commute. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">maptype</span> <span class="o">==</span> <span class="s1">&#39;phi&#39;</span><span class="p">:</span>
@@ -898,11 +915,20 @@
             <span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span>
             <span class="n">end_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span>
             <span class="n">maptype_latex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\psi&#39;</span>
+        
+        <span class="k">if</span> <span class="n">up_or_down</span> <span class="o">==</span> <span class="s1">&#39;down&#39;</span><span class="p">:</span>
+            <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_down</span>
+        <span class="k">elif</span> <span class="n">up_or_down</span> <span class="o">==</span> <span class="s1">&#39;up&#39;</span><span class="p">:</span>
+            <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_up</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown up_or_down </span><span class="si">{</span><span class="n">up_or_down</span><span class="si">}</span><span class="s2">. Must be &#39;up&#39; or &#39;down&#39;.&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">func_val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
+            <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="n">B</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
 
-            <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span> 
+            <span class="n">Bottom</span> <span class="o">=</span> <span class="n">B</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span>
+
+
             <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
 
             <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="o">@</span> <span class="n">Result</span>
@@ -921,45 +947,44 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown up_or_down </span><span class="si">{</span><span class="n">up_or_down</span><span class="si">}</span><span class="s2">. Must be &#39;up&#39; or &#39;down&#39;.&quot;</span><span class="p">)</span>
 
 
-        <span class="k">if</span> <span class="n">draw</span> <span class="ow">and</span> <span class="n">drawtype</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-            <span class="n">Top</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">Top_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">maptype_latex</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="s2">0,V</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot B_</span><span class="si">{</span><span class="n">start_graph</span><span class="si">}</span><span class="s2">$&quot;</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Top_title</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">draw</span><span class="p">:</span> 
+            <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">maptype_latex</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="s2">0,V</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot B_</span><span class="si">{</span><span class="n">start_graph</span><span class="si">}</span><span class="s2">$&quot;</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$B_</span><span class="si">{</span><span class="n">end_graph</span><span class="si">}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot </span><span class="si">{</span><span class="n">maptype_latex</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="s2">0,E</span><span class="se">}}</span><span class="s2">$&quot;</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">titles</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">titles</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$D_</span><span class="se">{{</span><span class="si">{</span><span class="n">end_graph</span><span class="si">}</span><span class="s2">,n,V</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot (</span><span class="si">{</span><span class="n">titles</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)$&quot;</span>
 
-            <span class="n">Bottom</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">Bottom_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$B_</span><span class="si">{</span><span class="n">end_graph</span><span class="si">}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot </span><span class="si">{</span><span class="n">maptype_latex</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="s2">0,E</span><span class="se">}}</span><span class="s2">$&quot;</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Bottom_title</span><span class="p">)</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_draw_matrix_debug</span><span class="p">(</span><span class="n">Top</span><span class="p">,</span> <span class="n">Bottom</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Result_Dist</span><span class="p">,</span> <span class="n">titles</span> <span class="o">=</span> <span class="n">titles</span><span class="p">)</span>
 
-            <span class="n">Result</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="n">Result_title</span> <span class="o">=</span> <span class="n">Top_title</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">Bottom_title</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Result_title</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Result_Dist</span></div>
 
-            <span class="n">Result_Dist</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;PuOr&#39;</span><span class="p">)</span>
-            <span class="n">Result_Dist_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$D_</span><span class="se">{{</span><span class="si">{</span><span class="n">end_graph</span><span class="si">}</span><span class="s2">,n,V</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot (</span><span class="si">{</span><span class="n">Result_title</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)$&quot;</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Result_Dist_title</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">draw</span> <span class="ow">and</span> <span class="n">drawtype</span> <span class="o">==</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-            <span class="n">Result_Dist</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;PuOr&#39;</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parallelogram for $</span><span class="si">{</span><span class="n">maptype_latex</span><span class="si">}</span><span class="s2">$ (Edge-Vertex)&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="Interleave.parallelogram_Edge_Vert">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert">[docs]</a>
+    <span class="k">def</span> <span class="nf">parallelogram_Edge_Vert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> 
+                                <span class="n">up_or_down</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span>
+                                <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check that the parallelogram for the pair :math:`(S_{\\tau_i}\\subset S_{\\sigma_i})` commutes, and return the maximum value in the matrix. </span>
 
-        <span class="k">if</span> <span class="n">returntype</span> <span class="o">==</span> <span class="s1">&#39;dist&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Result_Dist</span>
-        <span class="k">elif</span> <span class="n">returntype</span> <span class="o">==</span> <span class="s1">&#39;commute&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Result</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown returntype </span><span class="si">{</span><span class="n">returntype</span><span class="si">}</span><span class="s2">. Must be &#39;dist&#39; or &#39;commute&#39;.&quot;</span><span class="p">)</span></div>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">Result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram_Edge_Vert_matrix</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="n">up_or_down</span><span class="p">,</span> <span class="n">func_val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span></div>
 
 
     <span class="c1">#---</span>
 
-<div class="viewcode-block" id="Interleave.parallelogram">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram">[docs]</a>
-    <span class="k">def</span> <span class="nf">parallelogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
-                            <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+    <span class="c1">#---- Parallelogram: Thickening ----</span>
+
+<div class="viewcode-block" id="Interleave.parallelogram_matrix">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">parallelogram_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                            <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> 
+                            <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
+                            <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                             <span class="n">draw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
-                            <span class="n">drawtype</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">):</span>
+                            <span class="p">):</span>
 <span class="w">                            </span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the paralellograms for checking that it&#39;s a nat trans.</span>
@@ -972,18 +997,14 @@
 <span class="sd">                The type of map. Either &#39;phi&#39; or &#39;psi&#39;.</span>
 <span class="sd">            obj_type (str) : </span>
 <span class="sd">                The type of object. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
-<span class="sd">            returntype (str) : </span>
-<span class="sd">                The type of return. Either ``&#39;dist&#39;`` if you want the matrix that gives the thickenin grequired to make the diagram commute; or ``&#39;commute&#39;`` to just give the map mismatch.</span>
 <span class="sd">            func_val (int) :</span>
 <span class="sd">                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</span>
 <span class="sd">            draw (bool) : </span>
 <span class="sd">                Whether to draw the maps. Default is False.</span>
-<span class="sd">            drawtype (str) : </span>
-<span class="sd">                The type of drawing. Either &#39;all&#39; or &#39;result&#39;. Default is &#39;all&#39;.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            LabeledMatrix : </span>
-<span class="sd">                The matrix that gives the thickening required to make the diagram commute if returntype is ``&#39;dist&#39;``; or the map mismatch if returntype is ``&#39;commute&#39;``.</span>
+<span class="sd">                The matrix that gives the thickening required to make the diagram commute. </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">maptype</span> <span class="o">==</span> <span class="s1">&#39;phi&#39;</span><span class="p">:</span>
@@ -999,6 +1020,8 @@
             <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
             <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
             <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
+            <span class="c1"># Result= Result.to_labeled_matrix() # To make the matrix labeledmatrix</span>
+            
             <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="n">Result</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Do this for a single input function value</span>
@@ -1008,43 +1031,40 @@
             <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">end_graph</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="n">Result</span>
 
         <span class="c1"># --- Drawing--- #</span>
-        <span class="k">if</span> <span class="n">draw</span> <span class="ow">and</span> <span class="n">drawtype</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-            <span class="n">Top</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">Top_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">maptype_latex</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="s2">n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot I_</span><span class="se">{{</span><span class="s2">0,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2">$&quot;</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Top_title</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">draw</span><span class="p">:</span>
+            <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">maptype_latex</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="s2">n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot I_</span><span class="se">{{</span><span class="s2">0,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2">$&quot;</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$I_</span><span class="se">{{</span><span class="s2">n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot </span><span class="si">{</span><span class="n">maptype_latex</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="s2">0,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2">$&quot;</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">titles</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">titles</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$D_</span><span class="se">{{</span><span class="si">{</span><span class="n">end_graph</span><span class="si">}</span><span class="s2">,2n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot (</span><span class="si">{</span><span class="n">titles</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)$&quot;</span>
 
-            <span class="n">Bottom</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">Bottom_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$I_</span><span class="se">{{</span><span class="s2">n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot </span><span class="si">{</span><span class="n">maptype_latex</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="s2">0,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2">$&quot;</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Bottom_title</span><span class="p">)</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_draw_matrix_debug</span><span class="p">(</span><span class="n">Top</span><span class="p">,</span> <span class="n">Bottom</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Result_Dist</span><span class="p">)</span>
 
-            <span class="n">Result</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="n">Result_title</span> <span class="o">=</span> <span class="n">Top_title</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">Bottom_title</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Result_title</span><span class="p">)</span>
-
-            <span class="n">Result_Dist</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;PuOr&#39;</span><span class="p">)</span>
-            <span class="n">Result_dist_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$D_</span><span class="se">{{</span><span class="si">{</span><span class="n">end_graph</span><span class="si">}</span><span class="s2">,2n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot (</span><span class="si">{</span><span class="n">Result_title</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)$&quot;</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Result_dist_title</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="n">draw</span> <span class="ow">and</span> <span class="n">drawtype</span> <span class="o">==</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-            <span class="n">Result_Dist</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;PuOr&#39;</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parallelogram for $</span><span class="si">{</span><span class="n">maptype_latex</span><span class="si">}</span><span class="s2">$ (Edge-Vertex)&quot;</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="n">Result_Dist</span></div>
 
 
-        <span class="k">if</span> <span class="n">returntype</span> <span class="o">==</span> <span class="s1">&#39;dist&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Result_Dist</span>
-        <span class="k">elif</span> <span class="n">returntype</span> <span class="o">==</span> <span class="s1">&#39;commute&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Result</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown returntype </span><span class="si">{</span><span class="n">returntype</span><span class="si">}</span><span class="s2">. Must be &#39;dist&#39; or &#39;commute&#39;.&quot;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Interleave.parallelogram">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram">[docs]</a>
+    <span class="k">def</span> <span class="nf">parallelogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span>
+                        <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span>
+                        <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the loss value for the thickening paralellograms</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram_matrix</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span><span class="p">)</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">Result</span></div>
 
 
-<div class="viewcode-block" id="Interleave.triangle">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.triangle">[docs]</a>
-    <span class="k">def</span> <span class="nf">triangle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
-                        <span class="n">returntype</span> <span class="o">=</span> <span class="s1">&#39;dist&#39;</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-                        <span class="n">draw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">drawtype</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">):</span>
+    <span class="c1"># --- Triangles ----</span>
+
+<div class="viewcode-block" id="Interleave.triangle_matrix">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.triangle_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">triangle_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                        <span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> 
+                        <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
+                        <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+                        <span class="n">draw</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the triangle for checking that it&#39;s an interleaving. </span>
 
@@ -1055,28 +1075,28 @@
 <span class="sd">                The starting graph. Either &#39;F&#39; or &#39;G&#39;.</span>
 <span class="sd">            obj_type (str) : </span>
 <span class="sd">                The type of object. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
-<span class="sd">            returntype (str) : </span>
-<span class="sd">                The type of return. Either ``&#39;dist&#39;`` if you want the matrix that gives the thickenin grequired to make the diagram commute; or ``&#39;commute&#39;`` to just give the map mismatch.</span>
 <span class="sd">            func_val (int) :</span>
 <span class="sd">                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</span>
 <span class="sd">            draw (bool) : </span>
 <span class="sd">                Whether to draw the maps. Default is False.</span>
-<span class="sd">            drawtype (str) : </span>
-<span class="sd">                The type of drawing. Either &#39;all&#39; or &#39;result&#39;. Default is &#39;all&#39;.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            LabeledMatrix : </span>
-<span class="sd">                The matrix that gives the thickenin grequired to make the diagram commute if returntype is ``&#39;dist&#39;``; or the map mismatch if returntype is ``&#39;commute&#39;``.</span>
+<span class="sd">                The matrix that gives the thickenin grequired to make the diagram commute </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">start_graph</span> <span class="o">==</span> <span class="s1">&#39;F&#39;</span><span class="p">:</span>
             <span class="n">end_graph</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span>
             <span class="n">map1</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span>
             <span class="n">map2</span> <span class="o">=</span> <span class="s1">&#39;psi&#39;</span>
+            <span class="n">map1_latex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\varphi&#39;</span>
+            <span class="n">map2_latex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\psi&#39;</span>
         <span class="k">elif</span> <span class="n">start_graph</span> <span class="o">==</span> <span class="s1">&#39;G&#39;</span><span class="p">:</span>
             <span class="n">end_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span>
             <span class="n">map1</span> <span class="o">=</span> <span class="s1">&#39;psi&#39;</span>
             <span class="n">map2</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span>
+            <span class="n">map1_latex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\psi&#39;</span>
+            <span class="n">map2_latex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\varphi&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown start_graph </span><span class="si">{</span><span class="n">start_graph</span><span class="si">}</span><span class="s2">. Must be &#39;F&#39; or &#39;G&#39;.&quot;</span><span class="p">)</span>
 
@@ -1084,6 +1104,7 @@
             <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
             <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">map2</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">map1</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)</span>
             <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
+            <span class="c1"># Result = Result.to_labeled_matrix() # To make the matrix labeledmatrix</span>
 
             <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span> <span class="o">@</span> <span class="n">Result</span>
         
@@ -1091,39 +1112,31 @@
             <span class="n">Top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span>
             <span class="n">Bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">map2</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">map1</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span>
             <span class="n">Result</span> <span class="o">=</span> <span class="n">Top</span> <span class="o">-</span> <span class="n">Bottom</span>
-
+            
             <span class="n">Result_Dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)[</span><span class="n">func_val</span><span class="p">]</span> <span class="o">@</span> <span class="n">Result</span>
 
-        <span class="k">if</span> <span class="n">draw</span> <span class="ow">and</span> <span class="n">drawtype</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-            <span class="n">Top</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">Top_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$I_</span><span class="se">{{</span><span class="s2">0,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot I_</span><span class="se">{{</span><span class="s2">n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2">$&quot;</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Top_title</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">draw</span><span class="p">:</span>
+            <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$I_</span><span class="se">{{</span><span class="s2">n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot I_</span><span class="se">{{</span><span class="s2">0,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2">$&quot;</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">map2_latex</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="s2">n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot </span><span class="si">{</span><span class="n">map1_latex</span><span class="si">}</span><span class="s2">_</span><span class="se">{{</span><span class="s2">0,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2">$&quot;</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">titles</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">titles</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">titles</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$D_</span><span class="se">{{</span><span class="si">{</span><span class="n">start_graph</span><span class="si">}</span><span class="s2">,2n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot (</span><span class="si">{</span><span class="n">titles</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)$&quot;</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_draw_matrix_debug</span><span class="p">(</span><span class="n">Top</span><span class="p">,</span> <span class="n">Bottom</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Result_Dist</span><span class="p">)</span>
 
-            <span class="n">Bottom</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">Bottom_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$I_</span><span class="se">{{</span><span class="s2">n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot I_</span><span class="se">{{</span><span class="s2">2n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2">$&quot;</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Bottom_title</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Result_Dist</span></div>
 
-            <span class="n">Result</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="n">Result_title</span> <span class="o">=</span> <span class="n">Top_title</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">Bottom_title</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Result_title</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="Interleave.triangle">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.triangle">[docs]</a>
+    <span class="k">def</span> <span class="nf">triangle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the loss value for the triangle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">triangle_matrix</span><span class="p">(</span><span class="n">start_graph</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span><span class="p">)</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">Result</span></div>
 
-            <span class="n">Result_Dist</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;PuOr&#39;</span><span class="p">)</span>
-            <span class="n">Result_dist_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$D_</span><span class="se">{{</span><span class="si">{</span><span class="n">start_graph</span><span class="si">}</span><span class="s2">,2n,</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="se">}}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">cdot (</span><span class="si">{</span><span class="n">Result_title</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)$&quot;</span>
-            <span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">Result_dist_title</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">draw</span> <span class="ow">and</span> <span class="n">drawtype</span> <span class="o">==</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-            <span class="n">Result</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Triangle for </span><span class="si">{</span><span class="n">start_graph</span><span class="si">}</span><span class="s2"> (Edge-Vertex)&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">returntype</span> <span class="o">==</span> <span class="s1">&#39;dist&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Result_Dist</span>
-        <span class="k">elif</span> <span class="n">returntype</span> <span class="o">==</span> <span class="s1">&#39;commute&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Result</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown returntype </span><span class="si">{</span><span class="n">returntype</span><span class="si">}</span><span class="s2">. Must be &#39;dist&#39; or &#39;commute&#39;.&quot;</span><span class="p">)</span></div>
-
+    <span class="c1"># --- Loss functions ----</span>
 
 <div class="viewcode-block" id="Interleave.loss">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.loss">[docs]</a>
@@ -1139,6 +1152,7 @@
         <span class="n">loss_list</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># All the edge-vertex parallelogram maps </span>
+        <span class="c1"># TODO: I think this is missing the up/down bit? </span>
         <span class="k">for</span> <span class="n">maptype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="s1">&#39;psi&#39;</span><span class="p">]:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram_Edge_Vert</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">maptype</span><span class="p">)</span>
             <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
@@ -1153,8 +1167,8 @@
 
         <span class="c1"># ALl the triangle maps</span>
         <span class="k">for</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]:</span>
-            <span class="k">for</span> <span class="n">drawtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">]:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">triangle</span><span class="p">(</span><span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">start_graph</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">]:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">triangle</span><span class="p">(</span><span class="n">start_graph</span> <span class="o">=</span> <span class="n">start_graph</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)</span>
                 <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
                 <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
 
@@ -1190,7 +1204,8 @@
                 <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span>
                 <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">get_function_values</span><span class="p">():</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">maptype</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
-                    <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span> 
+                    <span class="c1"># print(f&quot;parallelogram loss for {graph_name} {obj_type} {i} is {loss}&quot;)</span>
                     <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># This catch is because the two graphs might have different ranges of function values</span>
@@ -1217,9 +1232,11 @@
                 <span class="n">edge_vals</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">get_function_values</span><span class="p">()</span>
                 <span class="n">edge_vals</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">edge_vals</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">edge_vals</span><span class="p">)))</span>
                 <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">edge_vals</span><span class="p">:</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram_Edge_Vert</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">maptype</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
-                    <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
-                    <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">up_or_down</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;up&#39;</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">]:</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram_Edge_Vert</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">maptype</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">up_or_down</span><span class="o">=</span><span class="n">up_or_down</span><span class="p">)</span>
+                        <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+                        <span class="c1"># print(f&quot;mixed parallelogram loss for {graph_name} {obj_type} {i} is {loss}&quot;)</span>
+                        <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># This catch is because the two graphs might have different ranges of function values</span>
                     <span class="k">pass</span>
@@ -1232,6 +1249,7 @@
                 <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">edge_vals</span><span class="p">:</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="n">maptype</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
                     <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+                    <span class="c1"># print(f&quot;parallelogram loss for {graph_name} {obj_type} {i} is {loss}&quot;)</span>
                     <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># This catch is because the two graphs might have different ranges of function values </span>
@@ -1245,6 +1263,7 @@
                 <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">edge_vals</span><span class="p">:</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">triangle</span><span class="p">(</span><span class="n">start_graph</span> <span class="o">=</span> <span class="n">graph_name</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>
                     <span class="n">loss</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">absmax</span><span class="p">()</span>
+                    <span class="c1"># print(f&quot;triangle loss for {graph_name} {obj_type} {i} is {loss}&quot;)</span>
                     <span class="n">loss_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># This catch is because the two graphs might have different ranges of function values</span>
@@ -1257,6 +1276,7 @@
         <span class="c1"># Get max loss over all function values</span>
         <span class="c1"># flatten the dictionary</span>
         <span class="n">loss_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">loss_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">loss_list</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">loss_list</span><span class="p">)</span></div>
 
 

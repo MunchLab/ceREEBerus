@@ -541,14 +541,14 @@ class Interleave:
         Draw all the induced maps.
         """
         fig, axs = plt.subplots(2, 2, figsize=figsize, constrained_layout=True)
-        self.draw_I('G', '0', 'V', ax = axs[0, 0])
+        self.draw_I('G', '0', 'V', ax = axs[0, 0], **kwargs)
         axs[0,0].set_title(r'Vertices: $G_0 \to G_{n}$')
-        self.draw_I('G', '0', 'E', ax = axs[1,0])
+        self.draw_I('G', '0', 'E', ax = axs[1,0], **kwargs)
         axs[1,0].set_title(r'Edges: $G_0 \to G_{n}$')
 
-        self.draw_I('G', 'n', 'V', ax = axs[0, 1])
+        self.draw_I('G', 'n', 'V', ax = axs[0, 1], **kwargs)
         axs[0,1].set_title(r'Vertices: $G_n \to G_{2n}$')
-        self.draw_I('G', 'n', 'E', ax = axs[1,1])
+        self.draw_I('G', 'n', 'E', ax = axs[1,1], **kwargs)
         axs[1,1].set_title(r'Edges: $G_n \to G_{2n}$')
 
     def draw_B(self, graph = 'F', key = '0', ax = None, **kwargs):
@@ -646,8 +646,8 @@ class Interleave:
             G_key = '_n'
             F_key = '_2n'
 
-        ax.set_ylabel(f"{type}(G{F_key})")
-        ax.set_xlabel(f"{type}(F{G_key})")
+        ax.set_ylabel(f"{obj_type}(G{F_key})")
+        ax.set_xlabel(f"{obj_type}(F{G_key})")
 
         return ax
     
@@ -672,8 +672,8 @@ class Interleave:
             F_key = '_n'
             G_key = '_2n'
             
-        ax.set_ylabel(f"{type}(G{G_key})")
-        ax.set_xlabel(f"{type}(F{F_key})")
+        ax.set_ylabel(f"{obj_type}(G{G_key})")
+        ax.set_xlabel(f"{obj_type}(F{F_key})")
 
         return ax
 
@@ -708,39 +708,56 @@ class Interleave:
         self.draw_psi('n', 'E', ax = axs[1,1],  **kwargs)
         axs[1,1].set_title(r'$\psi_n^E$')
 
-    # ==========
+    # =======================
     # Functions for checking commutative diagrams 
+    # =======================
 
-    def parallelogram_Edge_Vert(self, maptype = 'phi', returntype = 'dist', func_val = None, up_or_down = 'down',
-                                    draw = False,  
-                                    drawtype = 'all', 
-                                    **kwargs):
+    def _draw_matrix_debug(self, A, B, C, D, 
+                           titles = ['', '', '', ''], 
+                           figsize = (12,3)):
+        '''
+        A debugging drawing function to check the matrix mutliplications for each of the three diagram types. 
+        '''
+
+        fig, axs = plt.subplots(1, 4, figsize = figsize)
+        A.draw(ax = axs[0], vmin = -1, vmax = 1, filltype = 'nan')
+        axs[0].set_title(titles[0])
+        B.draw(ax = axs[1], vmin = -1, vmax = 1, filltype = 'nan')
+        axs[1].set_title(titles[1])
+        C.draw(ax = axs[2], vmin = -1, vmax = 1, colorbar = True, filltype = 'nan')
+        axs[2].set_title(titles[2])
+        D.draw(ax = axs[3], colorbar = True,  cmap = 'PuOr')
+        axs[3].set_title(titles[3])
+
+        return fig, axs
+
+    #---- Parallelogram: Edge-Vertex ----
+
+    def parallelogram_Edge_Vert_matrix(self, 
+                                maptype = 'phi', 
+                                up_or_down = 'down',
+                                func_val = None, 
+                                draw = False,  
+                                ):
         """
-        Check that the parallelogram for the pair :math:`(U_{\\tau_I}\\subset U_{\\sigma_i})` commutes.
-        This is the one that relates the edge maps to the vertex maps.
-        (These are types 1 (when maptype = 'phi') and 2 (when maptype = 'psi') from Liz's Big List )
+        Check that the parallelogram for the pair :math:`(S_{\\tau_i}\\subset S_{\\sigma_i})` commutes.
+        This is the one that relates the edge maps to the vertex maps. Because a function value has both an up and down version, we need to specify which one we want to check with the ``up_or_down`` parameter.
 
-        If ``func_val`` is not None, we will only check the parallelogram for that function value. Because a function value has both an up and down version, we need to specify which one we want to check with the ``up_or_down`` parameter.
+        If ``func_val`` is not None, we will only check the parallelogram for that function value. 
 
         Parameters:
             maptype (str) : 
-                The type of map. Either ``'phi'`` or ``'psi'``.
-            returntype (str) : 
-                The type of return. Either ``'dist'`` if you want the matrix that gives the thickening required to make the diagram commute; or ``'commute'`` to just give the map mismatch.
-            func_val (int) :
-                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.
+                The type of map for the relevant diagram. Either ``'phi'`` or ``'psi'``.
             up_or_down (str) :
                 Whether to check the up or down version of the parallelogram. Either ``'up'`` or ``'down'``. Default is ``'down'``.
+            func_val (int) :
+                The function value to check the parallelogram for. If None, we will check all function values for the full matrix.
             draw (bool) : 
                 Whether to draw the maps. Default is ``False``.
-            drawtype (str) : 
-                The type of drawing. Either ``'all'`` or ``'result'``. Default is ``'all'``.
-            **kwargs : 
-                Additional keyword arguments to pass to the drawing function.
         
         Returns:
             LabeledMatrix : 
-                The matrix that gives the thickenin grequired to make the diagram commute if returntype is ``'dist'``; or the map mismatch if returntype is ``'commute'``
+                The matrix that gives the thickening required to make the diagram commute. 
         """
 
         if maptype == 'phi':
@@ -751,11 +768,18 @@ class Interleave:
             start_graph = 'G'
             end_graph = 'F'
             maptype_latex = r'\psi'
+        
+        if up_or_down == 'down':
+            B = self.B_down
+        elif up_or_down == 'up':
+            B = self.B_up
+        else:
+            raise ValueError(f"Unknown up_or_down {up_or_down}. Must be 'up' or 'down'.")
 
         if func_val is None:
-            Top = self.get_interleaving_map(maptype, '0', 'V') @ self.B(start_graph, '0')
+            Top = self.get_interleaving_map(maptype, '0', 'V') @ B(start_graph, '0')
 
-            Bottom = self.B(end_graph, 'n') @ self.get_interleaving_map(maptype, '0', 'E')
+            Bottom = B(end_graph, 'n') @ self.get_interleaving_map(maptype, '0', 'E')
 
 
             Result = Top - Bottom
@@ -776,42 +800,38 @@ class Interleave:
                 raise ValueError(f"Unknown up_or_down {up_or_down}. Must be 'up' or 'down'.")
 
 
-        if draw and drawtype == 'all':
-            fig, axs = plt.subplots(1, 4, figsize = (15, 5))
-            Top.draw(ax = axs[0], vmin = -1, vmax = 1, **kwargs)
-            Top_title = f"${maptype_latex}_{{0,V}} \\cdot B_{start_graph}$"
-            axs[0].set_title(Top_title)
+        if draw: 
+            titles = ['', '', '', '']
+            titles[0] = f"${maptype_latex}_{{0,V}} \\cdot B_{start_graph}$"
+            titles[1] = f"$B_{end_graph} \\cdot {maptype_latex}_{{0,E}}$"
+            titles[2] = titles[0][:-1] + ' - ' + titles[1][1:]
+            titles[3] = f"$D_{{{end_graph},n,V}} \\cdot ({titles[2][1:-1]})$"
 
-            Bottom.draw(axs[1], vmin = -1, vmax = 1, **kwargs)
-            Bottom_title = f"$B_{end_graph} \\cdot {maptype_latex}_{{0,E}}$"
-            axs[1].set_title(Bottom_title)
+            fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist, titles = titles)
 
-            Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True, **kwargs)
-            Result_title = Top_title[:-1] + ' - ' + Bottom_title[1:]
-            axs[2].set_title(Result_title)
+        return Result_Dist
 
-            Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr', **kwargs)
-            Result_Dist_title = f"$D_{{{end_graph},n,V}} \\cdot ({Result_title[1:-1]})$"
-            axs[3].set_title(Result_Dist_title)
+    def parallelogram_Edge_Vert(self,maptype = 'phi', 
+                                up_or_down = 'down',
+                                func_val = None):
+        """
+        Check that the parallelogram for the pair :math:`(S_{\\tau_i}\\subset S_{\\sigma_i})` commutes, and return the maximum value in the matrix. 
 
-        elif draw and drawtype == 'result':
-            fig, ax = plt.subplots(1, 1, figsize = (5, 5))
-            Result_Dist.draw(ax = ax, colorbar = True, cmap = 'PuOr', **kwargs)
-            ax.set_title(f"Parallelogram for ${maptype_latex}$ (Edge-Vertex)")
+        """
 
-        if returntype == 'dist':
-            return Result_Dist
-        elif returntype == 'commute':
-            return Result
-        else:
-            raise ValueError(f"Unknown returntype {returntype}. Must be 'dist' or 'commute'.")
+        Result = self.parallelogram_Edge_Vert_matrix(maptype, up_or_down, func_val)
+        return Result.absmax()
 
     #---
 
-    def parallelogram(self, maptype = 'phi', obj_type = 'V', 
-                            returntype = 'dist', func_val = None, 
+    #---- Parallelogram: Thickening ----
+
+    def parallelogram_matrix(self, 
+                            maptype = 'phi', 
+                            obj_type = 'V', 
+                            func_val = None, 
                             draw = False, 
-                            drawtype = 'all'):
+                            ):
                             
         """
         Get the paralellograms for checking that it's a nat trans.
@@ -824,18 +844,14 @@ class Interleave:
                 The type of map. Either 'phi' or 'psi'.
             obj_type (str) : 
                 The type of object. Either ``'V'`` or ``'E'``.
-            returntype (str) : 
-                The type of return. Either ``'dist'`` if you want the matrix that gives the thickenin grequired to make the diagram commute; or ``'commute'`` to just give the map mismatch.
             func_val (int) :
                 The function value to check the parallelogram for. If None, we will check all function values for the full matrix.
             draw (bool) : 
                 Whether to draw the maps. Default is False.
-            drawtype (str) : 
-                The type of drawing. Either 'all' or 'result'. Default is 'all'.
         
         Returns:
             LabeledMatrix : 
-                The matrix that gives the thickening required to make the diagram commute if returntype is ``'dist'``; or the map mismatch if returntype is ``'commute'``.
+                The matrix that gives the thickening required to make the diagram commute. 
         """
 
         if maptype == 'phi':
@@ -851,8 +867,7 @@ class Interleave:
             Top = self.get_interleaving_map(maptype, 'n', obj_type) @ self.I(start_graph, '0', obj_type)
             Bottom = self.I(end_graph, 'n', obj_type) @ self.get_interleaving_map(maptype, '0', obj_type)
             Result = Top - Bottom
-            Result= Result.to_labeled_matrix() # To make the matrix labeledmatrix
-            
+            # Result= Result.to_labeled_matrix() # To make the matrix labeledmatrix
             
             Result_Dist = self.D(end_graph, '2n', obj_type) @ Result
         else:
@@ -863,40 +878,34 @@ class Interleave:
             Result_Dist = self.D(end_graph, '2n', obj_type)[func_val] @ Result
 
         # --- Drawing--- #
-        if draw and drawtype == 'all':
-            fig, axs = plt.subplots(1, 4, figsize = (15, 5))
-            Top.draw(ax = axs[0], vmin = -1, vmax = 1)
-            Top_title = f"${maptype_latex}_{{n,{obj_type}}} \\cdot I_{{0,{obj_type}}}$"
-            axs[0].set_title(Top_title)
+        if draw:
+            titles = ['', '', '', '']
+            titles[0] = f"${maptype_latex}_{{n,{obj_type}}} \\cdot I_{{0,{obj_type}}}$"
+            titles[1] = f"$I_{{n,{obj_type}}} \\cdot {maptype_latex}_{{0,{obj_type}}}$"
+            titles[2] = titles[0][:-1] + ' - ' + titles[1][1:]
+            titles[3] = f"$D_{{{end_graph},2n,{obj_type}}} \\cdot ({titles[2][1:-1]})$"
 
-            Bottom.draw(axs[1], vmin = -1, vmax = 1)
-            Bottom_title = f"$I_{{n,{obj_type}}} \\cdot {maptype_latex}_{{0,{obj_type}}}$"
-            axs[1].set_title(Bottom_title)
+            fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist)
 
-            Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
-            Result_title = Top_title[:-1] + ' - ' + Bottom_title[1:]
-            axs[2].set_title(Result_title)
+            
+        return Result_Dist
 
-            Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr')
-            Result_dist_title = f"$D_{{{end_graph},2n,{obj_type}}} \\cdot ({Result_title[1:-1]})$"
-            axs[3].set_title(Result_dist_title)
+    def parallelogram(self, maptype = 'phi',
+                        obj_type = 'V',
+                        func_val = None):
+        """
+        Get the loss value for the thickening paralellograms
+        """
+        Result = self.parallelogram_matrix(maptype, obj_type, func_val).absmax()
+        return Result
 
-        elif draw and drawtype == 'result':
-            fig, ax = plt.subplots(1, 1, figsize = (5, 5))
-            Result_Dist.draw(ax = ax, colorbar = True, cmap = 'PuOr')
-            ax.set_title(f"Parallelogram for ${maptype_latex}$ (Edge-Vertex)")
+    # --- Triangles ----
 
-
-        if returntype == 'dist':
-            return Result_Dist
-        elif returntype == 'commute':
-            return Result
-        else:
-            raise ValueError(f"Unknown returntype {returntype}. Must be 'dist' or 'commute'.")
-
-    def triangle(self, start_graph = 'F', obj_type = 'V', 
-                        returntype = 'dist', func_val = None, 
-                        draw = False, drawtype = 'all'):
+    def triangle_matrix(self, 
+                        start_graph = 'F', 
+                        obj_type = 'V', 
+                        func_val = None, 
+                        draw = False, ):
         """
         Get the triangle for checking that it's an interleaving. 
 
@@ -907,18 +916,14 @@ class Interleave:
                 The starting graph. Either 'F' or 'G'.
             obj_type (str) : 
                 The type of object. Either ``'V'`` or ``'E'``.
-            returntype (str) : 
-                The type of return. Either ``'dist'`` if you want the matrix that gives the thickenin grequired to make the diagram commute; or ``'commute'`` to just give the map mismatch.
             func_val (int) :
                 The function value to check the parallelogram for. If None, we will check all function values for the full matrix.
             draw (bool) : 
                 Whether to draw the maps. Default is False.
-            drawtype (str) : 
-                The type of drawing. Either 'all' or 'result'. Default is 'all'.
         
         Returns:
             LabeledMatrix : 
-                The matrix that gives the thickenin grequired to make the diagram commute if returntype is ``'dist'``; or the map mismatch if returntype is ``'commute'``.
+                The matrix that gives the thickenin grequired to make the diagram commute 
         """
 
         if start_graph == 'F':
@@ -940,7 +945,7 @@ class Interleave:
             Top = self.I(start_graph, 'n', obj_type) @ self.I(start_graph, '0', obj_type)
             Bottom = self.get_interleaving_map(maptype = map2, key = 'n', obj_type = obj_type) @ self.get_interleaving_map(maptype = map1, key = '0', obj_type = obj_type)
             Result = Top - Bottom
-            Result = Result.to_labeled_matrix() # To make the matrix labeledmatrix
+            # Result = Result.to_labeled_matrix() # To make the matrix labeledmatrix
 
             Result_Dist = self.D(start_graph, '2n', obj_type) @ Result
         
@@ -951,35 +956,24 @@ class Interleave:
             
             Result_Dist = self.D(start_graph, '2n', obj_type)[func_val] @ Result
 
-        if draw and drawtype == 'all':
-            fig, axs = plt.subplots(1, 4, figsize = (15, 5))
-            Top.draw(ax = axs[0], vmin = -1, vmax = 1)
-            Top_title = f"$I_{{n,{obj_type}}} \\cdot I_{{0,{obj_type}}}$"
-            axs[0].set_title(Top_title)
+        if draw:
+            titles = ['', '', '', '']
+            titles[0] = f"$I_{{n,{obj_type}}} \\cdot I_{{0,{obj_type}}}$"
+            titles[1] = f"${map2_latex}_{{n,{obj_type}}} \\cdot {map1_latex}_{{0,{obj_type}}}$"
+            titles[2] = titles[0][:-1] + ' - ' + titles[1][1:]
+            titles[3] = f"$D_{{{start_graph},2n,{obj_type}}} \\cdot ({titles[2][1:-1]})$"
+            fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist)
 
-            Bottom.draw(axs[1], vmin = -1, vmax = 1)
-            Bottom_title = f"${map2_latex}_{{n,{obj_type}}} \\cdot {map1_latex}_{{0,{obj_type}}}$"
-            axs[1].set_title(Bottom_title)
+        return Result_Dist
+    
+    def triangle(self, start_graph = 'F', obj_type = 'V', func_val = None):
+        """
+        Get the loss value for the triangle
+        """
+        Result = self.triangle_matrix(start_graph, obj_type, func_val).absmax()
+        return Result
 
-            Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
-            Result_title = Top_title[:-1] + ' - ' + Bottom_title[1:]
-            axs[2].set_title(Result_title)
-
-            Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr')
-            Result_dist_title = f"$D_{{{start_graph},2n,{obj_type}}} \\cdot ({Result_title[1:-1]})$"
-            axs[3].set_title(Result_dist_title)
-
-        elif draw and drawtype == 'result':
-            fig, ax = plt.subplots(1, 1, figsize = (5, 5))
-            Result.draw(ax = ax, colorbar = True)
-            ax.set_title(f"Triangle for {start_graph} (Edge-Vertex)")
-
-        if returntype == 'dist':
-            return Result_Dist
-        elif returntype == 'commute':
-            return Result
-        else:
-            raise ValueError(f"Unknown returntype {returntype}. Must be 'dist' or 'commute'.")
+    # --- Loss functions ----
 
     def loss(self):
         """
@@ -993,6 +987,7 @@ class Interleave:
         loss_list = []
 
         # All the edge-vertex parallelogram maps 
+        # TODO: I think this is missing the up/down bit? 
         for maptype in ['phi', 'psi']:
             result = self.parallelogram_Edge_Vert(maptype = maptype)
             loss = result.absmax()

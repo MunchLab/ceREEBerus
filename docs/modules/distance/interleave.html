@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -5,23 +7,19 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2.1. Interleave class &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -118,6 +116,20 @@
 <li><p><strong>F</strong> (<a class="reference internal" href="../reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph" title="cereeberus.reeb.mapper.MapperGraph"><em>MapperGraph</em></a>) – The first Mapper graph.</p></li>
 <li><p><strong>G</strong> (<a class="reference internal" href="../reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph" title="cereeberus.reeb.mapper.MapperGraph"><em>MapperGraph</em></a>) – The second Mapper graph.</p></li>
 <li><p><strong>n</strong> (<em>int</em>) – The interleaving parameter. The default is 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.set_interleaving_maps">
+<span class="sig-name descname"><span class="pre">set_interleaving_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.set_interleaving_maps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.set_interleaving_maps" title="Link to this definition"></a></dt>
+<dd><p>Set the phi and psi matrices to a given value. Instead of replacing the matrices, set the values block by block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phi_dict</strong> (<em>dict</em>) – A dictionary of the form <code class="docutils literal notranslate"><span class="pre">{'0':</span> <span class="pre">{'V':</span> <span class="pre">phi_0_V,</span> <span class="pre">'E':</span> <span class="pre">phi_0_E},</span> <span class="pre">'n':</span> <span class="pre">{'V':</span> <span class="pre">phi_n_V,</span> <span class="pre">'E':</span> <span class="pre">phi_n_E}}</span></code> where each <code class="docutils literal notranslate"><span class="pre">phi_i_j</span></code> is a LabeledBlockMatrix.</p></li>
+<li><p><strong>psi_dict</strong> (<em>dict</em>) – A dictionary of the form <code class="docutils literal notranslate"><span class="pre">{'0':</span> <span class="pre">{'V':</span> <span class="pre">psi_0_V,</span> <span class="pre">'E':</span> <span class="pre">psi_0_E},</span> <span class="pre">'n':</span> <span class="pre">{'V':</span> <span class="pre">psi_n_V,</span> <span class="pre">'E':</span> <span class="pre">psi_n_E}}</span></code> where each <code class="docutils literal notranslate"><span class="pre">psi_i_j</span></code> is a LabeledBlockMatrix.</p></li>
 </ul>
 </dd>
 </dl>
@@ -277,19 +289,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_all_graphs">
 <span class="sig-name descname"><span class="pre">draw_all_graphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(15,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_graphs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_graphs" title="Link to this definition"></a></dt>
-<dd><p>Draw all the Mapper graphs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>figsize</strong> (<em>tuple</em>) – The size of the figure to draw. Default is (15,10).</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The figure and axes the graphs were drawn on.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>matplotlib.figure.Figure, numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_I">
@@ -307,16 +307,8 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_all_I">
-<span class="sig-name descname"><span class="pre">draw_all_I</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(13,</span> <span class="pre">13)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_I"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_I" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw_all_I</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_I"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_I" title="Link to this definition"></a></dt>
 <dd><p>Draw all the induced maps.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<em>str</em>) – The graph to draw the induced maps for. Either <code class="docutils literal notranslate"><span class="pre">'F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'G'</span></code>.</p></li>
-<li><p><strong>figsize</strong> (<em>tuple</em>) – The size of the figure to draw. Default is (13,13).</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -335,13 +327,8 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_all_B">
-<span class="sig-name descname"><span class="pre">draw_all_B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(12,</span> <span class="pre">9)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_B" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw_all_B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(24,</span> <span class="pre">18)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_B" title="Link to this definition"></a></dt>
 <dd><p>Draw all the boundary matrices.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>figsize</strong> (<em>tuple</em>) – The size of the figure to draw. Default is (12,9).</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -401,11 +388,6 @@
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_all_phi">
 <span class="sig-name descname"><span class="pre">draw_all_phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_phi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_phi" title="Link to this definition"></a></dt>
 <dd><p>Draw all the <code class="docutils literal notranslate"><span class="pre">phi</span></code> maps.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>figsize</strong> (<em>tuple</em>) – The size of the figure to draw. Default is (10,10).</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -415,26 +397,52 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert">
-<span class="sig-name descname"><span class="pre">parallelogram_Edge_Vert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maptype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'phi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returntype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dist'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_or_down</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'down'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drawtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram_Edge_Vert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert" title="Link to this definition"></a></dt>
-<dd><p>Check that the parallelogram for the pair <span class="math notranslate nohighlight">\((U_{\tau_I}\subset U_{\sigma_i})\)</span> commutes.
-This is the one that relates the edge maps to the vertex maps.
-(These are types 1 (when maptype = ‘phi’) and 2 (when maptype = ‘psi’) from Liz’s Big List )</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">func_val</span></code> is not None, we will only check the parallelogram for that function value. Because a function value has both an up and down version, we need to specify which one we want to check with the <code class="docutils literal notranslate"><span class="pre">up_or_down</span></code> parameter.</p>
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert_matrix">
+<span class="sig-name descname"><span class="pre">parallelogram_Edge_Vert_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maptype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'phi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_or_down</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'down'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram_Edge_Vert_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert_matrix" title="Link to this definition"></a></dt>
+<dd><p>Check that the parallelogram for the pair <span class="math notranslate nohighlight">\((S_{\tau_i}\subset S_{\sigma_i})\)</span> commutes.
+This is the one that relates the edge maps to the vertex maps. Because a function value has both an up and down version, we need to specify which one we want to check with the <code class="docutils literal notranslate"><span class="pre">up_or_down</span></code> parameter.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">func_val</span></code> is not None, we will only check the parallelogram for that function value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>maptype</strong> (<em>str</em>) – The type of map. Either <code class="docutils literal notranslate"><span class="pre">'phi'</span></code> or <code class="docutils literal notranslate"><span class="pre">'psi'</span></code>.</p></li>
-<li><p><strong>returntype</strong> (<em>str</em>) – The type of return. Either <code class="docutils literal notranslate"><span class="pre">'dist'</span></code> if you want the matrix that gives the thickening required to make the diagram commute; or <code class="docutils literal notranslate"><span class="pre">'commute'</span></code> to just give the map mismatch.</p></li>
-<li><p><strong>func_val</strong> (<em>int</em>) – The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</p></li>
+<li><p><strong>maptype</strong> (<em>str</em>) – The type of map for the relevant diagram. Either <code class="docutils literal notranslate"><span class="pre">'phi'</span></code> or <code class="docutils literal notranslate"><span class="pre">'psi'</span></code>.</p></li>
 <li><p><strong>up_or_down</strong> (<em>str</em>) – Whether to check the up or down version of the parallelogram. Either <code class="docutils literal notranslate"><span class="pre">'up'</span></code> or <code class="docutils literal notranslate"><span class="pre">'down'</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">'down'</span></code>.</p></li>
+<li><p><strong>func_val</strong> (<em>int</em>) – The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</p></li>
 <li><p><strong>draw</strong> (<em>bool</em>) – Whether to draw the maps. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><strong>drawtype</strong> (<em>str</em>) – The type of drawing. Either <code class="docutils literal notranslate"><span class="pre">'all'</span></code> or <code class="docutils literal notranslate"><span class="pre">'result'</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">'all'</span></code>.</p></li>
-<li><p><strong>**kwargs</strong> – Additional keyword arguments to pass to the drawing function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The matrix that gives the thickenin grequired to make the diagram commute if returntype is <code class="docutils literal notranslate"><span class="pre">'dist'</span></code>; or the map mismatch if returntype is <code class="docutils literal notranslate"><span class="pre">'commute'</span></code></p>
+<dd class="field-even"><p>The matrix that gives the thickening required to make the diagram commute.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix">LabeledMatrix</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert">
+<span class="sig-name descname"><span class="pre">parallelogram_Edge_Vert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maptype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'phi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_or_down</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'down'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram_Edge_Vert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert" title="Link to this definition"></a></dt>
+<dd><p>Check that the parallelogram for the pair <span class="math notranslate nohighlight">\((S_{\tau_i}\subset S_{\sigma_i})\)</span> commutes, and return the maximum value in the matrix.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram_matrix">
+<span class="sig-name descname"><span class="pre">parallelogram_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maptype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'phi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram_matrix" title="Link to this definition"></a></dt>
+<dd><p>Get the paralellograms for checking that it’s a nat trans.
+These are types 3-6 from Liz’s Big List.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">func_val</span></code> is not None, we will only check the parallelogram for that function value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>maptype</strong> (<em>str</em>) – The type of map. Either ‘phi’ or ‘psi’.</p></li>
+<li><p><strong>obj_type</strong> (<em>str</em>) – The type of object. Either <code class="docutils literal notranslate"><span class="pre">'V'</span></code> or <code class="docutils literal notranslate"><span class="pre">'E'</span></code>.</p></li>
+<li><p><strong>func_val</strong> (<em>int</em>) – The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</p></li>
+<li><p><strong>draw</strong> (<em>bool</em>) – Whether to draw the maps. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matrix that gives the thickening required to make the diagram commute.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix">LabeledMatrix</a></p>
@@ -444,23 +452,26 @@ This is the one that relates the edge maps to the vertex maps.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.parallelogram">
-<span class="sig-name descname"><span class="pre">parallelogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maptype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'phi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returntype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dist'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drawtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram" title="Link to this definition"></a></dt>
-<dd><p>Get the paralellograms for checking that it’s a nat trans.
-These are types 3-6 from Liz’s Big List.</p>
+<span class="sig-name descname"><span class="pre">parallelogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maptype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'phi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.parallelogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.parallelogram" title="Link to this definition"></a></dt>
+<dd><p>Get the loss value for the thickening paralellograms</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.triangle_matrix">
+<span class="sig-name descname"><span class="pre">triangle_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.triangle_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.triangle_matrix" title="Link to this definition"></a></dt>
+<dd><p>Get the triangle for checking that it’s an interleaving.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">func_val</span></code> is not None, we will only check the parallelogram for that function value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>maptype</strong> (<em>str</em>) – The type of map. Either ‘phi’ or ‘psi’.</p></li>
+<li><p><strong>start_graph</strong> (<em>str</em>) – The starting graph. Either ‘F’ or ‘G’.</p></li>
 <li><p><strong>obj_type</strong> (<em>str</em>) – The type of object. Either <code class="docutils literal notranslate"><span class="pre">'V'</span></code> or <code class="docutils literal notranslate"><span class="pre">'E'</span></code>.</p></li>
-<li><p><strong>returntype</strong> (<em>str</em>) – The type of return. Either <code class="docutils literal notranslate"><span class="pre">'dist'</span></code> if you want the matrix that gives the thickenin grequired to make the diagram commute; or <code class="docutils literal notranslate"><span class="pre">'commute'</span></code> to just give the map mismatch.</p></li>
 <li><p><strong>func_val</strong> (<em>int</em>) – The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</p></li>
 <li><p><strong>draw</strong> (<em>bool</em>) – Whether to draw the maps. Default is False.</p></li>
-<li><p><strong>drawtype</strong> (<em>str</em>) – The type of drawing. Either ‘all’ or ‘result’. Default is ‘all’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The matrix that gives the thickening required to make the diagram commute if returntype is <code class="docutils literal notranslate"><span class="pre">'dist'</span></code>; or the map mismatch if returntype is <code class="docutils literal notranslate"><span class="pre">'commute'</span></code>.</p>
+<dd class="field-even"><p>The matrix that gives the thickenin grequired to make the diagram commute</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix">LabeledMatrix</a></p>
@@ -470,27 +481,8 @@ These are types 3-6 from Liz’s Big List.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.triangle">
-<span class="sig-name descname"><span class="pre">triangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returntype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dist'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drawtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.triangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.triangle" title="Link to this definition"></a></dt>
-<dd><p>Get the triangle for checking that it’s an interleaving.</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">func_val</span></code> is not None, we will only check the parallelogram for that function value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>start_graph</strong> (<em>str</em>) – The starting graph. Either ‘F’ or ‘G’.</p></li>
-<li><p><strong>obj_type</strong> (<em>str</em>) – The type of object. Either <code class="docutils literal notranslate"><span class="pre">'V'</span></code> or <code class="docutils literal notranslate"><span class="pre">'E'</span></code>.</p></li>
-<li><p><strong>returntype</strong> (<em>str</em>) – The type of return. Either <code class="docutils literal notranslate"><span class="pre">'dist'</span></code> if you want the matrix that gives the thickenin grequired to make the diagram commute; or <code class="docutils literal notranslate"><span class="pre">'commute'</span></code> to just give the map mismatch.</p></li>
-<li><p><strong>func_val</strong> (<em>int</em>) – The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</p></li>
-<li><p><strong>draw</strong> (<em>bool</em>) – Whether to draw the maps. Default is False.</p></li>
-<li><p><strong>drawtype</strong> (<em>str</em>) – The type of drawing. Either ‘all’ or ‘result’. Default is ‘all’.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The matrix that gives the thickenin grequired to make the diagram commute if returntype is <code class="docutils literal notranslate"><span class="pre">'dist'</span></code>; or the map mismatch if returntype is <code class="docutils literal notranslate"><span class="pre">'commute'</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledMatrix" title="cereeberus.distance.labeled_blocks.LabeledMatrix">LabeledMatrix</a></p>
-</dd>
-</dl>
+<span class="sig-name descname"><span class="pre">triangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.triangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.triangle" title="Link to this definition"></a></dt>
+<dd><p>Get the loss value for the triangle</p>
 </dd></dl>
 
 <dl class="py method">
