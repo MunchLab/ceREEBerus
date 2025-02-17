@@ -814,25 +814,25 @@ class Interleave:
 
         if draw and drawtype == 'all':
             fig, axs = plt.subplots(1, 4, figsize = (15, 5))
-            Top.draw(ax = axs[0], vmin = -1, vmax = 1)
+            Top.draw(ax = axs[0], vmin = -1, vmax = 1, **kwargs)
             Top_title = f"${maptype_latex}_{{0,V}} \\cdot B_{start_graph}$"
             axs[0].set_title(Top_title)
 
-            Bottom.draw(axs[1], vmin = -1, vmax = 1)
+            Bottom.draw(axs[1], vmin = -1, vmax = 1, **kwargs)
             Bottom_title = f"$B_{end_graph} \\cdot {maptype_latex}_{{0,E}}$"
             axs[1].set_title(Bottom_title)
 
-            Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
+            Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True, **kwargs)
             Result_title = Top_title[:-1] + ' - ' + Bottom_title[1:]
             axs[2].set_title(Result_title)
 
-            Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr')
+            Result_Dist.draw(axs[3], colorbar = True, cmap = 'PuOr', **kwargs)
             Result_Dist_title = f"$D_{{{end_graph},n,V}} \\cdot ({Result_title[1:-1]})$"
             axs[3].set_title(Result_Dist_title)
 
         elif draw and drawtype == 'result':
             fig, ax = plt.subplots(1, 1, figsize = (5, 5))
-            Result_Dist.draw(ax = ax, colorbar = True, cmap = 'PuOr')
+            Result_Dist.draw(ax = ax, colorbar = True, cmap = 'PuOr', **kwargs)
             ax.set_title(f"Parallelogram for ${maptype_latex}$ (Edge-Vertex)")
 
         if returntype == 'dist':
