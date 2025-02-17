@@ -983,10 +983,14 @@ class Interleave:
             end_graph = 'G'
             map1 = 'phi'
             map2 = 'psi'
+            map1_latex = r'\varphi'
+            map2_latex = r'\psi'
         elif start_graph == 'G':
             end_graph = 'F'
             map1 = 'psi'
             map2 = 'phi'
+            map1_latex = r'\psi'
+            map2_latex = r'\varphi'
         else:
             raise ValueError(f"Unknown start_graph {start_graph}. Must be 'F' or 'G'.")
 
@@ -1008,11 +1012,11 @@ class Interleave:
         if draw and drawtype == 'all':
             fig, axs = plt.subplots(1, 4, figsize = (15, 5))
             Top.draw(ax = axs[0], vmin = -1, vmax = 1)
-            Top_title = f"$I_{{0,{obj_type}}} \\cdot I_{{n,{obj_type}}}$"
+            Top_title = f"$I_{{n,{obj_type}}} \\cdot I_{{0,{obj_type}}}$"
             axs[0].set_title(Top_title)
 
             Bottom.draw(axs[1], vmin = -1, vmax = 1)
-            Bottom_title = f"$I_{{n,{obj_type}}} \\cdot I_{{2n,{obj_type}}}$"
+            Bottom_title = f"${map2_latex}_{{n,{obj_type}}} \\cdot {map1_latex}_{{0,{obj_type}}}$"
             axs[1].set_title(Bottom_title)
 
             Result.draw(axs[2], vmin = -1, vmax = 1, colorbar = True)
@@ -1167,6 +1171,7 @@ class Interleave:
         # Get max loss over all function values
         # flatten the dictionary
         loss_list = list(loss_dict.values())
+        print(loss_list)
         return max(loss_list)
 
 
