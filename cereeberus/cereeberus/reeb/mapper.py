@@ -222,6 +222,10 @@ class MapperGraph(ReebGraph):
             # If there are none, no need to keep adding edges 
             if not np.any(D.array == -1):
                 break
+        
+        # If there are still -1's, set them to np.inf
+        if np.any(D.array == -1):
+            D.array[D.array == -1] = np.inf
 
         return D
     

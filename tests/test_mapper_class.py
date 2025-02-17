@@ -3,6 +3,7 @@ from cereeberus import ReebGraph, MapperGraph
 from cereeberus.data import ex_graphs as ex_g
 from cereeberus.data import ex_reebgraphs as ex_rg
 from cereeberus.data import ex_mappergraphs as ex_mg
+import numpy as np
 
 class TestMapperClass(unittest.TestCase):
 
@@ -115,7 +116,21 @@ class TestMapperClass(unittest.TestCase):
 
         self.assertEqual(H.number_connected_components(),3 )
 
+    def test_dist_matrix(self):
+        # This test makes sure you can get the distance matrix from the mapper graph.
+        R = ex_mg.juggling_man()
+        M = R.thickening_distance_by_level(4)
+        self.assertEqual(M[5,6], 1)
+        self.assertEqual(M[5,5], 0)
 
+        # These should have infinity entries since there are disconnected components at that level
+        M = R.thickening_distance_by_level(5)
+        self.assertEqual(M[2,10], np.inf)
+        self.assertEqual(M[2,3], 1)
+
+        # Check the whole put together matrix
+        M = R.thickening_distance_matrix()
+        self.assertEqual(M[5][3,10], np.inf)
        
 
 
