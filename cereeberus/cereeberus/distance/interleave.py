@@ -1089,8 +1089,8 @@ class Interleave:
             for (Graph, graph_name, maptype) in [(self.F, 'F', 'phi'), (self.G, 'G', 'psi')]:
                 obj_type = 'V'
                 if i in Graph().get_function_values():
-                    result = self.parallelogram(maptype = maptype, obj_type = obj_type, func_val = i)
-                    loss = result.absmax() 
+                    loss = self.parallelogram(maptype = maptype, obj_type = obj_type, func_val = i)
+                    # loss = result.absmax() 
                     # print(f"parallelogram loss for {graph_name} {obj_type} {i} is {loss}")
                     loss_list.append(loss)
                 else:
@@ -1101,8 +1101,8 @@ class Interleave:
             for (Graph, graph_name) in [(self.F, 'F'), (self.G, 'G')]:
                 obj_type = 'V'
                 if i in Graph().get_function_values():
-                    result = self.triangle(start_graph = graph_name, obj_type = obj_type, func_val = i)
-                    loss = result.absmax()
+                    loss = self.triangle(start_graph = graph_name, obj_type = obj_type, func_val = i)
+                    # loss = result.absmax()
                     loss_list.append(loss)
                 else:
                     # This catch is because the two graphs might have different ranges of function values
@@ -1119,8 +1119,8 @@ class Interleave:
                 edge_vals.pop(edge_vals.index(max(edge_vals)))
                 if i in edge_vals:
                     for up_or_down in ['up', 'down']:
-                        result = self.parallelogram_Edge_Vert(maptype = maptype, obj_type = obj_type, func_val = i, up_or_down=up_or_down)
-                        loss = result.absmax()
+                        loss = self.parallelogram_Edge_Vert(maptype = maptype, func_val = i, up_or_down=up_or_down)
+                        # loss = result.absmax()
                         # print(f"mixed parallelogram loss for {graph_name} {obj_type} {i} is {loss}")
                         loss_list.append(loss)
                 else:
@@ -1133,8 +1133,8 @@ class Interleave:
                 edge_vals = Graph().get_function_values()
                 edge_vals.pop(edge_vals.index(max(edge_vals)))
                 if i in edge_vals:
-                    result = self.parallelogram(maptype = maptype, obj_type = obj_type, func_val = i)
-                    loss = result.absmax()
+                    loss = self.parallelogram(maptype = maptype, obj_type = obj_type, func_val = i)
+                    # loss = result.absmax()
                     # print(f"parallelogram loss for {graph_name} {obj_type} {i} is {loss}")
                     loss_list.append(loss)
                 else:
@@ -1147,8 +1147,8 @@ class Interleave:
                 edge_vals = Graph().get_function_values()
                 edge_vals.pop(edge_vals.index(max(edge_vals)))
                 if i in edge_vals:
-                    result = self.triangle(start_graph = graph_name, obj_type = obj_type, func_val = i)
-                    loss = result.absmax()
+                    loss = self.triangle(start_graph = graph_name, obj_type = obj_type, func_val = i)
+                    # loss = result.absmax()
                     # print(f"triangle loss for {graph_name} {obj_type} {i} is {loss}")
                     loss_list.append(loss)
                 else:
