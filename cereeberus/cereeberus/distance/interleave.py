@@ -319,19 +319,25 @@ class Interleave:
         """
         return self.B_down_[graph][key]
 
-    def B_up(self, graph = 'F', key = '0'):
+    def B_up(self, graph = 'F', key = '0', shift_indices = False):
         """
         Get the upward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an *upper* endpoint of edge :math:`e` and 0 otherwise.
-
-        Warning: This is stored as a block matrix but we need to be careful when multiplying due to the index shift! TODO TODO TODO 
+        
+        If ``shift_indices`` is True, the indices of the matrix will be shifted (DOWN?) by one to make matrix multiplication work later.
 
         Parameters:
             graph (str) : 
                 The graph to get the boundary matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
                 The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+            shift_indices (bool) :
+                Whether to shift the indices of the matrix. Default is False.
         """
-        return self.B_up_[graph][key]
+        
+        if shift_indices:
+            return self.B_up_[graph][key].to_shifted_blocks(1)
+        else:
+            return self.B_up_[graph][key]
 
     def I(self, graph = 'F', key = '0', obj_type = 'V'):
         """
@@ -740,11 +746,22 @@ class Interleave:
         '''
 
         fig, axs = plt.subplots(1, 4, figsize = figsize, constrained_layout = True)
-        A.draw(ax = axs[0], vmin = -1, vmax = 1, filltype = 'nan')
+        if type(A) == LBM:
+            A.draw(ax = axs[0], vmin = -1, vmax = 1, filltype = 'nan')
+        else:
+            A.draw(ax = axs[0], vmin = -1, vmax = 1)
         axs[0].set_title(titles[0])
-        B.draw(ax = axs[1], vmin = -1, vmax = 1, filltype = 'nan')
+        
+        if type(B) == LBM:
+            B.draw(ax = axs[1], vmin = -1, vmax = 1, filltype = 'nan')
+        else:
+            B.draw(ax = axs[1], vmin = -1, vmax = 1)
         axs[1].set_title(titles[1])
-        C.draw(ax = axs[2], vmin = -1, vmax = 1, colorbar = True, filltype = 'nan')
+        
+        if type(C) == LBM:
+            C.draw(ax = axs[2], vmin = -1, vmax = 1,colorbar = True, filltype = 'nan')
+        else:
+            C.draw(ax = axs[2], vmin = -1, vmax = 1, colorbar = True)
         axs[2].set_title(titles[2])
         D.draw(ax = axs[3], colorbar = True,  cmap = 'PuOr')
         axs[3].set_title(titles[3])
@@ -769,7 +786,7 @@ class Interleave:
             maptype (str) : 
                 The type of map for the relevant diagram. Either ``'phi'`` or ``'psi'``.
             up_or_down (str) :
-                Whether to check the up or down version of the parallelogram. Either ``'up'`` or ``'down'``. Default is ``'down'``.
+                Whether to check the up or down version of the parallelogram. Either ``'up'``, ``'down'``, or ``'both'``. Default is ``'down'``.
             func_val (int) :
                 The function value to check the parallelogram for. If None, we will check all function values for the full matrix.
             draw (bool) : 
@@ -792,19 +809,34 @@ class Interleave:
         if up_or_down == 'down':
             B = self.B_down
             arrow = '\\downarrow'
+            interleaving_map_top = self.get_interleaving_map(maptype, '0', 'V')
+            interleaving_map_bottom = self.get_interleaving_map(maptype, '0', 'E')
         elif up_or_down == 'up':
             B = self.B_up
             arrow = '\\uparrow'
+
+            # Shift of the top caused by indexing problem: 
+            interleaving_map_top = self.get_interleaving_map(maptype, '0', 'V').to_shifted_blocks(-1)
+            
+            interleaving_map_bottom = self.get_interleaving_map(maptype, '0', 'E')
+            
+        elif up_or_down == 'both':
+            interleaving_map_top = self.get_interleaving_map(maptype, '0', 'V')
+            interleaving_map_bottom = self.get_interleaving_map(maptype, '0', 'E')
+            B = self.B
+            arrow = '{ }'
         else:
-            raise ValueError(f"Unknown up_or_down {up_or_down}. Must be 'up' or 'down'.")
+            raise ValueError(f"Unknown up_or_down {up_or_down}. Must be 'up', 'down', or 'both'.")
 
         if func_val is None:
-            Top = self.get_interleaving_map(maptype, '0', 'V') @ B(start_graph, '0')
-
-            Bottom = B(end_graph, 'n') @ self.get_interleaving_map(maptype, '0', 'E')
-
+            Top = interleaving_map_top @ B(start_graph, '0')
+            Bottom = B(end_graph, 'n') @ interleaving_map_bottom
 
             Result = Top - Bottom
+
+            if up_or_down == 'up':
+                # Need to undo the shift fix applied earlier
+                Result = Result.to_shifted_blocks(1)
 
             Result_Dist = self.D(end_graph, 'n', 'V') @ Result
         else: 
