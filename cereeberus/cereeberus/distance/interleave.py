@@ -415,7 +415,7 @@ class Interleave:
     ### ----------------
     
     
-    def set_random_assignment(self, random_n = True):
+    def set_random_assignment(self, random_n = True, seed = None):
         """
         Set the phi and psi matrices to random values. No matter what, the maps from F to Gn and G to Fn will be randomly set.  If ``'random_n'`` is True, the maps from Fn to G2n and Gn to F2n will also be randomly set. Otherwise, we will use matrix tricks to figure out the later from the former. 
 
@@ -428,23 +428,27 @@ class Interleave:
         self.phi_['0']['V'] = LBM(None, 
                                     self.val_to_verts['G']['n'], 
                                     self.val_to_verts['F']['0'],
-                                    random_initialize = True)
+                                    random_initialize = True,
+                                    seed = seed)
 
         self.phi_['0']['E'] = LBM(None,
                                     self.val_to_edges['G']['n'],
                                     self.val_to_edges['F']['0'],
-                                    random_initialize = True)
+                                    random_initialize = True,
+                                    seed = seed)
         
         if random_n:
             self.phi_['n']['V'] = LBM(None, 
                                     self.val_to_verts['G']['2n'], 
                                     self.val_to_verts['F']['n'],
-                                    random_initialize = random_n)
+                                    random_initialize = random_n,
+                                    seed = seed)
 
             self.phi_['n']['E'] = LBM(None,
                                     self.val_to_edges['G']['2n'],
                                     self.val_to_edges['F']['n'],
-                                    random_initialize = random_n)
+                                    random_initialize = random_n,
+                                    seed = seed)
         else:
             for obj_type in ['V', 'E']:
                 self.phi_['n'][obj_type] = self.I('G', 'n', obj_type) @ self.phi('0', obj_type) @ self.I('F', '0', obj_type).T()
@@ -536,20 +540,30 @@ class Interleave:
         
         return ax
 
-    def draw_all_I(self, figsize = (10,10),  **kwargs):
+    def draw_all_I(self, graph = 'F',  figsize = (10,10),  **kwargs):
         """
         Draw all the induced maps.
         """
         fig, axs = plt.subplots(2, 2, figsize=figsize, constrained_layout=True)
-        self.draw_I('G', '0', 'V', ax = axs[0, 0], **kwargs)
-        axs[0,0].set_title(r'Vertices: $G_0 \to G_{n}$')
-        self.draw_I('G', '0', 'E', ax = axs[1,0], **kwargs)
-        axs[1,0].set_title(r'Edges: $G_0 \to G_{n}$')
 
-        self.draw_I('G', 'n', 'V', ax = axs[0, 1], **kwargs)
-        axs[0,1].set_title(r'Vertices: $G_n \to G_{2n}$')
-        self.draw_I('G', 'n', 'E', ax = axs[1,1], **kwargs)
-        axs[1,1].set_title(r'Edges: $G_n \to G_{2n}$')
+        self.draw_I(graph, '0', 'V', ax = axs[0, 0], **kwargs)
+        title = r'Vertices: $' + graph + r'_0 \to ' + graph + r'_{n}$'
+        axs[0,0].set_title(title)
+
+        title = r'Edges: $' + graph + r'_0 \to ' + graph + r'_{n}$'
+        self.draw_I(graph, '0', 'E', ax = axs[1,0], **kwargs)
+        axs[1,0].set_title(title)
+
+        self.draw_I(graph, 'n', 'V', ax = axs[0, 1], **kwargs)
+        title = r'Vertices: $' + graph + r'_n \to ' + graph + r'_{2n}$'
+        axs[0,1].set_title(title)
+
+
+        title = r'Edges: $' + graph + r'_n \to ' + graph + r'_{2n}$'
+        self.draw_I(graph, 'n', 'E', ax = axs[1,1], **kwargs)
+        axs[1,1].set_title(title)
+        
+        return fig, axs
 
     def draw_B(self, graph = 'F', key = '0', ax = None, **kwargs):
         """
@@ -589,6 +603,8 @@ class Interleave:
         axs[1,1].set_title(r'$B(G_n)$')
         self.draw_B('G', '2n', ax = axs[1, 2])
         axs[1,2].set_title(r'$B(G_{2n})$')
+        
+        return fig, axs
 
     def draw_D(self, graph = 'F', key = '0', obj_type = 'V', 
                     colorbar = True, ax = None,  **kwargs):
@@ -693,6 +709,8 @@ class Interleave:
         self.draw_phi('n', 'E', ax = axs[1, 1], **kwargs)
         axs[1, 1].set_title(r'$\varphi_n^E$')
 
+        return fig, axs
+
     def draw_all_psi(self, figsize = (10,10), **kwargs):
         """
         Draw all the ``psi`` maps.
@@ -708,6 +726,8 @@ class Interleave:
         self.draw_psi('n', 'E', ax = axs[1,1],  **kwargs)
         axs[1,1].set_title(r'$\psi_n^E$')
 
+        return fig, axs
+
     # =======================
     # Functions for checking commutative diagrams 
     # =======================
@@ -719,7 +739,7 @@ class Interleave:
         A debugging drawing function to check the matrix mutliplications for each of the three diagram types. 
         '''
 
-        fig, axs = plt.subplots(1, 4, figsize = figsize)
+        fig, axs = plt.subplots(1, 4, figsize = figsize, constrained_layout = True)
         A.draw(ax = axs[0], vmin = -1, vmax = 1, filltype = 'nan')
         axs[0].set_title(titles[0])
         B.draw(ax = axs[1], vmin = -1, vmax = 1, filltype = 'nan')
@@ -771,8 +791,10 @@ class Interleave:
         
         if up_or_down == 'down':
             B = self.B_down
+            arrow = '\\downarrow'
         elif up_or_down == 'up':
             B = self.B_up
+            arrow = '\\uparrow'
         else:
             raise ValueError(f"Unknown up_or_down {up_or_down}. Must be 'up' or 'down'.")
 
@@ -802,10 +824,10 @@ class Interleave:
 
         if draw: 
             titles = ['', '', '', '']
-            titles[0] = f"${maptype_latex}_{{0,V}} \\cdot B_{start_graph}$"
-            titles[1] = f"$B_{end_graph} \\cdot {maptype_latex}_{{0,E}}$"
+            titles[0] = f"$M_{maptype_latex}^V \\cdot B_{start_graph}^{arrow}$"
+            titles[1] = f"$B_{end_graph}^{arrow} \\cdot M_{maptype_latex}^E$"
             titles[2] = titles[0][:-1] + ' - ' + titles[1][1:]
-            titles[3] = f"$D_{{{end_graph},n,V}} \\cdot ({titles[2][1:-1]})$"
+            titles[3] = f"$D_{{{end_graph}^{{n}}}}^{{V}} \\cdot  ({titles[2][1:-1]})$"
 
             fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist, titles = titles)
 
@@ -883,9 +905,9 @@ class Interleave:
             titles[0] = f"${maptype_latex}_{{n,{obj_type}}} \\cdot I_{{0,{obj_type}}}$"
             titles[1] = f"$I_{{n,{obj_type}}} \\cdot {maptype_latex}_{{0,{obj_type}}}$"
             titles[2] = titles[0][:-1] + ' - ' + titles[1][1:]
-            titles[3] = f"$D_{{{end_graph},2n,{obj_type}}} \\cdot ({titles[2][1:-1]})$"
+            titles[3] = f"$D_{{{end_graph}^{{2n}}}}^{obj_type} \\cdot ({titles[2][1:-1]})$"
 
-            fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist)
+            fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist, titles = titles)
 
             
         return Result_Dist
@@ -958,11 +980,11 @@ class Interleave:
 
         if draw:
             titles = ['', '', '', '']
-            titles[0] = f"$I_{{n,{obj_type}}} \\cdot I_{{0,{obj_type}}}$"
-            titles[1] = f"${map2_latex}_{{n,{obj_type}}} \\cdot {map1_latex}_{{0,{obj_type}}}$"
+            titles[0] = f"$I_{{{start_graph}^n}}^{obj_type} \\cdot I_{start_graph}^{obj_type}$"
+            titles[1] = f"$M_{{{map2_latex}^n}}^{obj_type} \\cdot M_{{{map1_latex}}}^{obj_type}$"
             titles[2] = titles[0][:-1] + ' - ' + titles[1][1:]
-            titles[3] = f"$D_{{{start_graph},2n,{obj_type}}} \\cdot ({titles[2][1:-1]})$"
-            fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist)
+            titles[3] = f"$D_{{{start_graph}^{{2n}}}}^{obj_type} \\cdot ({titles[2][1:-1]})$"
+            fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist, titles = titles)
 
         return Result_Dist
     
