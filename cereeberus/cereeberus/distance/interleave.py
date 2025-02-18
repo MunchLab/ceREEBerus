@@ -1025,6 +1025,7 @@ class Interleave:
         Get the loss value for the triangle
         """
         Result = self.triangle_matrix(start_graph, obj_type, func_val).absmax()
+        Result = np.ceil(Result/2)
         return Result
 
     # --- Loss functions ----
