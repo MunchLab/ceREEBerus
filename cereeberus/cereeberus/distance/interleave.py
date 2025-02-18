@@ -1,5 +1,6 @@
 from cereeberus import MapperGraph
 import numpy as np
+import pandas as pd
 import networkx as nx
 from scipy.linalg import block_diag
 from matplotlib import pyplot as plt
@@ -1030,13 +1031,13 @@ class Interleave:
 
     # --- Loss functions ----
 
-    def loss(self):
+    def loss_table(self):
         """
-        Computes the actual loss :math:`k` for the interleaving distance. This means that there is an :math:`(n+k)`-interleaving. 
+        Returns a table with the loss for each term in the bound. The actual loss is the maximum of these values, and can be found with the ``loss`` method.
 
         Returns:
-            float : 
-                The loss value.
+            pd.DataFrame : 
+                A table with the loss value for each term. The 'Loss' column has the loss value.
         """
 
         loss_list = []
@@ -1046,23 +1047,34 @@ class Interleave:
             for up_or_down in ['up', 'down']:
                 result = self.parallelogram_Edge_Vert(maptype = maptype, up_or_down = up_or_down)
                 loss = result
-                loss_list.append(loss)
+                loss_list.append([f'Edge-Vertex', maptype, up_or_down, loss])
 
         # All the parallelogram maps 
         for maptype in ['phi', 'psi']:
             for obj_type in ['V', 'E']:
                 result = self.parallelogram(maptype = maptype, obj_type = obj_type)
                 loss = result
-                loss_list.append(loss)
+                loss_list.append( [f'Thickening', maptype, obj_type, loss])
 
         # ALl the triangle maps
         for obj_type in ['V', 'E']:
             for start_graph in ['F', 'G']:
                 result = self.triangle(start_graph = start_graph, obj_type = obj_type)
                 loss = result
-                loss_list.append(loss)
+                loss_list.append([f'Triangle', obj_type, start_graph, loss])
+        loss_table = pd.DataFrame(loss_list, columns = ['Dgm Type', 'Req A', 'Req B', 'Loss'])
+        return loss_table
 
-        return max(loss_list)
+    def loss(self):
+        """
+        Computes the loss for the interleaving distance. Specifically, if the loss is :math:`L` and the interleaving class was initiated with :math:`n`, then the interleaving distance is at most :math:`n + L`.
+
+        Returns:
+            float : 
+                The loss value.
+        """
+        loss_table = self.loss_table()
+        return loss_table['Loss'].max()
 
     def loss_by_block(self):
         """
