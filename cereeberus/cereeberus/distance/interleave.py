@@ -1041,24 +1041,24 @@ class Interleave:
         loss_list = []
 
         # All the edge-vertex parallelogram maps 
-        # TODO: I think this is missing the up/down bit? 
         for maptype in ['phi', 'psi']:
-            result = self.parallelogram_Edge_Vert(maptype = maptype)
-            loss = result.absmax()
-            loss_list.append(loss)
+            for up_or_down in ['up', 'down']:
+                result = self.parallelogram_Edge_Vert(maptype = maptype, up_or_down = up_or_down)
+                loss = result
+                loss_list.append(loss)
 
         # All the parallelogram maps 
         for maptype in ['phi', 'psi']:
             for obj_type in ['V', 'E']:
                 result = self.parallelogram(maptype = maptype, obj_type = obj_type)
-                loss = result.absmax()
+                loss = result
                 loss_list.append(loss)
 
         # ALl the triangle maps
         for obj_type in ['V', 'E']:
             for start_graph in ['F', 'G']:
                 result = self.triangle(start_graph = start_graph, obj_type = obj_type)
-                loss = result.absmax()
+                loss = result
                 loss_list.append(loss)
 
         return max(loss_list)
