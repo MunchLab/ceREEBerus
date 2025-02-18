@@ -934,8 +934,8 @@ class Interleave:
         # --- Drawing--- #
         if draw:
             titles = ['', '', '', '']
-            titles[0] = f"${maptype_latex}_{{n,{obj_type}}} \\cdot I_{{0,{obj_type}}}$"
-            titles[1] = f"$I_{{n,{obj_type}}} \\cdot {maptype_latex}_{{0,{obj_type}}}$"
+            titles[0] = f"$M_{{{maptype_latex}_n}}^{obj_type} \\cdot I_{start_graph}^{obj_type}$"
+            titles[1] = f"$I_{{{end_graph}^n}} \\cdot M_{maptype_latex}^{obj_type}$"
             titles[2] = titles[0][:-1] + ' - ' + titles[1][1:]
             titles[3] = f"$D_{{{end_graph}^{{2n}}}}^{obj_type} \\cdot ({titles[2][1:-1]})$"
 
