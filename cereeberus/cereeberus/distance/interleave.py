@@ -282,6 +282,10 @@ class Interleave:
         Parameters:
             key (str) :
                 The key for the MapperGraph. Either ``'0'``, ``'n'``, or ``'2n'``. Default is ``'0'``.
+        
+        Returns:
+            MapperGraph : 
+                The MapperGraph for :math:`F` with key.
         """
         return self.F_[key]
     
@@ -292,6 +296,10 @@ class Interleave:
         Parameters:
             key (str) : 
                 The key for the MapperGraph. Either ``'0'``, ``'n'``, or ``'2n'``. Default is ``'0'``.
+                
+        Returns:
+            MapperGraph : 
+                The MapperGraph for :math:`G` with key.
         """
         return self.G_[key]
 
@@ -304,6 +312,10 @@ class Interleave:
                 The graph to get the boundary matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
                 The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+        
+        Returns:
+            LabeledBlockMatrix : 
+                The boundary matrix for the Mapper graph.
         """
         return self.B_down_[graph][key].to_labeled_matrix() + self.B_up_[graph][key].to_labeled_matrix()
 
@@ -317,10 +329,14 @@ class Interleave:
                 The graph to get the boundary matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
                 The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+        
+        Returns:
+            LabeledBlockMatrix : 
+                The downward boundary matrix for the Mapper graph.
         """
         return self.B_down_[graph][key]
 
-    def B_up(self, graph = 'F', key = '0', shift_indices = False):
+    def B_up(self, graph = 'F', key = '0'):
         """
         Get the upward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an *upper* endpoint of edge :math:`e` and 0 otherwise.
         
@@ -331,14 +347,13 @@ class Interleave:
                 The graph to get the boundary matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
                 The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
-            shift_indices (bool) :
-                Whether to shift the indices of the matrix. Default is False.
+                
+        Returns:
+            LabeledBlockMatrix : 
+                The upward boundary matrix for the Mapper graph.
         """
         
-        if shift_indices:
-            return self.B_up_[graph][key].to_shifted_blocks(1)
-        else:
-            return self.B_up_[graph][key]
+        return self.B_up_[graph][key]
 
     def I(self, graph = 'F', key = '0', obj_type = 'V'):
         """
@@ -353,6 +368,10 @@ class Interleave:
                 The key for the induced map. Either ``'0'`` or ``'n'``.
             obj_type (str) : 
                 The type of map. Either ``'V'`` or ``'E'``.
+                
+        Returns:
+            LabeledBlockMatrix : 
+                The induced map from ``graph_key`` to ``graph_(key+n)``.
         """
         return self.I_[graph][key][obj_type]
         
@@ -366,30 +385,42 @@ class Interleave:
                 The graph to get the distance matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
                 The key for the distance matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+
+        Returns:
+            LabeledBlockMatrix : 
+                The distance matrix for the Mapper graph.
         """
         return self.D_[graph][key][obj_type]
 
     def phi(self, key = '0', obj_type = 'V'):
         """
-        Get the interleaving map :math:`F \\to G^n`.
+        Get the interleaving map :math:`\\varphi: F \\to G^n` if `key == '0'` or :math:`\\varphi_n: F^n \\to G^{2n}` if `key == 'n'`.
 
         Parameters:
             key (str) : 
                 The key for the map. Either ``'0'`` or ``'n'``.
             obj_type (str) : 
                 The type of map. Either ``'V'`` or ``'E'``.
+        
+        Returns:
+            LabeledBlockMatrix : 
+                The interleaving map.
         """
         return self.phi_[key][obj_type]
 
     def psi(self, key = '0', obj_type = 'V'):
         """
-        Get the interleaving map :math:`\\psi: G  \\to F^n` on either vertices or edges.
+        Get the interleaving map :math:`\\psi: G \\to F^n` if `key == '0'` or :math:`\\psi_n: G^n \\to F^{2n}` if `key == 'n'`.
 
         Parameters:
             key (str) : 
                 The key for the map. Either ``'0'`` or ``'n'``.
             obj_type (str) : 
                 The type of map. Either ``'V'`` or ``'E'``.
+        
+        Returns:
+            LabeledBlockMatrix : 
+                The interleaving map.
         """
         return self.psi_[key][obj_type]
 
@@ -502,6 +533,14 @@ class Interleave:
     ### ----------------
 
     def draw_all_graphs(self, figsize = (15,10), **kwargs):
+        """Draw all the graphs stored in the Interleave object.
+
+        Args:
+            figsize (tuple, optional): Sets the size of the figure. Defaults to (15,10).
+
+        Returns:
+            tuple: The figure and axes objects.
+        """
         fig, axs = plt.subplots(2, 3, figsize=figsize, constrained_layout = True, sharey = True)
 
         self.F().draw(ax = axs[0,0], **kwargs)
@@ -533,6 +572,10 @@ class Interleave:
                 The graph to draw the induced map for. Either ``'F'`` or ``'G'``.
             key (str) : 
                 The key for the induced map. Either ``'0'`` or ``'n'``.
+        
+        Returns:
+            matplotlib.axes.Axes
+                The axes the matrix was drawn on.
         """
         if ax is None:
             ax = plt.gca()
@@ -550,6 +593,15 @@ class Interleave:
     def draw_all_I(self, graph = 'F',  figsize = (10,10),  **kwargs):
         """
         Draw all the induced maps.
+        
+        Parameters:
+            graph (str) : 
+                The graph to draw the induced maps for. Either ``'F'`` or ``'G'``.
+            figsize (tuple) : 
+                The size of the figure. Default is (10,10).
+        
+        Returns:
+            tuple: The figure and axes objects.
         """
         fig, axs = plt.subplots(2, 2, figsize=figsize, constrained_layout=True)
 
@@ -581,6 +633,10 @@ class Interleave:
                 The graph to draw the boundary matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
                 The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+        
+        Returns:
+            matplotlib.axes.Axes
+                The axes the matrix was drawn on.
         """
         if ax is None:
             ax = plt.gca()
@@ -595,6 +651,13 @@ class Interleave:
     def draw_all_B(self, figsize = (24,18)):
         """
         Draw all the boundary matrices.
+        
+        Parameters:
+            figsize (tuple) : 
+                The size of the figure. Default is (24,18).
+        
+        Returns:
+            tuple: The figure and axes objects.
         """
         fig, axs = plt.subplots(2, 3, figsize=figsize, constrained_layout=True)
         self.draw_B('F', '0', ax = axs[0, 0])
@@ -655,6 +718,10 @@ class Interleave:
                 The key for the map. Either ``'0'`` or ``'n'``.
             obj_type (str) : 
                 The type of map. Either ``'V'`` or ``'E'``.
+                
+        Returns:
+            matplotlib.axes.Axes
+                The axes the matrix was drawn on.
         """
         if ax is None:
             ax = plt.gca()
@@ -683,6 +750,10 @@ class Interleave:
                 The key for the map. Either ``'0'`` or ``'n'``.
             obj_type (str) : 
                 The type of map. Either ``'V'`` or ``'E'``.
+                
+        Returns:
+            matplotlib.axes.Axes
+                The axes the matrix was drawn on.
         """
         if ax is None:
             ax = plt.gca()
@@ -703,6 +774,13 @@ class Interleave:
     def draw_all_phi(self, figsize = (10,10), **kwargs):
         """
         Draw all the ``phi`` maps.
+        
+        Parameters:
+            figsize (tuple) : 
+                The size of the figure. Default is (10,10).
+        
+        Returns:
+            tuple: The figure and axes objects.
 
         """
         fig, axs = plt.subplots(2, 2, figsize=figsize, constrained_layout=True)
@@ -721,6 +799,13 @@ class Interleave:
     def draw_all_psi(self, figsize = (10,10), **kwargs):
         """
         Draw all the ``psi`` maps.
+        
+        Parameters:
+            figsize (tuple) : 
+                The size of the figure. Default is (10,10).
+        
+        Returns:
+            tuple: The figure and axes objects.
         """
         fig, axs = plt.subplots(2, 2, figsize=figsize, constrained_layout=True)
         self.draw_psi('0', 'V', ax = axs[0,0],  **kwargs)
@@ -739,11 +824,11 @@ class Interleave:
     # Functions for checking commutative diagrams 
     # =======================
 
-    def _draw_matrix_debug(self, A, B, C, D, 
+    def _draw_matrix_mult(self, A, B, C, D, 
                            titles = ['', '', '', ''], 
                            figsize = (12,3)):
         '''
-        A debugging drawing function to check the matrix mutliplications for each of the three diagram types. 
+        A drawing function to check the matrix mutliplications for each of the three diagram types. 
         '''
 
         fig, axs = plt.subplots(1, 4, figsize = figsize, constrained_layout = True)
@@ -862,7 +947,7 @@ class Interleave:
             titles[2] = titles[0][:-1] + ' - ' + titles[1][1:]
             titles[3] = f"$D_{{{end_graph}^{{n}}}}^{{V}} \\cdot  ({titles[2][1:-1]})$"
 
-            fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist, titles = titles)
+            fig, axs = self._draw_matrix_mult(Top, Bottom, Result, Result_Dist, titles = titles)
 
         return Result_Dist
 
@@ -940,7 +1025,7 @@ class Interleave:
             titles[2] = titles[0][:-1] + ' - ' + titles[1][1:]
             titles[3] = f"$D_{{{end_graph}^{{2n}}}}^{obj_type} \\cdot ({titles[2][1:-1]})$"
 
-            fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist, titles = titles)
+            fig, axs = self._draw_matrix_mult(Top, Bottom, Result, Result_Dist, titles = titles)
 
             
         return Result_Dist
@@ -1017,7 +1102,7 @@ class Interleave:
             titles[1] = f"$M_{{{map2_latex}^n}}^{obj_type} \\cdot M_{{{map1_latex}}}^{obj_type}$"
             titles[2] = titles[0][:-1] + ' - ' + titles[1][1:]
             titles[3] = f"$D_{{{start_graph}^{{2n}}}}^{obj_type} \\cdot ({titles[2][1:-1]})$"
-            fig, axs = self._draw_matrix_debug(Top, Bottom, Result, Result_Dist, titles = titles)
+            fig, axs = self._draw_matrix_mult(Top, Bottom, Result, Result_Dist, titles = titles)
 
         return Result_Dist
     
@@ -1065,7 +1150,7 @@ class Interleave:
         loss_table = pd.DataFrame(loss_list, columns = ['Dgm Type', 'Req A', 'Req B', 'Loss'])
         return loss_table
 
-    def loss(self):
+    def loss(self, verbose = False):
         """
         Computes the loss for the interleaving distance. Specifically, if the loss is :math:`L` and the interleaving class was initiated with :math:`n`, then the interleaving distance is at most :math:`n + L`.
 
@@ -1074,7 +1159,14 @@ class Interleave:
                 The loss value.
         """
         loss_table = self.loss_table()
-        return loss_table['Loss'].max()
+        
+        loss = loss_table['Loss'].max()
+        
+        if verbose: 
+            print(loss_table)
+            print(f"\nLoss: {loss}")
+            print(f"Interleaving distance bound: {self.n} + {loss} = {self.n + loss}")
+        return loss
 
     def loss_by_block(self):
         """

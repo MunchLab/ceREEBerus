@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -7,19 +5,23 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2.1. Interleave class &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
 
   
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -143,6 +145,12 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>key</strong> (<em>str</em>) – The key for the MapperGraph. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">'0'</span></code>.</p>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The MapperGraph for <span class="math notranslate nohighlight">\(F\)</span> with key.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph" title="cereeberus.reeb.mapper.MapperGraph">MapperGraph</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -153,6 +161,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>key</strong> (<em>str</em>) – The key for the MapperGraph. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">'0'</span></code>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The MapperGraph for <span class="math notranslate nohighlight">\(G\)</span> with key.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph" title="cereeberus.reeb.mapper.MapperGraph">MapperGraph</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -168,6 +182,12 @@
 <li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The boundary matrix for the Mapper graph.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -182,6 +202,12 @@
 <li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The downward boundary matrix for the Mapper graph.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -189,13 +215,19 @@
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.B_up">
 <span class="sig-name descname"><span class="pre">B_up</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.B_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.B_up" title="Link to this definition"></a></dt>
 <dd><p>Get the upward boundary matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(B[v,e]\)</span> equal to 1 if vertex <span class="math notranslate nohighlight">\(v\)</span> is an <em>upper</em> endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and 0 otherwise.</p>
-<p>Warning: This is stored as a block matrix but we need to be careful when multiplying due to the index shift! TODO TODO TODO</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">shift_indices</span></code> is True, the indices of the matrix will be shifted (DOWN?) by one to make matrix multiplication work later.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>graph</strong> (<em>str</em>) – The graph to get the boundary matrix for. Either <code class="docutils literal notranslate"><span class="pre">'F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'G'</span></code>.</p></li>
 <li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The upward boundary matrix for the Mapper graph.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -213,6 +245,12 @@
 <li><p><strong>obj_type</strong> (<em>str</em>) – The type of map. Either <code class="docutils literal notranslate"><span class="pre">'V'</span></code> or <code class="docutils literal notranslate"><span class="pre">'E'</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The induced map from <code class="docutils literal notranslate"><span class="pre">graph_key</span></code> to <code class="docutils literal notranslate"><span class="pre">graph_(key+n)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -227,13 +265,19 @@
 <li><p><strong>key</strong> (<em>str</em>) – The key for the distance matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The distance matrix for the Mapper graph.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.phi">
 <span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.phi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.phi" title="Link to this definition"></a></dt>
-<dd><p>Get the interleaving map <span class="math notranslate nohighlight">\(F \to G^n\)</span>.</p>
+<dd><p>Get the interleaving map <span class="math notranslate nohighlight">\(\varphi: F \to G^n\)</span> if <cite>key == ‘0’</cite> or <span class="math notranslate nohighlight">\(\varphi_n: F^n \to G^{2n}\)</span> if <cite>key == ‘n’</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -241,19 +285,31 @@
 <li><p><strong>obj_type</strong> (<em>str</em>) – The type of map. Either <code class="docutils literal notranslate"><span class="pre">'V'</span></code> or <code class="docutils literal notranslate"><span class="pre">'E'</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The interleaving map.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.psi">
 <span class="sig-name descname"><span class="pre">psi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.psi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.psi" title="Link to this definition"></a></dt>
-<dd><p>Get the interleaving map <span class="math notranslate nohighlight">\(\psi: G  \to F^n\)</span> on either vertices or edges.</p>
+<dd><p>Get the interleaving map <span class="math notranslate nohighlight">\(\psi: G \to F^n\)</span> if <cite>key == ‘0’</cite> or <span class="math notranslate nohighlight">\(\psi_n: G^n \to F^{2n}\)</span> if <cite>key == ‘n’</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>key</strong> (<em>str</em>) – The key for the map. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code> or <code class="docutils literal notranslate"><span class="pre">'n'</span></code>.</p></li>
 <li><p><strong>obj_type</strong> (<em>str</em>) – The type of map. Either <code class="docutils literal notranslate"><span class="pre">'V'</span></code> or <code class="docutils literal notranslate"><span class="pre">'E'</span></code>.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The interleaving map.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="labeled_blocks.html#cereeberus.distance.labeled_blocks.LabeledBlockMatrix" title="cereeberus.distance.labeled_blocks.LabeledBlockMatrix">LabeledBlockMatrix</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -281,7 +337,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.set_random_assignment">
-<span class="sig-name descname"><span class="pre">set_random_assignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.set_random_assignment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.set_random_assignment" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_random_assignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.set_random_assignment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.set_random_assignment" title="Link to this definition"></a></dt>
 <dd><p>Set the phi and psi matrices to random values. No matter what, the maps from F to Gn and G to Fn will be randomly set.  If <code class="docutils literal notranslate"><span class="pre">'random_n'</span></code> is True, the maps from Fn to G2n and Gn to F2n will also be randomly set. Otherwise, we will use matrix tricks to figure out the later from the former.</p>
 <p>Note this functions assumes the phi and psi dictionaries were set on initialization. It will overwrite any contents that are there.</p>
 </dd></dl>
@@ -289,7 +345,19 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_all_graphs">
 <span class="sig-name descname"><span class="pre">draw_all_graphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(15,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_graphs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_graphs" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Draw all the graphs stored in the Interleave object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Sets the size of the figure. Defaults to (15,10).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and axes objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_I">
@@ -302,13 +370,34 @@
 <li><p><strong>key</strong> (<em>str</em>) – The key for the induced map. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code> or <code class="docutils literal notranslate"><span class="pre">'n'</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>matplotlib.axes.Axes</dt><dd><p>The axes the matrix was drawn on.</p>
+</dd>
+</dl>
+</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_all_I">
-<span class="sig-name descname"><span class="pre">draw_all_I</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_I"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_I" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw_all_I</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_I"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_I" title="Link to this definition"></a></dt>
 <dd><p>Draw all the induced maps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<em>str</em>) – The graph to draw the induced maps for. Either <code class="docutils literal notranslate"><span class="pre">'F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'G'</span></code>.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em>) – The size of the figure. Default is (10,10).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and axes objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -322,6 +411,13 @@
 <li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>matplotlib.axes.Axes</dt><dd><p>The axes the matrix was drawn on.</p>
+</dd>
+</dl>
+</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -329,6 +425,17 @@
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_all_B">
 <span class="sig-name descname"><span class="pre">draw_all_B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(24,</span> <span class="pre">18)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_B" title="Link to this definition"></a></dt>
 <dd><p>Draw all the boundary matrices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>figsize</strong> (<em>tuple</em>) – The size of the figure. Default is (24,18).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and axes objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -367,6 +474,13 @@
 <li><p><strong>obj_type</strong> (<em>str</em>) – The type of map. Either <code class="docutils literal notranslate"><span class="pre">'V'</span></code> or <code class="docutils literal notranslate"><span class="pre">'E'</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>matplotlib.axes.Axes</dt><dd><p>The axes the matrix was drawn on.</p>
+</dd>
+</dl>
+</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -381,6 +495,13 @@
 <li><p><strong>obj_type</strong> (<em>str</em>) – The type of map. Either <code class="docutils literal notranslate"><span class="pre">'V'</span></code> or <code class="docutils literal notranslate"><span class="pre">'E'</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>matplotlib.axes.Axes</dt><dd><p>The axes the matrix was drawn on.</p>
+</dd>
+</dl>
+</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -388,12 +509,34 @@
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_all_phi">
 <span class="sig-name descname"><span class="pre">draw_all_phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_phi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_phi" title="Link to this definition"></a></dt>
 <dd><p>Draw all the <code class="docutils literal notranslate"><span class="pre">phi</span></code> maps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>figsize</strong> (<em>tuple</em>) – The size of the figure. Default is (10,10).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and axes objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.draw_all_psi">
 <span class="sig-name descname"><span class="pre">draw_all_psi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.draw_all_psi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.draw_all_psi" title="Link to this definition"></a></dt>
 <dd><p>Draw all the <code class="docutils literal notranslate"><span class="pre">psi</span></code> maps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>figsize</strong> (<em>tuple</em>) – The size of the figure. Default is (10,10).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The figure and axes objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -406,7 +549,7 @@ This is the one that relates the edge maps to the vertex maps. Because a functio
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>maptype</strong> (<em>str</em>) – The type of map for the relevant diagram. Either <code class="docutils literal notranslate"><span class="pre">'phi'</span></code> or <code class="docutils literal notranslate"><span class="pre">'psi'</span></code>.</p></li>
-<li><p><strong>up_or_down</strong> (<em>str</em>) – Whether to check the up or down version of the parallelogram. Either <code class="docutils literal notranslate"><span class="pre">'up'</span></code> or <code class="docutils literal notranslate"><span class="pre">'down'</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">'down'</span></code>.</p></li>
+<li><p><strong>up_or_down</strong> (<em>str</em>) – Whether to check the up or down version of the parallelogram. Either <code class="docutils literal notranslate"><span class="pre">'up'</span></code>, <code class="docutils literal notranslate"><span class="pre">'down'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'both'</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">'down'</span></code>.</p></li>
 <li><p><strong>func_val</strong> (<em>int</em>) – The function value to check the parallelogram for. If None, we will check all function values for the full matrix.</p></li>
 <li><p><strong>draw</strong> (<em>bool</em>) – Whether to draw the maps. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 </ul>
@@ -486,9 +629,23 @@ These are types 3-6 from Liz’s Big List.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.loss_table">
+<span class="sig-name descname"><span class="pre">loss_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.loss_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.loss_table" title="Link to this definition"></a></dt>
+<dd><p>Returns a table with the loss for each term in the bound. The actual loss is the maximum of these values, and can be found with the <code class="docutils literal notranslate"><span class="pre">loss</span></code> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A table with the loss value for each term. The ‘Loss’ column has the loss value.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.loss">
-<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.loss" title="Link to this definition"></a></dt>
-<dd><p>Computes the actual loss <span class="math notranslate nohighlight">\(k\)</span> for the interleaving distance. This means that there is an <span class="math notranslate nohighlight">\((n+k)\)</span>-interleaving.</p>
+<span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.loss" title="Link to this definition"></a></dt>
+<dd><p>Computes the loss for the interleaving distance. Specifically, if the loss is <span class="math notranslate nohighlight">\(L\)</span> and the interleaving class was initiated with <span class="math notranslate nohighlight">\(n\)</span>, then the interleaving distance is at most <span class="math notranslate nohighlight">\(n + L\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The loss value.</p>

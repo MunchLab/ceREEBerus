@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -7,20 +5,24 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>6. Basic tutorial: Interleaving class &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
 
   
-      <script src="../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -65,7 +67,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#Checking-all-the-diagrams">6.2.2. Checking all the diagrams</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#Testing-setting-the-induced-maps-in-the-interleaving-from-the-first-maps">6.3. Testing setting the induced maps in the interleaving from the first maps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#The-final-loss-computation">6.3. The final loss computation</a></li>
 </ul>
 </li>
 </ul>
@@ -233,12 +235,7 @@ G_2n: {&#39;nodes&#39;: 32, &#39;edges&#39;: 32}
 <section id="Matrices">
 <h3><span class="section-number">6.1.1. </span>Matrices<a class="headerlink" href="#Matrices" title="Link to this heading"></a></h3>
 <p>There are many matrices stored in the <code class="docutils literal notranslate"><span class="pre">Interleave</span></code> class, but since these are largely block matrices due to the function preserving restriction on the maps, we store these in the following structure.</p>
-<p>A block dictionary is a dictionary with keys as the integer function values for the relevant graphs. Each key <span class="math notranslate nohighlight">\(i\)</span> maps to another dictionary with keys</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">array</span></code>: the matrix for the <span class="math notranslate nohighlight">\(i\)</span> th block</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">rows</span></code>: A list of the vertices (or edges) in order represented in the rows of the matrix</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cols</span></code>: A list of the vertices (or edges) in order represented in the rows of the matrix.</p></li>
-</ul>
+<p>A block dictionary is a dictionary with keys as the integer function values for the relevant graphs. Each key <span class="math notranslate nohighlight">\(i\)</span> maps to another dictionary with keys - <code class="docutils literal notranslate"><span class="pre">array</span></code>: the matrix for the <span class="math notranslate nohighlight">\(i\)</span> th block - <code class="docutils literal notranslate"><span class="pre">rows</span></code>: A list of the vertices (or edges) in order represented in the rows of the matrix - <code class="docutils literal notranslate"><span class="pre">cols</span></code>: A list of the vertices (or edges) in order represented in the rows of the matrix.</p>
 <section id="Inclusion-Matrices">
 <h4><span class="section-number">6.1.1.1. </span>Inclusion Matrices<a class="headerlink" href="#Inclusion-Matrices" title="Link to this heading"></a></h4>
 <p>The first block matrices are the inclusion matrices, which can be accessed by calling <code class="docutils literal notranslate"><span class="pre">Interleave.I</span></code>. These matrices give the maps <span class="math notranslate nohighlight">\(F \to F_n \to F_{2n}\)</span> and <span class="math notranslate nohighlight">\(G \to G_n \to G_{2n}\)</span>.</p>
@@ -268,8 +265,8 @@ rows=[8, 9],
 cols=[6, 7])
 </pre></div></div>
 </div>
-<p>Reading the output above, we see that vertex 6 in <span class="math notranslate nohighlight">\(F_n\)</span> is sent to vertex <span class="math notranslate nohighlight">\(9\)</span> in <span class="math notranslate nohighlight">\(F_{2n}\)</span>, while vertex 7 in <span class="math notranslate nohighlight">\(F_n\)</span> is sent to vertex <span class="math notranslate nohighlight">\(8\)</span> in <span class="math notranslate nohighlight">\(F_{2n}\)</span></p>
-<p>Each map is stored as a <code class="docutils literal notranslate"><span class="pre">LabeledBlockMatrix</span></code> type. See <cite>the ``labeled_blocks`</cite> documentation &lt;../modules/distance/labeled_blocks.rst&gt;`__ for further details. The full matrix with all the blocks in place can be accessed as follows.</p>
+<p>Reading the output above, we see that vertex 6 in <span class="math notranslate nohighlight">\(F_n\)</span> is sent to vertex <span class="math notranslate nohighlight">\(8\)</span> in <span class="math notranslate nohighlight">\(F_{2n}\)</span>, while vertex 7 in <span class="math notranslate nohighlight">\(F_n\)</span> is sent to vertex <span class="math notranslate nohighlight">\(9\)</span> in <span class="math notranslate nohighlight">\(F_{2n}\)</span></p>
+<p>Each map is stored as a <code class="docutils literal notranslate"><span class="pre">LabeledBlockMatrix</span></code> type. See <a class="reference internal" href="../modules/distance/labeled_blocks.html"><span class="doc">the documentation</span></a> for further details. The full matrix with all the blocks in place can be accessed as follows.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
@@ -349,10 +346,10 @@ cols=[(13, 16, 0), (14, 17, 0), (15, 18, 0)])
 </div>
 <p>There are also commands to draw individual <span class="math notranslate nohighlight">\(I\)</span> maps using <code class="docutils literal notranslate"><span class="pre">Interleave.drawI</span></code>. The command below draws all of these at once for convenience.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_all_I</span><span class="p">(</span><span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">draw_all_I</span><span class="p">(</span><span class="n">filltype</span> <span class="o">=</span> <span class="s1">&#39;nan&#39;</span><span class="p">,</span> <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -462,11 +459,27 @@ cols=[(13, 16, 0), (14, 17, 0), (15, 18, 0)])
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 2400x1800 with 6 Axes&gt;,
+ array([[&lt;Axes: title={&#39;center&#39;: &#39;$B(F_0)$&#39;}, xlabel=&#39;E(F_0)&#39;, ylabel=&#39;V(F_0)&#39;&gt;,
+         &lt;Axes: title={&#39;center&#39;: &#39;$B(F_n)$&#39;}, xlabel=&#39;E(F_n)&#39;, ylabel=&#39;V(F_n)&#39;&gt;,
+         &lt;Axes: title={&#39;center&#39;: &#39;$B(F_{2n})$&#39;}, xlabel=&#39;E(F_2n)&#39;, ylabel=&#39;V(F_2n)&#39;&gt;],
+        [&lt;Axes: title={&#39;center&#39;: &#39;$B(G_0)$&#39;}, xlabel=&#39;E(G_0)&#39;, ylabel=&#39;V(G_0)&#39;&gt;,
+         &lt;Axes: title={&#39;center&#39;: &#39;$B(G_n)$&#39;}, xlabel=&#39;E(G_n)&#39;, ylabel=&#39;V(G_n)&#39;&gt;,
+         &lt;Axes: title={&#39;center&#39;: &#39;$B(G_{2n})$&#39;}, xlabel=&#39;E(G_2n)&#39;, ylabel=&#39;V(G_2n)&#39;&gt;]],
+       dtype=object))
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_39_0.png" src="../_images/notebooks_interleaving_basics_39_0.png" />
+<img alt="../_images/notebooks_interleaving_basics_39_1.png" src="../_images/notebooks_interleaving_basics_39_1.png" />
 </div>
 </div>
 </section>
@@ -616,11 +629,25 @@ cols=[13, 14, 15, 22])
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1000x1000 with 8 Axes&gt;,
+ array([[&lt;Axes: title={&#39;center&#39;: &#39;$\\varphi_0^V$&#39;}, xlabel=&#39;V(F)&#39;, ylabel=&#39;V(G_n)&#39;&gt;,
+         &lt;Axes: title={&#39;center&#39;: &#39;$\\varphi_n^V$&#39;}, xlabel=&#39;V(F_n)&#39;, ylabel=&#39;V(G_2n)&#39;&gt;],
+        [&lt;Axes: title={&#39;center&#39;: &#39;$\\varphi_0^E$&#39;}, xlabel=&#39;E(F)&#39;, ylabel=&#39;E(G_n)&#39;&gt;,
+         &lt;Axes: title={&#39;center&#39;: &#39;$\\varphi_n^E$&#39;}, xlabel=&#39;E(F_n)&#39;, ylabel=&#39;E(G_2n)&#39;&gt;]],
+       dtype=object))
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_56_0.png" src="../_images/notebooks_interleaving_basics_56_0.png" />
+<img alt="../_images/notebooks_interleaving_basics_56_1.png" src="../_images/notebooks_interleaving_basics_56_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -632,11 +659,25 @@ cols=[13, 14, 15, 22])
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 1500x1000 with 8 Axes&gt;,
+ array([[&lt;Axes: title={&#39;center&#39;: &#39;$\\psi_0^V$&#39;}, xlabel=&#39;V(F)&#39;, ylabel=&#39;V(G_n)&#39;&gt;,
+         &lt;Axes: title={&#39;center&#39;: &#39;$\\psi_n^V$&#39;}, xlabel=&#39;V(F_n)&#39;, ylabel=&#39;V(G_2n)&#39;&gt;],
+        [&lt;Axes: title={&#39;center&#39;: &#39;$\\psi_0^E$&#39;}, xlabel=&#39;E(F)&#39;, ylabel=&#39;E(G_n)&#39;&gt;,
+         &lt;Axes: title={&#39;center&#39;: &#39;$\\psi_n^E$&#39;}, xlabel=&#39;E(F_n)&#39;, ylabel=&#39;E(G_2n)&#39;&gt;]],
+       dtype=object))
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_57_0.png" src="../_images/notebooks_interleaving_basics_57_0.png" />
+<img alt="../_images/notebooks_interleaving_basics_57_1.png" src="../_images/notebooks_interleaving_basics_57_1.png" />
 </div>
 </div>
 </section>
@@ -644,7 +685,7 @@ cols=[13, 14, 15, 22])
 <h3><span class="section-number">6.2.2. </span>Checking all the diagrams<a class="headerlink" href="#Checking-all-the-diagrams" title="Link to this heading"></a></h3>
 <p>We have a giant list of diagrams to check. However, these are now reduced to multiplying all these matrices we’ve built above.</p>
 <p>The table below shows the diagrams to be checked, following the notation in the paper (<strong>TODO cite paper when it’s available!</strong>). In the following sections of the tutorial, we go through each of the three types of diagrams.</p>
-<img alt="The list of diagrams and relevant matrix multiplications" src="../_images/TheList.png" />
+<p><img alt="The list of diagrams and relevant matrix multiplications" src="../_images/TheList.png" /></p>
 <p>In the following sections, we show the code to compute each type of diagram loss.</p>
 <section id="Parallelograms---Edge-vertex">
 <h4><span class="section-number">6.2.2.1. </span>Parallelograms - Edge vertex<a class="headerlink" href="#Parallelograms---Edge-vertex" title="Link to this heading"></a></h4>
@@ -678,15 +719,35 @@ cols=[13, 14, 15, 22])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Maximum loss value for edge-vertex parallelogram: 2.0
+Maximum loss value for edge-vertex parallelogram: 3.0
 </pre></div></div>
 </div>
+<section id="We-can-also-compute-the-loss-by-each-function-value">
+<h5><span class="section-number">6.2.2.1.1. </span>We can also compute the loss by each function value<a class="headerlink" href="#We-can-also-compute-the-loss-by-each-function-value" title="Link to this heading"></a></h5>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">myInt2</span><span class="o">.</span><span class="n">parallelogram_Edge_Vert</span><span class="p">(</span><span class="n">maptype</span><span class="o">=</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">up_or_down</span><span class="o">=</span><span class="s1">&#39;up&#39;</span><span class="p">,</span> <span class="n">func_val</span><span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum loss value for edge-vertex parallelogram at function value </span><span class="si">{</span><span class="mi">5</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Maximum loss value for edge-vertex parallelogram at function value 5: 3.0
+</pre></div></div>
+</div>
+</section>
 </section>
 <section id="Parallelograms---Thickening">
 <h4><span class="section-number">6.2.2.2. </span>Parallelograms - Thickening<a class="headerlink" href="#Parallelograms---Thickening" title="Link to this heading"></a></h4>
 <p>These are the parallelograms that keep track of whether the maps from <span class="math notranslate nohighlight">\(S \to S^n\)</span> form a natural transformation.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt2</span><span class="o">.</span><span class="n">parallelogram_matrix</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">);</span>
@@ -697,11 +758,11 @@ Maximum loss value for edge-vertex parallelogram: 2.0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_64_0.png" src="../_images/notebooks_interleaving_basics_64_0.png" />
+<img alt="../_images/notebooks_interleaving_basics_66_0.png" src="../_images/notebooks_interleaving_basics_66_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">myInt2</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="p">)</span>
@@ -714,18 +775,17 @@ Maximum loss value for edge-vertex parallelogram: 2.0
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Maximum loss value for edges: 2.0
+Maximum loss value for edges: 1.0
 </pre></div></div>
 </div>
-</section>
-<section id="Triangles">
-<h4><span class="section-number">6.2.2.3. </span>Triangles<a class="headerlink" href="#Triangles" title="Link to this heading"></a></h4>
-<p>TODO</p>
+<section id="id1">
+<h5><span class="section-number">6.2.2.2.1. </span>We can also compute the loss by each function value<a class="headerlink" href="#id1" title="Link to this heading"></a></h5>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt2</span><span class="o">.</span><span class="n">triangle_matrix</span><span class="p">(</span><span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">);</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">myInt2</span><span class="o">.</span><span class="n">parallelogram</span><span class="p">(</span><span class="n">maptype</span><span class="o">=</span><span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">func_val</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum loss value for edges at function value </span><span class="si">{</span><span class="mi">5</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -733,11 +793,70 @@ Maximum loss value for edges: 2.0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_67_0.png" src="../_images/notebooks_interleaving_basics_67_0.png" />
+<div class="highlight"><pre>
+Maximum loss value for edges at function value 5: 0.0
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Triangles">
+<h4><span class="section-number">6.2.2.3. </span>Triangles<a class="headerlink" href="#Triangles" title="Link to this heading"></a></h4>
+<p>Finally, the triangle diagrams are the ones that ensure that the assignment forms an interleaving. Note that the loss function computed is <span class="math notranslate nohighlight">\(\lceil \frac{k}{2} \rceil\)</span> for <span class="math notranslate nohighlight">\(k\)</span> the maximum absolute value in the multiplied matrix.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt2</span><span class="o">.</span><span class="n">triangle_matrix</span><span class="p">(</span><span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">draw</span> <span class="o">=</span> <span class="kc">True</span><span class="p">);</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_interleaving_basics_71_0.png" src="../_images/notebooks_interleaving_basics_71_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt2</span><span class="o">.</span><span class="n">triangle</span><span class="p">(</span><span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span><span class="p">);</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum loss value for triangle: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Note this is the ceiling of half of the largest entry in the matrix above.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Maximum loss value for triangle: 0.0
+Note this is the ceiling of half of the largest entry in the matrix above.
+</pre></div></div>
+</div>
+<section id="id2">
+<h5><span class="section-number">6.2.2.3.1. </span>We can also compute the loss by each function value<a class="headerlink" href="#id2" title="Link to this heading"></a></h5>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">myInt2</span><span class="o">.</span><span class="n">triangle</span><span class="p">(</span><span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">func_val</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Maximum loss value for vertices at function value </span><span class="si">{</span><span class="mi">5</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Maximum loss value for vertices at function value 5: 1.0
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">myInt2</span><span class="o">.</span><span class="n">triangle</span><span class="p">(</span><span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span>
@@ -750,40 +869,21 @@ Maximum loss value for edges: 2.0
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Maximum loss value for triangle: 2.0
+Maximum loss value for triangle: 1.0
 </pre></div></div>
 </div>
 </section>
 </section>
 </section>
-<section id="Testing-setting-the-induced-maps-in-the-interleaving-from-the-first-maps">
-<h2><span class="section-number">6.3. </span>Testing setting the induced maps in the interleaving from the first maps<a class="headerlink" href="#Testing-setting-the-induced-maps-in-the-interleaving-from-the-first-maps" title="Link to this heading"></a></h2>
-<p><strong>TODO</strong> Move this stuff up to be up with the initialization information</p>
+</section>
+<section id="The-final-loss-computation">
+<h2><span class="section-number">6.3. </span>The final loss computation<a class="headerlink" href="#The-final-loss-computation" title="Link to this heading"></a></h2>
+<p>We do not need all the visuals above, the loss function can be easily computed as follows.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt2</span><span class="o">.</span><span class="n">set_random_assignment</span><span class="p">(</span><span class="n">random_n</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">myInt2</span><span class="o">.</span><span class="n">draw_all_psi</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_70_0.png" src="../_images/notebooks_interleaving_basics_70_0.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">psi</span> <span class="o">=</span> <span class="n">myInt2</span><span class="o">.</span><span class="n">psi</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">myInt</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">myInt</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">myInt</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -792,24 +892,31 @@ Maximum loss value for triangle: 2.0
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{1: [(0, 1, 0)], 2: [(1, 2, 0)], 3: [(2, 3, 0)], 4: [(3, 4, 0)], 5: [(4, 5, 0)], 6: [(5, 7, 0)], 7: [(6, 8, 0), (7, 9, 0), (7, 10, 0)], 8: [(8, 11, 0), (9, 11, 0), (10, 12, 0)], 9: [(11, 13, 0), (11, 14, 0), (12, 15, 0)], 10: [(13, 16, 0), (14, 16, 0), (15, 16, 0)], 11: [(16, 17, 0), (16, 18, 0)], 12: [(17, 19, 0), (18, 20, 0)], 13: [(19, 21, 0)], 14: [(21, 22, 0)]}
-{1: [(0, 2, 0)], 2: [(1, 3, 0), (2, 4, 0)], 3: [(3, 5, 0), (4, 6, 0)], 4: [(5, 7, 0), (6, 8, 0), (6, 9, 0)], 5: [(7, 10, 0), (8, 11, 0), (9, 12, 0)], 6: [(10, 14, 0), (11, 13, 0), (12, 15, 0)], 7: [(13, 16, 0), (14, 17, 0), (15, 18, 0)], 8: [(16, 19, 0), (17, 19, 0), (18, 20, 0)], 9: [(19, 21, 0), (19, 22, 0), (20, 23, 0)], 10: [(21, 24, 0), (22, 25, 0), (23, 24, 0)], 11: [(24, 26, 0), (25, 27, 0)], 12: [(26, 28, 0), (27, 29, 0)], 13: [(28, 30, 0)], 14: [(30, 31, 0)]}
+       Dgm Type Req A Req B  Loss
+0   Edge-Vertex   phi    up   0.0
+1   Edge-Vertex   phi  down   0.0
+2   Edge-Vertex   psi    up   0.0
+3   Edge-Vertex   psi  down   0.0
+4    Thickening   phi     V   0.0
+5    Thickening   phi     E   0.0
+6    Thickening   psi     V   0.0
+7    Thickening   psi     E   0.0
+8      Triangle     V     F   1.0
+9      Triangle     V     G   3.0
+10     Triangle     E     F   1.0
+11     Triangle     E     G   3.0
+Loss: 3.0
+Interleaving distance bound: 1 + 3.0 = 4.0
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_interleaving_basics_71_1.png" src="../_images/notebooks_interleaving_basics_71_1.png" />
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
+<div class="highlight"><pre>
+3.0
+</pre></div></div>
 </div>
 </section>
 </section>
