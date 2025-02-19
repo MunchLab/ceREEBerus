@@ -824,23 +824,31 @@ class ReebGraph(nx.MultiDiGraph):
             C_edge = list(H_edge.connected_components())
 
             # Strip the upper and lower from the strings to be able to check overlaps 
-            C_edge_new = []
-            for k in C_edge:
-                k_new = []
-                for v in k:
-                    if type(v) == str and (v[-6:] == '_upper' or v[-6:] == '_lower'):
-                        k_new.append(v[:-6])
-                    else:
-                        k_new.append(v)
-                C_edge_new.append(set(k_new))
+            for conn_comp_list in [C, C_0, C_edge]:
+                for j, conn_comp in enumerate(conn_comp_list):
+                    conn_comp_new = []
+                    for i, v in enumerate(conn_comp):
+                        if type(v) == str and (v[-6:] == '_upper' or v[-6:] == '_lower'):
+                            conn_comp_new.append(v[:-6])
+                        else:
+                            conn_comp_new.append(v)
+                    conn_comp_list[j] = set(conn_comp_new)
 
             # Add edges 
-            for i,c in enumerate(C_edge_new):
+            for i,c in enumerate(C_edge):
                 overlap_down = np.array([len(c.intersection(c_0)) for c_0 in C_0])
-                lower_vert = comp_to_new_vert_0[np.where(overlap_down > 0)[0][0]]
+                lower_vert = [comp_to_new_vert_0[u] for u in  np.where(overlap_down > 0)[0]]
+                if len(lower_vert) > 1:
+                    print(f'{i,c} has multiple lower vertices')
+                else:
+                    lower_vert = lower_vert[0]
                 
                 overlap_up = np.array([len(c.intersection(c_0)) for c_0 in C])
-                upper_vert = comp_to_new_vert[np.where(overlap_up > 0)[0][0]]
+                upper_vert = [comp_to_new_vert[u] for u in  np.where(overlap_up > 0)[0]]
+                if len(upper_vert) > 1:
+                    print(f'{i,c} has multiple upper vertices')
+                else:
+                    upper_vert = upper_vert[0]
                 
                 R_eps.add_edge(lower_vert, upper_vert)
 
