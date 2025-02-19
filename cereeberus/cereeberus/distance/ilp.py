@@ -162,6 +162,21 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
 
                     z_vars[block][starting_map][obj_type] = pulp.LpVariable.dicts('z_'+starting_map+'_'+obj_type+'_'+str(block), ((a, b, c) for a in range(n_rows_1) for b in range(n_rowcol_2) for c in range(n_cols_1)), cat='Binary')
 
+    # decison variables for the triangles (to make the ceiling(expression/2 work)
+    aux_vars = {block : {starting_map: {obj_type: {} for obj_type in ['V', 'E']} for starting_map in ['F', 'G']} for block in func_vals}
+
+    for block in func_vals:
+        for obj_type in ['V', 'E']:
+            for starting_map in ['F', 'G']:
+                if starting_map == 'F':
+                    shape_m_tri = myInt.D('F', '2n', obj_type)[block].get_array().shape[0]
+                else:
+                    shape_m_tri = myInt.D('G', '2n', obj_type)[block].get_array().shape[0]
+
+                aux_vars[block][starting_map][obj_type] = pulp.LpVariable('aux_'+starting_map+'_'+obj_type+'_'+str(block),  cat='Integer')
+
+                # aux_vars[block][starting_map][obj_type] = pulp.LpVariable.dicts('aux_'+starting_map+'_'+obj_type+'_'+str(block), (a for a in range(shape_m_tri)), cat='Integer')
+                    
     # create the minmax variable
     minmax_var = pulp.LpVariable('minmax_var', cat='Integer')
 
@@ -227,10 +242,10 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
                         second_term = pulp.lpSum([bou_n[i][l] * map_E_vars[l,k] for l in range(shape_o_mix)])
 
                         # total expression
-                        expression = pulp.lpSum(dist_n_other[i][h] * (first_term - second_term) for h in range(shape_m_mix))
+                        mixed_expression = pulp.lpSum(dist_n_other[i][h] * (first_term - second_term) for h in range(shape_m_mix))
                         
-                        prob += minmax_var >= expression
-                        prob += - minmax_var <= expression
+                        prob += minmax_var >= mixed_expression
+                        prob += - minmax_var <= mixed_expression
 
                 # constraint 2: each column sums to 1
                 for j in range(shape_n_mix):
@@ -293,8 +308,15 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
             
                 # for triangles
                 for  h in range(shape_m_tri):                    
-                    prob += minmax_var >= pulp.lpSum(dist_2n_starting[i,h] * (i_n_i_0[h,k] - map_product_vars[block][starting_map][obj_type][h,k]) for i in range(shape_m_tri) for k in range(shape_o_tri))
-                    prob += - minmax_var <= pulp.lpSum(dist_2n_starting[i,h] * (i_n_i_0[h,k] - map_product_vars[block][starting_map][obj_type][h,k]) for i in range(shape_m_tri) for k in range(shape_o_tri))
+
+                    tri_expression = pulp.lpSum(dist_2n_starting[i,h] * (i_n_i_0[h,k] - map_product_vars[block][starting_map][obj_type][h,k]) for i in range(shape_m_tri) for k in range(shape_o_tri))
+
+                    prob += aux_vars[block][starting_map][obj_type] * 2 >= tri_expression # ceiling of half of the expression
+
+                    prob += minmax_var >= aux_vars[block][starting_map][obj_type]
+                    prob += - minmax_var <= aux_vars[block][starting_map][obj_type]
+
+
 
                 # for parallelograms
                 for i in range(shape_m_para):
@@ -305,10 +327,10 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
 
 
                             # total expression
-                            expression = pulp.lpSum(dist_2n_other[i][h] * (first_term - second_term) for h in range(shape_m_para))
+                            para_expression = pulp.lpSum(dist_2n_other[i][h] * (first_term - second_term) for h in range(shape_m_para))
 
-                            prob += minmax_var >= expression
-                            prob += - minmax_var <= expression
+                            prob += minmax_var >= para_expression
+                            prob += - minmax_var <= para_expression
 
 
                 # constraint 2: map_multiplication and z relation. This is for triangles
@@ -370,6 +392,9 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
     else:
         prob.solve(pulp.GUROBI_CMD(msg=0)
                    )
+
+    if prob.status != 1:
+        raise ValueError("The ILP optimization did not converge. Please check the input data and try again.")
 
     # create a dictionary to store the results
     map_results = {'Phi_vars': Phi_vars, 'Psi_vars': Psi_vars}
