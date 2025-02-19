@@ -499,7 +499,13 @@ class LabeledBlockMatrix:
                 if map_dict is not None:
                         if cols_ and rows_:
                             for c in cols_:
-                                r = map_dict[c]
+                                try:
+                                    r = map_dict[c]
+                                except:
+                                    print(f"c: {c}")
+                                    print(f"map_dict: {map_dict}")
+                                    print(f"cols_: {cols_}")
+                                    print(f"rows_: {rows_}")
                                 self.blocks[i][r,c]  = 1 
                 elif random_initialize:
                     A = self.blocks[i].array            

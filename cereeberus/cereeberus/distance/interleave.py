@@ -67,7 +67,19 @@ class Interleave:
         self.I_['F']['0']['V'] = LBM(map_dict = I_0, 
                                      rows_dict = self.val_to_verts['F']['n'], 
                                      cols_dict = self.val_to_verts['F']['0'])
-        I_0_edges = {(e[0], e[1], 0): (I_0[e[0]], I_0[e[1]],0) for e in self.F_['0'].edges()}
+        # Getting the map from edges in F_0 to edges in F_n 
+        # Extra work is to deal with potential multiedges
+        mult_edges = self.F_['n'].get_multi_edges() 
+        I_0_edges = {}
+        for e in self.F('0').edges(keys = True):
+            if (I_0[e[0]], I_0[e[1]]) in mult_edges:
+                count = 0
+                while (I_0[e[0]], I_0[e[1]], count) in I_0_edges.values():
+                    count += 1
+                I_0_edges[e] = (I_0[e[0]], I_0[e[1]],count)
+            else:
+                I_0_edges[e] = (I_0[e[0]], I_0[e[1]],0) 
+
         self.I_['F']['0']['E'] = LBM(map_dict = I_0_edges, 
                                      rows_dict = self.val_to_edges['F']['n'], 
                                      cols_dict = self.val_to_edges['F']['0'])
@@ -77,8 +89,19 @@ class Interleave:
         self.I_['F']['n']['V'] = LBM(I_n, 
                                      self.val_to_verts['F']['2n'], 
                                      self.val_to_verts['F']['n'])
-        # Note that in this setting, the induced map on edges is the same as the map sending the edge to the edge with endpoints given by the vertices since there are no double edges for any smoothing >= 1. 
-        I_n_edges = {(e[0], e[1], 0): (I_n[e[0]], I_n[e[1]],0) for e in self.F('n').edges()}
+        # Getting the map from edges in F_n to edges in F_2n 
+        # Extra work is to deal with potential multiedges
+        mult_edges = self.F_['2n'].get_multi_edges() 
+        I_n_edges = {}
+        for e in self.F('n').edges(keys = True):                
+            if (I_n[e[0]], I_n[e[1]]) in mult_edges:
+                count = 0
+                while (I_n[e[0]], I_n[e[1]], count) in I_n_edges.values():
+                    count += 1
+                I_n_edges[e] = (I_n[e[0]], I_n[e[1]],count)
+            else:
+                I_n_edges[e] = (I_n[e[0]], I_n[e[1]],0) 
+
         self.I_['F']['n']['E'] = LBM(I_n_edges, 
                                      self.val_to_edges['F']['2n'], 
                                      self.val_to_edges['F']['n'])

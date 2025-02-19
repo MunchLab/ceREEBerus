@@ -679,6 +679,18 @@ class ReebGraph(nx.MultiDiGraph):
         
         v_list = max(self.connected_components(), key=len)
         return self.induced_subgraph(v_list)
+    
+    def get_multi_edges(self):
+        '''
+        Returns a set of the edges that have count higher than 1. Useful for checking for multiedges in the Reeb graph.
+        
+        Returns:
+            set: A set of edges that have count higher than 1.
+        '''
+        
+        mult_edges = [(e[0],e[1]) for e in self.edges if self.number_of_edges(e[0], e[1]) > 1]
+        return set(mult_edges)
+        
 
     #-----------------------------------------------#
     # Methods for getting matrices for the graph 
@@ -788,6 +800,12 @@ class ReebGraph(nx.MultiDiGraph):
         new_crit_vals = list(set(new_crit_vals))
         new_crit_vals.sort()
 
+        # get smallest diff between adjacent critical values
+        # This delta is used for the shift to figure out edges below
+        # the vertices at level cv
+        min_diff = min([new_crit_vals[i+1] - new_crit_vals[i] for i in range(len(new_crit_vals)-1)])
+        delta = min(min_diff/2, eps/2)
+
         # Create the new Reeb graph
         R_eps = ReebGraph()
 
@@ -820,7 +838,7 @@ class ReebGraph(nx.MultiDiGraph):
             # ===== Add edges below the vertices at level cv =====
 
             # Get the slice slightly below the vertex
-            H_edge = self.slice(cv-1.5*eps, cv + .5*eps, type = 'closed')
+            H_edge = self.slice(cv-eps-delta, cv + eps-delta, type = 'closed')
             C_edge = list(H_edge.connected_components())
 
             # Strip the upper and lower from the strings to be able to check overlaps 
