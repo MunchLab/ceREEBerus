@@ -124,10 +124,24 @@ class Interleave:
                                     cols_dict = self.val_to_verts['G']['0'], 
                                     map_dict = I_0)
 
-        # self.map_dict_to_matrix(I_0, 
-        #                         self.val_to_verts['G']['n'], 
-        #                         self.val_to_verts['G']['0'])
-        I_0_edges = {(e[0], e[1], 0): (I_0[e[0]], I_0[e[1]],0) for e in self.G_['0'].edges()}
+        # Getting the map from edges in G_0 to edges in G_n 
+        # Extra work is to deal with potential multiedges
+        mult_edges = self.G_['n'].get_multi_edges() 
+        I_0_edges = {}
+        for e in self.G('0').edges(keys = True):
+            if (I_0[e[0]], I_0[e[1]]) in mult_edges:
+                count = 0
+                while (I_0[e[0]], I_0[e[1]], count) in I_0_edges.values():
+                    count += 1
+                I_0_edges[e] = (I_0[e[0]], I_0[e[1]],count)
+            else:
+                I_0_edges[e] = (I_0[e[0]], I_0[e[1]],0) 
+
+        self.I_['G']['0']['E'] = LBM(map_dict = I_0_edges, 
+                                     rows_dict = self.val_to_edges['G']['n'], 
+                                     cols_dict = self.val_to_edges['G']['0'])
+        
+
         self.I_['G']['0']['E'] = LBM(I_0_edges, 
                                 self.val_to_edges['G']['n'], 
                                 self.val_to_edges['G']['0'])
@@ -137,7 +151,20 @@ class Interleave:
         self.I_['G']['n']['V'] = LBM(I_n, 
                                 self.val_to_verts['G']['2n'], 
                                 self.val_to_verts['G']['n'])
-        I_n_edges = {(e[0], e[1], 0): (I_n[e[0]], I_n[e[1]],0) for e in self.G_['n'].edges()}
+        
+        # Getting the map from edges in G_n to edges in G_2n 
+        # Extra work is to deal with potential multiedges
+        mult_edges = self.G_['2n'].get_multi_edges() 
+        I_n_edges = {}
+        for e in self.G('n').edges(keys = True):                
+            if (I_n[e[0]], I_n[e[1]]) in mult_edges:
+                count = 0
+                while (I_n[e[0]], I_n[e[1]], count) in I_n_edges.values():
+                    count += 1
+                I_n_edges[e] = (I_n[e[0]], I_n[e[1]],count)
+            else:
+                I_n_edges[e] = (I_n[e[0]], I_n[e[1]],0)  
+        
         self.I_['G']['n']['E'] = LBM(I_n_edges, 
                                 self.val_to_edges['G']['2n'], 
                                 self.val_to_edges['G']['n'])
@@ -491,7 +518,6 @@ class Interleave:
         """
         if maptype == 'phi':
             start_graph = self.F(key = key)
-            map_to_set = self.phi_[key][objtype]
             if key == '0':
                 end_graph = self.G(key = 'n')
             elif key == 'n':
@@ -500,7 +526,6 @@ class Interleave:
                 raise ValueError("'key' must be '0' or 'n'.")
         elif maptype == 'psi':
             start_graph = self.G(key = key)
-            map_to_set = self.psi_[key][objtype]
             if key == '0':
                 end_graph = self.F(key = 'n')
             elif key == 'n':
@@ -513,7 +538,11 @@ class Interleave:
         if objtype == 'V':
             # Check that the objects have the same function value 
             if start_graph.f[obj_a] != end_graph.f[obj_b]:
-                raise ValueError("The objects must have the same function value.")
+                i = start_graph.f[obj_a]
+                j = end_graph.f[obj_b]
+                end_graph.draw()
+                raise ValueError(f"The objects must have the same function value. {obj_a}: {i} != {obj_b}: {j}. Nodes: {start_graph.f.keys()}, {end_graph.f.keys()}")
+
             i = start_graph.f[obj_a]
         elif objtype == 'E':
             if len(obj_a) == 2:
