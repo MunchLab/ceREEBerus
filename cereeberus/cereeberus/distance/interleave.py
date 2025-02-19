@@ -254,44 +254,7 @@ class Interleave:
         # End psi
         # ---
 
-    ### ----------------
-    # Function to set phi and psi matrices for the interleaving (instead of random)
-    ### ----------------
-
-    def set_interleaving_maps(self, phi_dict = None, psi_dict = None):
-        """
-        Set the phi and psi matrices to a given value. Instead of replacing the matrices, set the values block by block.
-
-        Parameters:
-            phi_dict (dict): 
-                A dictionary of the form ``{'0': {'V': phi_0_V, 'E': phi_0_E}, 'n': {'V': phi_n_V, 'E': phi_n_E}}`` where each ``phi_i_j`` is a LabeledBlockMatrix.
-            psi_dict (dict): 
-                A dictionary of the form ``{'0': {'V': psi_0_V, 'E': psi_0_E}, 'n': {'V': psi_n_V, 'E': psi_n_E}}`` where each ``psi_i_j`` is a LabeledBlockMatrix.
-        """
-        
-        if phi_dict is not None:
-            for thickening in ['0', 'n']:
-                for obj_type in ['V', 'E']:
-
-                    # fist get the funciton values of the map that's coming in
-                    keys = phi_dict[thickening][obj_type].get_all_block_indices()
-
-                    # Now set the values
-                    for key in keys:
-                        self.phi_[thickening][obj_type][key] = phi_dict[thickening][obj_type][key]
-
-        if psi_dict is not None:
-            for thickening in ['0', 'n']:
-                for obj_type in ['V', 'E']:
-
-                    # fist get the funciton values of the map that's coming in
-                    keys = psi_dict[thickening][obj_type].get_all_block_indices()
-
-                    # Now set the values
-                    for key in keys:
-                        self.psi_[thickening][obj_type][key] = psi_dict[thickening][obj_type][key]
-
-
+ 
         
 
     ### ----------------
@@ -471,11 +434,118 @@ class Interleave:
         else:
             raise ValueError(f"Unknown maptype {maptype}. Must be 'phi' or 'psi'.")
 
+
     ### ----------------
-    #
+    # Functions to set phi and psi matrices for the interleaving (instead of random)
     ### ----------------
-    
-    
+
+    def set_interleaving_maps(self, phi_dict = None, psi_dict = None):
+        """
+        Set the phi and psi matrices to a given value. Instead of replacing the matrices, set the values block by block.
+
+        Parameters:
+            phi_dict (dict): 
+                A dictionary of the form ``{'0': {'V': phi_0_V, 'E': phi_0_E}, 'n': {'V': phi_n_V, 'E': phi_n_E}}`` where each ``phi_i_j`` is a LabeledBlockMatrix.
+            psi_dict (dict): 
+                A dictionary of the form ``{'0': {'V': psi_0_V, 'E': psi_0_E}, 'n': {'V': psi_n_V, 'E': psi_n_E}}`` where each ``psi_i_j`` is a LabeledBlockMatrix.
+        """
+        
+        if phi_dict is not None:
+            for thickening in ['0', 'n']:
+                for obj_type in ['V', 'E']:
+
+                    # fist get the funciton values of the map that's coming in
+                    keys = phi_dict[thickening][obj_type].get_all_block_indices()
+
+                    # Now set the values
+                    for key in keys:
+                        self.phi_[thickening][obj_type][key] = phi_dict[thickening][obj_type][key]
+
+        if psi_dict is not None:
+            for thickening in ['0', 'n']:
+                for obj_type in ['V', 'E']:
+
+                    # fist get the funciton values of the map that's coming in
+                    keys = psi_dict[thickening][obj_type].get_all_block_indices()
+
+                    # Now set the values
+                    for key in keys:
+                        self.psi_[thickening][obj_type][key] = psi_dict[thickening][obj_type][key]
+
+    def set_single_assignment(self, obj_a, obj_b, 
+                              maptype = 'phi', 
+                              key = '0', 
+                              objtype = 'V'):
+        """Set a single assignment in the interleaving map.
+        
+        This will be maptype_key(obj_a) = obj_b.
+
+        Note that edges can be passed as a triple (u,v,count) where u and v are the vertices and count is the key for the edge. If passed as a pair, the count will be assumed to be 0.
+        
+        Args:
+            obj_a (int): Object in the domain of the map.
+            obj_b (int): Object in the codomain of the map.
+            maptype (str, optional): Map to be set, either 'phi' or 'psi'. Defaults to 'phi'.
+            objtype (str, optional): Type of object as input, either 'V' or 'E'. Defaults to 'V'.
+            
+        """
+        if maptype == 'phi':
+            start_graph = self.F(key = key)
+            map_to_set = self.phi_[key][objtype]
+            if key == '0':
+                end_graph = self.G(key = 'n')
+            elif key == 'n':
+                end_graph = self.G(key = '2n')
+            else:
+                raise ValueError("'key' must be '0' or 'n'.")
+        elif maptype == 'psi':
+            start_graph = self.G(key = key)
+            map_to_set = self.psi_[key][objtype]
+            if key == '0':
+                end_graph = self.F(key = 'n')
+            elif key == 'n':
+                end_graph = self.F(key = '2n')
+            else:
+                raise ValueError("'key' must be '0' or 'n'.")
+        else:
+            raise ValueError("'maptype' must be 'phi' or 'psi'.")
+        
+        if objtype == 'V':
+            # Check that the objects have the same function value 
+            if start_graph.f[obj_a] != end_graph.f[obj_b]:
+                raise ValueError("The objects must have the same function value.")
+            i = start_graph.f[obj_a]
+        elif objtype == 'E':
+            if len(obj_a) == 2:
+                obj_a = obj_a + (0,)
+            elif len(obj_a) != 3:
+                raise ValueError("Edges must be passed as pairs or triples.")
+            if len(obj_b) == 2:
+                obj_b = obj_b + (0,)
+            elif len(obj_b) != 3:
+                raise ValueError("Edges must be passed as pairs or triples.")
+            
+            if start_graph.f[obj_a[0]] != end_graph.f[obj_b[0]]:
+                
+                i = start_graph.f[obj_a[0]]
+                j = end_graph.f[obj_b[0]]
+                raise ValueError(f"The objects must have the same function value. {i} != {j}")
+            i = start_graph.f[obj_a[0]]
+        
+        else:
+            raise ValueError("'objtype' must be 'V' or 'E'.")
+        
+        if maptype == 'phi': 
+            row = self.phi_[key][objtype][i].rows.index(obj_b)
+            col = self.phi_[key][objtype][i].cols.index(obj_a)
+            self.phi_[key][objtype][i].array[:, col] = 0
+            self.phi_[key][objtype][i].array[row, col] = 1
+        else: # Maptype = 'psi'
+            row = self.psi_[key][objtype][i].rows.index(obj_b)
+            col = self.psi_[key][objtype][i].cols.index(obj_a)
+            self.psi_[key][objtype][i].array[:, col] = 0
+            self.psi_[key][objtype][i].array[row, col] = 1
+            
     def set_random_assignment(self, random_n = True, seed = None):
         """
         Set the phi and psi matrices to random values. No matter what, the maps from F to Gn and G to Fn will be randomly set.  If ``'random_n'`` is True, the maps from Fn to G2n and Gn to F2n will also be randomly set. Otherwise, we will use matrix tricks to figure out the later from the former. 
