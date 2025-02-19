@@ -1267,7 +1267,6 @@ class Interleave:
         # Get max loss over all function values
         # flatten the dictionary
         loss_list = list(loss_dict.values())
-        print(loss_list)
         return max(loss_list)
 
 

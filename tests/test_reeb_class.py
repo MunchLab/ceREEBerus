@@ -212,6 +212,12 @@ class TestReebClass(unittest.TestCase):
         self.assertIsInstance(R_eps, ReebGraph)
         self.check_reeb(R_eps)
 
+        # This makes sure that the smoothing behaves with multiedges 
+        R = ex_rg.torus()
+        R_eps = R.smoothing(0.1)
+        # The Euler characteristic should be 0 for a small smoothing
+        self.assertEqual(len(R_eps.nodes) - len(R_eps.edges), 0)
+
     def test_matrices(self):
         # This test makes sure you can get the adjacency matrix and boundary matrix of a Reeb graph.
         R = ex_rg.juggling_man()

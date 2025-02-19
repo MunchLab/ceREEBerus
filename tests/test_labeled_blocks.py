@@ -77,7 +77,7 @@ class TestBlockMatrixClasses(unittest.TestCase):
         self.assertEqual(Mat1.absmax(), 100)
         self.assertTrue(np.isnan(EmptyMat.max()))
         self.assertTrue(np.isnan(EmptyMat.max()))
-        print('got here')
+        # print('got here')
 
     def test_block_labeled_matrix(self):
         # Make the example from the front of the documentation 

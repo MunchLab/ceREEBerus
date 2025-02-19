@@ -55,8 +55,8 @@ class LabeledMatrix:
             self.array = np.zeros((len(rows), len(cols)))
             for c in cols:
                 r = map_dict[c]
-                print (f"r = {r}, c = {c}")
-                print(f"rows: {rows}, cols: {cols}")
+                # print (f"r = {r}, c = {c}")
+                # print(f"rows: {rows}, cols: {cols}")
                 self.array[rows.index(r), cols.index(c)] = 1
         elif rows is not None and  cols is not None:
             self.array = np.zeros((len(rows), len(cols)))

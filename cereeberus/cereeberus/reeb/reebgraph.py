@@ -45,8 +45,8 @@ class ReebGraph(nx.MultiDiGraph):
                 e = e[:2]
                 if verbose:
                     print(f'Edge: {e}')
-                # Can't figure out why the graphs are outputting a 
-                # 3rd part of the tuple from our examples
+                # Multigraph means edges are stored as a triple (u,v,n) where n is the number of the edge. 
+                # This is an old note, maybe not true anymore?
                 edge = (e[0], e[1])
                 self.add_edge(*edge, reset_pos = False)
 
@@ -780,6 +780,7 @@ class ReebGraph(nx.MultiDiGraph):
         crit_vals = list(set(self.f.values()))
         new_crit_vals = [cv + eps for cv in crit_vals]
         new_crit_vals.extend([cv - eps for cv in crit_vals])
+        
         if return_map == True:
             # Only need to create vertices at this level if we want to return the map from
             # the original vertices to the new vertices
@@ -790,8 +791,8 @@ class ReebGraph(nx.MultiDiGraph):
         # Create the new Reeb graph
         R_eps = ReebGraph()
 
-        cv_0 = new_crit_vals[0]-eps # is arbitrary
-        H_0 = self.slice(cv_0-eps, cv_0+eps, type = 'closed') # This should give empty graph 
+        cv_0 = new_crit_vals[0]-eps # Starting value is arbitrary below the first critical value
+        H_0 = self.slice(cv_0-eps, cv_0+eps, type = 'closed') # This should initialize empty graph 
         C_0 = list(H_0.connected_components()) # This should give empty list
         comp_to_new_vert_0 = {}
 
@@ -799,14 +800,12 @@ class ReebGraph(nx.MultiDiGraph):
             # This will be a dictionary with keys as vertices in R and values as vertices in R_eps
             map = {}
 
-
         for i in range(len(new_crit_vals)):
             cv = new_crit_vals[i]
-            # print(f"Current critical value: {cv}")
             H = self.slice(cv-eps, cv+eps, type = 'closed')
             C = list(H.connected_components())
 
-            # Add vertices 
+            # ==== Add vertices at level cv =====
             comp_to_new_vert = {}
             for i,c  in enumerate(C):
                 vert_name = R_eps.get_next_vert_name()
@@ -818,11 +817,32 @@ class ReebGraph(nx.MultiDiGraph):
                         if v in self.nodes() and self.f[v] == cv:
                             map[v] = vert_name
 
+            # ===== Add edges below the vertices at level cv =====
+
+            # Get the slice slightly below the vertex
+            H_edge = self.slice(cv-1.5*eps, cv + .5*eps, type = 'closed')
+            C_edge = list(H_edge.connected_components())
+
+            # Strip the upper and lower from the strings to be able to check overlaps 
+            C_edge_new = []
+            for k in C_edge:
+                k_new = []
+                for v in k:
+                    if type(v) == str and (v[-6:] == '_upper' or v[-6:] == '_lower'):
+                        k_new.append(v[:-6])
+                    else:
+                        k_new.append(v)
+                C_edge_new.append(set(k_new))
+
             # Add edges 
-            for i,c in enumerate(C):
-                for i_0, c_0 in enumerate(C_0):
-                    if len(c.intersection(c_0)) > 0:
-                        R_eps.add_edge(comp_to_new_vert[i], comp_to_new_vert_0[i_0])
+            for i,c in enumerate(C_edge_new):
+                overlap_down = np.array([len(c.intersection(c_0)) for c_0 in C_0])
+                lower_vert = comp_to_new_vert_0[np.where(overlap_down > 0)[0][0]]
+                
+                overlap_up = np.array([len(c.intersection(c_0)) for c_0 in C])
+                upper_vert = comp_to_new_vert[np.where(overlap_up > 0)[0][0]]
+                
+                R_eps.add_edge(lower_vert, upper_vert)
 
             # Set up for the next round
             cv_0 = cv

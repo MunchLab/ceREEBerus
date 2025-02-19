@@ -72,7 +72,7 @@ class TestInterleaving(unittest.TestCase):
                 myphi = myInt.phi(key, obj_type)
                 cols = myInt.F(key).sorted_vertices() if obj_type == 'V' else myInt.F(key).sorted_edges()
                 rows = myInt.G(nextkey).sorted_vertices() if obj_type == 'V' else myInt.G(nextkey).sorted_edges()
-                print(f'key: {key}, nextkey: {nextkey}, obj_type: {obj_type}')
+                # print(f'key: {key}, nextkey: {nextkey}, obj_type: {obj_type}')
                 self.assertEqual(rows, myphi.get_all_rows())
                 self.assertEqual(cols, myphi.get_all_cols())
 
@@ -89,7 +89,7 @@ class TestInterleaving(unittest.TestCase):
                 mypsi = myInt.psi(key, obj_type)
                 cols = myInt.G(key).sorted_vertices() if obj_type == 'V' else myInt.G(key).sorted_edges()
                 rows = myInt.F(nextkey).sorted_vertices() if obj_type == 'V' else myInt.F(nextkey).sorted_edges()
-                print(f'key: {key}, nextkey: {nextkey}, obj_type: {obj_type}')
+                # print(f'key: {key}, nextkey: {nextkey}, obj_type: {obj_type}')
                 self.assertEqual(rows, mypsi.get_all_rows())
                 self.assertEqual(cols, mypsi.get_all_cols())
 
@@ -104,7 +104,7 @@ class TestInterleaving(unittest.TestCase):
 
         for maptype in ['phi', 'psi']:
             for obj_type in ['V', 'E']:
-                P = myInt.parallelogram(maptype, obj_type)
+                P = myInt.parallelogram_matrix(maptype, obj_type)
                 self.assertTrue(np.all(P.col_sum() == 0))
 
 
