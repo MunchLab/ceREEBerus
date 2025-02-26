@@ -248,12 +248,38 @@ class ReebGraph(nx.MultiDiGraph):
     #-----------------------------------------------#
     # Methods for adding and removing nodes and edges 
     #-----------------------------------------------#
+    # def next_vert_name(self, s):
+    #     """ 
+    #     Making a simple name generator for vertices. 
+    #     If you're using integers, it will just up the count by one. 
+    #     Letters will be incremented in the alphabet. If you reach 'Z', it will return 'AA'. If you reach 'ZZ', it will return 'AAA', etc.
+
+    #     Parameters:
+    #         s (str or int): The name of the vertex to increment.
+
+    #     Returns:
+    #         str or int
+    #             The next name in the sequence.
+    #     """
+
+    #     if type(s) == int:
+    #         return s+1
+    #     elif type(s) == str and len(s) == 1:
+    #         if not s == 'Z':
+    #             return chr(ord(s)+1) 
+    #         else:
+    #             return 'AA'
+    #     elif type(s) == str and len(s) > 1:
+    #         if s[-1] == 'Z':
+    #             return (len(s)+1)* 'A'
+    #         else:
+    #             return len(s)* chr(ord(s[-1])+1) #
+    #     else:
+    #         ValueError('Input must be a string or an integer')
+
     def next_vert_name(self, s):
         """ 
         Making a simple name generator for vertices. 
-        If you're using integers, it will just up the count by one. 
-        Letters will be incremented in the alphabet. If you reach 'Z', it will return 'AA'. If you reach 'ZZ', it will return 'AAA', etc.
-
         Parameters:
             s (str or int): The name of the vertex to increment.
 
@@ -261,21 +287,10 @@ class ReebGraph(nx.MultiDiGraph):
             str or int
                 The next name in the sequence.
         """
+        return "s"+str(len(self.nodes)) # This is a simple way to get a new name. Ensures that the name is unique.
+    
 
-        if type(s) == int:
-            return s+1
-        elif type(s) == str and len(s) == 1:
-            if not s == 'Z':
-                return chr(ord(s)+1)
-            else:
-                return 'AA'
-        elif type(s) == str and len(s) > 1:
-            if s[-1] == 'Z':
-                return (len(s)+1)* 'A'
-            else:
-                return len(s)* chr(ord(s[-1])+1)
-        else:
-            ValueError('Input must be a string or an integer')
+
 
     def get_next_vert_name(self):
         """Get the next name for a vertex in the Reeb graph. If there are no nodes, it will return 0.
