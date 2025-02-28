@@ -52,16 +52,14 @@ class MapperGraph(ReebGraph):
         except:
             return
         
-        last_vert_name = max(self.nodes())
         
         for i in range(n_low,n_high+1):
             e_list = [e for e in self.edges() if self.f[e[0]] < i and self.f[e[1]] > i]
 
             for e in e_list:
-                w_name = self.next_vert_name(last_vert_name)
+                w_name = self.get_next_vert_name()
                 self.subdivide_edge(*e,w_name, i)
 
-                last_vert_name = w_name
             
     
     def add_node(self, vertex, f_vertex, reset_pos=True):

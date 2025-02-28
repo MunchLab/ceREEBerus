@@ -205,6 +205,31 @@ class ReebGraph(nx.MultiDiGraph):
 
         return edges
 
+    def relabel_nodes(self, mapping):
+        """
+        Relabel the nodes of the Reeb graph using a mapping. The mapping should be a dictionary with keys as old node names and values as new node names.
+
+        Parameters:
+            mapping : dict. A dictionary mapping old node names to new node names.
+        """
+        
+        # Store copies of the old stuff 
+        nodes_old = list(self.nodes()).copy()
+        edges_old = list(self.edges(keys=True)).copy()
+        f_old = self.f.copy()
+        
+        # Delete all nodes and edges from the graph
+        for n in nodes_old:
+            self.remove_node(n)
+            
+        # Add the nodes and edges back in with the new names
+        for v_old in nodes_old:
+            self.add_node(mapping[v_old], f_old[v_old])
+            
+        for e in edges_old:
+            self.add_edge(mapping[e[0]], mapping[e[1]], e[2])
+        
+
     #-----------------------------------------------#
     # Methods for getting distances in the Reeb graph
     #-----------------------------------------------#
@@ -248,66 +273,27 @@ class ReebGraph(nx.MultiDiGraph):
     #-----------------------------------------------#
     # Methods for adding and removing nodes and edges 
     #-----------------------------------------------#
-    # def next_vert_name(self, s):
-    #     """ 
-    #     Making a simple name generator for vertices. 
-    #     If you're using integers, it will just up the count by one. 
-    #     Letters will be incremented in the alphabet. If you reach 'Z', it will return 'AA'. If you reach 'ZZ', it will return 'AAA', etc.
-
-    #     Parameters:
-    #         s (str or int): The name of the vertex to increment.
-
-    #     Returns:
-    #         str or int
-    #             The next name in the sequence.
-    #     """
-
-    #     if type(s) == int:
-    #         return s+1
-    #     elif type(s) == str and len(s) == 1:
-    #         if not s == 'Z':
-    #             return chr(ord(s)+1) 
-    #         else:
-    #             return 'AA'
-    #     elif type(s) == str and len(s) > 1:
-    #         if s[-1] == 'Z':
-    #             return (len(s)+1)* 'A'
-    #         else:
-    #             return len(s)* chr(ord(s[-1])+1) #
-    #     else:
-    #         ValueError('Input must be a string or an integer')
-
-    def next_vert_name(self, s):
-        """ 
-        Making a simple name generator for vertices. 
-        Parameters:
-            s (str or int): The name of the vertex to increment.
-
-        Returns:
-            str or int
-                The next name in the sequence.
-        """
-        return "s"+str(len(self.nodes)) # This is a simple way to get a new name. Ensures that the name is unique.
-    
+ 
 
 
 
     def get_next_vert_name(self):
-        """Get the next name for a vertex in the Reeb graph. If there are no nodes, it will return 0.
+        """Get the next name for a vertex in the Reeb graph that isn't already included. If there are no nodes, it will return 0. Otherwise, it will name the next vertex as one more than the maximum integer labeled vertex, ignoring any strings. 
 
         Returns:
             str or int
                 The next name in the sequence.
         """
-        if len(self.nodes) == 0:
+        integer_nodes = [v for v in self.nodes.keys() if type(v) == int]
+        if len(integer_nodes) == 0:
             return 0
         else:
-            return self.next_vert_name(max(self.nodes))
+            return max(integer_nodes) + 1
 
 
     def add_node(self, vertex, f_vertex, reset_pos=True):
         """Add a vertex to the Reeb graph. 
-        If the vertex name is given as None, it will be assigned via the next_vert_name method.
+        If the vertex name is given as None, it will be assigned via the get_next_vert_name method.
 
         Parameters:
             vertex (hashable like int or str, or None) : The name of the vertex to add.
@@ -319,7 +305,7 @@ class ReebGraph(nx.MultiDiGraph):
             raise ValueError(f'The vertex {vertex} is already in the Reeb graph.')
 
         if vertex is None:
-            vertex = self.next_vert_name(max(self.nodes))
+            vertex = self.get_next_vert_name()
             
         super().add_node(vertex)
 
