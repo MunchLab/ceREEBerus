@@ -245,7 +245,6 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
                         mixed_expression = pulp.lpSum(dist_n_other[i][h] * (first_term - second_term) for h in range(shape_m_mix))
                         
                         prob += minmax_var >= mixed_expression
-                        prob += - minmax_var <= mixed_expression
 
                 # constraint 2: each column sums to 1
                 for j in range(shape_n_mix):
@@ -314,7 +313,6 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
                     prob += aux_vars[block][starting_map][obj_type] * 2 >= tri_expression # ceiling of half of the expression
 
                     prob += minmax_var >= aux_vars[block][starting_map][obj_type]
-                    prob += - minmax_var <= aux_vars[block][starting_map][obj_type]
 
 
 
@@ -330,7 +328,6 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
                             para_expression = pulp.lpSum(dist_2n_other[i][h] * (first_term - second_term) for h in range(shape_m_para))
 
                             prob += minmax_var >= para_expression
-                            prob += - minmax_var <= para_expression
 
 
                 # constraint 2: map_multiplication and z relation. This is for triangles
