@@ -344,7 +344,7 @@ class ReebGraph(nx.MultiDiGraph):
         super().remove_node(vertex)
         del self.f[vertex]
 
-        if reset_pos:
+        if reset_pos and hasattr(self, 'pos_f'):
             del self.pos_f[vertex]
             self.set_pos_from_f()
 
@@ -382,7 +382,8 @@ class ReebGraph(nx.MultiDiGraph):
         elif self.f[u] > self.f[v]:
             edge = (v,u)
             super().add_edge(*edge)
-        else: # the function values are the same, so the edge collapses the two vertices
+        else: 
+            # the function values are the same, so the edge collapses the two vertices
             # wlog we're going to get rid of v, and add all its edges to u
 
             # get the edges of v
