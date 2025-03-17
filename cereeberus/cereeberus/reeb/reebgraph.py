@@ -801,6 +801,10 @@ class ReebGraph(nx.MultiDiGraph):
             tuple: ReebGraph, vertex_map, edge_map.
         """
 
+        # If eps is 0, return the original graph
+        if eps ==0:
+            return self, {v:v for v in self.nodes}, {e:[e] for e in self.edges(keys = True)}
+
         # Get the list of critical values to place new nodes 
         crit_vals = list(set(self.f.values()))
         new_crit_vals = [cv + eps for cv in crit_vals]
