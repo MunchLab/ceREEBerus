@@ -502,10 +502,13 @@ class LabeledBlockMatrix:
                                 try:
                                     r = map_dict[c]
                                 except:
+                                    print('Error')
                                     print(f"c: {c}")
                                     print(f"map_dict: {map_dict}")
                                     print(f"cols_: {cols_}")
                                     print(f"rows_: {rows_}")
+                                    print(f"blocks[i]: {self.blocks[i]}")
+                                    ValueError("Column object {c} not in map_dict")
                                 self.blocks[i][r,c]  = 1 
                 elif random_initialize:
                     A = self.blocks[i].array            

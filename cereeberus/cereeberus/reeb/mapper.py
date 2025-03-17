@@ -98,20 +98,44 @@ class MapperGraph(ReebGraph):
         return R.to_mapper(self.delta)
 
 
-    def smoothing(self, n = 1, return_map = False):
+    def smoothing_and_maps(self, n = 1):
         """
         Compute the smoothing of a mapper graph as given in todo: Cite the paper. Note that the input :math:`n` parameter is related to the integer function values, not the delta-scaled function values.
 
         Parameters:
             n (int): The amount of smoothing
+        
+        Returns:
+            tuple: MapperGraph, vertex_map, edge_map 
         """
         if type(n) != int:
             raise ValueError("Smoothing amount must be an integer.")
-        if return_map == True:
-            M_n, induced_map = super().smoothing(n, return_map)
-            return M_n.to_mapper(self.delta), induced_map
-        else:
-            return super().smoothing(n, return_map = False).to_mapper(self.delta)
+        
+        M_n, V_map, E_map = super().smoothing_and_maps(n)
+        
+        # E_map is a dictonary with output lists of edges, but we should only have one edge to one edge in the mapper graph  case
+        # This just strips E_map[key] = [(u,v,0)] to instead be E_map[key] = (u,v,0)
+        E_map = {key : E_map[key][0] for key in E_map}
+        
+        M_n = M_n.to_mapper(self.delta)
+        
+        return M_n, V_map, E_map 
+
+    def smoothing(self, n=1):
+        """
+        Compute the smoothing of a mapper graph as given in todo: Cite the paper. Note that the input :math:`n` parameter is related to the integer function values, not the delta-scaled function values.
+
+        Args:
+            n (int, optional): Smoothing amount. Defaults to 1.
+
+        Raises:
+            ValueError: _description_
+
+        Returns:
+            _type_: _description_
+        """
+        M_n, _, _ = self.smoothing_and_maps(n)
+        return M_n
 
     #------------------------------#
     # Functions for computing thickening distance matrix

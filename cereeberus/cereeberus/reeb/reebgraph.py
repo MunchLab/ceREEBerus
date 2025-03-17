@@ -228,6 +228,21 @@ class ReebGraph(nx.MultiDiGraph):
             
         for e in edges_old:
             self.add_edge(mapping[e[0]], mapping[e[1]], e[2])
+            
+    def inv_image(self, f_val):
+        """
+        Get the set of vertices and/or edges at a given function value. This will return $v$ for which $f(v) = $`f_val`, as well as edges $e = (u,v)$ for which $f(u) < $`f_val` and $f(v) > $`f_val`.
+
+        Parameters:
+            f_val : float. The function value to get the objects for.
+
+        Returns:
+            tuple : (set, set)
+                The set of vertices and the set of edges at the function value `f_val`.
+        """
+        verts = {v for v in self.nodes if self.f[v] == f_val}
+        edges = {e for e in self.edges if self.f[e[0]] < f_val and self.f[e[1]] > f_val}
+        return verts, edges
         
 
     #-----------------------------------------------#
@@ -772,22 +787,18 @@ class ReebGraph(nx.MultiDiGraph):
     # Operations on Reeb graph to get new Reeb graph
     #-----------------------------------------------#
 
-    def smoothing(self, eps = 1, 
-                  return_map = False, 
-                  map_type = 'dict',
-                  verbose = False):
+    def smoothing_and_maps(self, eps = 1, 
+                            verbose = False):
         """
-        Builds the ``eps``-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. 
+        Builds the ``eps``-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. This function also returns the maps (i) from the vertices of the original Reeb graph to the vertices of the smoothed Reeb graph and (ii) from the edges of the original to the edges of the smoothed graph.
+        These maps are given as a dictionary with keys as vertices (resp. edges) in the original Reeb graph and values as vertices (resp. edges) in the smoothed Reeb graph.
 
         Parameters:
             eps (float): The amount of smoothing to apply.
-            return_map (bool): Optional. If True, will return a map from the vertices of the original Reeb graph to the vertices of the smoothed Reeb graph.
-            map_type (str): Optional. The type of map to return. Can be 'matrix' or 'dictionary'. Default is 'matrix'.
             verbose (bool): Optional. If True, will print out additional information during the smoothing process.
         
         Returns:
-            ReebGraph: The smoothed Reeb graph.
-            If ``return_map`` is True, it returns a tuple with the second object giving a dictionary with keys as vertices in the original Reeb graph and values as vertices in the smoothed Reeb graph.
+            tuple: ReebGraph, vertex_map, edge_map.
         """
 
         # Get the list of critical values to place new nodes 
@@ -795,10 +806,8 @@ class ReebGraph(nx.MultiDiGraph):
         new_crit_vals = [cv + eps for cv in crit_vals]
         new_crit_vals.extend([cv - eps for cv in crit_vals])
         
-        if return_map == True:
-            # Only need to create vertices at this level if we want to return the map from
-            # the original vertices to the new vertices
-            new_crit_vals.extend(list(self.f.values()))
+        # Add vertices at the locations of the function values of the inputs
+        new_crit_vals.extend(list(self.f.values()))
         new_crit_vals = list(set(new_crit_vals))
         new_crit_vals.sort()
 
@@ -816,26 +825,28 @@ class ReebGraph(nx.MultiDiGraph):
         C_0 = list(H_0.connected_components()) # This should give empty list
         comp_to_new_vert_0 = {}
 
-        if return_map == True:
-            # This will be a dictionary with keys as vertices in R and values as vertices in R_eps
-            map = {}
+        # This will be a dictionary with keys as vertices in R and values as vertices in R_eps
+        map_V = {}
+        map_E = {e: [] for e in self.edges(keys = True)}
 
         for i in range(len(new_crit_vals)):
             cv = new_crit_vals[i]
             H = self.slice(cv-eps, cv+eps, type = 'closed')
             C = list(H.connected_components())
-
+            
             # ==== Add vertices at level cv =====
+
             comp_to_new_vert = {}
+            # comp_to_new_vert is a dictionary with keys as indices of connected components in the list C and values as the name of the vertex in R_eps
             for i,c  in enumerate(C):
                 vert_name = R_eps.get_next_vert_name()
                 R_eps.add_node(vert_name, cv, reset_pos = False)
                 comp_to_new_vert[i] = vert_name
 
-                if return_map == True:
-                    for v in c:
-                        if v in self.nodes() and self.f[v] == cv:
-                            map[v] = vert_name
+                # Track the vertex map
+                for v in c:
+                    if v in self.nodes() and self.f[v] == cv:
+                        map_V[v] = vert_name
 
             # ===== Add edges below the vertices at level cv =====
 
@@ -855,6 +866,9 @@ class ReebGraph(nx.MultiDiGraph):
                     conn_comp_list[j] = set(conn_comp_new)
 
             # Add edges 
+            # Track the stuff that needs to be included in the map
+            V_inv, E_inv = self.inv_image(cv-delta)
+            
             for i,c in enumerate(C_edge):
                 overlap_down = np.array([len(c.intersection(c_0)) for c_0 in C_0])
                 lower_vert = [comp_to_new_vert_0[u] for u in  np.where(overlap_down > 0)[0]]
@@ -871,6 +885,15 @@ class ReebGraph(nx.MultiDiGraph):
                     upper_vert = upper_vert[0]
                 
                 R_eps.add_edge(lower_vert, upper_vert)
+                
+                new_edge_name = (lower_vert, upper_vert, R_eps.number_of_edges(lower_vert, upper_vert)-1) # Because we just added the new edge, it should be the last one
+                
+                # Right now this assumes an endpoint vertex is in the sliced graph, is it possible for it to be edges only? 
+                for e in E_inv: 
+                    if e[0] in c or e[1] in c:
+                        map_E[e].append(new_edge_name)
+                
+
 
             # Set up for the next round
             cv_0 = cv
@@ -879,21 +902,21 @@ class ReebGraph(nx.MultiDiGraph):
             comp_to_new_vert_0 = comp_to_new_vert
 
         R_eps.set_pos_from_f()
+        
+        return R_eps, map_V, map_E
 
-        if return_map == True:
-            if map_type == 'matrix':
-                # Create the matrix version of the map
-                map_matrix = np.zeros((len(self.nodes), len(R_eps.nodes)))
-                for v in map:
-                    map_matrix[v, R_eps.nodes().index(map[v])] = 1
-                return R_eps, map_matrix
-            else:
-                return R_eps, map
-        else:
-            return R_eps
+    def smoothing(self, eps = 1):
+        """
+        Builds the ``eps``-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. 
 
-
-
+        Parameters:
+            eps (float): The amount of smoothing to apply.
+        
+        Returns:
+            ReebGraph: The smoothed Reeb graph.
+        """
+        R_eps, _, _ = self.smoothing_and_maps(eps = eps)
+        return R_eps
 
     #-----------------------------------------------#
     # Methods for converting to other graph types

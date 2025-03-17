@@ -4,6 +4,7 @@ import pandas as pd
 import networkx as nx
 from scipy.linalg import block_diag
 from matplotlib import pyplot as plt
+from ..compute.unionfind import UnionFind
 from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
 
@@ -39,8 +40,6 @@ class Interleave:
         # ---
         # Containers for matrices for later 
 
-
-        # self.A = {'F':{}, 'G':{}} # adjacency matrix
         self.B_down_ = {'F':{}, 'G':{}} # boundary matrix
         self.B_up_ = {'F':{}, 'G':{}} # boundary matrix
         self.D_ = {'F':{}, 'G':{}} # distance matrix
@@ -53,9 +52,9 @@ class Interleave:
         # Make F graphs and smoothed versions
         self.F_ = {}
         self.F_['0'] = F 
-        self.F_['n'], I_0 = F.smoothing(self.n, return_map = True)
-        self.F_['2n'], I_n = self.F('n').smoothing(self.n, return_map = True)
-
+        self.F_['n'], I_0_V, I_0_E = F.smoothing_and_maps(self.n)
+        self.F_['2n'], I_n_V, I_n_E = self.F('n').smoothing_and_maps(self.n)
+        
         # Get the dictionaries needed for the induced maps' block structure 
         for key in ['0', 'n', '2n']:
             self.val_to_verts['F'][key] = self.F(key).func_to_vertex_dict()
@@ -64,45 +63,19 @@ class Interleave:
         
         # Make the induced map from F_0 to F_n
         self.I_['F']['0'] = {}
-        self.I_['F']['0']['V'] = LBM(map_dict = I_0, 
+        self.I_['F']['0']['V'] = LBM(map_dict = I_0_V, 
                                      rows_dict = self.val_to_verts['F']['n'], 
                                      cols_dict = self.val_to_verts['F']['0'])
-        # Getting the map from edges in F_0 to edges in F_n 
-        # Extra work is to deal with potential multiedges
-        mult_edges = self.F_['n'].get_multi_edges() 
-        I_0_edges = {}
-        for e in self.F('0').edges(keys = True):
-            if (I_0[e[0]], I_0[e[1]]) in mult_edges:
-                count = 0
-                while (I_0[e[0]], I_0[e[1]], count) in I_0_edges.values():
-                    count += 1
-                I_0_edges[e] = (I_0[e[0]], I_0[e[1]],count)
-            else:
-                I_0_edges[e] = (I_0[e[0]], I_0[e[1]],0) 
-
-        self.I_['F']['0']['E'] = LBM(map_dict = I_0_edges, 
+        self.I_['F']['0']['E'] = LBM(map_dict = I_0_E, 
                                      rows_dict = self.val_to_edges['F']['n'], 
                                      cols_dict = self.val_to_edges['F']['0'])
 
         # Make the induced map from F_n to F_2n
         self.I_['F']['n'] = {}
-        self.I_['F']['n']['V'] = LBM(I_n, 
+        self.I_['F']['n']['V'] = LBM(I_n_V, 
                                      self.val_to_verts['F']['2n'], 
                                      self.val_to_verts['F']['n'])
-        # Getting the map from edges in F_n to edges in F_2n 
-        # Extra work is to deal with potential multiedges
-        mult_edges = self.F_['2n'].get_multi_edges() 
-        I_n_edges = {}
-        for e in self.F('n').edges(keys = True):                
-            if (I_n[e[0]], I_n[e[1]]) in mult_edges:
-                count = 0
-                while (I_n[e[0]], I_n[e[1]], count) in I_n_edges.values():
-                    count += 1
-                I_n_edges[e] = (I_n[e[0]], I_n[e[1]],count)
-            else:
-                I_n_edges[e] = (I_n[e[0]], I_n[e[1]],0) 
-
-        self.I_['F']['n']['E'] = LBM(I_n_edges, 
+        self.I_['F']['n']['E'] = LBM(I_n_E, 
                                      self.val_to_edges['F']['2n'], 
                                      self.val_to_edges['F']['n'])
 
@@ -110,8 +83,8 @@ class Interleave:
         # Now do the same for G
         self.G_ = {}
         self.G_['0'] = G 
-        self.G_['n'], I_0 = G.smoothing(self.n, return_map = True)
-        self.G_['2n'], I_n = self.G_['n'].smoothing(self.n, return_map = True)
+        self.G_['n'], I_0_V, I_0_E = G.smoothing_and_maps(self.n)
+        self.G_['2n'], I_n_V, I_n_E = self.G_['n'].smoothing_and_maps(self.n)
 
         # Get the dictionaries needed for the induced maps' block structure 
         for key in ['0', 'n', '2n']:
@@ -120,52 +93,23 @@ class Interleave:
 
         # Make the induced map from G_0 to G_n
         self.I_['G']['0'] = {}
-        self.I_['G']['0']['V'] = LBM( rows_dict = self.val_to_verts['G']['n'],
+        self.I_['G']['0']['V'] = LBM(rows_dict = self.val_to_verts['G']['n'],
                                     cols_dict = self.val_to_verts['G']['0'], 
-                                    map_dict = I_0)
-
-        # Getting the map from edges in G_0 to edges in G_n 
-        # Extra work is to deal with potential multiedges
-        mult_edges = self.G_['n'].get_multi_edges() 
-        I_0_edges = {}
-        for e in self.G('0').edges(keys = True):
-            if (I_0[e[0]], I_0[e[1]]) in mult_edges:
-                count = 0
-                while (I_0[e[0]], I_0[e[1]], count) in I_0_edges.values():
-                    count += 1
-                I_0_edges[e] = (I_0[e[0]], I_0[e[1]],count)
-            else:
-                I_0_edges[e] = (I_0[e[0]], I_0[e[1]],0) 
-
-        self.I_['G']['0']['E'] = LBM(map_dict = I_0_edges, 
+                                    map_dict = I_0_V)
+        self.I_['G']['0']['E'] = LBM(map_dict = I_0_E, 
                                      rows_dict = self.val_to_edges['G']['n'], 
                                      cols_dict = self.val_to_edges['G']['0'])
         
-
-        self.I_['G']['0']['E'] = LBM(I_0_edges, 
+        self.I_['G']['0']['E'] = LBM(I_0_E, 
                                 self.val_to_edges['G']['n'], 
                                 self.val_to_edges['G']['0'])
 
         # Make the induced map from G_n to G_2n
         self.I_['G']['n'] = {}
-        self.I_['G']['n']['V'] = LBM(I_n, 
+        self.I_['G']['n']['V'] = LBM(I_n_V, 
                                 self.val_to_verts['G']['2n'], 
                                 self.val_to_verts['G']['n'])
-        
-        # Getting the map from edges in G_n to edges in G_2n 
-        # Extra work is to deal with potential multiedges
-        mult_edges = self.G_['2n'].get_multi_edges() 
-        I_n_edges = {}
-        for e in self.G('n').edges(keys = True):                
-            if (I_n[e[0]], I_n[e[1]]) in mult_edges:
-                count = 0
-                while (I_n[e[0]], I_n[e[1]], count) in I_n_edges.values():
-                    count += 1
-                I_n_edges[e] = (I_n[e[0]], I_n[e[1]],count)
-            else:
-                I_n_edges[e] = (I_n[e[0]], I_n[e[1]],0)  
-        
-        self.I_['G']['n']['E'] = LBM(I_n_edges, 
+        self.I_['G']['n']['E'] = LBM(I_n_E, 
                                 self.val_to_edges['G']['2n'], 
                                 self.val_to_edges['G']['n'])
         
