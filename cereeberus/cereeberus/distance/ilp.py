@@ -27,18 +27,16 @@ def build_map_matrices(myInt, map_results):
     func_vals = myInt.all_func_vals()
 
 
-    # create empty dictionaries to store the final map matrices
-    final_maps = {block : {thickening:{obj_type:{} for obj_type in ['V', 'E']} for thickening in ['0', 'n']} for block in func_vals}
 
     # create the final map matrices
     
     final_maps = {thickening: {obj_type: {map_type: {} for map_type in ['Phi', 'Psi']} for obj_type in ['V', 'E']} for thickening in ['0', 'n']}
-    #final_maps = {obj_type: {map_type:{} for map_type in ['Phi','Psi']}  for obj_type in ['V', 'E']}
+
     for thickening in ['0', 'n']:
         for obj_type in ['V', 'E']:
             for map_type in ['Phi', 'Psi']:
-                
-                for block in func_vals:
+                for block in (func_vals[:-1] if obj_type == 'E' else func_vals):
+
                     if map_type == 'Phi':
                         map_vars = myInt.phi(thickening, obj_type)[block].get_array()
                         block_row_labels = myInt.phi(thickening, obj_type)[block].rows
@@ -103,10 +101,10 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
 
 
     # create the decision variables (NOTE: these are all the decision variables for all the diagrams)
-    for block in func_vals:
-        for thickening in ['0', 'n']:
-            for obj_type in ['V', 'E']:
-                
+    for thickening in ['0', 'n']:
+        for obj_type in ['V', 'E']:
+            for block in (func_vals[:-1] if obj_type == 'E' else func_vals):
+
                 # create lp variables for phi
                 n_rows = myInt.phi(thickening, obj_type)[block].get_array().shape[0]
                 n_cols = myInt.phi(thickening, obj_type)[block].get_array().shape[1]
@@ -134,10 +132,9 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
     z_vars = {block :  {starting_map: {obj_type: {} for obj_type in ['V', 'E']} for starting_map in ['F', 'G']} for block in func_vals}
 
     map_product_vars = {block : {starting_map: {obj_type: {} for obj_type in ['V', 'E']} for starting_map in ['F', 'G']} for block in func_vals}
-
-    for block in func_vals:
-        for obj_type in ['V', 'E']:
-            for starting_map in ['F', 'G']:
+    for obj_type in ['V', 'E']:
+        for starting_map in ['F', 'G']:
+            for block in (func_vals[:-1] if obj_type == 'E' else func_vals):
                 
                 if starting_map == 'F':
                     n_rows_1 = myInt.psi('n', obj_type)[block].get_array().shape[0]
@@ -165,9 +162,10 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
     # decison variables for the triangles (to make the ceiling(expression/2 work)
     aux_vars = {block : {starting_map: {obj_type: {} for obj_type in ['V', 'E']} for starting_map in ['F', 'G']} for block in func_vals}
 
-    for block in func_vals:
-        for obj_type in ['V', 'E']:
-            for starting_map in ['F', 'G']:
+    for obj_type in ['V', 'E']:
+        for starting_map in ['F', 'G']:
+            # for block in func_vals:
+            for block in (func_vals[:-1] if obj_type == 'E' else func_vals):
                 if starting_map == 'F':
                     shape_m_tri = myInt.D('F', '2n', obj_type)[block].get_array().shape[0]
                 else:
@@ -175,14 +173,13 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
 
                 aux_vars[block][starting_map][obj_type] = pulp.LpVariable('aux_'+starting_map+'_'+obj_type+'_'+str(block),  cat='Integer')
 
-                # aux_vars[block][starting_map][obj_type] = pulp.LpVariable.dicts('aux_'+starting_map+'_'+obj_type+'_'+str(block), (a for a in range(shape_m_tri)), cat='Integer')
+
                     
     # create the minmax variable
     minmax_var = pulp.LpVariable('minmax_var', cat='Integer')
 
     
     # create the constraints
-
     for block in func_vals:
         for starting_map in ['F', 'G']:
             # set the other map based on starting map 
@@ -192,13 +189,12 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
                 other_map = 'F'
 
             for up_or_down in ['up', 'down']: # deals with 1 (up, down) and 2 (up, down)
-               
+                
+                if block == func_vals[-1]: # skip the last block for this type of diagrams
+                    continue
+                
                #set the matrices
                 if up_or_down == 'up': #NOTE: the change in block indices
-
-                    if block == func_vals[-1]: # skip the last block for the up case
-                        continue
-                    
                     dist_n_other = myInt.D(other_map, 'n', 'V')[block+1].get_array()
                     bou_n = myInt.B_up(other_map, 'n')[block].get_array()
                     bou_0 = myInt.B_up(starting_map, '0')[block].get_array()
@@ -256,6 +252,9 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
 
 
             for obj_type in ['V', 'E']: # deals with 3, 4, 5, 6, 7, 8, 9, 10
+                if obj_type == 'E' and block == func_vals[-1]: # skip the last block for this type of diagrams. This is because we don't have an edge with the highest function value
+                    continue
+
                 # multiply inclusion matrices. Needed for the triangles
                 i_n_i_0 = myInt.I(starting_map, 'n', obj_type)[block].get_array() @ myInt.I(starting_map, '0', obj_type)[block].get_array()
 
@@ -387,9 +386,7 @@ def solve_ilp(myInt, verbose=False, get_thickened_maps = False):
     if verbose:
         prob.solve()
     else:
-        prob.solve(pulp.GUROBI_CMD(msg=0)
-                   )
-
+        prob.solve(pulp.GUROBI_CMD(msg=0))
     if prob.status != 1:
         raise ValueError("The ILP optimization did not converge. Please check the input data and try again.")
 
