@@ -8,6 +8,7 @@ from ..compute.unionfind import UnionFind
 from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
 from .ilp import solve_ilp
+import sys, os
 
 class Interleave:
     """
@@ -33,27 +34,222 @@ class Interleave:
         self.n = np.inf
         self.assignment = None
         
-    def fit(self):
+    def fit(self, verbose = False, 
+            max_n_for_error = 100, 
+            printOptimizerOutput = False, ):
         """
         Compute the interleaving distance between the two Mapper graphs.
+        
+        Parameters:
+            verbose (bool, optional): 
+                If True, print the progress of the optimization. Defaults to False.
+            max_n_for_error (int, optional): 
+                The maximum value of `n` to search for. If the interleaving distance is not found by this value, a ValueError is raised. Defaults to 100.
+            printOptimizerOutput (bool, optional):
+                If True, the output of the PULP optimizer is printed. Defaults to False.
         
         Returns:
             Interleave : 
                 The Interleave object with the computed interleaving distance.
         """
-        pass #TODO
         # -- Search through possible n values to find the smallest one that still allows for interleaving
-        # Put the for loop here that will search through the possible n values 
-    
-        # -- Set the internal parameter n to the smallest value that allows for interleaving
-        # self.n = N
-    
-        # -- Set the assignment to the one that minimizes the interleaving distance
-        # self.assignment = Assignment(self.F, self.G, n = self.n)
         
-        # return 
+        # -- Dictionary to store the search data 
+        # -- This will store the Loss for each value of n so we don't 
+        # -- have to recompute it each time. 
+        # -- The distance bound can be determined by search_data[key] = Loss implies d_I <= key + Loss
+        search_data = {} 
+        
+        # -- Set the initial value of the distance bound to be infinity
+        distance_bound = np.inf
+
+        # -- Do an expoential search for the smallest n that allows for interleaving
+        # -- Start with n = 1 and double it until the Loss is less than or equal to 0
+        N = 1 
+        found_max = False
+            
+        while not found_max:
+            # -- Compute the assignment for the current value of n
+            # -- If the Loss is less than or equal to 0, we have found a valid n
+            # -- Otherwise, double n and try again
+
+            try:
+                if verbose: 
+                    print(f"\n-\nTrying n = {N}...")
+                myAssgn = Assignment(self.F, self.G, n = N)
+                
+                Loss = myAssgn.optimize(printOptimizerOutput = printOptimizerOutput)
+                search_data[N] = Loss
+                
+                if verbose: 
+                    print(f"n = {N}, Loss = {Loss}, distance_bound = {N + Loss}")
+                
+            except ValueError as e:
+                # -- If we get a ValueError, it means the current n is too small
+                # -- So we double n and try again
+                search_data[N] = np.inf
+                N *= 2
+                continue
+            
+            if Loss <= 0:
+                # -- If the Loss is less than or equal to 0, we have found a valid n
+                max_N = N
+                found_max = True
+                if verbose:
+                    print(f"Found valid maximum n = {N} with Loss = {Loss}. Moving on to binary search.")
+            else:
+                # -- If the Loss is greater than 0, we need to try a larger n
+                N *= 2
+                
+            if N > max_n_for_error:
+                # -- If we have exceeded the maximum value of n, raise an error. Useful while we're checking this while loop
+                raise ValueError(f"Interleaving distance not found for n <= {max_n_for_error}.")
+                return search_data
+                
+            
+
+        # now binary search in [0, max_N] to find the smallest n that gives a loss of 0
+        
+        # -- Set the initial values for the binary search
+        low = 1
+        high = max_N
+        while low < high:
+            mid = (low + high) // 2
+            
+            try:
+                myAssgn = Assignment(self.F, self.G, n = mid)
+                Loss = myAssgn.optimize(printOptimizerOutput = printOptimizerOutput)
+                search_data[mid] = Loss
+            except ValueError as e:
+                # -- If we get a ValueError, it means the current n is too small
+                search_data[mid] = np.inf
+                low = mid + 1
+                continue
+            
+            if Loss <= 0:
+                # -- If the Loss is less than or equal to 0, we have found a valid n
+                high = mid
+            else:
+                low = mid + 1
+                
+        # -- Set the final value of n to be the smallest one that gives a loss of 0
+        self.n = low
+        # -- Set the assignment to be the one that minimizes the interleaving distance
+        self.assignment = Assignment(self.F, self.G, n = self.n)
+        Loss = self.assignment.optimize()
+        
+        
+        # Raise error if the loss isn't 0 
+        if Loss > 0:
+            raise ValueError(f"Final fit object is not an interleaving. Loss = {Loss}. N = {self.n}.")
+        return search_data
+        
+    
+    def phi(self, key = '0', obj_type = 'V'):
+        """
+        Get the interleaving map :math:`\\varphi: F \\to G^n` if `key == '0'` or :math:`\\varphi_n: F^n \\to G^{2n}` if `key == 'n'`.
+
+        Parameters:
+            key (str) : 
+                The key for the map. Either ``'0'`` or ``'n'``.
+            obj_type (str) : 
+                The type of map. Either ``'V'`` or ``'E'``.
+        
+        Returns:
+            LabeledBlockMatrix : 
+                The interleaving map.
+        """
+        if self.assignment is None:
+            raise ValueError("You must call fit() before getting the interleaving map.")
+        return self.assignment.phi(key, obj_type)
+    
+    def psi(self, key = '0', obj_type = 'V'):
+        """
+        Get the interleaving map :math:`\\psi: G \\to F^n` if `key == '0'` or :math:`\\psi_n: G^n \\to F^{2n}` if `key == 'n'`.
+
+        Parameters:
+            key (str) : 
+                The key for the map. Either ``'0'`` or ``'n'``.
+            obj_type (str) : 
+                The type of map. Either ``'V'`` or ``'E'``.
+        
+        Returns:
+            LabeledBlockMatrix : 
+                The interleaving map.
+        """
+        if self.assignment is None:
+            raise ValueError("You must call fit() before getting the interleaving map.")
+        return self.assignment.psi(key, obj_type)
+    
+    def get_interleaving_map(self, maptype = 'phi', key = '0', obj_type = 'V'):
+        """
+        Get the relevant interleaving map. Helpful for iterating over options. 
+
+        Parameters:
+            maptype (str) : 
+                The type of map. Either ``'phi'`` or ``'psi'``.
+            key (str) : 
+                The key for the map. Either ``'0'`` or ``'n'``.
+            obj_type (str) : 
+                The type of map. Either ``'V'`` or ``'E'``.
+
+        Returns:
+            LabeledBlockMatrix : 
+                The relevant interleaving map.
+        """
+        
+        if self.assignment is None:
+            raise ValueError("You must call fit() before getting the interleaving map.")
+        return self.assignment.get_interleaving_map(maptype, key, obj_type)
+    
+    def draw_all_graphs(self, figsize = (15,10), **kwargs):
+        """Draw all the graphs stored in the Interleave object.
+
+        Args:
+            figsize (tuple, optional): Sets the size of the figure. Defaults to (15,10).
+
+        Returns:
+            tuple: The figure and axes objects.
+        """
+        
+        if self.assignment is None:
+            raise ValueError("You must call fit() before drawing the graphs.")
+        return self.assignment.draw_all_graphs() 
+    
+    def draw_all_phi(self):
+        """Draw all the phi maps stored in the Interleave object.
+
+        Returns:
+            tuple: The figure and axes objects.
+        """
+        
+        if self.assignment is None:
+            raise ValueError("You must call fit() before drawing the phi maps.")
+        return self.assignment.draw_all_phi()
+    
+    def draw_all_psi(self):
+        """Draw all the psi maps stored in the Interleave object.
+
+        Returns:
+            tuple: The figure and axes objects.
+        """
+        
+        if self.assignment is None:
+            raise ValueError("You must call fit() before drawing the psi maps.")
+        return self.assignment.draw_all_psi()
+    
+    # Disable Printing 
+    def _blockPrint():
+        sys.stdout = open(os.devnull, 'w')
+
+    # Restore Printing
+    def _enablePrint():
+        sys.stdout = sys.__stdout__
         
 
+#============================
+# Assignment Class
+#============================
 
 class Assignment:
     """
@@ -1398,19 +1594,40 @@ class Assignment:
 
         return all_func_vals
     
-    def optimize(self):
+    def optimize(self, printOptimizerOutput = False):
         """Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.
         This function requires the `pulp` package to be installed.
         
+        Parameters:
+            printOptimizerOutput (bool) : 
+                If True, prints the output of the ILP solver. Default is False.
         Returns:
             float : 
                 The loss value found by the ILP solver.
         """
         
+        if not printOptimizerOutput:
+            # Stop printouts
+            self._blockPrint()
+            
         map_dict, loss_val = solve_ilp(self); 
+        
+        if not printOptimizerOutput:
+            # Restore printouts
+            self._enablePrint()
+            
         self.phi_['0'] = {'V': map_dict['phi_0_V'], 'E': map_dict['phi_0_E']}
         self.phi_['n'] = {'V': map_dict['phi_n_V'], 'E': map_dict['phi_n_E']}
         self.psi_['0'] = {'V': map_dict['psi_0_V'], 'E': map_dict['psi_0_E']}
         self.psi_['n'] = {'V': map_dict['psi_n_V'], 'E': map_dict['psi_n_E']}
         
         return loss_val
+    
+    # Disable Printing 
+    def _blockPrint(self):
+        sys.stdout = open(os.devnull, 'w')
+
+    # Restore Printing
+    def _enablePrint(self):
+        sys.stdout = sys.__stdout__
+    
