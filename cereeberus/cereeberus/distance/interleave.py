@@ -7,10 +7,57 @@ from matplotlib import pyplot as plt
 from ..compute.unionfind import UnionFind
 from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
+from .ilp import solve_ilp
 
 class Interleave:
     """
-    A class to bound the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G` throughout.
+    A class to compute the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G`.
+
+    The interleaving distance is a measure of how similar two Mapper graphs are, based on the induced maps between them. 
+
+    """
+    
+    def __init__(self, F, G):
+        """
+        Initialize the Interleave object.
+        
+        Parameters:
+            F (MapperGraph):
+                The first Mapper graph.
+            G (MapperGraph):
+                The second Mapper graph.
+        """
+        
+        self.F = F
+        self.G = G
+        self.n = np.inf
+        self.assignment = None
+        
+    def fit(self):
+        """
+        Compute the interleaving distance between the two Mapper graphs.
+        
+        Returns:
+            Interleave : 
+                The Interleave object with the computed interleaving distance.
+        """
+        pass #TODO
+        # -- Search through possible n values to find the smallest one that still allows for interleaving
+        # Put the for loop here that will search through the possible n values 
+    
+        # -- Set the internal parameter n to the smallest value that allows for interleaving
+        # self.n = N
+    
+        # -- Set the assignment to the one that minimizes the interleaving distance
+        # self.assignment = Assignment(self.F, self.G, n = self.n)
+        
+        # return 
+        
+
+
+class Assignment:
+    """
+    A class to determine the loss for a given assignment, and thus bound the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G` throughout.
 
     We use keys ``['0', 'n', '2n']`` to denote the Mapper graphs :math:`F = F_0`, :math:`F_n`, and :math:`F_{2n}` and similarly for :math:`G`.
 
@@ -1350,3 +1397,20 @@ class Interleave:
         all_func_vals.sort()
 
         return all_func_vals
+    
+    def optimize(self):
+        """Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.
+        This function requires the `pulp` package to be installed.
+        
+        Returns:
+            float : 
+                The loss value found by the ILP solver.
+        """
+        
+        map_dict, loss_val = solve_ilp(self); 
+        self.phi_['0'] = {'V': map_dict['phi_0_V'], 'E': map_dict['phi_0_E']}
+        self.phi_['n'] = {'V': map_dict['phi_n_V'], 'E': map_dict['phi_n_E']}
+        self.psi_['0'] = {'V': map_dict['psi_0_V'], 'E': map_dict['psi_0_E']}
+        self.psi_['n'] = {'V': map_dict['psi_n_V'], 'E': map_dict['psi_n_E']}
+        
+        return loss_val
