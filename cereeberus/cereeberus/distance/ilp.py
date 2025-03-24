@@ -68,8 +68,20 @@ def build_map_matrices(myAssgn, map_results):
     
 ##------------------- ILP Optimization -------------------##
 
-def solve_ilp(myAssgn, verbose=False, get_thickened_maps = False):
+def solve_ilp(myAssgn, pulp_solver = None, verbose=False, get_thickened_maps = False):
 
+    """
+    Function to solve the ILP optimization problem for interleaving maps. The function creates a linear programming problem using the PuLP library and solves it to find the optimal interleaving maps.
+    
+    Parameters:
+        myAssgn (Assignment): the Assignment object containing the interleaving maps and other relevant data
+        pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.
+        verbose (bool): whether to print the optimization status and results
+        get_thickened_maps (bool): whether to return the thickened maps as well. Default is False.
+        
+    Returns:
+        tuple: a tuple containing the final interleaving maps (as a dictionary of LabeledBlockMatrices) and the optimized loss value
+    """
     # function values
     func_vals = myAssgn.all_func_vals()
 
@@ -364,7 +376,8 @@ def solve_ilp(myAssgn, verbose=False, get_thickened_maps = False):
 
 
     # solve the problem
-    prob.solve()
+    prob.solve(pulp_solver)
+    
     # prob.solve(pulp.GUROBI_CMD(msg=0))
     if prob.status != 1:
         raise ValueError("The ILP optimization did not converge. Please check the input data and try again.")

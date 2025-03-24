@@ -8,6 +8,7 @@ from ..compute.unionfind import UnionFind
 from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
 from .ilp import solve_ilp
+from ..compute.utils import HiddenPrints
 import sys, os
 
 class Interleave:
@@ -34,13 +35,16 @@ class Interleave:
         self.n = np.inf
         self.assignment = None
         
-    def fit(self, verbose = False, 
+    def fit(self, pulp_solver = None, 
+            verbose = False, 
             max_n_for_error = 100, 
-            printOptimizerOutput = False, ):
+            ):
         """
         Compute the interleaving distance between the two Mapper graphs.
         
         Parameters:
+            pulp_solver (pulp.LpSolver): 
+                The solver to use for the ILP optimization. If None, the default solver is used.
             verbose (bool, optional): 
                 If True, print the progress of the optimization. Defaults to False.
             max_n_for_error (int, optional): 
@@ -1603,40 +1607,26 @@ class Assignment:
 
         return all_func_vals
     
-    def optimize(self, printOptimizerOutput = False):
+    def optimize(self, pulp_solver = None):
         """Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.
         This function requires the `pulp` package to be installed.
         
         Parameters:
-            printOptimizerOutput (bool) : 
-                If True, prints the output of the ILP solver. Default is False.
+            pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.
         Returns:
             float : 
                 The loss value found by the ILP solver.
         """
         
-        if not printOptimizerOutput:
-            # Stop printouts
-            self._blockPrint()
-            
-        map_dict, loss_val = solve_ilp(self); 
-        
-        if not printOptimizerOutput:
-            # Restore printouts
-            self._enablePrint()
+        map_dict, loss_val = solve_ilp(self, pulp_solver = pulp_solver)
             
         self.phi_['0'] = {'V': map_dict['phi_0_V'], 'E': map_dict['phi_0_E']}
         self.phi_['n'] = {'V': map_dict['phi_n_V'], 'E': map_dict['phi_n_E']}
         self.psi_['0'] = {'V': map_dict['psi_0_V'], 'E': map_dict['psi_0_E']}
         self.psi_['n'] = {'V': map_dict['psi_n_V'], 'E': map_dict['psi_n_E']}
         
+        
         return loss_val
     
-    # Disable Printing 
-    def _blockPrint(self):
-        sys.stdout = open(os.devnull, 'w')
 
-    # Restore Printing
-    def _enablePrint(self):
-        sys.stdout = sys.__stdout__
     
