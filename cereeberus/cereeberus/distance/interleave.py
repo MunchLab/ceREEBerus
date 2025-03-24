@@ -35,9 +35,7 @@ class Interleave:
         self.n = np.inf
         self.assignment = None
         
-    def fit(self, pulp_solver = None, 
-            verbose = False, 
-            max_n_for_error = 100, 
+    def old_fit(self, pulp_solver = None, verbose = False, max_n_for_error = 100, 
             ):
         """
         Compute the interleaving distance between the two Mapper graphs.
@@ -82,7 +80,7 @@ class Interleave:
                     print(f"\n-\nTrying n = {N}...")
                 myAssgn = Assignment(self.F, self.G, n = N)
                 
-                Loss = myAssgn.optimize(printOptimizerOutput = printOptimizerOutput)
+                Loss = myAssgn.optimize()
                 search_data[N] = Loss
                 
                 if verbose: 
@@ -108,7 +106,6 @@ class Interleave:
             if N > max_n_for_error:
                 # -- If we have exceeded the maximum value of n, raise an error. Useful while we're checking this while loop
                 raise ValueError(f"Interleaving distance not found for n <= {max_n_for_error}.")
-                return search_data
                 
             
 
@@ -122,7 +119,7 @@ class Interleave:
             
             try:
                 myAssgn = Assignment(self.F, self.G, n = mid)
-                Loss = myAssgn.optimize(printOptimizerOutput = printOptimizerOutput)
+                Loss = myAssgn.optimize()
                 search_data[mid] = Loss
             except ValueError as e:
                 # -- If we get a ValueError, it means the current n is too small
@@ -147,9 +144,98 @@ class Interleave:
         if Loss > 0:
             raise ValueError(f"Final fit object is not an interleaving. Loss = {Loss}. N = {self.n}.")
         
-        return self
-        
+        return self.n
     
+    def fit(self, pulp_solver = None, verbose= False, max_n_for_error = 100):
+        """
+        Compute the interleaving distance between the two Mapper graphs.
+        
+        Parameters:
+            pulp_solver (pulp.LpSolver): 
+                The solver to use for the ILP optimization. If None, the default solver is used.
+            verbose (bool, optional): 
+                If True, print the progress of the optimization. Defaults to False.
+            max_n_for_error (int, optional): 
+                The maximum value of `n` to search for. If the interleaving distance is not found by this value, a ValueError is raised. Defaults to 100. ####NOTE: this can be replaced by the bounding box.
+            
+        Returns:
+            Int:
+                The interleaving distance, that is, the smallest n for which loss is zero.
+        """
+
+        # step 0: search for n=0 
+        myAssgn = Assignment(self.F, self.G, n = 0)
+        Loss = myAssgn.optimize(pulp_solver = pulp_solver)
+
+        if verbose:
+            print(f"\n-\nTrying n = 0...")
+            print(f"n = 0, Loss = {Loss}, distance_bound = {0 + Loss}")
+
+        # if loss is 0, we're done
+        if Loss == 0:
+            self.n = 0
+            self.assignment = myAssgn
+            return self.n
+        
+        # step 1: exponential search for the upperbound
+        low, high = 1, 1
+        found_valid_n = False
+
+        while high <= max_n_for_error:
+            try:
+                myAssgn = Assignment(self.F, self.G, n = high)
+                Loss = myAssgn.optimize(pulp_solver = pulp_solver)
+
+                if verbose:
+                    print(f"\n-\nTrying n = {high}...")
+                    print(f"n = {high}, Loss = {Loss}, distance_bound = {high + Loss}")
+
+                if  Loss == 0:
+                    found_valid_n = True
+                    break
+                low, high = high, high*2
+            except ValueError: # infeasible assignment
+                low, high = high, high*2
+
+        if not found_valid_n:
+            raise ValueError(f"Interleaving distance not found for n <= {max_n_for_error}.")
+        
+        high = min(high, max_n_for_error)  # Clamp to max allowed
+        # step 2: binary search for the optimal n
+        
+        low = (high//2) + 1 if high > 1 else 1
+        best_n = high
+
+        while low <= high:
+            mid = (low + high) // 2 
+            try:
+                myAssgn = Assignment(self.F, self.G, n = mid)
+                Loss = myAssgn.optimize(pulp_solver = pulp_solver)
+                
+                if verbose:
+                    print(f"\n-\nTrying n = {mid}...")
+                    print(f"n = {mid}, Loss = {Loss}, distance_bound = {mid + Loss}")
+                
+                if Loss == 0:
+                    best_n = mid
+                    high = mid - 1 # decrease n to increase the loss
+                else:
+                    low = mid + 1
+            except ValueError: # infeasible assignment
+                low = mid + 1  
+        
+        # validate the final solution
+        self.n = best_n
+        self.assignment = Assignment(self.F, self.G, n = self.n)
+        final_loss = self.assignment.optimize(pulp_solver = pulp_solver)
+
+        if final_loss != 0:
+            raise ValueError(f"Unexpected non-zero loss (Loss={final_loss}) for n={self.n}")
+        
+        return self.n
+            
+    
+
     def phi(self, key = '0', obj_type = 'V'):
         """
         Get the interleaving map :math:`\\varphi: F \\to G^n` if ``key == '0'`` or :math:`\\varphi_n: F^n \\to G^{2n}` if ``key == 'n'``.
