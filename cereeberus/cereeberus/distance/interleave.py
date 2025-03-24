@@ -12,10 +12,10 @@ import sys, os
 
 class Interleave:
     """
-    A class to compute the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G`.
-
-    The interleaving distance is a measure of how similar two Mapper graphs are, based on the induced maps between them. 
-
+    A class to compute the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G`. The interleaving distance is a measure of how similar two Mapper graphs are, based on the induced maps between them.
+    
+    Once the ``Interleave.fit()`` command has been run, the optimal bound for the distance for the input mapper graphs is stored as ``Interleave.n``. The resulting maps can be found using the ``Interleave.phi()`` and ``Interleave.psi()`` functions. For more detailed structure, the full interleaving is stored using an `Assignment` class, documented below, and can be accessed using ``Interleave.assignment``.
+    
     """
     
     def __init__(self, F, G):
@@ -142,12 +142,13 @@ class Interleave:
         # Raise error if the loss isn't 0 
         if Loss > 0:
             raise ValueError(f"Final fit object is not an interleaving. Loss = {Loss}. N = {self.n}.")
-        return search_data
+        
+        return self
         
     
     def phi(self, key = '0', obj_type = 'V'):
         """
-        Get the interleaving map :math:`\\varphi: F \\to G^n` if `key == '0'` or :math:`\\varphi_n: F^n \\to G^{2n}` if `key == 'n'`.
+        Get the interleaving map :math:`\\varphi: F \\to G^n` if ``key == '0'`` or :math:`\\varphi_n: F^n \\to G^{2n}` if ``key == 'n'``.
 
         Parameters:
             key (str) : 
@@ -165,7 +166,7 @@ class Interleave:
     
     def psi(self, key = '0', obj_type = 'V'):
         """
-        Get the interleaving map :math:`\\psi: G \\to F^n` if `key == '0'` or :math:`\\psi_n: G^n \\to F^{2n}` if `key == 'n'`.
+        Get the interleaving map :math:`\\psi: G \\to F^n` if ``key == '0'`` or :math:`\\psi_n: G^n \\to F^{2n}` if ``key == 'n'``.
 
         Parameters:
             key (str) : 
@@ -216,27 +217,35 @@ class Interleave:
             raise ValueError("You must call fit() before drawing the graphs.")
         return self.assignment.draw_all_graphs() 
     
-    def draw_all_phi(self):
+    def draw_all_phi(self, figsize = (15,10), **kwargs):
         """Draw all the phi maps stored in the Interleave object.
 
+        Args:
+            figsize (tuple, optional): Sets the size of the figure. Defaults to (15,10).
+            **kwargs: Additional keyword arguments to pass to the drawing function.
+            
         Returns:
             tuple: The figure and axes objects.
         """
         
         if self.assignment is None:
             raise ValueError("You must call fit() before drawing the phi maps.")
-        return self.assignment.draw_all_phi()
+        return self.assignment.draw_all_phi(figsize, **kwargs)
     
-    def draw_all_psi(self):
+    def draw_all_psi(self, figsize = (15,10), **kwargs):
         """Draw all the psi maps stored in the Interleave object.
 
+        Args:
+            figsize (tuple, optional): Sets the size of the figure. Defaults to (15,10).
+            **kwargs: Additional keyword arguments to pass to the drawing function.
+            
         Returns:
             tuple: The figure and axes objects.
         """
         
         if self.assignment is None:
             raise ValueError("You must call fit() before drawing the psi maps.")
-        return self.assignment.draw_all_psi()
+        return self.assignment.draw_all_psi(figsize, **kwargs)
     
     # Disable Printing 
     def _blockPrint():
