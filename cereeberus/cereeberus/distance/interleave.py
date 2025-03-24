@@ -140,7 +140,7 @@ class Interleave:
         self.n = low
         # -- Set the assignment to be the one that minimizes the interleaving distance
         self.assignment = Assignment(self.F, self.G, n = self.n)
-        Loss = self.assignment.optimize()
+        Loss = self.assignment.optimize(pulp_solver = pulp_solver,)
         
         
         # Raise error if the loss isn't 0 
