@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -5,23 +7,19 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>1.1. ReebGraph class &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -296,6 +294,38 @@ The node to get the down degree of.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.relabel_nodes">
+<span class="sig-name descname"><span class="pre">relabel_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.relabel_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.relabel_nodes" title="Link to this definition"></a></dt>
+<dd><p>Relabel the nodes of the Reeb graph using a mapping. The mapping should be a dictionary with keys as old node names and values as new node names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mapping</strong> – dict. A dictionary mapping old node names to new node names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.inv_image">
+<span class="sig-name descname"><span class="pre">inv_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.inv_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.inv_image" title="Link to this definition"></a></dt>
+<dd><p>Get the set of vertices and/or edges at a given function value. This will return $v$ for which $f(v) = $`f_val`, as well as edges $e = (u,v)$ for which $f(u) &lt; $`f_val` and $f(v) &gt; $`f_val`.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>f_val</strong> – float. The function value to get the objects for.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>(set, set)</dt><dd><p>The set of vertices and the set of edges at the function value <cite>f_val</cite>.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.thickening_distance">
 <span class="sig-name descname"><span class="pre">thickening_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.thickening_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.thickening_distance" title="Link to this definition"></a></dt>
 <dd><p>Get the thickening distance between two vertices in the Reeb graph. This is the amount of thickening needed before the two vertices map to the same connected component. Note that u and v need to be at the same function value, so f(u) = f(v).</p>
@@ -317,29 +347,9 @@ The node to get the down degree of.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.next_vert_name">
-<span class="sig-name descname"><span class="pre">next_vert_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.next_vert_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.next_vert_name" title="Link to this definition"></a></dt>
-<dd><p>Making a simple name generator for vertices.
-If you’re using integers, it will just up the count by one.
-Letters will be incremented in the alphabet. If you reach ‘Z’, it will return ‘AA’. If you reach ‘ZZ’, it will return ‘AAA’, etc.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>s</strong> (<em>str</em><em> or </em><em>int</em>) – The name of the vertex to increment.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>str or int</dt><dd><p>The next name in the sequence.</p>
-</dd>
-</dl>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.get_next_vert_name">
 <span class="sig-name descname"><span class="pre">get_next_vert_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.get_next_vert_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.get_next_vert_name" title="Link to this definition"></a></dt>
-<dd><p>Get the next name for a vertex in the Reeb graph. If there are no nodes, it will return 0.</p>
+<dd><p>Get the next name for a vertex in the Reeb graph that isn’t already included. If there are no nodes, it will return 0. Otherwise, it will name the next vertex as one more than the maximum integer labeled vertex, ignoring any strings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><dl class="simple">
@@ -355,7 +365,7 @@ Letters will be incremented in the alphabet. If you reach ‘Z’, it will retur
 <dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.add_node">
 <span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_vertex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.add_node" title="Link to this definition"></a></dt>
 <dd><p>Add a vertex to the Reeb graph.
-If the vertex name is given as None, it will be assigned via the next_vert_name method.</p>
+If the vertex name is given as None, it will be assigned via the get_next_vert_name method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -575,6 +585,20 @@ This will convert any edges that cross the slice into vertices.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.get_multi_edges">
+<span class="sig-name descname"><span class="pre">get_multi_edges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.get_multi_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.get_multi_edges" title="Link to this definition"></a></dt>
+<dd><p>Returns a set of the edges that have count higher than 1. Useful for checking for multiedges in the Reeb graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A set of edges that have count higher than 1.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.adjacency_matrix">
 <span class="sig-name descname"><span class="pre">adjacency_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symmetrize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.adjacency_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.adjacency_matrix" title="Link to this definition"></a></dt>
 <dd><p>Returns the adjacency matrix of the Reeb graph. Symmetrizes the matrix by default; if symmetrize = False, it will return the directed adjacency matrix.</p>
@@ -619,21 +643,36 @@ This will convert any edges that cross the slice into vertices.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.smoothing">
-<span class="sig-name descname"><span class="pre">smoothing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dict'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.smoothing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.smoothing" title="Link to this definition"></a></dt>
-<dd><p>Builds the <code class="docutils literal notranslate"><span class="pre">eps</span></code>-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph <span class="math notranslate nohighlight">\((X,f)\)</span>, the smoothed graph is the Reeb graph of the product space <span class="math notranslate nohighlight">\((X \times [-\varepsilon, \varepsilon], f(x) +  t)\)</span>.</p>
+<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.smoothing_and_maps">
+<span class="sig-name descname"><span class="pre">smoothing_and_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.smoothing_and_maps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.smoothing_and_maps" title="Link to this definition"></a></dt>
+<dd><p>Builds the <code class="docutils literal notranslate"><span class="pre">eps</span></code>-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph <span class="math notranslate nohighlight">\((X,f)\)</span>, the smoothed graph is the Reeb graph of the product space <span class="math notranslate nohighlight">\((X \times [-\varepsilon, \varepsilon], f(x) +  t)\)</span>. This function also returns the maps (i) from the vertices of the original Reeb graph to the vertices of the smoothed Reeb graph and (ii) from the edges of the original to the edges of the smoothed graph.
+These maps are given as a dictionary with keys as vertices (resp. edges) in the original Reeb graph and values as vertices (resp. edges) in the smoothed Reeb graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>eps</strong> (<em>float</em>) – The amount of smoothing to apply.</p></li>
-<li><p><strong>return_map</strong> (<em>bool</em>) – Optional. If True, will return a map from the vertices of the original Reeb graph to the vertices of the smoothed Reeb graph.</p></li>
-<li><p><strong>map_type</strong> (<em>str</em>) – Optional. The type of map to return. Can be ‘matrix’ or ‘dictionary’. Default is ‘matrix’.</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – Optional. If True, will print out additional information during the smoothing process.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The smoothed Reeb graph.
-If <code class="docutils literal notranslate"><span class="pre">return_map</span></code> is True, it returns a tuple with the second object giving a dictionary with keys as vertices in the original Reeb graph and values as vertices in the smoothed Reeb graph.</p>
+<dd class="field-even"><p>ReebGraph, vertex_map, edge_map.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.reebgraph.ReebGraph.smoothing">
+<span class="sig-name descname"><span class="pre">smoothing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/reebgraph.html#ReebGraph.smoothing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.reebgraph.ReebGraph.smoothing" title="Link to this definition"></a></dt>
+<dd><p>Builds the <code class="docutils literal notranslate"><span class="pre">eps</span></code>-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph <span class="math notranslate nohighlight">\((X,f)\)</span>, the smoothed graph is the Reeb graph of the product space <span class="math notranslate nohighlight">\((X \times [-\varepsilon, \varepsilon], f(x) +  t)\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eps</strong> (<em>float</em>) – The amount of smoothing to apply.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The smoothed Reeb graph.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#cereeberus.reeb.reebgraph.ReebGraph" title="cereeberus.reeb.reebgraph.ReebGraph">ReebGraph</a></p>

@@ -1,24 +1,22 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>cereeberus.distance.interleave &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -80,21 +78,292 @@
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">block_diag</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">..compute.unionfind</span> <span class="kn">import</span> <span class="n">UnionFind</span>
 <span class="kn">from</span> <span class="nn">.labeled_blocks</span> <span class="kn">import</span> <span class="n">LabeledBlockMatrix</span> <span class="k">as</span> <span class="n">LBM</span>
 <span class="kn">from</span> <span class="nn">.labeled_blocks</span> <span class="kn">import</span> <span class="n">LabeledMatrix</span> <span class="k">as</span> <span class="n">LM</span>
+<span class="kn">from</span> <span class="nn">.ilp</span> <span class="kn">import</span> <span class="n">solve_ilp</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
 
 <div class="viewcode-block" id="Interleave">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave">[docs]</a>
 <span class="k">class</span> <span class="nc">Interleave</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A class to bound the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G` throughout.</span>
+<span class="sd">    A class to compute the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G`.</span>
+
+<span class="sd">    The interleaving distance is a measure of how similar two Mapper graphs are, based on the induced maps between them. </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="Interleave.__init__">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Interleave object.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            F (MapperGraph):</span>
+<span class="sd">                The first Mapper graph.</span>
+<span class="sd">            G (MapperGraph):</span>
+<span class="sd">                The second Mapper graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">F</span> <span class="o">=</span> <span class="n">F</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">G</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+        
+<div class="viewcode-block" id="Interleave.fit">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.fit">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+            <span class="n">max_n_for_error</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> 
+            <span class="n">printOptimizerOutput</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the interleaving distance between the two Mapper graphs.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            verbose (bool, optional): </span>
+<span class="sd">                If True, print the progress of the optimization. Defaults to False.</span>
+<span class="sd">            max_n_for_error (int, optional): </span>
+<span class="sd">                The maximum value of `n` to search for. If the interleaving distance is not found by this value, a ValueError is raised. Defaults to 100.</span>
+<span class="sd">            printOptimizerOutput (bool, optional):</span>
+<span class="sd">                If True, the output of the PULP optimizer is printed. Defaults to False.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Interleave : </span>
+<span class="sd">                The Interleave object with the computed interleaving distance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># -- Search through possible n values to find the smallest one that still allows for interleaving</span>
+        
+        <span class="c1"># -- Dictionary to store the search data </span>
+        <span class="c1"># -- This will store the Loss for each value of n so we don&#39;t </span>
+        <span class="c1"># -- have to recompute it each time. </span>
+        <span class="c1"># -- The distance bound can be determined by search_data[key] = Loss implies d_I &lt;= key + Loss</span>
+        <span class="n">search_data</span> <span class="o">=</span> <span class="p">{}</span> 
+        
+        <span class="c1"># -- Set the initial value of the distance bound to be infinity</span>
+        <span class="n">distance_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+        <span class="c1"># -- Do an expoential search for the smallest n that allows for interleaving</span>
+        <span class="c1"># -- Start with n = 1 and double it until the Loss is less than or equal to 0</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="mi">1</span> 
+        <span class="n">found_max</span> <span class="o">=</span> <span class="kc">False</span>
+            
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">found_max</span><span class="p">:</span>
+            <span class="c1"># -- Compute the assignment for the current value of n</span>
+            <span class="c1"># -- If the Loss is less than or equal to 0, we have found a valid n</span>
+            <span class="c1"># -- Otherwise, double n and try again</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> 
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">-</span><span class="se">\n</span><span class="s2">Trying n = </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+                <span class="n">myAssgn</span> <span class="o">=</span> <span class="n">Assignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">N</span><span class="p">)</span>
+                
+                <span class="n">Loss</span> <span class="o">=</span> <span class="n">myAssgn</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">printOptimizerOutput</span> <span class="o">=</span> <span class="n">printOptimizerOutput</span><span class="p">)</span>
+                <span class="n">search_data</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="n">Loss</span>
+                
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> 
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n = </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">, Loss = </span><span class="si">{</span><span class="n">Loss</span><span class="si">}</span><span class="s2">, distance_bound = </span><span class="si">{</span><span class="n">N</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># -- If we get a ValueError, it means the current n is too small</span>
+                <span class="c1"># -- So we double n and try again</span>
+                <span class="n">search_data</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+                <span class="n">N</span> <span class="o">*=</span> <span class="mi">2</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">Loss</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># -- If the Loss is less than or equal to 0, we have found a valid n</span>
+                <span class="n">max_N</span> <span class="o">=</span> <span class="n">N</span>
+                <span class="n">found_max</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found valid maximum n = </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> with Loss = </span><span class="si">{</span><span class="n">Loss</span><span class="si">}</span><span class="s2">. Moving on to binary search.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># -- If the Loss is greater than 0, we need to try a larger n</span>
+                <span class="n">N</span> <span class="o">*=</span> <span class="mi">2</span>
+                
+            <span class="k">if</span> <span class="n">N</span> <span class="o">&gt;</span> <span class="n">max_n_for_error</span><span class="p">:</span>
+                <span class="c1"># -- If we have exceeded the maximum value of n, raise an error. Useful while we&#39;re checking this while loop</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Interleaving distance not found for n &lt;= </span><span class="si">{</span><span class="n">max_n_for_error</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">search_data</span>
+                
+            
+
+        <span class="c1"># now binary search in [0, max_N] to find the smallest n that gives a loss of 0</span>
+        
+        <span class="c1"># -- Set the initial values for the binary search</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">max_N</span>
+        <span class="k">while</span> <span class="n">low</span> <span class="o">&lt;</span> <span class="n">high</span><span class="p">:</span>
+            <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">high</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">myAssgn</span> <span class="o">=</span> <span class="n">Assignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">mid</span><span class="p">)</span>
+                <span class="n">Loss</span> <span class="o">=</span> <span class="n">myAssgn</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">printOptimizerOutput</span> <span class="o">=</span> <span class="n">printOptimizerOutput</span><span class="p">)</span>
+                <span class="n">search_data</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">=</span> <span class="n">Loss</span>
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># -- If we get a ValueError, it means the current n is too small</span>
+                <span class="n">search_data</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+                <span class="n">low</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">Loss</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># -- If the Loss is less than or equal to 0, we have found a valid n</span>
+                <span class="n">high</span> <span class="o">=</span> <span class="n">mid</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">low</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+                
+        <span class="c1"># -- Set the final value of n to be the smallest one that gives a loss of 0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">low</span>
+        <span class="c1"># -- Set the assignment to be the one that minimizes the interleaving distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="o">=</span> <span class="n">Assignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">Loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+        
+        
+        <span class="c1"># Raise error if the loss isn&#39;t 0 </span>
+        <span class="k">if</span> <span class="n">Loss</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final fit object is not an interleaving. Loss = </span><span class="si">{</span><span class="n">Loss</span><span class="si">}</span><span class="s2">. N = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">search_data</span></div>
+
+        
+    
+<div class="viewcode-block" id="Interleave.phi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.phi">[docs]</a>
+    <span class="k">def</span> <span class="nf">phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the interleaving map :math:`\\varphi: F \\to G^n` if `key == &#39;0&#39;` or :math:`\\varphi_n: F^n \\to G^{2n}` if `key == &#39;n&#39;`.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
+<span class="sd">            obj_type (str) : </span>
+<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The interleaving map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must call fit() before getting the interleaving map.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Interleave.psi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.psi">[docs]</a>
+    <span class="k">def</span> <span class="nf">psi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the interleaving map :math:`\\psi: G \\to F^n` if `key == &#39;0&#39;` or :math:`\\psi_n: G^n \\to F^{2n}` if `key == &#39;n&#39;`.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
+<span class="sd">            obj_type (str) : </span>
+<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The interleaving map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must call fit() before getting the interleaving map.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">psi</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Interleave.get_interleaving_map">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.get_interleaving_map">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_interleaving_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the relevant interleaving map. Helpful for iterating over options. </span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            maptype (str) : </span>
+<span class="sd">                The type of map. Either ``&#39;phi&#39;`` or ``&#39;psi&#39;``.</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
+<span class="sd">            obj_type (str) : </span>
+<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The relevant interleaving map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must call fit() before getting the interleaving map.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">get_interleaving_map</span><span class="p">(</span><span class="n">maptype</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Interleave.draw_all_graphs">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_graphs">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_all_graphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw all the graphs stored in the Interleave object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            figsize (tuple, optional): Sets the size of the figure. Defaults to (15,10).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: The figure and axes objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must call fit() before drawing the graphs.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">draw_all_graphs</span><span class="p">()</span> </div>
+
+    
+<div class="viewcode-block" id="Interleave.draw_all_phi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_phi">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_all_phi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw all the phi maps stored in the Interleave object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: The figure and axes objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must call fit() before drawing the phi maps.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">draw_all_phi</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="Interleave.draw_all_psi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_psi">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_all_psi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw all the psi maps stored in the Interleave object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: The figure and axes objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must call fit() before drawing the psi maps.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">draw_all_psi</span><span class="p">()</span></div>
+
+    
+    <span class="c1"># Disable Printing </span>
+    <span class="k">def</span> <span class="nf">_blockPrint</span><span class="p">():</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Restore Printing</span>
+    <span class="k">def</span> <span class="nf">_enablePrint</span><span class="p">():</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span></div>
+
+        
+
+<span class="c1">#============================</span>
+<span class="c1"># Assignment Class</span>
+<span class="c1">#============================</span>
+
+<div class="viewcode-block" id="Assignment">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment">[docs]</a>
+<span class="k">class</span> <span class="nc">Assignment</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to determine the loss for a given assignment, and thus bound the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G` throughout.</span>
 
 <span class="sd">    We use keys ``[&#39;0&#39;, &#39;n&#39;, &#39;2n&#39;]`` to denote the Mapper graphs :math:`F = F_0`, :math:`F_n`, and :math:`F_{2n}` and similarly for :math:`G`.</span>
 
 <span class="sd">    Note that the difference in the ranges of the two Mapper graphs must be within ``&#39;n&#39;``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Interleave.__init__">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.__init__">[docs]</a>
+<div class="viewcode-block" id="Assignment.__init__">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> 
                         <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
                         <span class="n">initialize_random_maps</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -119,8 +388,6 @@
         <span class="c1"># ---</span>
         <span class="c1"># Containers for matrices for later </span>
 
-
-        <span class="c1"># self.A = {&#39;F&#39;:{}, &#39;G&#39;:{}} # adjacency matrix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">B_down_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;F&#39;</span><span class="p">:{},</span> <span class="s1">&#39;G&#39;</span><span class="p">:{}}</span> <span class="c1"># boundary matrix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">B_up_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;F&#39;</span><span class="p">:{},</span> <span class="s1">&#39;G&#39;</span><span class="p">:{}}</span> <span class="c1"># boundary matrix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">D_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;F&#39;</span><span class="p">:{},</span> <span class="s1">&#39;G&#39;</span><span class="p">:{}}</span> <span class="c1"># distance matrix</span>
@@ -133,9 +400,9 @@
         <span class="c1"># Make F graphs and smoothed versions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">F_</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">F_</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span> 
-        <span class="bp">self</span><span class="o">.</span><span class="n">F_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="n">I_0</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">return_map</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">F_</span><span class="p">[</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> <span class="n">I_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">return_map</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">F_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="n">I_0_V</span><span class="p">,</span> <span class="n">I_0_E</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">smoothing_and_maps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">F_</span><span class="p">[</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> <span class="n">I_n_V</span><span class="p">,</span> <span class="n">I_n_E</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">smoothing_and_maps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+        
         <span class="c1"># Get the dictionaries needed for the induced maps&#39; block structure </span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">func_to_vertex_dict</span><span class="p">()</span>
@@ -144,22 +411,19 @@
         
         <span class="c1"># Make the induced map from F_0 to F_n</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">map_dict</span> <span class="o">=</span> <span class="n">I_0</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">map_dict</span> <span class="o">=</span> <span class="n">I_0_V</span><span class="p">,</span> 
                                      <span class="n">rows_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
                                      <span class="n">cols_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
-        <span class="n">I_0_edges</span> <span class="o">=</span> <span class="p">{(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">):</span> <span class="p">(</span><span class="n">I_0</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">I_0</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">F_</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">()}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">map_dict</span> <span class="o">=</span> <span class="n">I_0_edges</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">map_dict</span> <span class="o">=</span> <span class="n">I_0_E</span><span class="p">,</span> 
                                      <span class="n">rows_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
                                      <span class="n">cols_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
 
         <span class="c1"># Make the induced map from F_n to F_2n</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">I_n</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">I_n_V</span><span class="p">,</span> 
                                      <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
                                      <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
-        <span class="c1"># Note that in this setting, the induced map on edges is the same as the map sending the edge to the edge with endpoints given by the vertices since there are no double edges for any smoothing &gt;= 1. </span>
-        <span class="n">I_n_edges</span> <span class="o">=</span> <span class="p">{(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">):</span> <span class="p">(</span><span class="n">I_n</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">I_n</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">edges</span><span class="p">()}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">I_n_edges</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">I_n_E</span><span class="p">,</span> 
                                      <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
                                      <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
 
@@ -167,8 +431,8 @@
         <span class="c1"># Now do the same for G</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G_</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span> 
-        <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="n">I_0</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">return_map</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> <span class="n">I_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">return_map</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="n">I_0_V</span><span class="p">,</span> <span class="n">I_0_E</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">smoothing_and_maps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> <span class="n">I_n_V</span><span class="p">,</span> <span class="n">I_n_E</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">smoothing_and_maps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
 
         <span class="c1"># Get the dictionaries needed for the induced maps&#39; block structure </span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
@@ -177,25 +441,23 @@
 
         <span class="c1"># Make the induced map from G_0 to G_n</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span> <span class="n">rows_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">rows_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span>
                                     <span class="n">cols_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">],</span> 
-                                    <span class="n">map_dict</span> <span class="o">=</span> <span class="n">I_0</span><span class="p">)</span>
-
-        <span class="c1"># self.map_dict_to_matrix(I_0, </span>
-        <span class="c1">#                         self.val_to_verts[&#39;G&#39;][&#39;n&#39;], </span>
-        <span class="c1">#                         self.val_to_verts[&#39;G&#39;][&#39;0&#39;])</span>
-        <span class="n">I_0_edges</span> <span class="o">=</span> <span class="p">{(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">):</span> <span class="p">(</span><span class="n">I_0</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">I_0</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">()}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">I_0_edges</span><span class="p">,</span> 
+                                    <span class="n">map_dict</span> <span class="o">=</span> <span class="n">I_0_V</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">map_dict</span> <span class="o">=</span> <span class="n">I_0_E</span><span class="p">,</span> 
+                                     <span class="n">rows_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
+                                     <span class="n">cols_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">I_0_E</span><span class="p">,</span> 
                                 <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> 
                                 <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
 
         <span class="c1"># Make the induced map from G_n to G_2n</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">I_n</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">I_n_V</span><span class="p">,</span> 
                                 <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
                                 <span class="bp">self</span><span class="o">.</span><span class="n">val_to_verts</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
-        <span class="n">I_n_edges</span> <span class="o">=</span> <span class="p">{(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">):</span> <span class="p">(</span><span class="n">I_n</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">I_n</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">()}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">I_n_edges</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">I_n_E</span><span class="p">,</span> 
                                 <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;2n&#39;</span><span class="p">],</span> 
                                 <span class="bp">self</span><span class="o">.</span><span class="n">val_to_edges</span><span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
         
@@ -312,12 +574,223 @@
         <span class="c1"># End psi</span>
         <span class="c1"># ---</span>
 
+ 
+        
+
     <span class="c1">### ----------------</span>
-    <span class="c1"># Function to set phi and psi matrices for the interleaving (instead of random)</span>
+    <span class="c1"># Functions for getting stuff out of all the dictionaries </span>
     <span class="c1">### ----------------</span>
 
-<div class="viewcode-block" id="Interleave.set_interleaving_maps">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.set_interleaving_maps">[docs]</a>
+<div class="viewcode-block" id="Assignment.F">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.F">[docs]</a>
+    <span class="k">def</span> <span class="nf">F</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the MapperGraph for :math:`F` with key.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key (str) :</span>
+<span class="sd">                The key for the MapperGraph. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``. Default is ``&#39;0&#39;``.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            MapperGraph : </span>
+<span class="sd">                The MapperGraph for :math:`F` with key.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">F_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+    
+<div class="viewcode-block" id="Assignment.G">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.G">[docs]</a>
+    <span class="k">def</span> <span class="nf">G</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the MapperGraph for :math:`G` with key.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the MapperGraph. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``. Default is ``&#39;0&#39;``.</span>
+<span class="sd">                </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            MapperGraph : </span>
+<span class="sd">                The MapperGraph for :math:`G` with key.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Assignment.B">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.B">[docs]</a>
+    <span class="k">def</span> <span class="nf">B</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an endpoint of edge :math:`e` and 0 otherwise.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            graph (str) : </span>
+<span class="sd">                The graph to get the boundary matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The boundary matrix for the Mapper graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_down_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">to_labeled_matrix</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_up_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">to_labeled_matrix</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Assignment.B_down">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.B_down">[docs]</a>
+    <span class="k">def</span> <span class="nf">B_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the downward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is a *lower* endpoint of edge :math:`e` and 0 otherwise.</span>
+
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            graph (str) : </span>
+<span class="sd">                The graph to get the boundary matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The downward boundary matrix for the Mapper graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_down_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Assignment.B_up">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.B_up">[docs]</a>
+    <span class="k">def</span> <span class="nf">B_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the upward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an *upper* endpoint of edge :math:`e` and 0 otherwise.</span>
+<span class="sd">        </span>
+<span class="sd">        If ``shift_indices`` is True, the indices of the matrix will be shifted (DOWN?) by one to make matrix multiplication work later.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            graph (str) : </span>
+<span class="sd">                The graph to get the boundary matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
+<span class="sd">                </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The upward boundary matrix for the Mapper graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_up_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Assignment.I">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.I">[docs]</a>
+    <span class="k">def</span> <span class="nf">I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the induced map from one Mapper graph to another, specifically from ``graph_key`` to ``graph_(key+n)`` sending ``obj_type`` to the same type. For example, ``I(&#39;G&#39;, &#39;n&#39;, &#39;E&#39;)`` is the map for edges from :math:`G_n` to :math:`G_{2n}`.</span>
+<span class="sd">        </span>
+<span class="sd">        This is the matrix with entry :math:`I[u, v] = 1` if vertex :math:`v` in the first graph maps to vertex :math:`u` in the second graph.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            graph (str) : </span>
+<span class="sd">                The graph to get the induced map for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the induced map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
+<span class="sd">            obj_type (str) : </span>
+<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
+<span class="sd">                </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The induced map from ``graph_key`` to ``graph_(key+n)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span></div>
+
+        
+
+<div class="viewcode-block" id="Assignment.D">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.D">[docs]</a>
+    <span class="k">def</span> <span class="nf">D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the distance matrix for a Mapper graph. This is the matrix with entry :math:`D[u, v]` equal to the minimum thickening needed for vertices :math:`u` and :math:`v` to map to the same connected component (similarly for edges). Note this distance is only defined for vertices or edges at the same function value. </span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            graph (str) : </span>
+<span class="sd">                The graph to get the distance matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the distance matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The distance matrix for the Mapper graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">D_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Assignment.phi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.phi">[docs]</a>
+    <span class="k">def</span> <span class="nf">phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the interleaving map :math:`\\varphi: F \\to G^n` if `key == &#39;0&#39;` or :math:`\\varphi_n: F^n \\to G^{2n}` if `key == &#39;n&#39;`.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
+<span class="sd">            obj_type (str) : </span>
+<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The interleaving map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Assignment.psi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.psi">[docs]</a>
+    <span class="k">def</span> <span class="nf">psi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the interleaving map :math:`\\psi: G \\to F^n` if `key == &#39;0&#39;` or :math:`\\psi_n: G^n \\to F^{2n}` if `key == &#39;n&#39;`.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
+<span class="sd">            obj_type (str) : </span>
+<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The interleaving map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Assignment.get_interleaving_map">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.get_interleaving_map">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_interleaving_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the relevant interleaving map. Helpful for iterating over options. </span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            maptype (str) : </span>
+<span class="sd">                The type of map. Either ``&#39;phi&#39;`` or ``&#39;psi&#39;``.</span>
+<span class="sd">            key (str) : </span>
+<span class="sd">                The key for the map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
+<span class="sd">            obj_type (str) : </span>
+<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix : </span>
+<span class="sd">                The relevant interleaving map.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">maptype</span> <span class="o">==</span> <span class="s1">&#39;phi&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">maptype</span> <span class="o">==</span> <span class="s1">&#39;psi&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown maptype </span><span class="si">{</span><span class="n">maptype</span><span class="si">}</span><span class="s2">. Must be &#39;phi&#39; or &#39;psi&#39;.&quot;</span><span class="p">)</span></div>
+
+
+
+    <span class="c1">### ----------------</span>
+    <span class="c1"># Functions to set phi and psi matrices for the interleaving (instead of random)</span>
+    <span class="c1">### ----------------</span>
+
+<div class="viewcode-block" id="Assignment.set_interleaving_maps">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.set_interleaving_maps">[docs]</a>
     <span class="k">def</span> <span class="nf">set_interleaving_maps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phi_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">psi_dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the phi and psi matrices to a given value. Instead of replacing the matrices, set the values block by block.</span>
@@ -352,223 +825,87 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="n">thickening</span><span class="p">][</span><span class="n">obj_type</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">psi_dict</span><span class="p">[</span><span class="n">thickening</span><span class="p">][</span><span class="n">obj_type</span><span class="p">][</span><span class="n">key</span><span class="p">]</span></div>
 
 
-
-        
-
-    <span class="c1">### ----------------</span>
-    <span class="c1"># Functions for getting stuff out of all the dictionaries </span>
-    <span class="c1">### ----------------</span>
-
-<div class="viewcode-block" id="Interleave.F">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.F">[docs]</a>
-    <span class="k">def</span> <span class="nf">F</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the MapperGraph for :math:`F` with key.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            key (str) :</span>
-<span class="sd">                The key for the MapperGraph. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``. Default is ``&#39;0&#39;``.</span>
+<div class="viewcode-block" id="Assignment.set_single_assignment">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.set_single_assignment">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_single_assignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_a</span><span class="p">,</span> <span class="n">obj_b</span><span class="p">,</span> 
+                              <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> 
+                              <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> 
+                              <span class="n">objtype</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set a single assignment in the interleaving map.</span>
 <span class="sd">        </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            MapperGraph : </span>
-<span class="sd">                The MapperGraph for :math:`F` with key.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">F_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+<span class="sd">        This will be maptype_key(obj_a) = obj_b.</span>
 
-    
-<div class="viewcode-block" id="Interleave.G">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.G">[docs]</a>
-    <span class="k">def</span> <span class="nf">G</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the MapperGraph for :math:`G` with key.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            key (str) : </span>
-<span class="sd">                The key for the MapperGraph. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``. Default is ``&#39;0&#39;``.</span>
-<span class="sd">                </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            MapperGraph : </span>
-<span class="sd">                The MapperGraph for :math:`G` with key.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="Interleave.B">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.B">[docs]</a>
-    <span class="k">def</span> <span class="nf">B</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an endpoint of edge :math:`e` and 0 otherwise.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            graph (str) : </span>
-<span class="sd">                The graph to get the boundary matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
-<span class="sd">            key (str) : </span>
-<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
+<span class="sd">        Note that edges can be passed as a triple (u,v,count) where u and v are the vertices and count is the key for the edge. If passed as a pair, the count will be assumed to be 0.</span>
 <span class="sd">        </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            LabeledBlockMatrix : </span>
-<span class="sd">                The boundary matrix for the Mapper graph.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            obj_a (int): Object in the domain of the map.</span>
+<span class="sd">            obj_b (int): Object in the codomain of the map.</span>
+<span class="sd">            maptype (str, optional): Map to be set, either &#39;phi&#39; or &#39;psi&#39;. Defaults to &#39;phi&#39;.</span>
+<span class="sd">            objtype (str, optional): Type of object as input, either &#39;V&#39; or &#39;E&#39;. Defaults to &#39;V&#39;.</span>
+<span class="sd">            </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_down_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">to_labeled_matrix</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_up_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">to_labeled_matrix</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="Interleave.B_down">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.B_down">[docs]</a>
-    <span class="k">def</span> <span class="nf">B_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the downward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is a *lower* endpoint of edge :math:`e` and 0 otherwise.</span>
-
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            graph (str) : </span>
-<span class="sd">                The graph to get the boundary matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
-<span class="sd">            key (str) : </span>
-<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
-<span class="sd">        </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            LabeledBlockMatrix : </span>
-<span class="sd">                The downward boundary matrix for the Mapper graph.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_down_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="Interleave.B_up">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.B_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">B_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the upward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an *upper* endpoint of edge :math:`e` and 0 otherwise.</span>
-<span class="sd">        </span>
-<span class="sd">        If ``shift_indices`` is True, the indices of the matrix will be shifted (DOWN?) by one to make matrix multiplication work later.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            graph (str) : </span>
-<span class="sd">                The graph to get the boundary matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
-<span class="sd">            key (str) : </span>
-<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
-<span class="sd">                </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            LabeledBlockMatrix : </span>
-<span class="sd">                The upward boundary matrix for the Mapper graph.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">B_up_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="Interleave.I">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.I">[docs]</a>
-    <span class="k">def</span> <span class="nf">I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the induced map from one Mapper graph to another, specifically from ``graph_key`` to ``graph_(key+n)`` sending ``obj_type`` to the same type. For example, ``I(&#39;G&#39;, &#39;n&#39;, &#39;E&#39;)`` is the map for edges from :math:`G_n` to :math:`G_{2n}`.</span>
-<span class="sd">        </span>
-<span class="sd">        This is the matrix with entry :math:`I[u, v] = 1` if vertex :math:`v` in the first graph maps to vertex :math:`u` in the second graph.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            graph (str) : </span>
-<span class="sd">                The graph to get the induced map for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
-<span class="sd">            key (str) : </span>
-<span class="sd">                The key for the induced map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
-<span class="sd">            obj_type (str) : </span>
-<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
-<span class="sd">                </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            LabeledBlockMatrix : </span>
-<span class="sd">                The induced map from ``graph_key`` to ``graph_(key+n)``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">I_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span></div>
-
-        
-
-<div class="viewcode-block" id="Interleave.D">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.D">[docs]</a>
-    <span class="k">def</span> <span class="nf">D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the distance matrix for a Mapper graph. This is the matrix with entry :math:`D[u, v]` equal to the minimum thickening needed for vertices :math:`u` and :math:`v` to map to the same connected component (similarly for edges). Note this distance is only defined for vertices or edges at the same function value. </span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            graph (str) : </span>
-<span class="sd">                The graph to get the distance matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
-<span class="sd">            key (str) : </span>
-<span class="sd">                The key for the distance matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            LabeledBlockMatrix : </span>
-<span class="sd">                The distance matrix for the Mapper graph.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">D_</span><span class="p">[</span><span class="n">graph</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="Interleave.phi">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.phi">[docs]</a>
-    <span class="k">def</span> <span class="nf">phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the interleaving map :math:`\\varphi: F \\to G^n` if `key == &#39;0&#39;` or :math:`\\varphi_n: F^n \\to G^{2n}` if `key == &#39;n&#39;`.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            key (str) : </span>
-<span class="sd">                The key for the map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
-<span class="sd">            obj_type (str) : </span>
-<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
-<span class="sd">        </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            LabeledBlockMatrix : </span>
-<span class="sd">                The interleaving map.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="Interleave.psi">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.psi">[docs]</a>
-    <span class="k">def</span> <span class="nf">psi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the interleaving map :math:`\\psi: G \\to F^n` if `key == &#39;0&#39;` or :math:`\\psi_n: G^n \\to F^{2n}` if `key == &#39;n&#39;`.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            key (str) : </span>
-<span class="sd">                The key for the map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
-<span class="sd">            obj_type (str) : </span>
-<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
-<span class="sd">        </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            LabeledBlockMatrix : </span>
-<span class="sd">                The interleaving map.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="Interleave.get_interleaving_map">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.get_interleaving_map">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_interleaving_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the relevant interleaving map. Helpful for iterating over options. </span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            maptype (str) : </span>
-<span class="sd">                The type of map. Either ``&#39;phi&#39;`` or ``&#39;psi&#39;``.</span>
-<span class="sd">            key (str) : </span>
-<span class="sd">                The key for the map. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
-<span class="sd">            obj_type (str) : </span>
-<span class="sd">                The type of map. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            LabeledBlockMatrix : </span>
-<span class="sd">                The relevant interleaving map.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">maptype</span> <span class="o">==</span> <span class="s1">&#39;phi&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
+            <span class="n">start_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+                <span class="n">end_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">:</span>
+                <span class="n">end_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;2n&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;key&#39; must be &#39;0&#39; or &#39;n&#39;.&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">maptype</span> <span class="o">==</span> <span class="s1">&#39;psi&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">)</span>
+            <span class="n">start_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+                <span class="n">end_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">:</span>
+                <span class="n">end_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;2n&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;key&#39; must be &#39;0&#39; or &#39;n&#39;.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown maptype </span><span class="si">{</span><span class="n">maptype</span><span class="si">}</span><span class="s2">. Must be &#39;phi&#39; or &#39;psi&#39;.&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;maptype&#39; must be &#39;phi&#39; or &#39;psi&#39;.&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">objtype</span> <span class="o">==</span> <span class="s1">&#39;V&#39;</span><span class="p">:</span>
+            <span class="c1"># Check that the objects have the same function value </span>
+            <span class="k">if</span> <span class="n">start_graph</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">obj_a</span><span class="p">]</span> <span class="o">!=</span> <span class="n">end_graph</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">obj_b</span><span class="p">]:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">start_graph</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">obj_a</span><span class="p">]</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="n">end_graph</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">obj_b</span><span class="p">]</span>
+                <span class="n">end_graph</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The objects must have the same function value. </span><span class="si">{</span><span class="n">obj_a</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">obj_b</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">. Nodes: </span><span class="si">{</span><span class="n">start_graph</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">end_graph</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+            <span class="n">i</span> <span class="o">=</span> <span class="n">start_graph</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">obj_a</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">objtype</span> <span class="o">==</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj_a</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">obj_a</span> <span class="o">=</span> <span class="n">obj_a</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj_a</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Edges must be passed as pairs or triples.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj_b</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">obj_b</span> <span class="o">=</span> <span class="n">obj_b</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj_b</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Edges must be passed as pairs or triples.&quot;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">start_graph</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">obj_a</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">!=</span> <span class="n">end_graph</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">obj_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]]:</span>
+                
+                <span class="n">i</span> <span class="o">=</span> <span class="n">start_graph</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">obj_a</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="n">end_graph</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">obj_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The objects must have the same function value. </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">start_graph</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">obj_a</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;objtype&#39; must be &#39;V&#39; or &#39;E&#39;.&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">maptype</span> <span class="o">==</span> <span class="s1">&#39;phi&#39;</span><span class="p">:</span> 
+            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">objtype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">obj_b</span><span class="p">)</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">objtype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">obj_a</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">objtype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">objtype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># Maptype = &#39;psi&#39;</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">objtype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">rows</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">obj_b</span><span class="p">)</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">objtype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">obj_a</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">objtype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[:,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">objtype</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span></div>
 
-    <span class="c1">### ----------------</span>
-    <span class="c1">#</span>
-    <span class="c1">### ----------------</span>
-    
-    
-<div class="viewcode-block" id="Interleave.set_random_assignment">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.set_random_assignment">[docs]</a>
+            
+<div class="viewcode-block" id="Assignment.set_random_assignment">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.set_random_assignment">[docs]</a>
     <span class="k">def</span> <span class="nf">set_random_assignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_n</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the phi and psi matrices to random values. No matter what, the maps from F to Gn and G to Fn will be randomly set.  If ``&#39;random_n&#39;`` is True, the maps from Fn to G2n and Gn to F2n will also be randomly set. Otherwise, we will use matrix tricks to figure out the later from the former. </span>
@@ -649,8 +986,8 @@
     <span class="c1"># Functions for drawing stuff</span>
     <span class="c1">### ----------------</span>
 
-<div class="viewcode-block" id="Interleave.draw_all_graphs">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_graphs">[docs]</a>
+<div class="viewcode-block" id="Assignment.draw_all_graphs">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_all_graphs">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_all_graphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw all the graphs stored in the Interleave object.</span>
 
@@ -683,8 +1020,8 @@
         <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span></div>
 
 
-<div class="viewcode-block" id="Interleave.draw_I">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_I">[docs]</a>
+<div class="viewcode-block" id="Assignment.draw_I">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_I">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the induced map from one Mapper graph to another.</span>
@@ -713,8 +1050,8 @@
         <span class="k">return</span> <span class="n">ax</span></div>
 
 
-<div class="viewcode-block" id="Interleave.draw_all_I">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_I">[docs]</a>
+<div class="viewcode-block" id="Assignment.draw_all_I">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_all_I">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_all_I</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span>  <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw all the induced maps.</span>
@@ -750,8 +1087,8 @@
         <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span></div>
 
 
-<div class="viewcode-block" id="Interleave.draw_B">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_B">[docs]</a>
+<div class="viewcode-block" id="Assignment.draw_B">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_B">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_B</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the boundary matrix for a Mapper graph.</span>
@@ -777,8 +1114,8 @@
         <span class="k">return</span> <span class="n">ax</span></div>
 
 
-<div class="viewcode-block" id="Interleave.draw_all_B">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_B">[docs]</a>
+<div class="viewcode-block" id="Assignment.draw_all_B">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_all_B">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_all_B</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">24</span><span class="p">,</span><span class="mi">18</span><span class="p">)):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw all the boundary matrices.</span>
@@ -808,8 +1145,8 @@
         <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span></div>
 
 
-<div class="viewcode-block" id="Interleave.draw_D">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_D">[docs]</a>
+<div class="viewcode-block" id="Assignment.draw_D">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_D">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
                     <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -844,8 +1181,8 @@
         <span class="k">return</span> <span class="n">ax</span></div>
 
 
-<div class="viewcode-block" id="Interleave.draw_phi">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_phi">[docs]</a>
+<div class="viewcode-block" id="Assignment.draw_phi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_phi">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the map :math:`\\psi: F \\to G^n`.</span>
@@ -879,8 +1216,8 @@
         <span class="k">return</span> <span class="n">ax</span></div>
 
     
-<div class="viewcode-block" id="Interleave.draw_psi">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_psi">[docs]</a>
+<div class="viewcode-block" id="Assignment.draw_psi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_psi">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_psi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the map :math:`\\psi: G \\to F^n`.</span>
@@ -912,8 +1249,8 @@
         <span class="k">return</span> <span class="n">ax</span></div>
 
 
-<div class="viewcode-block" id="Interleave.draw_all_phi">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_phi">[docs]</a>
+<div class="viewcode-block" id="Assignment.draw_all_phi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_all_phi">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_all_phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw all the ``phi`` maps.</span>
@@ -940,8 +1277,8 @@
         <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span></div>
 
 
-<div class="viewcode-block" id="Interleave.draw_all_psi">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_psi">[docs]</a>
+<div class="viewcode-block" id="Assignment.draw_all_psi">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_all_psi">[docs]</a>
     <span class="k">def</span> <span class="nf">draw_all_psi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw all the ``psi`` maps.</span>
@@ -1003,8 +1340,8 @@
 
     <span class="c1">#---- Parallelogram: Edge-Vertex ----</span>
 
-<div class="viewcode-block" id="Interleave.parallelogram_Edge_Vert_matrix">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert_matrix">[docs]</a>
+<div class="viewcode-block" id="Assignment.parallelogram_Edge_Vert_matrix">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.parallelogram_Edge_Vert_matrix">[docs]</a>
     <span class="k">def</span> <span class="nf">parallelogram_Edge_Vert_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                                 <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> 
                                 <span class="n">up_or_down</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span>
@@ -1101,8 +1438,8 @@
         <span class="k">return</span> <span class="n">Result_Dist</span></div>
 
 
-<div class="viewcode-block" id="Interleave.parallelogram_Edge_Vert">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_Edge_Vert">[docs]</a>
+<div class="viewcode-block" id="Assignment.parallelogram_Edge_Vert">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.parallelogram_Edge_Vert">[docs]</a>
     <span class="k">def</span> <span class="nf">parallelogram_Edge_Vert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> 
                                 <span class="n">up_or_down</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span>
                                 <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -1119,8 +1456,8 @@
 
     <span class="c1">#---- Parallelogram: Thickening ----</span>
 
-<div class="viewcode-block" id="Interleave.parallelogram_matrix">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram_matrix">[docs]</a>
+<div class="viewcode-block" id="Assignment.parallelogram_matrix">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.parallelogram_matrix">[docs]</a>
     <span class="k">def</span> <span class="nf">parallelogram_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                             <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span> 
                             <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
@@ -1186,8 +1523,8 @@
         <span class="k">return</span> <span class="n">Result_Dist</span></div>
 
 
-<div class="viewcode-block" id="Interleave.parallelogram">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.parallelogram">[docs]</a>
+<div class="viewcode-block" id="Assignment.parallelogram">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.parallelogram">[docs]</a>
     <span class="k">def</span> <span class="nf">parallelogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maptype</span> <span class="o">=</span> <span class="s1">&#39;phi&#39;</span><span class="p">,</span>
                         <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span>
                         <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -1200,8 +1537,8 @@
 
     <span class="c1"># --- Triangles ----</span>
 
-<div class="viewcode-block" id="Interleave.triangle_matrix">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.triangle_matrix">[docs]</a>
+<div class="viewcode-block" id="Assignment.triangle_matrix">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.triangle_matrix">[docs]</a>
     <span class="k">def</span> <span class="nf">triangle_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                         <span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> 
                         <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
@@ -1268,8 +1605,8 @@
         <span class="k">return</span> <span class="n">Result_Dist</span></div>
 
     
-<div class="viewcode-block" id="Interleave.triangle">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.triangle">[docs]</a>
+<div class="viewcode-block" id="Assignment.triangle">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.triangle">[docs]</a>
     <span class="k">def</span> <span class="nf">triangle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">func_val</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the loss value for the triangle</span>
@@ -1281,8 +1618,8 @@
 
     <span class="c1"># --- Loss functions ----</span>
 
-<div class="viewcode-block" id="Interleave.loss_table">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.loss_table">[docs]</a>
+<div class="viewcode-block" id="Assignment.loss_table">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.loss_table">[docs]</a>
     <span class="k">def</span> <span class="nf">loss_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a table with the loss for each term in the bound. The actual loss is the maximum of these values, and can be found with the ``loss`` method.</span>
@@ -1318,8 +1655,8 @@
         <span class="k">return</span> <span class="n">loss_table</span></div>
 
 
-<div class="viewcode-block" id="Interleave.loss">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.loss">[docs]</a>
+<div class="viewcode-block" id="Assignment.loss">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.loss">[docs]</a>
     <span class="k">def</span> <span class="nf">loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the loss for the interleaving distance. Specifically, if the loss is :math:`L` and the interleaving class was initiated with :math:`n`, then the interleaving distance is at most :math:`n + L`.</span>
@@ -1339,8 +1676,8 @@
         <span class="k">return</span> <span class="n">loss</span></div>
 
 
-<div class="viewcode-block" id="Interleave.loss_by_block">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.loss_by_block">[docs]</a>
+<div class="viewcode-block" id="Assignment.loss_by_block">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.loss_by_block">[docs]</a>
     <span class="k">def</span> <span class="nf">loss_by_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the loss for each block of the interleaving distance. </span>
@@ -1440,13 +1777,12 @@
         <span class="c1"># Get max loss over all function values</span>
         <span class="c1"># flatten the dictionary</span>
         <span class="n">loss_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">loss_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">loss_list</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">loss_list</span><span class="p">)</span></div>
 
 
 
-<div class="viewcode-block" id="Interleave.all_func_vals">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.all_func_vals">[docs]</a>
+<div class="viewcode-block" id="Assignment.all_func_vals">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.all_func_vals">[docs]</a>
     <span class="k">def</span> <span class="nf">all_func_vals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get all the function values that are in the graphs. </span>
@@ -1461,8 +1797,49 @@
         <span class="n">all_func_vals</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">all_func_vals</span></div>
-</div>
 
+    
+<div class="viewcode-block" id="Assignment.optimize">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.optimize">[docs]</a>
+    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">printOptimizerOutput</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.</span>
+<span class="sd">        This function requires the `pulp` package to be installed.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            printOptimizerOutput (bool) : </span>
+<span class="sd">                If True, prints the output of the ILP solver. Default is False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            float : </span>
+<span class="sd">                The loss value found by the ILP solver.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">printOptimizerOutput</span><span class="p">:</span>
+            <span class="c1"># Stop printouts</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_blockPrint</span><span class="p">()</span>
+            
+        <span class="n">map_dict</span><span class="p">,</span> <span class="n">loss_val</span> <span class="o">=</span> <span class="n">solve_ilp</span><span class="p">(</span><span class="bp">self</span><span class="p">);</span> 
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">printOptimizerOutput</span><span class="p">:</span>
+            <span class="c1"># Restore printouts</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_enablePrint</span><span class="p">()</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;phi_0_V&#39;</span><span class="p">],</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;phi_0_E&#39;</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;phi_n_V&#39;</span><span class="p">],</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;phi_n_E&#39;</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;psi_0_V&#39;</span><span class="p">],</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;psi_0_E&#39;</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;psi_n_V&#39;</span><span class="p">],</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;psi_n_E&#39;</span><span class="p">]}</span>
+        
+        <span class="k">return</span> <span class="n">loss_val</span></div>
+
+    
+    <span class="c1"># Disable Printing </span>
+    <span class="k">def</span> <span class="nf">_blockPrint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Restore Printing</span>
+    <span class="k">def</span> <span class="nf">_enablePrint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span></div>
+
+    
 </pre></div>
 
            </div>

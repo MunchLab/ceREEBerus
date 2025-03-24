@@ -1,24 +1,22 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>cereeberus.reeb.reebgraph &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -125,8 +123,8 @@
                 <span class="n">e</span> <span class="o">=</span> <span class="n">e</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Edge: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="c1"># Can&#39;t figure out why the graphs are outputting a </span>
-                <span class="c1"># 3rd part of the tuple from our examples</span>
+                <span class="c1"># Multigraph means edges are stored as a triple (u,v,n) where n is the number of the edge. </span>
+                <span class="c1"># This is an old note, maybe not true anymore?</span>
                 <span class="n">edge</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 
@@ -319,6 +317,52 @@
         <span class="k">return</span> <span class="n">edges</span></div>
 
 
+<div class="viewcode-block" id="ReebGraph.relabel_nodes">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.relabel_nodes">[docs]</a>
+    <span class="k">def</span> <span class="nf">relabel_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Relabel the nodes of the Reeb graph using a mapping. The mapping should be a dictionary with keys as old node names and values as new node names.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            mapping : dict. A dictionary mapping old node names to new node names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># Store copies of the old stuff </span>
+        <span class="n">nodes_old</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">edges_old</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">f_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        
+        <span class="c1"># Delete all nodes and edges from the graph</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nodes_old</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            
+        <span class="c1"># Add the nodes and edges back in with the new names</span>
+        <span class="k">for</span> <span class="n">v_old</span> <span class="ow">in</span> <span class="n">nodes_old</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="n">v_old</span><span class="p">],</span> <span class="n">f_old</span><span class="p">[</span><span class="n">v_old</span><span class="p">])</span>
+            
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges_old</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">mapping</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span></div>
+
+            
+<div class="viewcode-block" id="ReebGraph.inv_image">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.inv_image">[docs]</a>
+    <span class="k">def</span> <span class="nf">inv_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f_val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the set of vertices and/or edges at a given function value. This will return $v$ for which $f(v) = $`f_val`, as well as edges $e = (u,v)$ for which $f(u) &lt; $`f_val` and $f(v) &gt; $`f_val`.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            f_val : float. The function value to get the objects for.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple : (set, set)</span>
+<span class="sd">                The set of vertices and the set of edges at the function value `f_val`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">verts</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">==</span> <span class="n">f_val</span><span class="p">}</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="p">{</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">f_val</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="n">f_val</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">verts</span><span class="p">,</span> <span class="n">edges</span></div>
+
+        
+
     <span class="c1">#-----------------------------------------------#</span>
     <span class="c1"># Methods for getting distances in the Reeb graph</span>
     <span class="c1">#-----------------------------------------------#</span>
@@ -365,51 +409,24 @@
     <span class="c1">#-----------------------------------------------#</span>
     <span class="c1"># Methods for adding and removing nodes and edges </span>
     <span class="c1">#-----------------------------------------------#</span>
-<div class="viewcode-block" id="ReebGraph.next_vert_name">
-<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.next_vert_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">next_vert_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">        Making a simple name generator for vertices. </span>
-<span class="sd">        If you&#39;re using integers, it will just up the count by one. </span>
-<span class="sd">        Letters will be incremented in the alphabet. If you reach &#39;Z&#39;, it will return &#39;AA&#39;. If you reach &#39;ZZ&#39;, it will return &#39;AAA&#39;, etc.</span>
+ 
 
-<span class="sd">        Parameters:</span>
-<span class="sd">            s (str or int): The name of the vertex to increment.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str or int</span>
-<span class="sd">                The next name in the sequence.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">s</span><span class="o">+</span><span class="mi">1</span>
-        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span> <span class="o">==</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s1">&#39;AA&#39;</span>
-        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span> <span class="s1">&#39;A&#39;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">*</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Input must be a string or an integer&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ReebGraph.get_next_vert_name">
 <a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.get_next_vert_name">[docs]</a>
     <span class="k">def</span> <span class="nf">get_next_vert_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the next name for a vertex in the Reeb graph. If there are no nodes, it will return 0.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the next name for a vertex in the Reeb graph that isn&#39;t already included. If there are no nodes, it will return 0. Otherwise, it will name the next vertex as one more than the maximum integer labeled vertex, ignoring any strings. </span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str or int</span>
 <span class="sd">                The next name in the sequence.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">integer_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">integer_nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_vert_name</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">))</span></div>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">integer_nodes</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span></div>
 
 
 
@@ -417,7 +434,7 @@
 <a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.add_node">[docs]</a>
     <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">f_vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a vertex to the Reeb graph. </span>
-<span class="sd">        If the vertex name is given as None, it will be assigned via the next_vert_name method.</span>
+<span class="sd">        If the vertex name is given as None, it will be assigned via the get_next_vert_name method.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            vertex (hashable like int or str, or None) : The name of the vertex to add.</span>
@@ -429,7 +446,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The vertex </span><span class="si">{</span><span class="n">vertex</span><span class="si">}</span><span class="s1"> is already in the Reeb graph.&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">vertex</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">vertex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_vert_name</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">))</span>
+            <span class="n">vertex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_vert_name</span><span class="p">()</span>
             
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
 
@@ -474,7 +491,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">reset_pos</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">reset_pos</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;pos_f&#39;</span><span class="p">):</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span></div>
 
@@ -518,7 +535,8 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]:</span>
             <span class="n">edge</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">u</span><span class="p">)</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span> <span class="c1"># the function values are the same, so the edge collapses the two vertices</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="c1"># the function values are the same, so the edge collapses the two vertices</span>
             <span class="c1"># wlog we&#39;re going to get rid of v, and add all its edges to u</span>
 
             <span class="c1"># get the edges of v</span>
@@ -850,6 +868,21 @@
         <span class="n">v_list</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">v_list</span><span class="p">)</span></div>
 
+    
+<div class="viewcode-block" id="ReebGraph.get_multi_edges">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.get_multi_edges">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_multi_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns a set of the edges that have count higher than 1. Useful for checking for multiedges in the Reeb graph.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            set: A set of edges that have count higher than 1.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        
+        <span class="n">mult_edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">mult_edges</span><span class="p">)</span></div>
+
+        
 
     <span class="c1">#-----------------------------------------------#</span>
     <span class="c1"># Methods for getting matrices for the graph </span>
@@ -941,73 +974,119 @@
     <span class="c1"># Operations on Reeb graph to get new Reeb graph</span>
     <span class="c1">#-----------------------------------------------#</span>
 
-<div class="viewcode-block" id="ReebGraph.smoothing">
-<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.smoothing">[docs]</a>
-    <span class="k">def</span> <span class="nf">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
-                  <span class="n">return_map</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
-                  <span class="n">map_type</span> <span class="o">=</span> <span class="s1">&#39;dict&#39;</span><span class="p">,</span>
-                  <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ReebGraph.smoothing_and_maps">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.smoothing_and_maps">[docs]</a>
+    <span class="k">def</span> <span class="nf">smoothing_and_maps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
+                            <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Builds the ``eps``-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. </span>
+<span class="sd">        Builds the ``eps``-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. This function also returns the maps (i) from the vertices of the original Reeb graph to the vertices of the smoothed Reeb graph and (ii) from the edges of the original to the edges of the smoothed graph.</span>
+<span class="sd">        These maps are given as a dictionary with keys as vertices (resp. edges) in the original Reeb graph and values as vertices (resp. edges) in the smoothed Reeb graph.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            eps (float): The amount of smoothing to apply.</span>
-<span class="sd">            return_map (bool): Optional. If True, will return a map from the vertices of the original Reeb graph to the vertices of the smoothed Reeb graph.</span>
-<span class="sd">            map_type (str): Optional. The type of map to return. Can be &#39;matrix&#39; or &#39;dictionary&#39;. Default is &#39;matrix&#39;.</span>
 <span class="sd">            verbose (bool): Optional. If True, will print out additional information during the smoothing process.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
-<span class="sd">            ReebGraph: The smoothed Reeb graph.</span>
-<span class="sd">            If ``return_map`` is True, it returns a tuple with the second object giving a dictionary with keys as vertices in the original Reeb graph and values as vertices in the smoothed Reeb graph.</span>
+<span class="sd">            tuple: ReebGraph, vertex_map, edge_map.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># If eps is 0, return the original graph</span>
+        <span class="k">if</span> <span class="n">eps</span> <span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">,</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">},</span> <span class="p">{</span><span class="n">e</span><span class="p">:[</span><span class="n">e</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">keys</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)}</span>
 
         <span class="c1"># Get the list of critical values to place new nodes </span>
         <span class="n">crit_vals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
         <span class="n">new_crit_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">cv</span> <span class="o">+</span> <span class="n">eps</span> <span class="k">for</span> <span class="n">cv</span> <span class="ow">in</span> <span class="n">crit_vals</span><span class="p">]</span>
         <span class="n">new_crit_vals</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">cv</span> <span class="o">-</span> <span class="n">eps</span> <span class="k">for</span> <span class="n">cv</span> <span class="ow">in</span> <span class="n">crit_vals</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">return_map</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="c1"># Only need to create vertices at this level if we want to return the map from</span>
-            <span class="c1"># the original vertices to the new vertices</span>
-            <span class="n">new_crit_vals</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        
+        <span class="c1"># Add vertices at the locations of the function values of the inputs</span>
+        <span class="n">new_crit_vals</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
         <span class="n">new_crit_vals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new_crit_vals</span><span class="p">))</span>
         <span class="n">new_crit_vals</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="c1"># get smallest diff between adjacent critical values</span>
+        <span class="c1"># This delta is used for the shift to figure out edges below</span>
+        <span class="c1"># the vertices at level cv</span>
+        <span class="n">min_diff</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">new_crit_vals</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">new_crit_vals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_crit_vals</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_diff</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">eps</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="c1"># Create the new Reeb graph</span>
         <span class="n">R_eps</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
 
-        <span class="n">cv_0</span> <span class="o">=</span> <span class="n">new_crit_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">eps</span> <span class="c1"># is arbitrary</span>
-        <span class="n">H_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">cv_0</span><span class="o">-</span><span class="n">eps</span><span class="p">,</span> <span class="n">cv_0</span><span class="o">+</span><span class="n">eps</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;closed&#39;</span><span class="p">)</span> <span class="c1"># This should give empty graph </span>
+        <span class="n">cv_0</span> <span class="o">=</span> <span class="n">new_crit_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">eps</span> <span class="c1"># Starting value is arbitrary below the first critical value</span>
+        <span class="n">H_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">cv_0</span><span class="o">-</span><span class="n">eps</span><span class="p">,</span> <span class="n">cv_0</span><span class="o">+</span><span class="n">eps</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;closed&#39;</span><span class="p">)</span> <span class="c1"># This should initialize empty graph </span>
         <span class="n">C_0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">H_0</span><span class="o">.</span><span class="n">connected_components</span><span class="p">())</span> <span class="c1"># This should give empty list</span>
         <span class="n">comp_to_new_vert_0</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">if</span> <span class="n">return_map</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="c1"># This will be a dictionary with keys as vertices in R and values as vertices in R_eps</span>
-            <span class="nb">map</span> <span class="o">=</span> <span class="p">{}</span>
-
+        <span class="c1"># This will be a dictionary with keys as vertices in R and values as vertices in R_eps</span>
+        <span class="n">map_V</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">map_E</span> <span class="o">=</span> <span class="p">{</span><span class="n">e</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">keys</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)}</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_crit_vals</span><span class="p">)):</span>
             <span class="n">cv</span> <span class="o">=</span> <span class="n">new_crit_vals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="c1"># print(f&quot;Current critical value: {cv}&quot;)</span>
             <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">cv</span><span class="o">-</span><span class="n">eps</span><span class="p">,</span> <span class="n">cv</span><span class="o">+</span><span class="n">eps</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;closed&#39;</span><span class="p">)</span>
             <span class="n">C</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">connected_components</span><span class="p">())</span>
+            
+            <span class="c1"># ==== Add vertices at level cv =====</span>
 
-            <span class="c1"># Add vertices </span>
             <span class="n">comp_to_new_vert</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="c1"># comp_to_new_vert is a dictionary with keys as indices of connected components in the list C and values as the name of the vertex in R_eps</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">c</span>  <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">C</span><span class="p">):</span>
                 <span class="n">vert_name</span> <span class="o">=</span> <span class="n">R_eps</span><span class="o">.</span><span class="n">get_next_vert_name</span><span class="p">()</span>
                 <span class="n">R_eps</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">vert_name</span><span class="p">,</span> <span class="n">cv</span><span class="p">,</span> <span class="n">reset_pos</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
                 <span class="n">comp_to_new_vert</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">vert_name</span>
 
-                <span class="k">if</span> <span class="n">return_map</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">==</span> <span class="n">cv</span><span class="p">:</span>
-                            <span class="nb">map</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">vert_name</span>
+                <span class="c1"># Track the vertex map</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">==</span> <span class="n">cv</span><span class="p">:</span>
+                        <span class="n">map_V</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">vert_name</span>
+
+            <span class="c1"># ===== Add edges below the vertices at level cv =====</span>
+
+            <span class="c1"># Get the slice slightly below the vertex</span>
+            <span class="n">H_edge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">cv</span><span class="o">-</span><span class="n">eps</span><span class="o">-</span><span class="n">delta</span><span class="p">,</span> <span class="n">cv</span> <span class="o">+</span> <span class="n">eps</span><span class="o">-</span><span class="n">delta</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;closed&#39;</span><span class="p">)</span>
+            <span class="n">C_edge</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">H_edge</span><span class="o">.</span><span class="n">connected_components</span><span class="p">())</span>
+
+            <span class="c1"># Strip the upper and lower from the strings to be able to check overlaps </span>
+            <span class="k">for</span> <span class="n">conn_comp_list</span> <span class="ow">in</span> <span class="p">[</span><span class="n">C</span><span class="p">,</span> <span class="n">C_0</span><span class="p">,</span> <span class="n">C_edge</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">conn_comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">conn_comp_list</span><span class="p">):</span>
+                    <span class="n">conn_comp_new</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">conn_comp</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span> <span class="ow">and</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;_upper&#39;</span> <span class="ow">or</span> <span class="n">v</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;_lower&#39;</span><span class="p">):</span>
+                            <span class="n">conn_comp_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">[:</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">conn_comp_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                    <span class="n">conn_comp_list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">conn_comp_new</span><span class="p">)</span>
 
             <span class="c1"># Add edges </span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">C</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">i_0</span><span class="p">,</span> <span class="n">c_0</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">C_0</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">c_0</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">R_eps</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">comp_to_new_vert</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">comp_to_new_vert_0</span><span class="p">[</span><span class="n">i_0</span><span class="p">])</span>
+            <span class="c1"># Track the stuff that needs to be included in the map</span>
+            <span class="n">V_inv</span><span class="p">,</span> <span class="n">E_inv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inv_image</span><span class="p">(</span><span class="n">cv</span><span class="o">-</span><span class="n">delta</span><span class="p">)</span>
+            
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">C_edge</span><span class="p">):</span>
+                <span class="n">overlap_down</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">c_0</span><span class="p">))</span> <span class="k">for</span> <span class="n">c_0</span> <span class="ow">in</span> <span class="n">C_0</span><span class="p">])</span>
+                <span class="n">lower_vert</span> <span class="o">=</span> <span class="p">[</span><span class="n">comp_to_new_vert_0</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span>  <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overlap_down</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lower_vert</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">i</span><span class="p">,</span><span class="n">c</span><span class="si">}</span><span class="s1"> has multiple lower vertices&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lower_vert</span> <span class="o">=</span> <span class="n">lower_vert</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                
+                <span class="n">overlap_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">c_0</span><span class="p">))</span> <span class="k">for</span> <span class="n">c_0</span> <span class="ow">in</span> <span class="n">C</span><span class="p">])</span>
+                <span class="n">upper_vert</span> <span class="o">=</span> <span class="p">[</span><span class="n">comp_to_new_vert</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span>  <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overlap_up</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">upper_vert</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">i</span><span class="p">,</span><span class="n">c</span><span class="si">}</span><span class="s1"> has multiple upper vertices&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">upper_vert</span> <span class="o">=</span> <span class="n">upper_vert</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                
+                <span class="n">R_eps</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">lower_vert</span><span class="p">,</span> <span class="n">upper_vert</span><span class="p">)</span>
+                
+                <span class="n">new_edge_name</span> <span class="o">=</span> <span class="p">(</span><span class="n">lower_vert</span><span class="p">,</span> <span class="n">upper_vert</span><span class="p">,</span> <span class="n">R_eps</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">(</span><span class="n">lower_vert</span><span class="p">,</span> <span class="n">upper_vert</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Because we just added the new edge, it should be the last one</span>
+                
+                <span class="c1"># Right now this assumes an endpoint vertex is in the sliced graph, is it possible for it to be edges only? </span>
+                <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">E_inv</span><span class="p">:</span> 
+                    <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">c</span> <span class="ow">or</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+                        <span class="n">map_E</span><span class="p">[</span><span class="n">e</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_edge_name</span><span class="p">)</span>
+                
+
 
             <span class="c1"># Set up for the next round</span>
             <span class="n">cv_0</span> <span class="o">=</span> <span class="n">cv</span>
@@ -1016,21 +1095,24 @@
             <span class="n">comp_to_new_vert_0</span> <span class="o">=</span> <span class="n">comp_to_new_vert</span>
 
         <span class="n">R_eps</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">return_map</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">map_type</span> <span class="o">==</span> <span class="s1">&#39;matrix&#39;</span><span class="p">:</span>
-                <span class="c1"># Create the matrix version of the map</span>
-                <span class="n">map_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">R_eps</span><span class="o">.</span><span class="n">nodes</span><span class="p">)))</span>
-                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">:</span>
-                    <span class="n">map_matrix</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="n">R_eps</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">map</span><span class="p">[</span><span class="n">v</span><span class="p">])]</span> <span class="o">=</span> <span class="mi">1</span>
-                <span class="k">return</span> <span class="n">R_eps</span><span class="p">,</span> <span class="n">map_matrix</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">R_eps</span><span class="p">,</span> <span class="nb">map</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">R_eps</span></div>
+        
+        <span class="k">return</span> <span class="n">R_eps</span><span class="p">,</span> <span class="n">map_V</span><span class="p">,</span> <span class="n">map_E</span></div>
 
 
+<div class="viewcode-block" id="ReebGraph.smoothing">
+<a class="viewcode-back" href="../../../modules/reeb/reebgraph.html#cereeberus.reeb.reebgraph.ReebGraph.smoothing">[docs]</a>
+    <span class="k">def</span> <span class="nf">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the ``eps``-smoothed Reeb graph from the input. One way to define this is for a given Reeb graph :math:`(X,f)`, the smoothed graph is the Reeb graph of the product space :math:`(X \\times [-\\varepsilon, \\varepsilon], f(x) +  t)`. </span>
 
+<span class="sd">        Parameters:</span>
+<span class="sd">            eps (float): The amount of smoothing to apply.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            ReebGraph: The smoothed Reeb graph.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">R_eps</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing_and_maps</span><span class="p">(</span><span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">R_eps</span></div>
 
 
     <span class="c1">#-----------------------------------------------#</span>
