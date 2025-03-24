@@ -82,16 +82,17 @@
 <span class="kn">from</span> <span class="nn">.labeled_blocks</span> <span class="kn">import</span> <span class="n">LabeledBlockMatrix</span> <span class="k">as</span> <span class="n">LBM</span>
 <span class="kn">from</span> <span class="nn">.labeled_blocks</span> <span class="kn">import</span> <span class="n">LabeledMatrix</span> <span class="k">as</span> <span class="n">LM</span>
 <span class="kn">from</span> <span class="nn">.ilp</span> <span class="kn">import</span> <span class="n">solve_ilp</span>
+<span class="kn">from</span> <span class="nn">..compute.utils</span> <span class="kn">import</span> <span class="n">HiddenPrints</span>
 <span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
 
 <div class="viewcode-block" id="Interleave">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave">[docs]</a>
 <span class="k">class</span> <span class="nc">Interleave</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A class to compute the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G`.</span>
-
-<span class="sd">    The interleaving distance is a measure of how similar two Mapper graphs are, based on the induced maps between them. </span>
-
+<span class="sd">    A class to compute the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G`. The interleaving distance is a measure of how similar two Mapper graphs are, based on the induced maps between them.</span>
+<span class="sd">    </span>
+<span class="sd">    Once the ``Interleave.fit()`` command has been run, the optimal bound for the distance for the input mapper graphs is stored as ``Interleave.n``. The resulting maps can be found using the ``Interleave.phi()`` and ``Interleave.psi()`` functions. For more detailed structure, the full interleaving is stored using an `Assignment` class, documented below, and can be accessed using ``Interleave.assignment``.</span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
 <div class="viewcode-block" id="Interleave.__init__">
@@ -115,13 +116,16 @@
         
 <div class="viewcode-block" id="Interleave.fit">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.fit">[docs]</a>
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pulp_solver</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+            <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
             <span class="n">max_n_for_error</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> 
-            <span class="n">printOptimizerOutput</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="p">):</span>
+            <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the interleaving distance between the two Mapper graphs.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters:</span>
+<span class="sd">            pulp_solver (pulp.LpSolver): </span>
+<span class="sd">                The solver to use for the ILP optimization. If None, the default solver is used.</span>
 <span class="sd">            verbose (bool, optional): </span>
 <span class="sd">                If True, print the progress of the optimization. Defaults to False.</span>
 <span class="sd">            max_n_for_error (int, optional): </span>
@@ -217,13 +221,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">low</span>
         <span class="c1"># -- Set the assignment to be the one that minimizes the interleaving distance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="o">=</span> <span class="n">Assignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
-        <span class="n">Loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+        <span class="n">Loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">pulp_solver</span> <span class="o">=</span> <span class="n">pulp_solver</span><span class="p">,)</span>
         
         
         <span class="c1"># Raise error if the loss isn&#39;t 0 </span>
         <span class="k">if</span> <span class="n">Loss</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final fit object is not an interleaving. Loss = </span><span class="si">{</span><span class="n">Loss</span><span class="si">}</span><span class="s2">. N = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">search_data</span></div>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
 
         
     
@@ -231,7 +236,7 @@
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.phi">[docs]</a>
     <span class="k">def</span> <span class="nf">phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the interleaving map :math:`\\varphi: F \\to G^n` if `key == &#39;0&#39;` or :math:`\\varphi_n: F^n \\to G^{2n}` if `key == &#39;n&#39;`.</span>
+<span class="sd">        Get the interleaving map :math:`\\varphi: F \\to G^n` if ``key == &#39;0&#39;`` or :math:`\\varphi_n: F^n \\to G^{2n}` if ``key == &#39;n&#39;``.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            key (str) : </span>
@@ -252,7 +257,7 @@
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.psi">[docs]</a>
     <span class="k">def</span> <span class="nf">psi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the interleaving map :math:`\\psi: G \\to F^n` if `key == &#39;0&#39;` or :math:`\\psi_n: G^n \\to F^{2n}` if `key == &#39;n&#39;`.</span>
+<span class="sd">        Get the interleaving map :math:`\\psi: G \\to F^n` if ``key == &#39;0&#39;`` or :math:`\\psi_n: G^n \\to F^{2n}` if ``key == &#39;n&#39;``.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            key (str) : </span>
@@ -312,30 +317,38 @@
     
 <div class="viewcode-block" id="Interleave.draw_all_phi">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_phi">[docs]</a>
-    <span class="k">def</span> <span class="nf">draw_all_phi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw_all_phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw all the phi maps stored in the Interleave object.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            figsize (tuple, optional): Sets the size of the figure. Defaults to (15,10).</span>
+<span class="sd">            **kwargs: Additional keyword arguments to pass to the drawing function.</span>
+<span class="sd">            </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            tuple: The figure and axes objects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must call fit() before drawing the phi maps.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">draw_all_phi</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">draw_all_phi</span><span class="p">(</span><span class="n">figsize</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="Interleave.draw_all_psi">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.draw_all_psi">[docs]</a>
-    <span class="k">def</span> <span class="nf">draw_all_psi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw_all_psi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw all the psi maps stored in the Interleave object.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            figsize (tuple, optional): Sets the size of the figure. Defaults to (15,10).</span>
+<span class="sd">            **kwargs: Additional keyword arguments to pass to the drawing function.</span>
+<span class="sd">            </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            tuple: The figure and axes objects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must call fit() before drawing the psi maps.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">draw_all_psi</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">draw_all_psi</span><span class="p">(</span><span class="n">figsize</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     
     <span class="c1"># Disable Printing </span>
@@ -1801,43 +1814,29 @@
     
 <div class="viewcode-block" id="Assignment.optimize">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.optimize">[docs]</a>
-    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">printOptimizerOutput</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pulp_solver</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.</span>
 <span class="sd">        This function requires the `pulp` package to be installed.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters:</span>
-<span class="sd">            printOptimizerOutput (bool) : </span>
-<span class="sd">                If True, prints the output of the ILP solver. Default is False.</span>
+<span class="sd">            pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            float : </span>
 <span class="sd">                The loss value found by the ILP solver.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">printOptimizerOutput</span><span class="p">:</span>
-            <span class="c1"># Stop printouts</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_blockPrint</span><span class="p">()</span>
-            
-        <span class="n">map_dict</span><span class="p">,</span> <span class="n">loss_val</span> <span class="o">=</span> <span class="n">solve_ilp</span><span class="p">(</span><span class="bp">self</span><span class="p">);</span> 
-        
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">printOptimizerOutput</span><span class="p">:</span>
-            <span class="c1"># Restore printouts</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_enablePrint</span><span class="p">()</span>
+        <span class="n">map_dict</span><span class="p">,</span> <span class="n">loss_val</span> <span class="o">=</span> <span class="n">solve_ilp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pulp_solver</span> <span class="o">=</span> <span class="n">pulp_solver</span><span class="p">)</span>
             
         <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;phi_0_V&#39;</span><span class="p">],</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;phi_0_E&#39;</span><span class="p">]}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phi_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;phi_n_V&#39;</span><span class="p">],</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;phi_n_E&#39;</span><span class="p">]}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;psi_0_V&#39;</span><span class="p">],</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;psi_0_E&#39;</span><span class="p">]}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;psi_n_V&#39;</span><span class="p">],</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">map_dict</span><span class="p">[</span><span class="s1">&#39;psi_n_E&#39;</span><span class="p">]}</span>
         
+        
         <span class="k">return</span> <span class="n">loss_val</span></div>
+</div>
 
     
-    <span class="c1"># Disable Printing </span>
-    <span class="k">def</span> <span class="nf">_blockPrint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-
-    <span class="c1"># Restore Printing</span>
-    <span class="k">def</span> <span class="nf">_enablePrint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span></div>
 
     
 </pre></div>
