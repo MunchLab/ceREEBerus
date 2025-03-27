@@ -461,7 +461,7 @@ class Assignment:
         # Build boundary matrices 
 
         for Graph, graph_name in [(self.F, 'F'), (self.G, 'G')]:
-            for key in ['0', 'n', '2n']:
+            for key in ['0', 'n']: # Note, we don't need to do this for 2n because the matrices are never used.
 
                 B_down = LBM()
                 B_up = LBM()
@@ -495,9 +495,8 @@ class Assignment:
 
         # ---
         # Build the distance matrices 
-        # Note.... I don't think I actually need all of these, but I'm going to build them all anyway.
         for (metagraph, name) in [ (self.F_,'F'), (self.G_,'G')]:
-            for key in ['0', 'n', '2n']:
+            for key in ['n', '2n']: # Note, we don't need to do this for 0 because the matrices are never used.
                 self.D_[name][key] = {'V':{}, 'E':{}}
 
                 self.D_[name][key]['V'] = metagraph[key].thickening_distance_matrix()
@@ -604,13 +603,13 @@ class Assignment:
 
     def B(self, graph = 'F', key = '0'):
         """
-        Get the boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an endpoint of edge :math:`e` and 0 otherwise.
+        Get the boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an endpoint of edge :math:`e` and 0 otherwise. Also, the boundary matrix is not computed for ``key = '2n'`` because it is not used in the optimization.
 
         Parameters:
             graph (str) : 
                 The graph to get the boundary matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
-                The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+                The key for the boundary matrix. Either ``'0'`` or ``'n'``.
         
         Returns:
             LabeledBlockMatrix : 
@@ -620,14 +619,14 @@ class Assignment:
 
     def B_down(self, graph = 'F', key = '0'):
         """
-        Get the downward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is a *lower* endpoint of edge :math:`e` and 0 otherwise.
+        Get the downward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is a *lower* endpoint of edge :math:`e` and 0 otherwise. Also, the boundary matrix is not computed for ``key = '2n'`` because it is not used in the optimization.
 
 
         Parameters:
             graph (str) : 
                 The graph to get the boundary matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
-                The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+                The key for the boundary matrix. Either ``'0'``, or ``'n'``.
         
         Returns:
             LabeledBlockMatrix : 
@@ -637,7 +636,7 @@ class Assignment:
 
     def B_up(self, graph = 'F', key = '0'):
         """
-        Get the upward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an *upper* endpoint of edge :math:`e` and 0 otherwise.
+        Get the upward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an *upper* endpoint of edge :math:`e` and 0 otherwise. Also, the boundary matrix is not computed for ``key = '2n'`` because it is not used in the optimization.
         
         If ``shift_indices`` is True, the indices of the matrix will be shifted (DOWN?) by one to make matrix multiplication work later.
 
@@ -645,7 +644,7 @@ class Assignment:
             graph (str) : 
                 The graph to get the boundary matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
-                The key for the boundary matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+                The key for the boundary matrix. Either ``'0'`` or  ``'n'``.
                 
         Returns:
             LabeledBlockMatrix : 
@@ -675,15 +674,15 @@ class Assignment:
         return self.I_[graph][key][obj_type]
         
 
-    def D(self, graph = 'F', key = '0', obj_type = 'V'):
+    def D(self, graph = 'F', key = 'n', obj_type = 'V'):
         """
-        Get the distance matrix for a Mapper graph. This is the matrix with entry :math:`D[u, v]` equal to the minimum thickening needed for vertices :math:`u` and :math:`v` to map to the same connected component (similarly for edges). Note this distance is only defined for vertices or edges at the same function value. 
+        Get the distance matrix for a Mapper graph. This is the matrix with entry :math:`D[u, v]` equal to the minimum thickening needed for vertices :math:`u` and :math:`v` to map to the same connected component (similarly for edges). Note this distance is only defined for vertices or edges at the same function value. Also, the distance matrix is not computed for key = '0' because it is not used in the optimization.
 
         Parameters:
             graph (str) : 
                 The graph to get the distance matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
-                The key for the distance matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+                The key for the distance matrix. Either ``'n'``, or ``'2n'``.
 
         Returns:
             LabeledBlockMatrix : 
@@ -1056,7 +1055,7 @@ class Assignment:
 
         return ax
 
-    def draw_all_B(self, figsize = (24,18)):
+    def draw_all_B(self, figsize = (18,18)):
         """
         Draw all the boundary matrices.
         
@@ -1067,24 +1066,24 @@ class Assignment:
         Returns:
             tuple: The figure and axes objects.
         """
-        fig, axs = plt.subplots(2, 3, figsize=figsize, constrained_layout=True)
+        fig, axs = plt.subplots(2, 2, figsize=figsize, constrained_layout=True)
         self.draw_B('F', '0', ax = axs[0, 0])
         axs[0,0].set_title(r'$B(F_0)$')
         self.draw_B('F', 'n', ax = axs[0, 1])
         axs[0,1].set_title(r'$B(F_n)$')
-        self.draw_B('F', '2n', ax = axs[0, 2])
-        axs[0,2].set_title(r'$B(F_{2n})$')
+        # self.draw_B('F', '2n', ax = axs[0, 2])
+        # axs[0,2].set_title(r'$B(F_{2n})$')
 
         self.draw_B('G', '0', ax = axs[1, 0])
         axs[1,0].set_title(r'$B(G_0)$')
         self.draw_B('G', 'n', ax = axs[1, 1])
         axs[1,1].set_title(r'$B(G_n)$')
-        self.draw_B('G', '2n', ax = axs[1, 2])
-        axs[1,2].set_title(r'$B(G_{2n})$')
+        # self.draw_B('G', '2n', ax = axs[1, 2])
+        # axs[1,2].set_title(r'$B(G_{2n})$')
         
         return fig, axs
 
-    def draw_D(self, graph = 'F', key = '0', obj_type = 'V', 
+    def draw_D(self, graph = 'F', key = 'n', obj_type = 'V', 
                     colorbar = True, ax = None,  **kwargs):
         """
         Draw the distance matrix for a Mapper graph.
@@ -1093,7 +1092,7 @@ class Assignment:
             graph (str) : 
                 The graph to draw the distance matrix for. Either ``'F'`` or ``'G'``.
             key (str) : 
-                The key for the distance matrix. Either ``'0'``, ``'n'``, or ``'2n'``.
+                The key for the distance matrix. Either  ``'n'``, or ``'2n'``.
             obj_type (str) : 
                 The type of matrix. Either ``'V'`` or ``'E'``.
             colorbar (bool) : 
