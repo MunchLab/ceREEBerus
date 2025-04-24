@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>cereeberus.distance.interleave &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
 
@@ -14,7 +14,7 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -114,11 +114,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="o">=</span> <span class="kc">None</span></div>
 
         
-<div class="viewcode-block" id="Interleave.fit">
-<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.fit">[docs]</a>
-    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pulp_solver</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-            <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
-            <span class="n">max_n_for_error</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> 
+<div class="viewcode-block" id="Interleave.old_fit">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.old_fit">[docs]</a>
+    <span class="k">def</span> <span class="nf">old_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pulp_solver</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_n_for_error</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> 
             <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the interleaving distance between the two Mapper graphs.</span>
@@ -163,7 +161,7 @@
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">-</span><span class="se">\n</span><span class="s2">Trying n = </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
                 <span class="n">myAssgn</span> <span class="o">=</span> <span class="n">Assignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">N</span><span class="p">)</span>
                 
-                <span class="n">Loss</span> <span class="o">=</span> <span class="n">myAssgn</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">printOptimizerOutput</span> <span class="o">=</span> <span class="n">printOptimizerOutput</span><span class="p">)</span>
+                <span class="n">Loss</span> <span class="o">=</span> <span class="n">myAssgn</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
                 <span class="n">search_data</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="n">Loss</span>
                 
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> 
@@ -189,7 +187,6 @@
             <span class="k">if</span> <span class="n">N</span> <span class="o">&gt;</span> <span class="n">max_n_for_error</span><span class="p">:</span>
                 <span class="c1"># -- If we have exceeded the maximum value of n, raise an error. Useful while we&#39;re checking this while loop</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Interleaving distance not found for n &lt;= </span><span class="si">{</span><span class="n">max_n_for_error</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">search_data</span>
                 
             
 
@@ -203,7 +200,7 @@
             
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">myAssgn</span> <span class="o">=</span> <span class="n">Assignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">mid</span><span class="p">)</span>
-                <span class="n">Loss</span> <span class="o">=</span> <span class="n">myAssgn</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">printOptimizerOutput</span> <span class="o">=</span> <span class="n">printOptimizerOutput</span><span class="p">)</span>
+                <span class="n">Loss</span> <span class="o">=</span> <span class="n">myAssgn</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
                 <span class="n">search_data</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span> <span class="o">=</span> <span class="n">Loss</span>
             <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="c1"># -- If we get a ValueError, it means the current n is too small</span>
@@ -228,10 +225,102 @@
         <span class="k">if</span> <span class="n">Loss</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final fit object is not an interleaving. Loss = </span><span class="si">{</span><span class="n">Loss</span><span class="si">}</span><span class="s2">. N = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
         
-        <span class="k">return</span> <span class="bp">self</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span></div>
 
-        
     
+<div class="viewcode-block" id="Interleave.fit">
+<a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.fit">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pulp_solver</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_n_for_error</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the interleaving distance between the two Mapper graphs.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            pulp_solver (pulp.LpSolver): </span>
+<span class="sd">                The solver to use for the ILP optimization. If None, the default solver is used.</span>
+<span class="sd">            verbose (bool, optional): </span>
+<span class="sd">                If True, print the progress of the optimization. Defaults to False.</span>
+<span class="sd">            max_n_for_error (int, optional): </span>
+<span class="sd">                The maximum value of `n` to search for. If the interleaving distance is not found by this value, a ValueError is raised. Defaults to 100. ####NOTE: this can be replaced by the bounding box.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Int:</span>
+<span class="sd">                The interleaving distance, that is, the smallest n for which loss is zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># step 0: search for n=0 </span>
+        <span class="n">myAssgn</span> <span class="o">=</span> <span class="n">Assignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">Loss</span> <span class="o">=</span> <span class="n">myAssgn</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">pulp_solver</span> <span class="o">=</span> <span class="n">pulp_solver</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">-</span><span class="se">\n</span><span class="s2">Trying n = 0...&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n = 0, Loss = </span><span class="si">{</span><span class="n">Loss</span><span class="si">}</span><span class="s2">, distance_bound = </span><span class="si">{</span><span class="mi">0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># if loss is 0, we&#39;re done</span>
+        <span class="k">if</span> <span class="n">Loss</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="o">=</span> <span class="n">myAssgn</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
+        
+        <span class="c1"># step 1: exponential search for the upperbound</span>
+        <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="n">found_valid_n</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">while</span> <span class="n">high</span> <span class="o">&lt;=</span> <span class="n">max_n_for_error</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">myAssgn</span> <span class="o">=</span> <span class="n">Assignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">high</span><span class="p">)</span>
+                <span class="n">Loss</span> <span class="o">=</span> <span class="n">myAssgn</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">pulp_solver</span> <span class="o">=</span> <span class="n">pulp_solver</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">-</span><span class="se">\n</span><span class="s2">Trying n = </span><span class="si">{</span><span class="n">high</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n = </span><span class="si">{</span><span class="n">high</span><span class="si">}</span><span class="s2">, Loss = </span><span class="si">{</span><span class="n">Loss</span><span class="si">}</span><span class="s2">, distance_bound = </span><span class="si">{</span><span class="n">high</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span>  <span class="n">Loss</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">found_valid_n</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+                <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">high</span><span class="p">,</span> <span class="n">high</span><span class="o">*</span><span class="mi">2</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span> <span class="c1"># infeasible assignment</span>
+                <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">high</span><span class="p">,</span> <span class="n">high</span><span class="o">*</span><span class="mi">2</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found_valid_n</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Interleaving distance not found for n &lt;= </span><span class="si">{</span><span class="n">max_n_for_error</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        
+        <span class="n">high</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">high</span><span class="p">,</span> <span class="n">max_n_for_error</span><span class="p">)</span>  <span class="c1"># Clamp to max allowed</span>
+        <span class="c1"># step 2: binary search for the optimal n</span>
+        
+        <span class="n">low</span> <span class="o">=</span> <span class="p">(</span><span class="n">high</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">high</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">best_n</span> <span class="o">=</span> <span class="n">high</span>
+
+        <span class="k">while</span> <span class="n">low</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">:</span>
+            <span class="n">mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">high</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> 
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">myAssgn</span> <span class="o">=</span> <span class="n">Assignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">mid</span><span class="p">)</span>
+                <span class="n">Loss</span> <span class="o">=</span> <span class="n">myAssgn</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">pulp_solver</span> <span class="o">=</span> <span class="n">pulp_solver</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">-</span><span class="se">\n</span><span class="s2">Trying n = </span><span class="si">{</span><span class="n">mid</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n = </span><span class="si">{</span><span class="n">mid</span><span class="si">}</span><span class="s2">, Loss = </span><span class="si">{</span><span class="n">Loss</span><span class="si">}</span><span class="s2">, distance_bound = </span><span class="si">{</span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Loss</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">Loss</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">best_n</span> <span class="o">=</span> <span class="n">mid</span>
+                    <span class="n">high</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span> <span class="c1"># decrease n to increase the loss</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">low</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span> <span class="c1"># infeasible assignment</span>
+                <span class="n">low</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>  
+        
+        <span class="c1"># validate the final solution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">best_n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span> <span class="o">=</span> <span class="n">Assignment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">final_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignment</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">pulp_solver</span> <span class="o">=</span> <span class="n">pulp_solver</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">final_loss</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected non-zero loss (Loss=</span><span class="si">{</span><span class="n">final_loss</span><span class="si">}</span><span class="s2">) for n=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span></div>
+
+            
+    
+
 <div class="viewcode-block" id="Interleave.phi">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Interleave.phi">[docs]</a>
     <span class="k">def</span> <span class="nf">phi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
@@ -480,7 +569,7 @@
         <span class="c1"># Build boundary matrices </span>
 
         <span class="k">for</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">graph_name</span> <span class="ow">in</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">)]:</span>
-            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">]:</span> <span class="c1"># Note, we don&#39;t need to do this for 2n because the matrices are never used.</span>
 
                 <span class="n">B_down</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">()</span>
                 <span class="n">B_up</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">()</span>
@@ -514,9 +603,8 @@
 
         <span class="c1"># ---</span>
         <span class="c1"># Build the distance matrices </span>
-        <span class="c1"># Note.... I don&#39;t think I actually need all of these, but I&#39;m going to build them all anyway.</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">metagraph</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">F_</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">,</span><span class="s1">&#39;G&#39;</span><span class="p">)]:</span>
-            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">]:</span> <span class="c1"># Note, we don&#39;t need to do this for 0 because the matrices are never used.</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">D_</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;V&#39;</span><span class="p">:{},</span> <span class="s1">&#39;E&#39;</span><span class="p">:{}}</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">D_</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metagraph</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">thickening_distance_matrix</span><span class="p">()</span>
@@ -632,13 +720,13 @@
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.B">[docs]</a>
     <span class="k">def</span> <span class="nf">B</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an endpoint of edge :math:`e` and 0 otherwise.</span>
+<span class="sd">        Get the boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an endpoint of edge :math:`e` and 0 otherwise. Also, the boundary matrix is not computed for ``key = &#39;2n&#39;`` because it is not used in the optimization.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            graph (str) : </span>
 <span class="sd">                The graph to get the boundary matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
 <span class="sd">            key (str) : </span>
-<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
+<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;`` or ``&#39;n&#39;``.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            LabeledBlockMatrix : </span>
@@ -651,14 +739,14 @@
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.B_down">[docs]</a>
     <span class="k">def</span> <span class="nf">B_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the downward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is a *lower* endpoint of edge :math:`e` and 0 otherwise.</span>
+<span class="sd">        Get the downward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is a *lower* endpoint of edge :math:`e` and 0 otherwise. Also, the boundary matrix is not computed for ``key = &#39;2n&#39;`` because it is not used in the optimization.</span>
 
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            graph (str) : </span>
 <span class="sd">                The graph to get the boundary matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
 <span class="sd">            key (str) : </span>
-<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
+<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;``, or ``&#39;n&#39;``.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            LabeledBlockMatrix : </span>
@@ -671,7 +759,7 @@
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.B_up">[docs]</a>
     <span class="k">def</span> <span class="nf">B_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the upward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an *upper* endpoint of edge :math:`e` and 0 otherwise.</span>
+<span class="sd">        Get the upward boundary matrix for a Mapper graph. This is the matrix with entry :math:`B[v,e]` equal to 1 if vertex :math:`v` is an *upper* endpoint of edge :math:`e` and 0 otherwise. Also, the boundary matrix is not computed for ``key = &#39;2n&#39;`` because it is not used in the optimization.</span>
 <span class="sd">        </span>
 <span class="sd">        If ``shift_indices`` is True, the indices of the matrix will be shifted (DOWN?) by one to make matrix multiplication work later.</span>
 
@@ -679,7 +767,7 @@
 <span class="sd">            graph (str) : </span>
 <span class="sd">                The graph to get the boundary matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
 <span class="sd">            key (str) : </span>
-<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
+<span class="sd">                The key for the boundary matrix. Either ``&#39;0&#39;`` or  ``&#39;n&#39;``.</span>
 <span class="sd">                </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            LabeledBlockMatrix : </span>
@@ -715,15 +803,15 @@
 
 <div class="viewcode-block" id="Assignment.D">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.D">[docs]</a>
-    <span class="k">def</span> <span class="nf">D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the distance matrix for a Mapper graph. This is the matrix with entry :math:`D[u, v]` equal to the minimum thickening needed for vertices :math:`u` and :math:`v` to map to the same connected component (similarly for edges). Note this distance is only defined for vertices or edges at the same function value. </span>
+<span class="sd">        Get the distance matrix for a Mapper graph. This is the matrix with entry :math:`D[u, v]` equal to the minimum thickening needed for vertices :math:`u` and :math:`v` to map to the same connected component (similarly for edges). Note this distance is only defined for vertices or edges at the same function value. Also, the distance matrix is not computed for key = &#39;0&#39; because it is not used in the optimization.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            graph (str) : </span>
 <span class="sd">                The graph to get the distance matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
 <span class="sd">            key (str) : </span>
-<span class="sd">                The key for the distance matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
+<span class="sd">                The key for the distance matrix. Either ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            LabeledBlockMatrix : </span>
@@ -1129,7 +1217,7 @@
 
 <div class="viewcode-block" id="Assignment.draw_all_B">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_all_B">[docs]</a>
-    <span class="k">def</span> <span class="nf">draw_all_B</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">24</span><span class="p">,</span><span class="mi">18</span><span class="p">)):</span>
+    <span class="k">def</span> <span class="nf">draw_all_B</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">18</span><span class="p">,</span><span class="mi">18</span><span class="p">)):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw all the boundary matrices.</span>
 <span class="sd">        </span>
@@ -1140,27 +1228,27 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            tuple: The figure and axes objects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(F_0)$&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(F_n)$&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-        <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(F_</span><span class="si">{2n}</span><span class="s1">)$&#39;</span><span class="p">)</span>
+        <span class="c1"># self.draw_B(&#39;F&#39;, &#39;2n&#39;, ax = axs[0, 2])</span>
+        <span class="c1"># axs[0,2].set_title(r&#39;$B(F_{2n})$&#39;)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(G_0)$&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(G_n)$&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw_B</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;2n&#39;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$B(G_</span><span class="si">{2n}</span><span class="s1">)$&#39;</span><span class="p">)</span>
+        <span class="c1"># self.draw_B(&#39;G&#39;, &#39;2n&#39;, ax = axs[1, 2])</span>
+        <span class="c1"># axs[1,2].set_title(r&#39;$B(G_{2n})$&#39;)</span>
         
         <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span></div>
 
 
 <div class="viewcode-block" id="Assignment.draw_D">
 <a class="viewcode-back" href="../../../modules/distance/interleave.html#cereeberus.distance.interleave.Assignment.draw_D">[docs]</a>
-    <span class="k">def</span> <span class="nf">draw_D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">draw_D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">,</span> 
                     <span class="n">colorbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw the distance matrix for a Mapper graph.</span>
@@ -1169,7 +1257,7 @@
 <span class="sd">            graph (str) : </span>
 <span class="sd">                The graph to draw the distance matrix for. Either ``&#39;F&#39;`` or ``&#39;G&#39;``.</span>
 <span class="sd">            key (str) : </span>
-<span class="sd">                The key for the distance matrix. Either ``&#39;0&#39;``, ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
+<span class="sd">                The key for the distance matrix. Either  ``&#39;n&#39;``, or ``&#39;2n&#39;``.</span>
 <span class="sd">            obj_type (str) : </span>
 <span class="sd">                The type of matrix. Either ``&#39;V&#39;`` or ``&#39;E&#39;``.</span>
 <span class="sd">            colorbar (bool) : </span>

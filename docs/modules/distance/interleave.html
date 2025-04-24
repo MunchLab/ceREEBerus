@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2.1. Interleave class &mdash; ceREEBerus 0.1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
 
@@ -15,7 +15,7 @@
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -123,8 +123,8 @@ A full tutorial can be found in the <a class="reference internal" href="../../no
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulp_solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_n_for_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.fit" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.old_fit">
+<span class="sig-name descname"><span class="pre">old_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulp_solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_n_for_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.old_fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.old_fit" title="Link to this definition"></a></dt>
 <dd><p>Compute the interleaving distance between the two Mapper graphs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -140,6 +140,27 @@ A full tutorial can be found in the <a class="reference internal" href="../../no
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#cereeberus.distance.interleave.Interleave" title="cereeberus.distance.interleave.Interleave">Interleave</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.distance.interleave.Interleave.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulp_solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_n_for_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Interleave.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Interleave.fit" title="Link to this definition"></a></dt>
+<dd><p>Compute the interleaving distance between the two Mapper graphs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pulp_solver</strong> (<em>pulp.LpSolver</em>) – The solver to use for the ILP optimization. If None, the default solver is used.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print the progress of the optimization. Defaults to False.</p></li>
+<li><p><strong>max_n_for_error</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum value of <cite>n</cite> to search for. If the interleaving distance is not found by this value, a ValueError is raised. Defaults to 100. ####NOTE: this can be replaced by the bounding box.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The interleaving distance, that is, the smallest n for which loss is zero.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -322,12 +343,12 @@ A full tutorial can be found in the <a class="reference internal" href="../../no
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Assignment.B">
 <span class="sig-name descname"><span class="pre">B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Assignment.B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Assignment.B" title="Link to this definition"></a></dt>
-<dd><p>Get the boundary matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(B[v,e]\)</span> equal to 1 if vertex <span class="math notranslate nohighlight">\(v\)</span> is an endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and 0 otherwise.</p>
+<dd><p>Get the boundary matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(B[v,e]\)</span> equal to 1 if vertex <span class="math notranslate nohighlight">\(v\)</span> is an endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and 0 otherwise. Also, the boundary matrix is not computed for <code class="docutils literal notranslate"><span class="pre">key</span> <span class="pre">=</span> <span class="pre">'2n'</span></code> because it is not used in the optimization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>graph</strong> (<em>str</em>) – The graph to get the boundary matrix for. Either <code class="docutils literal notranslate"><span class="pre">'F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'G'</span></code>.</p></li>
-<li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code> or <code class="docutils literal notranslate"><span class="pre">'n'</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -342,12 +363,12 @@ A full tutorial can be found in the <a class="reference internal" href="../../no
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Assignment.B_down">
 <span class="sig-name descname"><span class="pre">B_down</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Assignment.B_down"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Assignment.B_down" title="Link to this definition"></a></dt>
-<dd><p>Get the downward boundary matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(B[v,e]\)</span> equal to 1 if vertex <span class="math notranslate nohighlight">\(v\)</span> is a <em>lower</em> endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and 0 otherwise.</p>
+<dd><p>Get the downward boundary matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(B[v,e]\)</span> equal to 1 if vertex <span class="math notranslate nohighlight">\(v\)</span> is a <em>lower</em> endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and 0 otherwise. Also, the boundary matrix is not computed for <code class="docutils literal notranslate"><span class="pre">key</span> <span class="pre">=</span> <span class="pre">'2n'</span></code> because it is not used in the optimization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>graph</strong> (<em>str</em>) – The graph to get the boundary matrix for. Either <code class="docutils literal notranslate"><span class="pre">'F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'G'</span></code>.</p></li>
-<li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'n'</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -362,13 +383,13 @@ A full tutorial can be found in the <a class="reference internal" href="../../no
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Assignment.B_up">
 <span class="sig-name descname"><span class="pre">B_up</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Assignment.B_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Assignment.B_up" title="Link to this definition"></a></dt>
-<dd><p>Get the upward boundary matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(B[v,e]\)</span> equal to 1 if vertex <span class="math notranslate nohighlight">\(v\)</span> is an <em>upper</em> endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and 0 otherwise.</p>
+<dd><p>Get the upward boundary matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(B[v,e]\)</span> equal to 1 if vertex <span class="math notranslate nohighlight">\(v\)</span> is an <em>upper</em> endpoint of edge <span class="math notranslate nohighlight">\(e\)</span> and 0 otherwise. Also, the boundary matrix is not computed for <code class="docutils literal notranslate"><span class="pre">key</span> <span class="pre">=</span> <span class="pre">'2n'</span></code> because it is not used in the optimization.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">shift_indices</span></code> is True, the indices of the matrix will be shifted (DOWN?) by one to make matrix multiplication work later.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>graph</strong> (<em>str</em>) – The graph to get the boundary matrix for. Either <code class="docutils literal notranslate"><span class="pre">'F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'G'</span></code>.</p></li>
-<li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The key for the boundary matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code> or  <code class="docutils literal notranslate"><span class="pre">'n'</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -404,13 +425,13 @@ A full tutorial can be found in the <a class="reference internal" href="../../no
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Assignment.D">
-<span class="sig-name descname"><span class="pre">D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Assignment.D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Assignment.D" title="Link to this definition"></a></dt>
-<dd><p>Get the distance matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(D[u, v]\)</span> equal to the minimum thickening needed for vertices <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span> to map to the same connected component (similarly for edges). Note this distance is only defined for vertices or edges at the same function value.</p>
+<span class="sig-name descname"><span class="pre">D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'n'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Assignment.D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Assignment.D" title="Link to this definition"></a></dt>
+<dd><p>Get the distance matrix for a Mapper graph. This is the matrix with entry <span class="math notranslate nohighlight">\(D[u, v]\)</span> equal to the minimum thickening needed for vertices <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span> to map to the same connected component (similarly for edges). Note this distance is only defined for vertices or edges at the same function value. Also, the distance matrix is not computed for key = ‘0’ because it is not used in the optimization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>graph</strong> (<em>str</em>) – The graph to get the distance matrix for. Either <code class="docutils literal notranslate"><span class="pre">'F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'G'</span></code>.</p></li>
-<li><p><strong>key</strong> (<em>str</em>) – The key for the distance matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The key for the distance matrix. Either <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -603,7 +624,7 @@ A full tutorial can be found in the <a class="reference internal" href="../../no
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Assignment.draw_all_B">
-<span class="sig-name descname"><span class="pre">draw_all_B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(24,</span> <span class="pre">18)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Assignment.draw_all_B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Assignment.draw_all_B" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw_all_B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(18,</span> <span class="pre">18)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Assignment.draw_all_B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Assignment.draw_all_B" title="Link to this definition"></a></dt>
 <dd><p>Draw all the boundary matrices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -620,13 +641,13 @@ A full tutorial can be found in the <a class="reference internal" href="../../no
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cereeberus.distance.interleave.Assignment.draw_D">
-<span class="sig-name descname"><span class="pre">draw_D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Assignment.draw_D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Assignment.draw_D" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw_D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'F'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'n'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'V'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/distance/interleave.html#Assignment.draw_D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.distance.interleave.Assignment.draw_D" title="Link to this definition"></a></dt>
 <dd><p>Draw the distance matrix for a Mapper graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>graph</strong> (<em>str</em>) – The graph to draw the distance matrix for. Either <code class="docutils literal notranslate"><span class="pre">'F'</span></code> or <code class="docutils literal notranslate"><span class="pre">'G'</span></code>.</p></li>
-<li><p><strong>key</strong> (<em>str</em>) – The key for the distance matrix. Either <code class="docutils literal notranslate"><span class="pre">'0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The key for the distance matrix. Either  <code class="docutils literal notranslate"><span class="pre">'n'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'2n'</span></code>.</p></li>
 <li><p><strong>obj_type</strong> (<em>str</em>) – The type of matrix. Either <code class="docutils literal notranslate"><span class="pre">'V'</span></code> or <code class="docutils literal notranslate"><span class="pre">'E'</span></code>.</p></li>
 <li><p><strong>colorbar</strong> (<em>bool</em>) – Whether to draw a colorbar. Default is True.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The axes to draw the matrix on. If None, the current axes will be used.</p></li>
