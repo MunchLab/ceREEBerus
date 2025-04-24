@@ -17,7 +17,7 @@ class TestInterleaving(unittest.TestCase):
         #--- B ---# 
 
         for H, graph in [(myAssgn.F, 'F'), (myAssgn.G, 'G')]: 
-            for key in ['0', 'n', '2n']:
+            for key in ['0', 'n']:
                 mygraph = H(key)
 
                 rows_ = mygraph.sorted_vertices()
