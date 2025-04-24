@@ -3,7 +3,7 @@ import networkx as nx
 import numpy as np
 import warnings
 
-from networkx.generators import random_tree
+from networkx.generators import random_labeled_tree
 
 from cereeberus import MergeTree
 
@@ -19,7 +19,7 @@ def randomMergeTree(n = 10, func_randomizer = None, range = [0,10],  seed = None
     warnings.filterwarnings('ignore') 
 
     # Generate a random tree
-    T = nx.random_tree(n, seed = seed)
+    T = random_labeled_tree(n, seed = seed)
 
     np.random.seed(seed)
     root = np.random.randint(n)

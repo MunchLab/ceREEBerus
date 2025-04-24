@@ -81,7 +81,7 @@ def bezier_curve(pt0, midpt, pt1):
         y2 = a2*x2 + b2
     return points    
 
-def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1):
+def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1, ax = None, **kwargs):
     """Main plotting function for the Reeb Graph Class
 
     Parameters: 
@@ -91,9 +91,10 @@ def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1):
         cp (float): parameter to control curvature of loops in the plotting function. For vertical Reeb graph, only mess with cpx.
 
     """
+    if ax is None:
+        fig, ax = plt.subplots()
 
     viridis = mpl.colormaps['viridis'].resampled(16)
-    fig, ax = plt.subplots()
 
     n = len(R.nodes)
 
@@ -104,9 +105,9 @@ def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1):
     # Some weird plotting to make the colored and labeled nodes work.
     # Taking the list of function values from the pos_f dicationary since the infinite node should already have a position set.
     color_map = [R.pos_f[v][1] for v in R.nodes]
-    pathcollection = nx.draw_networkx_nodes(R, R.pos_f, node_color=color_map)
+    pathcollection = nx.draw_networkx_nodes(R, R.pos_f, node_color=color_map, ax = ax, **kwargs)
     if with_labels:
-        nx.draw_networkx_labels(R, pos=R.pos_f, font_color='black')
+        nx.draw_networkx_labels(R, pos=R.pos_f, font_color='black', ax = ax)
     if with_colorbar:
         plt.colorbar(pathcollection)
 
@@ -128,10 +129,10 @@ def reeb_plot(R, with_labels = True, with_colorbar = False, cpx=.1, cpy=.1):
         ymid1 = ymid + cpy*ymid
         curve = bezier_curve(R.pos_f[node0], (xmid0, ymid0), R.pos_f[node1])
         c = np.array(curve)
-        plt.plot(c[:,0], c[:,1], color='grey', zorder = 0)
+        ax.plot(c[:,0], c[:,1], color='grey', zorder = 0)
         curve = bezier_curve(R.pos_f[node0], (xmid1, ymid1), R.pos_f[node1])
         c = np.array(curve)
-        plt.plot(c[:,0], c[:,1], color='grey', zorder = 0)
+        ax.plot(c[:,0], c[:,1], color='grey', zorder = 0)
 
 
     ax.tick_params(left = True, bottom = False, labelleft = True, labelbottom = False)

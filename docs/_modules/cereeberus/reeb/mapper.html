@@ -16,7 +16,7 @@
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -75,6 +75,10 @@
              
   <h1>Source code for cereeberus.reeb.mapper</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">ReebGraph</span>
+<span class="kn">from</span> <span class="nn">..distance.labeled_blocks</span> <span class="kn">import</span> <span class="n">LabeledBlockMatrix</span> <span class="k">as</span> <span class="n">LBM</span>
+<span class="kn">from</span> <span class="nn">..distance.labeled_blocks</span> <span class="kn">import</span> <span class="n">LabeledMatrix</span> <span class="k">as</span> <span class="n">LM</span>
+<span class="kn">from</span> <span class="nn">..compute.unionfind</span> <span class="kn">import</span> <span class="n">UnionFind</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <div class="viewcode-block" id="MapperGraph">
 <a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph">[docs]</a>
@@ -134,16 +138,14 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="k">return</span>
         
-        <span class="n">last_vert_name</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
         
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_low</span><span class="p">,</span><span class="n">n_high</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">e_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">]</span>
 
             <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">e_list</span><span class="p">:</span>
-                <span class="n">w_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_vert_name</span><span class="p">(</span><span class="n">last_vert_name</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="o">*</span><span class="n">e</span><span class="p">,</span><span class="n">w_name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">w_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_vert_name</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="o">*</span><span class="n">e</span><span class="p">,</span><span class="n">w_name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span></div>
 
-                <span class="n">last_vert_name</span> <span class="o">=</span> <span class="n">w_name</span></div>
 
             
     
@@ -189,6 +191,192 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">R</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">R</span><span class="o">.</span><span class="n">to_mapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MapperGraph.smoothing_and_maps">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.smoothing_and_maps">[docs]</a>
+    <span class="k">def</span> <span class="nf">smoothing_and_maps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the smoothing of a mapper graph as given in todo: Cite the paper. Note that the input :math:`n` parameter is related to the integer function values, not the delta-scaled function values.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            n (int): The amount of smoothing</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: MapperGraph, vertex_map, edge_map </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Smoothing amount must be an integer.&quot;</span><span class="p">)</span>
+        
+        <span class="n">M_n</span><span class="p">,</span> <span class="n">V_map</span><span class="p">,</span> <span class="n">E_map</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">smoothing_and_maps</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        
+        <span class="c1"># E_map is a dictonary with output lists of edges, but we should only have one edge to one edge in the mapper graph  case</span>
+        <span class="c1"># This just strips E_map[key] = [(u,v,0)] to instead be E_map[key] = (u,v,0)</span>
+        <span class="n">E_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">E_map</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">E_map</span><span class="p">}</span>
+        
+        <span class="n">M_n</span> <span class="o">=</span> <span class="n">M_n</span><span class="o">.</span><span class="n">to_mapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">M_n</span><span class="p">,</span> <span class="n">V_map</span><span class="p">,</span> <span class="n">E_map</span> </div>
+
+
+<div class="viewcode-block" id="MapperGraph.smoothing">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.smoothing">[docs]</a>
+    <span class="k">def</span> <span class="nf">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the smoothing of a mapper graph as given in todo: Cite the paper. Note that the input :math:`n` parameter is related to the integer function values, not the delta-scaled function values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n (int, optional): Smoothing amount. Defaults to 1.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: _description_</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">M_n</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing_and_maps</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">M_n</span></div>
+
+
+    <span class="c1">#------------------------------#</span>
+    <span class="c1"># Functions for computing thickening distance matrix</span>
+    <span class="c1">#------------------------------#</span>
+<div class="viewcode-block" id="MapperGraph.thickening_distance_by_level">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.thickening_distance_by_level">[docs]</a>
+    <span class="k">def</span> <span class="nf">thickening_distance_by_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the thickening distance matrix at a given level. This distance is the amount of thickening needed before the given pair of vertices at that level map to the same connected component.</span>
+
+<span class="sd">        Parameters:</span>
+
+<span class="sd">            level : int. The level to get the thickening distance matrix at.</span>
+<span class="sd">            obj_type : str. &#39;V&#39; or &#39;E&#39; to get the distance matrix for vertices or edges, respectively. Default is &#39;V&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledMatrix</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Dict to get list of vertices at a level</span>
+        <span class="n">LevelVerts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_to_vertex_dict</span><span class="p">()</span>
+
+        <span class="c1"># Dict to get lists of edges at a level </span>
+        <span class="n">LevelEdges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_to_edge_dict</span><span class="p">()</span>
+
+        <span class="c1"># Current level to be checking </span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">level</span> 
+
+        <span class="c1"># Objects to be checking</span>
+        <span class="k">if</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s1">&#39;V&#39;</span><span class="p">:</span>
+            <span class="c1"># Vertices at the current level</span>
+            <span class="n">rowLabels</span> <span class="o">=</span> <span class="n">LevelVerts</span><span class="p">[</span><span class="n">L</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span>
+            <span class="c1"># Edges at the current level</span>
+            <span class="n">rowLabels</span> <span class="o">=</span> <span class="n">LevelEdges</span><span class="p">[</span><span class="n">L</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Type must be &#39;V&#39; or &#39;E&#39;.&quot;</span><span class="p">)</span>
+
+
+        <span class="c1"># If there&#39;s only one object, the distance is 0. </span>
+        <span class="c1"># Return the little matrix block</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">D</span> <span class="o">=</span> <span class="n">LM</span><span class="p">(</span><span class="n">rows</span> <span class="o">=</span> <span class="n">rowLabels</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">rowLabels</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">D</span>
+
+        <span class="c1"># Max difference to check </span>
+        <span class="n">max_diff</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">L</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">min_f</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_f</span><span class="p">()</span><span class="o">-</span><span class="n">L</span><span class="p">)</span>
+
+        <span class="c1"># Distance matrix for this level</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">)))</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">D</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">))</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">LM</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">rowLabels</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">rowLabels</span><span class="p">)</span>
+
+        <span class="c1"># Initialize a union find object</span>
+        <span class="n">UF</span> <span class="o">=</span> <span class="n">UnionFind</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">()))</span>
+
+
+
+        <span class="c1"># Loop through the levels to add edges, and update teh distance matrix if </span>
+        <span class="c1"># a pair of objects not already merged.</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_diff</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            
+            <span class="k">if</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s1">&#39;V&#39;</span><span class="p">:</span>
+                <span class="n">up_level</span> <span class="o">=</span> <span class="n">L</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span>
+                <span class="n">down_level</span> <span class="o">=</span> <span class="n">L</span><span class="o">-</span><span class="n">k</span>
+            <span class="k">elif</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span>
+                <span class="n">up_level</span> <span class="o">=</span> <span class="n">L</span><span class="o">+</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span>
+                <span class="n">down_level</span> <span class="o">=</span> <span class="n">L</span><span class="o">-</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span>
+
+            <span class="n">U</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># Add edges at each up and down level</span>
+            <span class="c1"># try/except is to ignore entries without edges</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># up verts </span>
+                <span class="n">U</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">LevelEdges</span><span class="p">[</span><span class="n">up_level</span><span class="p">])</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># down verts</span>
+                <span class="n">U</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">LevelEdges</span><span class="p">[</span><span class="n">down_level</span><span class="p">])</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="c1"># Add these edges to the union find object</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">U</span><span class="p">:</span>
+                <span class="n">UF</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s1">&#39;V&#39;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">rowLabels</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">rowLabels</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">u</span> <span class="ow">and</span> <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">v</span><span class="p">)][</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">u</span><span class="p">)]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">UF</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="n">UF</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+                                <span class="c1"># print(f&quot;found {v} and {u}&quot;)</span>
+                                <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">v</span><span class="p">)][</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">u</span><span class="p">)]</span> <span class="o">=</span> <span class="n">k</span>
+                                <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">u</span><span class="p">)][</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">k</span>
+            <span class="k">elif</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">e</span> <span class="o">!=</span> <span class="n">f</span> <span class="ow">and</span> <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">UF</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">UF</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span> <span class="c1"># and UF.find(e[1]) == UF.find(f[1]):</span>
+                                <span class="c1"># print(f&quot;found {e} and {f}&quot;)</span>
+                                <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+                                <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+                
+            
+            <span class="c1"># Check if there are still any entries of -1 </span>
+            <span class="c1"># If there are none, no need to keep adding edges </span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">array</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">break</span>
+        
+        <span class="c1"># If there are still -1&#39;s, set them to np.inf</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">array</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">D</span><span class="o">.</span><span class="n">array</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+        <span class="k">return</span> <span class="n">D</span></div>
+
+    
+<div class="viewcode-block" id="MapperGraph.thickening_distance_matrix">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.thickening_distance_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">thickening_distance_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="s1">&#39;V&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the thickening distance matrix for the entire mapper graph. This is a labeled block matrix with rows and columns indexed by vertices, and entries given by the thickening distance between the two vertices.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s1">&#39;V&#39;</span><span class="p">:</span>
+            <span class="n">V_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_to_vertex_dict</span><span class="p">()</span>
+            <span class="n">DistMat</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">rows_dict</span><span class="o">=</span> <span class="n">V_dict</span><span class="p">,</span> <span class="n">cols_dict</span> <span class="o">=</span> <span class="n">V_dict</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span>
+            <span class="n">E_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_to_edge_dict</span><span class="p">()</span>
+            <span class="n">DistMat</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">rows_dict</span><span class="o">=</span> <span class="n">E_dict</span><span class="p">,</span> <span class="n">cols_dict</span> <span class="o">=</span> <span class="n">E_dict</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DistMat</span><span class="o">.</span><span class="n">get_all_block_indices</span><span class="p">():</span>
+            <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickening_distance_by_level</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">obj_type</span> <span class="o">=</span> <span class="n">obj_type</span><span class="p">)</span>
+            <span class="n">DistMat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">D</span>
+
+        <span class="k">return</span> <span class="n">DistMat</span></div>
 </div>
 
     

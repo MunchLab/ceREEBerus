@@ -6,8 +6,8 @@ import pandas as pd
 
 from warnings import warn
 
-from cereeberus.compute.merge import isMerge
-from cereeberus.compute.merge import computeMergeTree
+# from cereeberus.compute.merge import isMerge
+# from cereeberus.compute.merge import computeMergeTree
 
 class MergeTree(ReebGraph):
     """ 

@@ -12,3 +12,4 @@ This section is for adding example jupyter notebooks.  Please be patient with us
    embed_graph_basics.ipynb
    mapper_basics.ipynb
    example_graphs.ipynb
+   interleaving_basics.ipynb

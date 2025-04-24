@@ -134,19 +134,19 @@ class TestReebClass(unittest.TestCase):
 
     def test_remove_regular_vertx(self):
         # This test makes sure you can remove a node from a Reeb graph.
-        R = ex_rg.torus()
+        R = ex_rg.torus(multigraph = False)
 
         # Error if passing in a vertex that isn't already there
         self.assertRaises(ValueError, R.remove_regular_vertex, 'chicken')
 
         # Error if passing in a vertex but its not regular
-        self.assertRaises(ValueError, R.remove_regular_vertex, 0)
-        self.assertRaises(ValueError, R.remove_regular_vertex, 1)
+        self.assertRaises(ValueError, R.remove_regular_vertex, 'a')
+        self.assertRaises(ValueError, R.remove_regular_vertex, 'b')
 
         # Ok, now actually do it
         n = len(R.nodes)
         m = len(R.edges)
-        R.remove_regular_vertex(2)
+        R.remove_regular_vertex('e')
         S = {'nodes': n-1, 'edges': m-1}
         self.assertEqual(S, R.summary())
 
@@ -154,7 +154,7 @@ class TestReebClass(unittest.TestCase):
         self.check_reeb(R)
 
         # One more time with all the regular vertices
-        R = ex_rg.torus()
+        R = ex_rg.torus(multigraph = False)
         n = len(R.nodes)
         m = len(R.edges)
         R.remove_all_regular_vertices()
@@ -195,9 +195,39 @@ class TestReebClass(unittest.TestCase):
 
         # Example chosen so that we have vertices with value on the endpoints (we're assuming open interval so shouldn't be included)
         # We also have at least one edge that completely crosses the interval in question
-        H = R.slice( 2,6)
+        H = R.slice( 2,5)
 
         self.assertEqual(H.number_connected_components(),3 )
+
+        # Example chosen so that we have vertices with value on the endpoints (we're using closed interval so now these should be included)
+        H = R.slice( 2,5, type = 'closed')
+
+        self.assertEqual(H.number_connected_components(),2 )
+
+    def test_smoothing(self):
+        # This test makes sure you can smooth a Reeb graph.
+        R = ex_rg.juggling_man()
+
+        R_eps = R.smoothing(0.1)
+        self.assertIsInstance(R_eps, ReebGraph)
+        self.check_reeb(R_eps)
+
+        # This makes sure that the smoothing behaves with multiedges 
+        R = ex_rg.torus()
+        R_eps = R.smoothing(0.1)
+        # The Euler characteristic should be 0 for a small smoothing
+        self.assertEqual(len(R_eps.nodes) - len(R_eps.edges), 0)
+
+    def test_matrices(self):
+        # This test makes sure you can get the adjacency matrix and boundary matrix of a Reeb graph.
+        R = ex_rg.juggling_man()
+        A = R.adjacency_matrix()
+        self.assertEqual(A.shape, (len(R.nodes), len(R.nodes)))
+
+        B = R.boundary_matrix()
+        self.assertEqual(B.shape, (len(R.nodes), len(R.edges)))
+
+
 
 
        

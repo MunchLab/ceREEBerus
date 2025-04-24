@@ -16,7 +16,7 @@
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -77,14 +77,46 @@
 <span></span><span class="kn">from</span> <span class="nn">cereeberus</span> <span class="kn">import</span> <span class="n">ReebGraph</span>
 <span class="kn">from</span> <span class="nn">cereeberus.data</span> <span class="kn">import</span> <span class="n">ex_graphs</span>
 
+
+<div class="viewcode-block" id="line">
+<a class="viewcode-back" href="../../../modules/data/ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.line">[docs]</a>
+<span class="k">def</span> <span class="nf">line</span><span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the Reeb graph of a simple line as a ReebGraph class. The endpoints have function value a and b respectively.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        a, b (int): The function values for the two vertices in increasing order.</span>
+<span class="sd">        seed (int): Optional. The seed to use for the random number generator, which only controls the layout function.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ReebGraph: The Reeb graph of the line.</span>
+
+<span class="sd">        </span>
+<span class="sd">    .. figure:: ../../images/line.png</span>
+<span class="sd">        :figwidth: 400px</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">R</span></div>
+
+
 <div class="viewcode-block" id="torus">
 <a class="viewcode-back" href="../../../modules/data/ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.torus">[docs]</a>
-<span class="k">def</span> <span class="nf">torus</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">torus</span><span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">multigraph</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns the Reeb graph of a simple upright torus as a ReebGraph class. </span>
 
 <span class="sd">    Parameters:</span>
+<span class="sd">        a ,b, c, d (int): The function values for the four vertices in increasing order.</span>
+<span class="sd">        multigraph (bool): Optional. If False, then the loop edges will be subdivided so that the resulting graph doesn&#39;t have multiple edges between $b$ and $c$. Default is True.</span>
 <span class="sd">        seed (int): Optional. The seed to use for the random number generator, which only controls the layout function.</span>
+
 
 <span class="sd">    Returns:</span>
 <span class="sd">        ReebGraph: The Reeb graph of the torus.</span>
@@ -93,7 +125,23 @@
 <span class="sd">        :figwidth: 400px</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">ReebGraph</span><span class="p">(</span><span class="n">ex_graphs</span><span class="o">.</span><span class="n">torus_graph</span><span class="p">(),</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span></div>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">multigraph</span><span class="p">:</span>
+        <span class="n">R</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> 
+        <span class="n">R</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> 
+
+    <span class="n">R</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">R</span></div>
 
 
 <div class="viewcode-block" id="dancing_man">
@@ -163,6 +211,55 @@
 <span class="sd">        ReebGraph: The Reeb graph of the simple loops example.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">ReebGraph</span><span class="p">(</span><span class="n">ex_graphs</span><span class="o">.</span><span class="n">simple_loops_unordered</span><span class="p">(),</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="interleave_example_A">
+<a class="viewcode-back" href="../../../modules/data/ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.interleave_example_A">[docs]</a>
+<span class="k">def</span> <span class="nf">interleave_example_A</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the Reeb graph of the first example for the interleave function.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        seed (int): Optional. The seed to use for the random number generator, which only controls the layout function.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ReebGraph: The Reeb graph of the first example for the interleave function.</span>
+
+<span class="sd">    .. figure:: ../../images/interleave_example_A.png</span>
+<span class="sd">        :figwidth: 400px</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">dancing_man</span><span class="p">()</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="mi">2</span><span class="o">*</span><span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">R</span><span class="o">.</span><span class="n">nodes</span><span class="p">()}</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">R</span></div>
+
+
+<div class="viewcode-block" id="interleave_example_B">
+<a class="viewcode-back" href="../../../modules/data/ex_reebgraphs.html#cereeberus.data.ex_reebgraphs.interleave_example_B">[docs]</a>
+<span class="k">def</span> <span class="nf">interleave_example_B</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the Reeb graph of the second example for the interleave function.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        seed (int): Optional. The seed to use for the random number generator, which only controls the layout function.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ReebGraph: The Reeb graph of the second example for the interleave function.</span>
+<span class="sd">    </span>
+<span class="sd">    .. figure:: ../../images/interleave_example_B.png</span>
+<span class="sd">        :figwidth: 400px</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">interleave_example_A</span><span class="p">()</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">R</span></div>
 
 </pre></div>
 

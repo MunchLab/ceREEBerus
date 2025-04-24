@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2. Basic Tutorial: MergeTree class &mdash; ceREEBerus 0.1.0 documentation</title>
@@ -18,7 +18,7 @@
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../_static/documentation_options.js?v=01f34227"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -54,18 +54,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../modules/index.html">Modules and Documentation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial Notebooks</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="reeb_basics.html">1. Basic Tutorial: Reeb graph class</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">2. Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Old-stuff-down-here,-to-be-deleted....">2.1. Old stuff down here, to be deleted….</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#You-can-also-check-if-a-graph-is-a-merge-tree.">2.1.1. You can also check if a graph is a merge tree.</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:">2.1.2. To compute a merge tree from a Reeb Graph, we need to first identify any isolates in the graph (nodes with degree 0) and remove them as they will not be going into the merge tree. Looking at a Reeb graph with isolates:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Then-we-can-remove-isolates-and-plot">2.1.3. Then we can remove isolates and plot</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="embed_graph_basics.html">3. Basic Tutorial: Embedded graph class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mapper_basics.html">4. Basic tutorial: <code class="docutils literal notranslate"><span class="pre">MapperGraph</span></code> class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example_graphs.html">5. Example graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interleaving_basics.html">6. Basic tutorial: <code class="docutils literal notranslate"><span class="pre">Interleaving</span></code> class</a></li>
 </ul>
 </li>
 </ul>
@@ -440,122 +433,6 @@ The LCA of vertices 0 and 1 is vertex 6.
 </table>
 </div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<section id="Old-stuff-down-here,-to-be-deleted....">
-<h2><span class="section-number">2.1. </span>Old stuff down here, to be deleted….<a class="headerlink" href="#Old-stuff-down-here,-to-be-deleted...." title="Link to this heading"></a></h2>
-<p>You can also create random merge trees and plot them</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.data.randomMergeTrees</span> <span class="kn">import</span> <span class="n">randomMerge</span>
-<span class="kn">from</span> <span class="nn">cereeberus.reeb.merge</span> <span class="kn">import</span> <span class="n">mergeTree</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">randomMerge</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">M</span> <span class="o">=</span> <span class="n">mergeTree</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
-<span class="n">M</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<section id="You-can-also-check-if-a-graph-is-a-merge-tree.">
-<h3><span class="section-number">2.1.1. </span>You can also check if a graph is a merge tree.<a class="headerlink" href="#You-can-also-check-if-a-graph-is-a-merge-tree." title="Link to this heading"></a></h3>
-<p>This works for both Reeb graphs and Networkx graphs, and it part of the Merge function already</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute.merge</span> <span class="kn">import</span> <span class="n">isMerge</span>
-<span class="c1">### Reeb Graph</span>
-<span class="n">isMerge</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Networkx Graph</span>
-<span class="n">isMerge</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">,</span><span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</section>
-<section id="To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:">
-<h3><span class="section-number">2.1.2. </span>To compute a merge tree from a Reeb Graph, we need to first identify any isolates in the graph (nodes with degree 0) and remove them as they will not be going into the merge tree. Looking at a Reeb graph with isolates:<a class="headerlink" href="#To-compute-a-merge-tree-from-a-Reeb-Graph,-we-need-to-first-identify-any-isolates-in-the-graph-(nodes-with-degree-0)-and-remove-them-as-they-will-not-be-going-into-the-merge-tree.-Looking-at-a-Reeb-graph-with-isolates:" title="Link to this heading"></a></h3>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jm</span> <span class="o">=</span> <span class="n">reeb</span><span class="o">.</span><span class="n">juggling_man</span><span class="p">()</span>
-<span class="n">jm</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</section>
-<section id="Then-we-can-remove-isolates-and-plot">
-<h3><span class="section-number">2.1.3. </span>Then we can remove isolates and plot<a class="headerlink" href="#Then-we-can-remove-isolates-and-plot" title="Link to this heading"></a></h3>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jm_im</span> <span class="o">=</span> <span class="n">degree</span><span class="o">.</span><span class="n">remove_isolates</span><span class="p">(</span><span class="n">jm</span><span class="p">)</span>
-<span class="n">jm_im</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<p>We then import the <code class="docutils literal notranslate"><span class="pre">computemergetree</span></code> function, and provide a filtration.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute.merge</span> <span class="kn">import</span> <span class="n">computeMergeTree</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmt</span> <span class="o">=</span> <span class="n">computeMergeTree</span><span class="p">(</span><span class="n">jm_im</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">cmt</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
-<span class="n">cmt</span><span class="o">.</span><span class="n">fx</span>
-</pre></div>
-</div>
-</div>
-<p>We can also compute distances between networkx graphs, reeb graphs, and merge trees. The first example is the graph edit distance, compliments of the networkx package implementation.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cereeberus.compute</span> <span class="kn">import</span> <span class="n">distance</span>
-<span class="n">distance</span><span class="o">.</span><span class="n">edit</span><span class="p">(</span><span class="n">cmt</span><span class="p">,</span> <span class="n">jm_im</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</section>
-</section>
 </section>
 
 

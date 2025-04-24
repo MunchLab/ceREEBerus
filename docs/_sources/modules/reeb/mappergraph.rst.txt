@@ -1,5 +1,5 @@
 MapperGraph class
-================
+=================
 
 This is the mapper graph class which is inherited from the Reeb graph class.  The main differences are 
 
