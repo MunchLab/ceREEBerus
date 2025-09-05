@@ -148,6 +148,89 @@ class Interleave:
     
     def fit(self, pulp_solver = None, verbose= False, max_n_for_error = 100):
         """
+        Finds the smallest feasible n using exponential + binary search and stores the optimal assignment in self.assignment and the n in self.n.
+        
+        Parameters:
+            pulp_solver (pulp.LpSolver): 
+                solver to use for ILP. If None, the default solver is used.
+            verbose (bool, optional): 
+                If True, print the progress of the optimization. Defaults to False.
+            max_n_for_error (int, optional): 
+            The maximum value of `n` to search for. If the interleaving distance is not found by this value, a ValueError is raised. Defaults to 100. ####NOTE: this can be replaced by the bounding box.
+        
+        Returns:
+            int: smallest feasible n
+    """
+        
+        # Step 0: Check n = 0
+        myAssgn = Assignment(self.F, self.G, n=0)
+        prob_status = myAssgn.optimize(pulp_solver=pulp_solver)
+        
+        if verbose:
+            print(f"\n-\nTrying n = 0...")
+            print(f"n = 0, status = {prob_status}")
+        
+        if prob_status == 1:
+            self.n = 0
+            self.assignment = myAssgn
+            return self.n
+        
+        # Step 1: Exponential search for first feasible n
+        low, high  = 0, 1 # last infeasible, first candidate for feasible
+        found_feasible_n = False
+
+        while high <= max_n_for_error:
+            myAssgn = Assignment(self.F, self.G, n=high)
+            prob_status = myAssgn.optimize(pulp_solver=pulp_solver)
+
+            if verbose:
+                print(f"\n-\nTrying n = {high}...")
+                print(f"n = {high}, status = {prob_status}")
+
+            if prob_status == 1:
+                found_feasible_n = True
+                break
+            low, high = high, high * 2 # double n
+        else:
+            if not found_feasible_n:
+                raise ValueError(f"Interleaving distance not found for n <= {max_n_for_error}.")
+            
+
+        high = min(high, max_n_for_error)  # Clamp to max allowed
+
+        # Step 2: Binary search for smallest feasible n in [low+1, high]
+        best_n = high
+
+        while low <= high:
+            mid = (low + high) // 2
+            myAssgn = Assignment(self.F, self.G, n=mid)
+            prob_status = myAssgn.optimize(pulp_solver=pulp_solver)
+
+            if verbose:
+                print(f"\n-\nTrying n = {mid}...")
+                print(f"n = {mid}, status = {prob_status}")
+
+            if prob_status == 1:
+                best_n = mid
+                high = mid - 1 # try smaller n
+
+            else:
+                low = mid+1  # update to last infeasible n
+
+        # Step 3: Final validation
+        self.n = best_n
+        self.assignment = Assignment(self.F, self.G, n=self.n)
+        prob_status = self.assignment.optimize(pulp_solver=pulp_solver)
+
+        if prob_status != 1:
+            raise ValueError(f"Final fit object is not an interleaving. Status = {prob_status} for n = {self.n}.")
+        
+        return self.n
+
+
+
+    def fit_with_D(self, pulp_solver = None, verbose= False, max_n_for_error = 100):
+        """
         Compute the interleaving distance between the two Mapper graphs.
         
         Parameters:
@@ -1699,11 +1782,15 @@ class Assignment:
         Parameters:
             pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.
         Returns:
-            float : 
-                The loss value found by the ILP solver.
+            int or None:
+                Returns 1 if an optimal solution was found and None otherwise.
+            
         """
-        
-        map_dict, loss_val = solve_ilp(self, pulp_solver = pulp_solver)
+
+        map_dict, prob_status = solve_ilp(self, pulp_solver = pulp_solver)
+
+        if prob_status != 'Optimal':
+            return None
             
         self.phi_['0'] = {'V': map_dict['phi_0_V'], 'E': map_dict['phi_0_E']}
         self.phi_['n'] = {'V': map_dict['phi_n_V'], 'E': map_dict['phi_n_E']}
@@ -1711,7 +1798,7 @@ class Assignment:
         self.psi_['n'] = {'V': map_dict['psi_n_V'], 'E': map_dict['psi_n_E']}
         
         
-        return loss_val
+        return 1
     
 
     

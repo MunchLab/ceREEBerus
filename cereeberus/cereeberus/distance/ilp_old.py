@@ -3,7 +3,7 @@ from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
 # import cereeberus.data.ex_mappergraphs as ex_mg
 
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 import numpy as np
 
 import pulp #for ILP optimization
@@ -166,7 +166,9 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
                 aux_vars[block][starting_map][obj_type] = pulp.LpVariable('aux_'+starting_map+'_'+obj_type+'_'+str(block),  cat='Integer')
 
 
-                
+                    
+    # create the minmax variable
+    minmax_var = pulp.LpVariable('minmax_var', cat='Integer')
 
     
     # create the constraints
@@ -185,6 +187,7 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
                 
                #set the matrices
                 if up_or_down == 'up': #NOTE: the change in block indices
+                    dist_n_other = myAssgn.D(other_map, 'n', 'V')[block+1].get_array()
                     bou_n = myAssgn.B_up(other_map, 'n')[block].get_array()
                     bou_0 = myAssgn.B_up(starting_map, '0')[block].get_array()
                     if starting_map == 'F':
@@ -198,6 +201,7 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
                         map_V_vars = psi_vars[block+1]['0']['V']
                         map_E_vars = psi_vars[block]['0']['E']
                 else:
+                    dist_n_other = myAssgn.D(other_map, 'n', 'V')[block].get_array()
                     bou_n = myAssgn.B_down(other_map, 'n')[block].get_array()
                     bou_0 = myAssgn.B_down(starting_map, '0')[block].get_array()
                     if starting_map == 'F':
@@ -212,14 +216,13 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
                         map_E_vars = psi_vars[block]['0']['E']
 
                 # set the dimensions
-                shape_m_mix = map_V.shape[0]
+                shape_m_mix = dist_n_other.shape[0]
                 shape_n_mix = map_V.shape[1]
                 shape_o_mix = bou_n.shape[1]
                 shape_p_mix = map_E.shape[1]
 
                 # constraint 1: loss is bigger than the absolute value of each matrix elements
 
-                # changed below
                 for i in range(shape_m_mix):
                     for k in range(shape_p_mix):
                         # inner difference
@@ -227,12 +230,9 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
                         second_term = pulp.lpSum([bou_n[i][l] * map_E_vars[l,k] for l in range(shape_o_mix)])
 
                         # total expression
-                        mixed_expression = (first_term - second_term)
-
-                        prob += mixed_expression == 0
-
-                
-
+                        mixed_expression = pulp.lpSum(dist_n_other[i][h] * (first_term - second_term) for h in range(shape_m_mix))
+                        
+                        prob += minmax_var >= mixed_expression
 
                 # constraint 2: each column sums to 1
                 for j in range(shape_n_mix):
@@ -254,6 +254,11 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
                 inc_0_para = myAssgn.I(starting_map, '0', obj_type)[block].get_array()
                 inc_n_para = myAssgn.I(other_map, 'n', obj_type)[block].get_array()
 
+                # write dist matrix for easier reference.
+                # for triangles
+                dist_2n_starting = myAssgn.D(starting_map, '2n', obj_type)[block].get_array()
+                # for parallelograms
+                dist_2n_other = myAssgn.D(other_map, '2n', obj_type)[block].get_array()
                 
                 # set map matrices for easier reference
                 if starting_map == 'F':
@@ -265,27 +270,24 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
                     map_n_para_vars = psi_vars[block]['n'][obj_type]
 
                 # set the dimensions
-                shape_m_tri = i_n_i_0.shape[0] # for triangles
+                shape_m_tri = dist_2n_starting.shape[0] # for triangles
+                shape_m_para = dist_2n_other.shape[0] # for parallelograms
 
                 shape_o_para = myAssgn.I(other_map, 'n', obj_type)[block].get_array().shape[1] # for parallelograms
 
-                shape_n_para = myAssgn.I(starting_map, '0', obj_type)[block].get_array().shape[0] # for parallelograms
 
                 if starting_map == 'F':
                     shape_n_tri = myAssgn.psi('n', obj_type)[block].get_array().shape[1] # for triangles
                     shape_o_tri = myAssgn.phi('0', obj_type)[block].get_array().shape[1] # for triangles
 
-                    # changed shape_n_para = myAssgn.phi('n', obj_type)[block].get_array().shape[1] # for parallelograms
+                    shape_n_para = myAssgn.phi('n', obj_type)[block].get_array().shape[1] # for parallelograms
                     
-                    shape_m_para = myAssgn.phi('n', obj_type)[block].get_array().shape[0] # for parallelograms
                     shape_p_para = myAssgn.phi('0', obj_type)[block].get_array().shape[1] # for parallelograms
                 else:
                     shape_n_tri = myAssgn.phi('n', obj_type)[block].get_array().shape[1] # for triangles
                     shape_o_tri = myAssgn.psi('0', obj_type)[block].get_array().shape[1] # for triangles
 
-                    # changed shape_n_para = myAssgn.psi('n', obj_type)[block].get_array().shape[1] # for parallelograms
-
-                    shape_m_para = myAssgn.psi('n', obj_type)[block].get_array().shape[0] # for parallelograms
+                    shape_n_para = myAssgn.psi('n', obj_type)[block].get_array().shape[1] # for parallelograms
                     shape_p_para = myAssgn.psi('0', obj_type)[block].get_array().shape[1] # for parallelograms
 
 
@@ -295,24 +297,17 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
                 #  constraint 1: loss is bigger than the absolute value of each matrix elements
             
                 # for triangles
-                
-                # changed below
                 for  h in range(shape_m_tri):                    
 
-                    tri_expression = pulp.lpSum( (i_n_i_0[h,k] - map_product_vars[block][starting_map][obj_type][h,k]) for k in range(shape_o_tri))
+                    tri_expression = pulp.lpSum(dist_2n_starting[i,h] * (i_n_i_0[h,k] - map_product_vars[block][starting_map][obj_type][h,k]) for i in range(shape_m_tri) for k in range(shape_o_tri))
 
+                    prob += aux_vars[block][starting_map][obj_type] * 2 >= tri_expression # ceiling of half of the expression
 
-                    # prob += aux_vars[block][starting_map][obj_type] * 2 >= tri_expression # ceiling of half of the expression
-
-
-                    prob += tri_expression == 0
-
+                    prob += minmax_var >= aux_vars[block][starting_map][obj_type]
 
 
 
                 # for parallelograms
-    
-                # changed below
                 for i in range(shape_m_para):
                     for k in range(shape_p_para):
                         # inner difference
@@ -321,9 +316,9 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
 
 
                             # total expression
-                            para_expression = first_term - second_term
+                            para_expression = pulp.lpSum(dist_2n_other[i][h] * (first_term - second_term) for h in range(shape_m_para))
 
-                            prob += para_expression == 0
+                            prob += minmax_var >= para_expression
 
 
                 # constraint 2: map_multiplication and z relation. This is for triangles
@@ -376,7 +371,7 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
 
     
     # Set the objective function
-    prob += 0
+    prob += minmax_var
 
     # solve the problem
     if pulp_solver == 'GUROBI':   
@@ -387,8 +382,8 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
     
     # prob.solve(pulp.GUROBI_CMD(msg=0))
     if prob.status != 1:
-        return prob.status
-    
+        raise ValueError("The ILP optimization did not converge. Please check the input data and try again.")
+
     # create a dictionary to store the results
     map_results = {'phi_vars': phi_vars, 'psi_vars': psi_vars}
 
@@ -396,9 +391,14 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
     final_maps = build_map_matrices(myAssgn, map_results)
         
     if verbose:
+        print(f"The optimized loss is: {pulp.value(minmax_var)}")
         print("Status:", pulp.LpStatus[prob.status])
-        # prob.writeLP("model.lp")  # Write the model in LP format
+        prob.writeLP("model.lp")  # Write the model in LP format
     
-   
+    # if get_thickened_maps:
+    #     final_maps = build_map_matrices(myAssgn, map_results, thickening = 'n')
+
+    #     return final_maps, pulp.value(minmax_var)
+
     # return results
-    return final_maps, prob.status
+    return final_maps, pulp.value(minmax_var)
