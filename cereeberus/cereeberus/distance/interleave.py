@@ -7,8 +7,7 @@ from matplotlib import pyplot as plt
 from ..compute.unionfind import UnionFind
 from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
-from .ilp import solve_ilp
-from .ilp_old import solve_ilp_old
+from .ilp import solve_ilp, solve_ilp_dist
 from ..compute.utils import HiddenPrints
 import sys, os
 
@@ -36,116 +35,7 @@ class Interleave:
         self.n = np.inf
         self.assignment = None
         
-    # def old_fit(self, pulp_solver = None, verbose = False, max_n_for_error = 100, 
-    #         ):
-    #     """
-    #     Compute the interleaving distance between the two Mapper graphs.
-        
-    #     Parameters:
-    #         pulp_solver (pulp.LpSolver): 
-    #             The solver to use for the ILP optimization. If None, the default solver is used.
-    #         verbose (bool, optional): 
-    #             If True, print the progress of the optimization. Defaults to False.
-    #         max_n_for_error (int, optional): 
-    #             The maximum value of `n` to search for. If the interleaving distance is not found by this value, a ValueError is raised. Defaults to 100.
-    #         printOptimizerOutput (bool, optional):
-    #             If True, the output of the PULP optimizer is printed. Defaults to False.
-        
-    #     Returns:
-    #         Interleave : 
-    #             The Interleave object with the computed interleaving distance.
-    #     """
-    #     # -- Search through possible n values to find the smallest one that still allows for interleaving
-        
-    #     # -- Dictionary to store the search data 
-    #     # -- This will store the Loss for each value of n so we don't 
-    #     # -- have to recompute it each time. 
-    #     # -- The distance bound can be determined by search_data[key] = Loss implies d_I <= key + Loss
-    #     search_data = {} 
-        
-    #     # -- Set the initial value of the distance bound to be infinity
-    #     distance_bound = np.inf
 
-    #     # -- Do an expoential search for the smallest n that allows for interleaving
-    #     # -- Start with n = 1 and double it until the Loss is less than or equal to 0
-    #     N = 1 
-    #     found_max = False
-            
-    #     while not found_max:
-    #         # -- Compute the assignment for the current value of n
-    #         # -- If the Loss is less than or equal to 0, we have found a valid n
-    #         # -- Otherwise, double n and try again
-
-    #         try:
-    #             if verbose: 
-    #                 print(f"\n-\nTrying n = {N}...")
-    #             myAssgn = Assignment(self.F, self.G, n = N)
-                
-    #             Loss = myAssgn.optimize()
-    #             search_data[N] = Loss
-                
-    #             if verbose: 
-    #                 print(f"n = {N}, Loss = {Loss}, distance_bound = {N + Loss}")
-                
-    #         except ValueError as e:
-    #             # -- If we get a ValueError, it means the current n is too small
-    #             # -- So we double n and try again
-    #             search_data[N] = np.inf
-    #             N *= 2
-    #             continue
-            
-    #         if Loss <= 0:
-    #             # -- If the Loss is less than or equal to 0, we have found a valid n
-    #             max_N = N
-    #             found_max = True
-    #             if verbose:
-    #                 print(f"Found valid maximum n = {N} with Loss = {Loss}. Moving on to binary search.")
-    #         else:
-    #             # -- If the Loss is greater than 0, we need to try a larger n
-    #             N *= 2
-                
-    #         if N > max_n_for_error:
-    #             # -- If we have exceeded the maximum value of n, raise an error. Useful while we're checking this while loop
-    #             raise ValueError(f"Interleaving distance not found for n <= {max_n_for_error}.")
-                
-            
-
-    #     # now binary search in [0, max_N] to find the smallest n that gives a loss of 0
-        
-    #     # -- Set the initial values for the binary search
-    #     low = 1
-    #     high = max_N
-    #     while low < high:
-    #         mid = (low + high) // 2
-            
-    #         try:
-    #             myAssgn = Assignment(self.F, self.G, n = mid)
-    #             Loss = myAssgn.optimize()
-    #             search_data[mid] = Loss
-    #         except ValueError as e:
-    #             # -- If we get a ValueError, it means the current n is too small
-    #             search_data[mid] = np.inf
-    #             low = mid + 1
-    #             continue
-            
-    #         if Loss <= 0:
-    #             # -- If the Loss is less than or equal to 0, we have found a valid n
-    #             high = mid
-    #         else:
-    #             low = mid + 1
-                
-    #     # -- Set the final value of n to be the smallest one that gives a loss of 0
-    #     self.n = low
-    #     # -- Set the assignment to be the one that minimizes the interleaving distance
-    #     self.assignment = Assignment(self.F, self.G, n = self.n)
-    #     Loss = self.assignment.optimize(pulp_solver = pulp_solver,)
-        
-        
-    #     # Raise error if the loss isn't 0 
-    #     if Loss > 0:
-    #         raise ValueError(f"Final fit object is not an interleaving. Loss = {Loss}. N = {self.n}.")
-        
-    #     return self.n
     
     def fit(self, pulp_solver = None, verbose= False, max_n_for_error = 100):
         """
@@ -162,31 +52,50 @@ class Interleave:
         Returns:
             int: smallest feasible n
     """
-        
-        # Step 0: Check n = 0
-        myAssgn = Assignment(self.F, self.G, n=0)
-        prob_status = myAssgn.optimize(pulp_solver=pulp_solver)
-        
+        # catch the results to avoid recomputation
+        checked_results = {}
+
+
+        # Step 0: Check for smallest possible n (n=0 when they both have same function ranges)
+
+        min_n = max(abs(self.F.min_f()-self.G.min_f()), abs(self.F.max_f()-self.G.max_f()))
+
+
+        if min_n not in checked_results:
+            myAssgn = Assignment(self.F, self.G, n=min_n)
+            prob_status = myAssgn.optimize(pulp_solver=pulp_solver)
+
+            checked_results[min_n] = (prob_status, myAssgn)
+
+        prob_status, myAssgn = checked_results[min_n]
         if verbose:
-            print(f"\n-\nTrying n = 0...")
-            print(f"n = 0, status = {prob_status}")
+            print(f"\n-\nTrying n = {min_n}...")
+            print(f"n = {min_n}, status = {prob_status}")
+
+        
         
         if prob_status == 1:
-            self.n = 0
+            self.n = min_n
             self.assignment = myAssgn
             return self.n
         
         # Step 1: Exponential search for first feasible n
-        low, high  = 0, 1 # last infeasible, first candidate for feasible
+        low, high  = min_n, min_n+1
         found_feasible_n = False
 
         while high <= max_n_for_error:
-            myAssgn = Assignment(self.F, self.G, n=high)
-            prob_status = myAssgn.optimize(pulp_solver=pulp_solver)
+            if high not in checked_results:
+                myAssgn = Assignment(self.F, self.G, n=high)
+                prob_status = myAssgn.optimize(pulp_solver=pulp_solver)
+                checked_results[high] = (prob_status, myAssgn)
+
+            prob_status, myAssgn = checked_results[high]
 
             if verbose:
                 print(f"\n-\nTrying n = {high}...")
                 print(f"n = {high}, status = {prob_status}")
+            
+            
 
             if prob_status == 1:
                 found_feasible_n = True
@@ -204,13 +113,18 @@ class Interleave:
 
         while low <= high:
             mid = (low + high) // 2
-            myAssgn = Assignment(self.F, self.G, n=mid)
-            prob_status = myAssgn.optimize(pulp_solver=pulp_solver)
+            if mid not in checked_results:
+                myAssgn = Assignment(self.F, self.G, n=mid)
+                prob_status = myAssgn.optimize(pulp_solver=pulp_solver)
+                checked_results[mid] = (prob_status, myAssgn)
+
+            prob_status, myAssgn = checked_results[mid]
 
             if verbose:
                 print(f"\n-\nTrying n = {mid}...")
                 print(f"n = {mid}, status = {prob_status}")
 
+            
             if prob_status == 1:
                 best_n = mid
                 high = mid - 1 # try smaller n
@@ -220,8 +134,8 @@ class Interleave:
 
         # Step 3: Final validation
         self.n = best_n
-        self.assignment = Assignment(self.F, self.G, n=self.n)
-        prob_status = self.assignment.optimize(pulp_solver=pulp_solver)
+        prob_status, myAssgn = checked_results[self.n]
+        self.assignment = myAssgn
 
         if prob_status != 1:
             raise ValueError(f"Final fit object is not an interleaving. Status = {prob_status} for n = {self.n}.")
@@ -247,9 +161,16 @@ class Interleave:
                 The interleaving distance, that is, the smallest n for which loss is zero.
         """
 
+        # catch the results to avoid recomputation
+        checked_results = {}
+
         # step 0: search for n=0 
-        myAssgn = Assignment(self.F, self.G, n = 0)
-        Loss = myAssgn.dist_optimize(pulp_solver = pulp_solver)
+        if 0 not in checked_results:
+            myAssgn = Assignment(self.F, self.G, n = 0)
+            Loss = myAssgn.dist_optimize(pulp_solver = pulp_solver)
+            checked_results[0] = (Loss, myAssgn)
+        Loss, myAssgn = checked_results[0]
+
         if verbose:
             print(f"\n-\nTrying n = 0...")
             print(f"n = 0, Loss = {Loss}, distance_bound = {0 + Loss}")
@@ -266,8 +187,12 @@ class Interleave:
 
         while high <= max_n_for_error:
             try:
-                myAssgn = Assignment(self.F, self.G, n = high)
-                Loss = myAssgn.dist_optimize(pulp_solver = pulp_solver)
+                if high not in checked_results:
+                    myAssgn = Assignment(self.F, self.G, n = high)
+                    Loss = myAssgn.dist_optimize(pulp_solver = pulp_solver)
+                    checked_results[high] = (Loss, myAssgn)
+
+                Loss, myAssgn = checked_results[high]
 
                 if verbose:
                     print(f"\n-\nTrying n = {high}...")
@@ -292,8 +217,12 @@ class Interleave:
         while low <= high:
             mid = (low + high) // 2 
             try:
-                myAssgn = Assignment(self.F, self.G, n = mid)
-                Loss = myAssgn.dist_optimize(pulp_solver = pulp_solver)
+                if mid not in checked_results:
+                    myAssgn = Assignment(self.F, self.G, n = mid)
+                    Loss = myAssgn.dist_optimize(pulp_solver = pulp_solver)
+                    checked_results[mid] = (Loss, myAssgn)
+
+                Loss, myAssgn = checked_results[mid]
 
                 if verbose:
                     print(f"\n-\nTrying n = {mid}...")
@@ -309,11 +238,10 @@ class Interleave:
         
         # validate the final solution
         self.n = best_n
-        self.assignment = Assignment(self.F, self.G, n = self.n)
-        final_loss = self.assignment.dist_optimize(pulp_solver = pulp_solver)
-        if final_loss != 0:
-            raise ValueError(f"Unexpected non-zero loss (Loss={final_loss}) for n={self.n}")
-        
+        Loss, myAssgn = checked_results[self.n]
+        if Loss != 0:
+            raise ValueError(f"Unexpected non-zero loss (Loss={Loss}) for n={self.n}")
+        self.assignment = myAssgn
         return self.n
             
     
@@ -543,7 +471,7 @@ class Assignment:
         # End making smoothings and induced maps
         # ----
         # ---
-        # Build boundary matrices 
+        # # Build boundary matrices 
 
         # for Graph, graph_name in [(self.F, 'F'), (self.G, 'G')]:
         #     for key in ['0', 'n']: # Note, we don't need to do this for 2n because the matrices are never used.
@@ -575,7 +503,7 @@ class Assignment:
         #         self.B_down_[graph_name][key] = B_down
         #         self.B_up_[graph_name][key] = B_up
 
-        # End boundary matrices
+        # # End boundary matrices
         # ---
 
         # ---
@@ -668,19 +596,15 @@ class Assignment:
                 for key in ['0', 'n']: # Note, we don't need to do this for 2n because the matrices are never used.
 
                     B_down = LBM()
-                    # B_up = LBM()
 
                     for i in self.val_to_verts[graph_name][key]:
                         if i in self.val_to_edges[graph_name][key]:
                             edges = self.val_to_edges[graph_name][key][i]
                             verts_down = self.val_to_verts[graph_name][key][i]
-                            # verts_up = self.val_to_verts[graph_name][key][i+1]
                             B_down[i] = LM(rows = verts_down, cols = edges)
-                            # B_up[i] = LM(rows = verts_up, cols = edges)
 
                             for e in edges:
                                 B_down[i][e[0],e] = 1
-                                # B_up[i][e[1],e] = 1
 
                     min_i = min(list(self.val_to_verts[graph_name][key].keys()))
                     max_i = max(list(self.val_to_verts[graph_name][key].keys()))
@@ -1145,6 +1069,10 @@ class Assignment:
         self.G('2n').draw(ax = axs[1,2], **kwargs)
         axs[1,2].set_title(r'$G_{2n}$')
 
+        # turn on grid for all axes
+        for ax in axs.flatten():
+            ax.grid(True)
+
         return fig, axs
 
     def draw_I(self, graph = 'F', key = '0', obj_type = 'V', ax = None, **kwargs):
@@ -1511,6 +1439,7 @@ class Assignment:
             Result_Dist = self.D(end_graph, 'n', 'V') @ Result
         else: 
             if up_or_down == 'down': # tau_i \to \sigma_i
+
                 Top = self.get_interleaving_map(maptype, '0', 'V')[func_val] @ self.B_down(start_graph, '0')[func_val]
                 Bottom = self.B_down(end_graph, 'n')[func_val] @ self.get_interleaving_map(maptype, '0', 'E')[func_val]
                 Result = Top - Bottom
@@ -1907,7 +1836,7 @@ class Assignment:
             
         """
 
-        map_dict, loss_val = solve_ilp_old(self, pulp_solver = pulp_solver)
+        map_dict, loss_val = solve_ilp_dist(self, pulp_solver = pulp_solver)
             
         self.phi_['0'] = {'V': map_dict['phi_0_V'], 'E': map_dict['phi_0_E']}
         self.phi_['n'] = {'V': map_dict['phi_n_V'], 'E': map_dict['phi_n_E']}
