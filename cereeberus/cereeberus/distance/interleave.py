@@ -164,16 +164,19 @@ class Interleave:
         # catch the results to avoid recomputation
         checked_results = {}
 
-        # step 0: search for n=0 
-        if 0 not in checked_results:
-            myAssgn = Assignment(self.F, self.G, n = 0)
+        # Step 0: Check for smallest possible n (n=0 when they both have same function ranges)
+        min_n = max(abs(self.F.min_f()-self.G.min_f()), abs(self.F.max_f()-self.G.max_f())) # minimum possible n based on function ranges
+
+
+        if min_n not in checked_results:
+            myAssgn = Assignment(self.F, self.G, n = min_n)
             Loss = myAssgn.dist_optimize(pulp_solver = pulp_solver)
-            checked_results[0] = (Loss, myAssgn)
-        Loss, myAssgn = checked_results[0]
+            checked_results[min_n] = (Loss, myAssgn)
+        Loss, myAssgn = checked_results[min_n]
 
         if verbose:
-            print(f"\n-\nTrying n = 0...")
-            print(f"n = 0, Loss = {Loss}, distance_bound = {0 + Loss}")
+            print(f"\n-\nTrying n = {min_n}...")
+            print(f"n = {min_n}, Loss = {Loss}, distance_bound = {min_n + Loss}")
 
         # if loss is 0, we're done
         if Loss == 0:
@@ -182,7 +185,7 @@ class Interleave:
             return self.n
         
         # step 1: exponential search for the upperbound
-        low, high = 1, 1
+        low, high = min_n, min_n+1
         found_valid_n = False
 
         while high <= max_n_for_error:
