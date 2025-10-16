@@ -180,7 +180,7 @@ class Interleave:
 
         # if loss is 0, we're done
         if Loss == 0:
-            self.n = 0
+            self.n = min_n
             self.assignment = myAssgn
             return self.n
         
@@ -395,10 +395,10 @@ class Assignment:
         # ---
         # Containers for matrices for later 
 
-        # self.B_down_ = {'F':{}, 'G':{}} # boundary matrix
-        self._B_down = None # don't build the boundary matrices unless needed
-        # self.B_up_ = {'F':{}, 'G':{}} # boundary matrix
-        self._B_up = None # don't build the boundary matrices unless needed
+        self.B_down_ = {'F':{}, 'G':{}} # boundary matrix
+        # self._B_down = None # don't build the boundary matrices unless needed
+        self.B_up_ = {'F':{}, 'G':{}} # boundary matrix
+        # self._B_up = None # don't build the boundary matrices unless needed
         # self.D_ = {'F':{}, 'G':{}} # distance matrix
         self._D = None # don't build the distance matrices unless needed
         self.I_ = {'F':{}, 'G':{}} # induced maps
@@ -474,39 +474,39 @@ class Assignment:
         # End making smoothings and induced maps
         # ----
         # ---
-        # # Build boundary matrices 
+        # Build boundary matrices 
 
-        # for Graph, graph_name in [(self.F, 'F'), (self.G, 'G')]:
-        #     for key in ['0', 'n']: # Note, we don't need to do this for 2n because the matrices are never used.
+        for Graph, graph_name in [(self.F, 'F'), (self.G, 'G')]:
+            for key in ['0', 'n']: # Note, we don't need to do this for 2n because the matrices are never used.
 
-        #         B_down = LBM()
-        #         B_up = LBM()
+                B_down = LBM()
+                B_up = LBM()
 
-        #         for i in self.val_to_verts[graph_name][key]:
-        #             if i in self.val_to_edges[graph_name][key]:
-        #                 edges = self.val_to_edges[graph_name][key][i]
-        #                 verts_down = self.val_to_verts[graph_name][key][i]
-        #                 verts_up = self.val_to_verts[graph_name][key][i+1]
-        #                 B_down[i] = LM(rows = verts_down, cols = edges)
-        #                 B_up[i] = LM(rows = verts_up, cols = edges)
+                for i in self.val_to_verts[graph_name][key]:
+                    if i in self.val_to_edges[graph_name][key]:
+                        edges = self.val_to_edges[graph_name][key][i]
+                        verts_down = self.val_to_verts[graph_name][key][i]
+                        verts_up = self.val_to_verts[graph_name][key][i+1]
+                        B_down[i] = LM(rows = verts_down, cols = edges)
+                        B_up[i] = LM(rows = verts_up, cols = edges)
 
-        #                 for e in edges:
-        #                     B_down[i][e[0],e] = 1
-        #                     B_up[i][e[1],e] = 1
+                        for e in edges:
+                            B_down[i][e[0],e] = 1
+                            B_up[i][e[1],e] = 1
 
-        #         min_i = min(list(self.val_to_verts[graph_name][key].keys()))
-        #         max_i = max(list(self.val_to_verts[graph_name][key].keys()))
+                min_i = min(list(self.val_to_verts[graph_name][key].keys()))
+                max_i = max(list(self.val_to_verts[graph_name][key].keys()))
 
-        #         min_verts = self.val_to_verts[graph_name][key][min_i]
-        #         max_verts = self.val_to_verts[graph_name][key][max_i]
+                min_verts = self.val_to_verts[graph_name][key][min_i]
+                max_verts = self.val_to_verts[graph_name][key][max_i]
 
-        #         B_up[min_i-1] = LM(rows = min_verts, cols = [])
-        #         B_down[max_i] = LM(rows = max_verts, cols = [])
+                B_up[min_i-1] = LM(rows = min_verts, cols = [])
+                B_down[max_i] = LM(rows = max_verts, cols = [])
 
-        #         self.B_down_[graph_name][key] = B_down
-        #         self.B_up_[graph_name][key] = B_up
+                self.B_down_[graph_name][key] = B_down
+                self.B_up_[graph_name][key] = B_up
 
-        # # End boundary matrices
+        # End boundary matrices
         # ---
 
         # ---
@@ -591,71 +591,71 @@ class Assignment:
     # Properties
     ### ----------------
 
-    @property
-    def B_down_(self):
-        if self._B_down is None:
-            self._B_down = {'F':{}, 'G':{}}
-            for (Graph, graph_name) in [(self.F_,'F'), (self.G_,'G')]:
-                for key in ['0', 'n']: # Note, we don't need to do this for 2n because the matrices are never used.
+    # @property
+    # def B_down_(self):
+    #     if self._B_down is None:
+    #         self._B_down = {'F':{}, 'G':{}}
+    #         for (Graph, graph_name) in [(self.F_,'F'), (self.G_,'G')]:
+    #             for key in ['0', 'n']: # Note, we don't need to do this for 2n because the matrices are never used.
 
-                    B_down = LBM()
+    #                 B_down = LBM()
 
-                    for i in self.val_to_verts[graph_name][key]:
-                        if i in self.val_to_edges[graph_name][key]:
-                            edges = self.val_to_edges[graph_name][key][i]
-                            verts_down = self.val_to_verts[graph_name][key][i]
-                            B_down[i] = LM(rows = verts_down, cols = edges)
+    #                 for i in self.val_to_verts[graph_name][key]:
+    #                     if i in self.val_to_edges[graph_name][key]:
+    #                         edges = self.val_to_edges[graph_name][key][i]
+    #                         verts_down = self.val_to_verts[graph_name][key][i]
+    #                         B_down[i] = LM(rows = verts_down, cols = edges)
 
-                            for e in edges:
-                                B_down[i][e[0],e] = 1
+    #                         for e in edges:
+    #                             B_down[i][e[0],e] = 1
 
-                    min_i = min(list(self.val_to_verts[graph_name][key].keys()))
-                    max_i = max(list(self.val_to_verts[graph_name][key].keys()))
+    #                 min_i = min(list(self.val_to_verts[graph_name][key].keys()))
+    #                 max_i = max(list(self.val_to_verts[graph_name][key].keys()))
 
-                    min_verts = self.val_to_verts[graph_name][key][min_i]
-                    max_verts = self.val_to_verts[graph_name][key][max_i]
+    #                 min_verts = self.val_to_verts[graph_name][key][min_i]
+    #                 max_verts = self.val_to_verts[graph_name][key][max_i]
 
-                    B_down[min_i-1] = LM(rows = min_verts, cols = [])
-                    B_down[max_i] = LM(rows = max_verts, cols = [])
+    #                 B_down[min_i-1] = LM(rows = min_verts, cols = [])
+    #                 B_down[max_i] = LM(rows = max_verts, cols = [])
 
-                    self._B_down[graph_name][key] = B_down
-                    # self.B_up_[graph_name][key] = B_up
-        return self._B_down
+    #                 self._B_down[graph_name][key] = B_down
+    #                 # self.B_up_[graph_name][key] = B_up
+    #     return self._B_down
     
-    @property
-    def B_up_(self):
-        if self._B_up is None:
-            self._B_up = {'F':{}, 'G':{}}
-            for (Graph, graph_name) in [(self.F_,'F'), (self.G_,'G')]:
-                for key in ['0', 'n']: # Note, we don't need to do this for 2n because the matrices are never used.
+    # @property
+    # def B_up_(self):
+    #     if self._B_up is None:
+    #         self._B_up = {'F':{}, 'G':{}}
+    #         for (Graph, graph_name) in [(self.F_,'F'), (self.G_,'G')]:
+    #             for key in ['0', 'n']: # Note, we don't need to do this for 2n because the matrices are never used.
 
-                    # B_down = LBM()
-                    B_up = LBM()
+    #                 # B_down = LBM()
+    #                 B_up = LBM()
 
-                    for i in self.val_to_verts[graph_name][key]:
-                        if i in self.val_to_edges[graph_name][key]:
-                            edges = self.val_to_edges[graph_name][key][i]
-                            # verts_down = self.val_to_verts[graph_name][key][i]
-                            verts_up = self.val_to_verts[graph_name][key][i+1]
-                            # B_down[i] = LM(rows = verts_down, cols = edges)
-                            B_up[i] = LM(rows = verts_up, cols = edges)
+    #                 for i in self.val_to_verts[graph_name][key]:
+    #                     if i in self.val_to_edges[graph_name][key]:
+    #                         edges = self.val_to_edges[graph_name][key][i]
+    #                         # verts_down = self.val_to_verts[graph_name][key][i]
+    #                         verts_up = self.val_to_verts[graph_name][key][i+1]
+    #                         # B_down[i] = LM(rows = verts_down, cols = edges)
+    #                         B_up[i] = LM(rows = verts_up, cols = edges)
 
-                            for e in edges:
-                                # B_down[i][e[0],e] = 1
-                                B_up[i][e[1],e] = 1
+    #                         for e in edges:
+    #                             # B_down[i][e[0],e] = 1
+    #                             B_up[i][e[1],e] = 1
 
-                    min_i = min(list(self.val_to_verts[graph_name][key].keys()))
-                    max_i = max(list(self.val_to_verts[graph_name][key].keys()))
+    #                 min_i = min(list(self.val_to_verts[graph_name][key].keys()))
+    #                 max_i = max(list(self.val_to_verts[graph_name][key].keys()))
 
-                    min_verts = self.val_to_verts[graph_name][key][min_i]
-                    max_verts = self.val_to_verts[graph_name][key][max_i]
+    #                 min_verts = self.val_to_verts[graph_name][key][min_i]
+    #                 max_verts = self.val_to_verts[graph_name][key][max_i]
 
-                    B_up[min_i-1] = LM(rows = min_verts, cols = [])
-                    B_up[max_i] = LM(rows = max_verts, cols = [])
+    #                 B_up[min_i-1] = LM(rows = min_verts, cols = [])
+    #                 B_up[max_i] = LM(rows = max_verts, cols = [])
 
-                    # self.B_down_[graph_name][key] = B_down
-                    self._B_up[graph_name][key] = B_up
-        return self._B_up
+    #                 # self.B_down_[graph_name][key] = B_down
+    #                 self._B_up[graph_name][key] = B_up
+    #     return self._B_up
 
     @property
     def D_(self):
@@ -1786,7 +1786,7 @@ class Assignment:
         return max(loss_list)
 
 
-    def all_func_vals(self):
+    def all_func_vals(self, map = None):
         """
         Get all the function values that are in the graphs. 
 
@@ -1794,12 +1794,16 @@ class Assignment:
             list : 
                 A list of all the function values.
         """
+        if map == 'F':
+            return self.F().get_function_values()
+        elif map == 'G':
+            return self.G().get_function_values()
+        else:
+            all_func_vals = set(self.F().get_function_values()) | set(self.G().get_function_values()) 
+            all_func_vals = list(all_func_vals)
+            all_func_vals.sort()
 
-        all_func_vals = set(self.F().get_function_values()) | set(self.G().get_function_values()) 
-        all_func_vals = list(all_func_vals)
-        all_func_vals.sort()
-
-        return all_func_vals
+            return all_func_vals
     
     def optimize(self, pulp_solver = None):
         """Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.

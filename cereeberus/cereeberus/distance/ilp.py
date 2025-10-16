@@ -152,6 +152,8 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
     # create the constraints
     for block in func_vals:
         for starting_map in ['F', 'G']:
+            if block not in myAssgn.all_func_vals(map=starting_map): # If the block is not in the starting map, skip it. This is to account for the graphs with different function values
+                continue
             # set the other map based on starting map 
             if starting_map == 'F':
                 other_map = 'G'
@@ -160,7 +162,7 @@ def solve_ilp(myAssgn, pulp_solver = None, verbose=False):
 
             for up_or_down in ['up', 'down']: # deals with 1 (up, down) and 2 (up, down)
                 
-                if block == func_vals[-1]: # skip the last block for this type of diagrams
+                if block == myAssgn.all_func_vals(map=starting_map)[-1]: # skip the last block for this type of diagrams
                     continue
                 
                #set the matrices
