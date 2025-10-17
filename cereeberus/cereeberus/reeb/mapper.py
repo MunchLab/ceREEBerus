@@ -361,6 +361,18 @@ class MapperGraph(ReebGraph):
 
     #Does the Mapper Algorithm in order
     def runmapper(pointcloud, lensfunction, cover, clusteralgorithm):
+        """
+        Computes the Mapper Alogirthm
+
+        Parameters:
+            A pointcloud (as a list)
+            A lens function (as a string)
+            A cover (as a list of intervals)
+            A clustering algorithm (as a callable)
+
+        Returns:
+            A MapperGraph object as given by the Mapper Algorithm run on the parameters
+        """
         lensfunctionoutput = MapperGraph.__runlensfunction(lensfunction, pointcloud)
         coveringsets = MapperGraph.__createcoveringsets(lensfunctionoutput, cover)
         clusterpoints = MapperGraph.__cluster(coveringsets, clusteralgorithm)
@@ -369,13 +381,17 @@ class MapperGraph(ReebGraph):
 
 
     #function to create covers
-    def cover(lowestpoint, spacing, overlap, count):
-        output = list()
-        iteration = 0
-        while iteration < count:
-            output.append(((lowestpoint + (iteration*(spacing-overlap)),((lowestpoint + (iteration*(spacing-overlap)) + spacing)))))
-            iteration = iteration + 1
+    #cover(min, max, #covers, %overlap)
+    def cover(min, max, numcovers, percentoverlap):
+        output = []
+        val = 0
+        coversize = (max - min)/numcovers * (1+(percentoverlap/100))
+        while val < numcovers:
+            center = (min*(numcovers-(val+0.5)) + max*(val+0.5))/numcovers
+            output.append(((-0.5*coversize) + center, (0.5*coversize) + center))
+            val += 1
         return output
+        
 
 
 
