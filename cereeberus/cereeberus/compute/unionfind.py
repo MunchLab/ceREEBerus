@@ -1,6 +1,8 @@
 # Edited from https://yuminlee2.medium.com/union-find-algorithm-ffa9cd7d2dba
 
 class UnionFind:
+    """Union find data structure 
+    """
     def __init__(self, vertices):
         self.parent = {vertex: vertex for vertex in vertices}
         self.size = {vertex: 1 for vertex in vertices}
@@ -32,6 +34,20 @@ class UnionFind:
             self.size[root2] += 1
         
         self.count -= 1
+
+    def components_dict(self):
+        """Returns a dictionary mapping component representatives to lists of elements in that component.
+
+        Returns:
+            dict: A dictionary where keys are component representatives and values are lists of elements in that component.
+        """
+        components = {}
+        for node in self.parent:
+            root = self.find(node)
+            if root not in components:
+                components[root] = []
+            components[root].append(node)
+        return components
 
 
 if __name__ == "__main__":

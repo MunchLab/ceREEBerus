@@ -1,4 +1,4 @@
-from cereeberus import MapperGraph
+
 import numpy as np
 import pandas as pd
 import networkx as nx
@@ -12,6 +12,7 @@ from ..compute.utils import HiddenPrints
 import sys, os
 
 class Interleave:
+    # Import MapperGraph inside methods as needed to avoid circular import
     """
     A class to compute the interleaving distance between two Mapper graphs, denoted :math:`F` and :math:`G`. The interleaving distance is a measure of how similar two Mapper graphs are, based on the induced maps between them.
     
