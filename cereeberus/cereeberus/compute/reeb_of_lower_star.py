@@ -89,7 +89,7 @@ def reeb_of_lower_star(K: LowerStarSC, verbose = False):
 
     for i, (vert, filt) in enumerate(funcVals):
         if verbose:
-            print(f"\n---\n Processing {vert} at func val {filt:2f}")
+            print(f"\n---\n Processing {vert} at func val {filt:.2f}")
         now_min = filt
         now_max = funcVals[i+1][1] if i+1 < len(funcVals) else np.inf
         star = K.get_star([vert])
@@ -114,7 +114,7 @@ def reeb_of_lower_star(K: LowerStarSC, verbose = False):
         
         if verbose:
             print(f"  Current level set simplices: {currentLevelSet}")
-            print(f"  Level set components at vertex {vert} (func val {filt:2f}):")
+            print(f"  Level set components at vertex {vert} (func val {filt:.2f}):")
             for comp in components_at_vertex.values():
                 print(f"    Component: {comp}")
         
@@ -148,7 +148,7 @@ def reeb_of_lower_star(K: LowerStarSC, verbose = False):
         components = get_levelset_components(currentLevelSet)
         if verbose:
             print(f"\n  Updated current level set simplices: {currentLevelSet}")
-            print(f"  Level set components after vertex {vert} (func val {filt:2f}):")
+            print(f"  Level set components after vertex {vert} (func val {filt:.2f}):")
             for comp in components.values():
                 print(f"    Component: {comp}")
         #----
