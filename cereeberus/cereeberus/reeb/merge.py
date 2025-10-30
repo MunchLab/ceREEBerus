@@ -1,4 +1,4 @@
-from cereeberus import ReebGraph
+
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,8 +9,9 @@ from warnings import warn
 # from cereeberus.compute.merge import isMerge
 # from cereeberus.compute.merge import computeMergeTree
 
+from .reebgraph import ReebGraph
 class MergeTree(ReebGraph):
-    """ 
+    r"""
     A merge tree stored as a ``ReebGraph`` object. Like a Reeb graph, this is a directed graph with a function defined on the vertices. However, in a merge tree, the function is required to iave a single root with function value treated as :math:`\infty`. 
 
     We also store label information to construct a labeled merge tree. Here, this is a dictionary from some set (usually [1,...,n]) to a subset of vertices of the graph. 

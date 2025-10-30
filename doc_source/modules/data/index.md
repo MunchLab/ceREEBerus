@@ -10,4 +10,5 @@ This module contains examples to use for Reeb graph computations.
     Example Merge Trees <ex_mergetrees.rst>
     Example Embedded Graphs <ex_embedgraphs.rst>
     Example Mapper Graphs <ex_mappergraphs.rst>
+    Example Torus Lower Star Simplicial Complex <ex_torus.rst>
 ```

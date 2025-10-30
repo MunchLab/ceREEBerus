@@ -1,11 +1,12 @@
-from cereeberus import ReebGraph
+
 from ..distance.labeled_blocks import LabeledBlockMatrix as LBM
 from ..distance.labeled_blocks import LabeledMatrix as LM
 from ..compute.unionfind import UnionFind
 import numpy as np
 
+from .reebgraph import ReebGraph
 class MapperGraph(ReebGraph):
-    """
+    r"""
     A mapper graph structure. This inherits the properties of the Reeb graph in that it is a graph with a function given on the vertices, but with some additional requirements.
 
     - The values are integers in some range, [n_low, n_low+1, \cdots, n_high], although we consider the funciton values to be [\delta * n_low, \delta* (n_low+1), \cdots, \delta * n_high] for a stored delta 

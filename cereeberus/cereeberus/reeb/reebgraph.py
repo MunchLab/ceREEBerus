@@ -1,5 +1,5 @@
 import networkx as nx
-import cereeberus.compute.draw as draw
+from ..compute import draw
 import matplotlib.pyplot as plt
 import numpy as np
 

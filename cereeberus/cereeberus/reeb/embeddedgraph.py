@@ -1,7 +1,7 @@
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
-from cereeberus import ReebGraph
+from .reebgraph import ReebGraph
 
 
 class EmbeddedGraph(nx.Graph):
