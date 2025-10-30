@@ -93,7 +93,7 @@ class Torus(LowerStarSC):
         if isinstance(vertex, int):
             vertex = [vertex]
         elif len(vertex) == 1:
-            vertex = vertex
+            pass
         elif len(vertex) == 2: 
             vertex = [self.get_vertex_integer(*vertex)]
         else:
