@@ -33,7 +33,7 @@ class LowerStarSC(SimplexTree):
         if isinstance(vertex, int):
             vertex = [vertex]
         elif len(vertex) == 1:
-            vertex = vertex
+            pass
         else:
             raise ValueError("vertex must be an integer, or a single-element list.")
             
