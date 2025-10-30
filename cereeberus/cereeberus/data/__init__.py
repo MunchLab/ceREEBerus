@@ -4,5 +4,5 @@ __all__ = ['ex_reebgraphs', 'ex_mergetrees', 'ex_mappergraphs', 'ex_embedgraphs'
 from .ex_reebgraphs import *
 from .ex_mergetrees import *
 from .ex_mappergraphs import *
-from .ex_embedgraphs import *
+from . import ex_embedgraphs
 from . import ex_torus
