@@ -5,4 +5,4 @@ from .ex_reebgraphs import *
 from .ex_mergetrees import *
 from .ex_mappergraphs import *
 from .ex_embedgraphs import *
-from .ex_torus import *
+from . import ex_torus
