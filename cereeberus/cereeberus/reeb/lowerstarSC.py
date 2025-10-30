@@ -31,9 +31,7 @@ class LowerStarSC(SimplexTree):
         
         if isinstance(vertex, int):
             vertex = [vertex]
-        elif len(vertex) == 1:
-            pass
-        else:
+        elif len(vertex) != 1:
             raise ValueError("vertex must be an integer, or a single-element list.")
             
         super().assign_filtration(vertex, value)
