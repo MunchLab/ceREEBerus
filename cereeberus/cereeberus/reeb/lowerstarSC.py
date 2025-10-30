@@ -1,7 +1,6 @@
 # An example torus built using gudhi's Simplex Tree 
 
 from gudhi import SimplexTree
-import matplotlib.pyplot as plt
 import numpy as np
 
 class LowerStarSC(SimplexTree):
