@@ -51,8 +51,8 @@ If your change requires a change to the documentation, please update the documen
 
         make docs
 
-to ensure everything looks good. You will be able to view your changes in the built documentation by opening the `docs/_build/html/index.html` file in your web browser. Do not add the Docs folder to your git repository. The final documentation will be built on github when your PR is merged.
- ``make docs``: Build the documentation in the docs/ folder
+to ensure everything looks good. You will be able to view your changes in the built documentation by opening the ``docs/_build/html/index.html`` file in your web browser. Do not add the Docs folder to your git repository. The final documentation will be built on github when your PR is merged.
+
 - Add tests to cover your changes. You can run:
 
     .. code-block:: bash
@@ -73,9 +73,8 @@ The Makefile in this project provides several helpful commands for development a
 - ``make lint``: Run `flake8 <https://flake8.pycqa.org/en/latest/>`_ linter on the code
 - ``make format``: Format code using `black <https://black.readthedocs.io/en/stable/>`_
 - ``make tests``: Run the unit tests
-- ``make html``: Build the documentation in the docs/ folder
+- ``make docs``: Build the documentation in the docs/ folder
 - ``make release``: Build the package for release
-- ``make clean``: Autoformat the code using autopep8
 - ``make all``: Install requirements, install ceREEBerus in editable mode, then run format, tests, and docs
 - ``make help``: See a summary of all available commands.
 
@@ -116,3 +115,4 @@ There is lots of vocabulary around TDA constructions, and lots of opinions about
 - File names are all lowercase with underscores (e.g., reeb_graph.py)
 - Class names are in CamelCase (e.g., ReebGraph)
 - Method and function names are in ``snake_case``  or ``camelCase`` starting lower case (e.g., ``compute_reeb_graph`` or ``computeReeb``)
+- Plotting functions for a class are named ``Thing.draw()``. 
