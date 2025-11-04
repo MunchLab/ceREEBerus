@@ -32,7 +32,7 @@ jobs:
           pip install sphinx sphinx-rtd-theme myst-parser nbsphinx matplotlib
 
       - name: Build documentation
-        run: make html
+        run: make docs
 
       - name: Deploy to GitHub Pages
         if: github.event_name == 'push'
