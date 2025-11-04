@@ -1,5 +1,5 @@
 from .unionfind import UnionFind
-from ..reeb.lowerstarSC import LowerStarSC
+from ..reeb.lowerstar import LowerStar
 import numpy as np
 
 
@@ -19,7 +19,7 @@ def is_face(sigma, tau):
 
 def get_levelset_components(L):
     '''
-    Given a list of simplices L representing a level set, compute the connected components. This function is really only helpful inside of reeb_of_lower_star.
+    Given a list of simplices L representing a level set, compute the connected components. This function is really only helpful inside of computeReeb.
     
     Args:
         L: A list of simplices (each simplex is a list of vertices).
@@ -46,19 +46,19 @@ def get_levelset_components(L):
     return components
 
 
-def reeb_of_lower_star(K: LowerStarSC, verbose = False):
+def computeReeb(K: LowerStar, verbose = False):
     """Computes the Reeb graph of a Lower Star Simplicial Complex K.
 
     Args:
-        K (LowerStarSC): A Lower Star Simplicial Complex with assigned filtration values.
+        K (LowerStar): A Lower Star Simplicial Complex with assigned filtration values.
         verbose (boolean): Make it True if you want lots of printouts.
 
     Returns:
         ReebGraph: The computed Reeb graph.
 
     Example:
-        >>> from cereeberus.reeb.lowerstarSC import LowerStarSC
-        >>> K = LowerStarSC()
+        >>> from cereeberus.reeb.LowerStar import LowerStar
+        >>> K = LowerStar()
         >>> K.insert([0, 1, 2])
         >>> K.insert([1, 3])
         >>> K.insert([2,3])
@@ -66,7 +66,7 @@ def reeb_of_lower_star(K: LowerStarSC, verbose = False):
         >>> K.assign_filtration([1], 3.0)
         >>> K.assign_filtration([2], 5.0)
         >>> K.assign_filtration([3], 7)
-        >>> R = reeb_of_lower_star(K)
+        >>> R = computeReeb(K)
         >>> R.draw()
     """
     from ..reeb.reebgraph import ReebGraph

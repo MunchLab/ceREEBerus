@@ -7,9 +7,9 @@ This is the Lower Star Filtration class for Simplicial Complexes.  It is built o
 Note that this class can be imported as::
 
     import cereeberus
-    T = cereeberus.LowerStarSC()
+    T = cereeberus.LowerStar()
 
-.. automodule:: cereeberus.reeb.lowerstarSC
+.. automodule:: cereeberus.reeb.LowerStar
     :members:
     :no-index:
 

@@ -11,5 +11,5 @@ The module `cereeberus.reeb` contains classes for both the Reeb graph and merge 
     mergetree.rst
     embedgraph.rst
     mappergraph.rst
-    lowerstarSC.rst
+    lowerstar.rst
     

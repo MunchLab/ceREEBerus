@@ -1,11 +1,11 @@
-# An example torus built using gudhi's Simplex Tree 
+# An example lower star filtration built using gudhi's Simplex Tree 
 
 from gudhi import SimplexTree
 import numpy as np
 
-class LowerStarSC(SimplexTree):
+class LowerStar(SimplexTree):
     """
-    Class to create a simplicial compex that has a lower star filtration, based on Gudhi's SimplexTree.
+    Class to create a simplicial complex that has a lower star filtration, based on Gudhi's SimplexTree.
 
     Inherits from:
         SimplexTree: A simplex tree structure from the Gudhi library.
@@ -32,7 +32,7 @@ class LowerStarSC(SimplexTree):
         if isinstance(vertex, int):
             vertex = [vertex]
         elif len(vertex) != 1:
-            raise ValueError("vertex must be an integer, or a single-element list.")
+            raise ValueError("Lower star filtration can only by updated by specificying the function value on a vertex. Input -vertex- must be an integer, or a single-element list.")
             
         super().assign_filtration(vertex, value)
         
@@ -87,7 +87,7 @@ class LowerStarSC(SimplexTree):
     
     
 if __name__ == "__main__":
-    LS = LowerStarSC()
+    LS = LowerStar()
     LS.insert([0, 1, 2])
     LS.insert([1, 3])
     LS.insert([2,3])
