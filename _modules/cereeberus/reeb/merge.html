@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cereeberus.reeb.merge &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cereeberus.reeb.merge</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cereeberus.reeb.merge</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span>
+
+<span class="c1"># from cereeberus.compute.merge import isMerge</span>
+<span class="c1"># from cereeberus.compute.merge import computeMergeTree</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.reebgraph</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReebGraph</span>
+
+
+<div class="viewcode-block" id="MergeTree">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MergeTree</span><span class="p">(</span><span class="n">ReebGraph</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A merge tree stored as a ``ReebGraph`` object. Like a Reeb graph, this is a directed graph with a function defined on the vertices. However, in a merge tree, the function is required to iave a single root with function value treated as :math:`\infty`.</span>
+
+<span class="sd">    We also store label information to construct a labeled merge tree. Here, this is a dictionary from some set (usually [1,...,n]) to a subset of vertices of the graph.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MergeTree.__init__">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="p">{},</span> <span class="n">labels</span><span class="o">=</span><span class="p">{},</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a merge tree object.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            T: nx.graph, optional. If not none, it should be a tree with a specified root and function values.</span>
+<span class="sd">            labels: dict, optional. A dictionary from labels to subsets of vertices.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">T</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+            <span class="c1"># Always add the infinite node</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;v_inf&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Check if the input is valid and add it</span>
+            <span class="n">T</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputToDirRootTree</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+            <span class="c1"># Fix up the drawing locations</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fix_pos_f</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;MergeTree with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span><span class="si">}</span><span class="s2"> nodes and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span><span class="si">}</span><span class="s2"> edges.&quot;</span>
+
+    <span class="c1"># ------------------------------------------------------#</span>
+    <span class="c1"># Methods for listing, adding and removing nodes and edges</span>
+    <span class="c1"># ---------------------------------------------------------#</span>
+
+<div class="viewcode-block" id="MergeTree.get_finite_nodes">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.get_finite_nodes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_finite_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of the finite nodes of the tree. That is, everything except for `v_inf`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="s2">&quot;v_inf&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.get_leaves">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.get_leaves">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_leaves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of the leaves of the tree.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">down_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.add_node">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.add_node">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">f_vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a node to the tree. Note that this will break the single connected component property of the tree so we assume you will do this in the process of adding more connecting edges.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="n">f_vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="p">)</span>
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Merge trees assume a single connected component. Adding a node may break this assumption.&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.remove_node">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.remove_node">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes a node from the tree. Note that this will break the single connected component property of the tree if it is not a leaf so we assume you will do this in the process of adding more connecting edges.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">vertex</span> <span class="o">==</span> <span class="s2">&quot;v_inf&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You cannot remove the infinite node&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">down_degree</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;You removing a vertex with multiple children will create multiple connected components, so ensure that this property is eventually maintained.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.add_edge">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.add_edge">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds the edge (u,v) to the tree. This command will not allow you to add an edge if it will create a loop.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">]:</span>
+            <span class="n">lowerVertex</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lowerVertex</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">up_degree</span><span class="p">(</span><span class="n">lowerVertex</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Edge (</span><span class="si">{</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="si">}</span><span class="s2">) cannot be added. Adding the edge will create a loop in the graph.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">reset_pos</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.inputToDirRootTree">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.inputToDirRootTree">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inputToDirRootTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the input to a directed rooted tree that respects the internal structure.</span>
+
+<span class="sd">        If T is undirected, it will be converted to a directed tree with the root specified.</span>
+
+<span class="sd">        If f is not specified, a function will be induced from the tree from number of edges from the root.</span>
+
+<span class="sd">        A vertex will be added with funciton value infinity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">T</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Returns Tree, function</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+        <span class="k">elif</span> <span class="n">nx</span><span class="o">.</span><span class="n">is_tree</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The input graph is not a tree.&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">nx</span><span class="o">.</span><span class="n">is_directed</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must specify a root for the tree.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Convert to directed graph eminating from the root</span>
+                <span class="c1"># Because of the ReebGraph convention, edges point up to higher function values.</span>
+                <span class="n">T</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">bfs_tree</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">root</span><span class="p">)</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># T is already directed</span>
+            <span class="c1"># Make sure that this thing will be valid,</span>
+            <span class="c1"># I think this is the same as &quot;arboresence&quot; in networkx</span>
+            <span class="c1"># which is true if maximum in-degree equal to 1.</span>
+            <span class="c1"># Since our graphs point upwards, this is the same as</span>
+            <span class="c1"># making sure the reverse of our tree is an arboresence.</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">nx</span><span class="o">.</span><span class="n">is_arborescence</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">reverse</span><span class="p">()):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The input tree is not a valid tree.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># No matter what, add a dummy node, point the old root at it and</span>
+        <span class="c1"># eventually give that new node function value infinity.</span>
+        <span class="n">T</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;v_inf&quot;</span><span class="p">)</span>
+        <span class="n">T</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s2">&quot;v_inf&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check that the function is valid</span>
+        <span class="k">if</span> <span class="n">f</span> <span class="o">==</span> <span class="p">{}:</span>
+            <span class="c1"># Define a function with distance from the root (but reversed). Rigged so the minimum is always at 0.</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path_length</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">M</span> <span class="o">-</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+            <span class="n">f</span><span class="p">[</span><span class="s2">&quot;v_inf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">T</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;The function values should point upwards in the tree.&quot;</span>
+                    <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">T</span><span class="p">,</span> <span class="n">f</span></div>
+
+
+    <span class="c1"># -----------------------------------------------#</span>
+    <span class="c1"># Methods for drawing</span>
+    <span class="c1"># -----------------------------------------------#</span>
+
+<div class="viewcode-block" id="MergeTree.fix_pos_f">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.fix_pos_f">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fix_pos_f</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update drawing locations to deal with the fact that we have np.inf around.</span>
+
+<span class="sd">        This sets the drawing location of the infinite node to be directly above the maximum finite node of the tree.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the neighbor of the infinite node. Note we&#39;re assuming a single connected component so there&#39;s only one.</span>
+        <span class="n">top_vertices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="s2">&quot;v_inf&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">top_vertices</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The infinite node has no neighbors so there is nothing to be done.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">top_vertex</span> <span class="o">=</span> <span class="n">top_vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Get  min and max function values</span>
+            <span class="n">Lmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">Lmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">top_vertex</span><span class="p">]</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">Lmax</span> <span class="o">-</span> <span class="n">Lmin</span>
+
+            <span class="c1"># Get the drawing location of the neighbor to have same x coordinate as the neighbor, but y coordinate at .3*height above the maximum function value.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="s2">&quot;v_inf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">top_vertex</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">Lmax</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">height</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.set_pos_from_f">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.set_pos_from_f">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_pos_from_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fix the drawing locations for the function values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;v_inf&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fix_pos_f</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.draw">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.draw">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label_type</span><span class="o">=</span><span class="s2">&quot;names&quot;</span><span class="p">,</span> <span class="n">with_colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the merge tree.</span>
+
+<span class="sd">        If `with_labels` is True, the labels will be drawn. This is either the vertex names if `label_type` is &#39;names&#39; or the merge tree labels if `label_type` is &#39;labels&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># viridis = mpl.colormaps[&#39;viridis&#39;].resampled(16)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+        <span class="n">color_map</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">]</span>
+
+        <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">color_map</span><span class="p">)</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">with_labels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">label_type</span> <span class="o">==</span> <span class="s2">&quot;names&quot;</span><span class="p">:</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">label_type</span> <span class="o">==</span> <span class="s2">&quot;labels&quot;</span><span class="p">:</span>
+                <span class="n">label_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">label_map</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">[])</span> <span class="o">+</span> <span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+                <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">label_map</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The label type must be either &#39;names&#39; or &#39;labels&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labelleft</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+    <span class="c1"># -----------------------------------------------#</span>
+    <span class="c1"># Methods for labeled merge trees</span>
+    <span class="c1">#</span>
+    <span class="c1"># -----------------------------------------------#</span>
+
+<div class="viewcode-block" id="MergeTree.label_all_leaves">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.label_all_leaves">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">label_all_leaves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Label all the leaves of the tree by adding them to the labels dictionary if they&#39;re not already there.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">leaves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leaves</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="n">key</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.add_label">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.add_label">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a label to a vertex. If not provided, the label will be the next available integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The label </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> is already in use but will be reassigned.&quot;</span><span class="p">)</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">label</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertex</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.add_label_edge">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.add_label_edge">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_label_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">f_w</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a new vertex named `w` at function value `f_w` by subdividing the edge (u,v) and label it.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Add the vertex</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">f_w</span><span class="p">)</span>
+
+        <span class="c1"># Add the label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_label</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.LCA">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.LCA">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">LCA</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the least common ancestor of two vertices in the tree.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the path to the root from each</span>
+        <span class="n">anc_u</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="s2">&quot;v_inf&quot;</span><span class="p">))</span>
+        <span class="n">anc_v</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="s2">&quot;v_inf&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Get the intersection of the ancestors</span>
+        <span class="n">common_anc</span> <span class="o">=</span> <span class="n">anc_u</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">anc_v</span><span class="p">)</span>
+
+        <span class="c1"># Get the vertex with the minimum function value</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">common_anc</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">x</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="MergeTree.LCA_matrix">
+<a class="viewcode-back" href="../../../modules/reeb/mergetree.html#cereeberus.reeb.merge.MergeTree.LCA_matrix">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">LCA_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;leaves&quot;</span><span class="p">,</span> <span class="n">return_as_df</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the matrix of least common ancestors.</span>
+
+<span class="sd">        If type is `leaves`, then the rows and columns of the matrix are determined by the leaf sets.</span>
+
+<span class="sd">        If type is `labels`, then the rows and columns of the matrix are determined by the labels internal to the MergeTree.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;leaves&quot;</span><span class="p">:</span>
+            <span class="c1"># print(&#39;leaf version&#39;)</span>
+            <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_leaves</span><span class="p">()</span>
+            <span class="c1"># keys = list(range(len(nodes)))</span>
+            <span class="c1"># print(nodes,keys)</span>
+            <span class="n">col_labels</span> <span class="o">=</span> <span class="n">nodes</span>
+
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;labels&quot;</span><span class="p">:</span>
+            <span class="n">col_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">col_labels</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The input `type` of LCA matrix must be either &#39;leaves&#39; or &#39;labels&#39;.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Initialize the matrix</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+
+        <span class="c1"># Compute the LCA matrix</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">node_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">node_j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                    <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">node_i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">LCA_vertex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">LCA</span><span class="p">(</span><span class="n">node_i</span><span class="p">,</span> <span class="n">node_j</span><span class="p">)</span>
+                    <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">LCA_vertex</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">return_as_df</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">col_labels</span><span class="p">,</span> <span class="n">col_labels</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">M</span></div>
+</div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">cereeberus.data.randomMergeTrees</span><span class="w"> </span><span class="kn">import</span> <span class="n">randomMerge</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">randomMerge</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">Merge</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">fx</span><span class="p">)</span>
+    <span class="n">M</span><span class="o">.</span><span class="n">plot_reeb</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

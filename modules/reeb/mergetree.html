@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1.2. Merge tree &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="1.3. Embedded Graphs" href="embedgraph.html" />
+    <link rel="prev" title="1.1. ReebGraph class" href="reebgraph.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Modules and Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">1. ReebGraph and Related Classes</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="reebgraph.html">1.1. ReebGraph class</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">1.2. Merge tree</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cereeberus.reeb.merge.MergeTree"><code class="docutils literal notranslate"><span class="pre">MergeTree</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="embedgraph.html">1.3. Embedded Graphs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mappergraph.html">1.4. MapperGraph class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lowerstar.html">1.5. Lower Star Filtration for Simplicial Complexes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../distance/index.html">2. Distances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/index.html">3. Example data and graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compute/index.html">4. Compute</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">1. </span>ReebGraph and related classes</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">1.2. </span>Merge tree</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/modules/reeb/mergetree.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="merge-tree">
+<h1><span class="section-number">1.2. </span>Merge tree<a class="headerlink" href="#merge-tree" title="Link to this heading"></a></h1>
+<p>This is the Merge tree class which inherits structure from <cite>ReebGraph</cite>.</p>
+<p>Note that this class can be imported as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cereeberus</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">cereeberus</span><span class="o">.</span><span class="n">MergeTree</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py class" id="module-cereeberus.reeb.merge">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cereeberus.reeb.merge.</span></span><span class="sig-name descname"><span class="pre">MergeTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree" title="Link to this definition"></a></dt>
+<dd><p>A merge tree stored as a <code class="docutils literal notranslate"><span class="pre">ReebGraph</span></code> object. Like a Reeb graph, this is a directed graph with a function defined on the vertices. However, in a merge tree, the function is required to iave a single root with function value treated as <span class="math notranslate nohighlight">\(\infty\)</span>.</p>
+<p>We also store label information to construct a labeled merge tree. Here, this is a dictionary from some set (usually [1,…,n]) to a subset of vertices of the graph.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize a merge tree object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> – nx.graph, optional. If not none, it should be a tree with a specified root and function values.</p></li>
+<li><p><strong>labels</strong> – dict, optional. A dictionary from labels to subsets of vertices.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.get_finite_nodes">
+<span class="sig-name descname"><span class="pre">get_finite_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.get_finite_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.get_finite_nodes" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of the finite nodes of the tree. That is, everything except for <cite>v_inf</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.get_leaves">
+<span class="sig-name descname"><span class="pre">get_leaves</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.get_leaves"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.get_leaves" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of the leaves of the tree.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_vertex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.add_node" title="Link to this definition"></a></dt>
+<dd><p>Adds a node to the tree. Note that this will break the single connected component property of the tree so we assume you will do this in the process of adding more connecting edges.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.remove_node">
+<span class="sig-name descname"><span class="pre">remove_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.remove_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.remove_node" title="Link to this definition"></a></dt>
+<dd><p>Removes a node from the tree. Note that this will break the single connected component property of the tree if it is not a leaf so we assume you will do this in the process of adding more connecting edges.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.add_edge">
+<span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.add_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.add_edge" title="Link to this definition"></a></dt>
+<dd><p>Adds the edge (u,v) to the tree. This command will not allow you to add an edge if it will create a loop.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.inputToDirRootTree">
+<span class="sig-name descname"><span class="pre">inputToDirRootTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.inputToDirRootTree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.inputToDirRootTree" title="Link to this definition"></a></dt>
+<dd><p>Convert the input to a directed rooted tree that respects the internal structure.</p>
+<p>If T is undirected, it will be converted to a directed tree with the root specified.</p>
+<p>If f is not specified, a function will be induced from the tree from number of edges from the root.</p>
+<p>A vertex will be added with funciton value infinity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.fix_pos_f">
+<span class="sig-name descname"><span class="pre">fix_pos_f</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.fix_pos_f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.fix_pos_f" title="Link to this definition"></a></dt>
+<dd><p>Update drawing locations to deal with the fact that we have np.inf around.</p>
+<p>This sets the drawing location of the infinite node to be directly above the maximum finite node of the tree.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.set_pos_from_f">
+<span class="sig-name descname"><span class="pre">set_pos_from_f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.set_pos_from_f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.set_pos_from_f" title="Link to this definition"></a></dt>
+<dd><p>Fix the drawing locations for the function values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">with_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'names'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.draw" title="Link to this definition"></a></dt>
+<dd><p>Draw the merge tree.</p>
+<p>If <cite>with_labels</cite> is True, the labels will be drawn. This is either the vertex names if <cite>label_type</cite> is ‘names’ or the merge tree labels if <cite>label_type</cite> is ‘labels’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.label_all_leaves">
+<span class="sig-name descname"><span class="pre">label_all_leaves</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.label_all_leaves"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.label_all_leaves" title="Link to this definition"></a></dt>
+<dd><p>Label all the leaves of the tree by adding them to the labels dictionary if they’re not already there.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.add_label">
+<span class="sig-name descname"><span class="pre">add_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.add_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.add_label" title="Link to this definition"></a></dt>
+<dd><p>Add a label to a vertex. If not provided, the label will be the next available integer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.add_label_edge">
+<span class="sig-name descname"><span class="pre">add_label_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.add_label_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.add_label_edge" title="Link to this definition"></a></dt>
+<dd><p>Add a new vertex named <cite>w</cite> at function value <cite>f_w</cite> by subdividing the edge (u,v) and label it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.LCA">
+<span class="sig-name descname"><span class="pre">LCA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.LCA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.LCA" title="Link to this definition"></a></dt>
+<dd><p>Compute the least common ancestor of two vertices in the tree.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cereeberus.reeb.merge.MergeTree.LCA_matrix">
+<span class="sig-name descname"><span class="pre">LCA_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'leaves'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_as_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cereeberus/reeb/merge.html#MergeTree.LCA_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cereeberus.reeb.merge.MergeTree.LCA_matrix" title="Link to this definition"></a></dt>
+<dd><p>Compute the matrix of least common ancestors.</p>
+<p>If type is <cite>leaves</cite>, then the rows and columns of the matrix are determined by the leaf sets.</p>
+<p>If type is <cite>labels</cite>, then the rows and columns of the matrix are determined by the labels internal to the MergeTree.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="reebgraph.html" class="btn btn-neutral float-left" title="1.1. ReebGraph class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="embedgraph.html" class="btn btn-neutral float-right" title="1.3. Embedded Graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

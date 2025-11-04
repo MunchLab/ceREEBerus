@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cereeberus.reeb.mapper &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cereeberus.reeb.mapper</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cereeberus.reeb.mapper</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..distance.labeled_blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabeledBlockMatrix</span> <span class="k">as</span> <span class="n">LBM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..distance.labeled_blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabeledMatrix</span> <span class="k">as</span> <span class="n">LM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..compute.unionfind</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnionFind</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.reebgraph</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReebGraph</span>
+
+
+<div class="viewcode-block" id="MapperGraph">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MapperGraph</span><span class="p">(</span><span class="n">ReebGraph</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A mapper graph structure. This inherits the properties of the Reeb graph in that it is a graph with a function given on the vertices, but with some additional requirements.</span>
+
+<span class="sd">    - The values are integers in some range, [n_low, n_low+1, \cdots, n_high], although we consider the funciton values to be [\delta * n_low, \delta* (n_low+1), \cdots, \delta * n_high] for a stored delta</span>
+<span class="sd">    - If an edge crosses a value, it has a vertex (so that the inverse image of any integer is only vertices, not interiors of edges)</span>
+<span class="sd">    - An internal delta is stored so that this can be interpreted as function values [\delta * n_low, \delta* (n_low+1), \cdots, \delta * n_high]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MapperGraph.__init__">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="p">{},</span> <span class="n">delta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="c1"># Check that $f$ values are only integers</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Function values must be integers.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">delta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">delta</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapperify</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MapperGraph.add_edge">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.add_edge">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add an edge to the graph. This will also update the internal structure to make sure it satisfies the mapper properties.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">reset_pos</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapperify</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MapperGraph.mapperify">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.mapperify">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mapperify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Take the internal structure and make sure it satisfies the requirement that all edges have adjacent function values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># If we&#39;re initializing with nothing, this should pass.</span>
+        <span class="c1"># Note that if self.n_low is None, then self.n_high and self.delta</span>
+        <span class="c1"># are both None as well but I am not currently checking that.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">n_low</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">n_high</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_low</span><span class="p">,</span> <span class="n">n_high</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">e_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">e_list</span><span class="p">:</span>
+                <span class="n">w_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_vert_name</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">subdivide_edge</span><span class="p">(</span><span class="o">*</span><span class="n">e</span><span class="p">,</span> <span class="n">w_name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MapperGraph.add_node">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.add_node">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">f_vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as adding a node in Reeb, but with the additional requirement that the function value is an integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_vertex</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Function values must be integers.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="n">f_vertex</span><span class="p">,</span> <span class="n">reset_pos</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MapperGraph.set_pos_from_f">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.set_pos_from_f">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_pos_from_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as the Reeb graph function, but we want to draw the vertex locations at delta*function value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_f</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">[</span><span class="n">v</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="MapperGraph.induced_subgraph">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.induced_subgraph">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">induced_subgraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the subgraph of the mapper graph induced by the nodes in the list nodes.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            nodes (list): The list of nodes to include in the subgraph.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            MapperGraph</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">R</span><span class="o">.</span><span class="n">to_mapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MapperGraph.smoothing_and_maps">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.smoothing_and_maps">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">smoothing_and_maps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the smoothing of a mapper graph as given in todo: Cite the paper. Note that the input :math:`n` parameter is related to the integer function values, not the delta-scaled function values.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            n (int): The amount of smoothing</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: MapperGraph, vertex_map, edge_map</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Smoothing amount must be an integer.&quot;</span><span class="p">)</span>
+
+        <span class="n">M_n</span><span class="p">,</span> <span class="n">V_map</span><span class="p">,</span> <span class="n">E_map</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">smoothing_and_maps</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+        <span class="c1"># E_map is a dictonary with output lists of edges, but we should only have one edge to one edge in the mapper graph  case</span>
+        <span class="c1"># This just strips E_map[key] = [(u,v,0)] to instead be E_map[key] = (u,v,0)</span>
+        <span class="n">E_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">E_map</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">E_map</span><span class="p">}</span>
+
+        <span class="n">M_n</span> <span class="o">=</span> <span class="n">M_n</span><span class="o">.</span><span class="n">to_mapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">M_n</span><span class="p">,</span> <span class="n">V_map</span><span class="p">,</span> <span class="n">E_map</span></div>
+
+
+<div class="viewcode-block" id="MapperGraph.smoothing">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.smoothing">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">smoothing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the smoothing of a mapper graph as given in todo: Cite the paper. Note that the input :math:`n` parameter is related to the integer function values, not the delta-scaled function values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n (int, optional): Smoothing amount. Defaults to 1.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: _description_</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">M_n</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing_and_maps</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">M_n</span></div>
+
+
+    <span class="c1"># ------------------------------#</span>
+    <span class="c1"># Functions for computing thickening distance matrix</span>
+    <span class="c1"># ------------------------------#</span>
+<div class="viewcode-block" id="MapperGraph.thickening_distance_by_level">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.thickening_distance_by_level">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">thickening_distance_by_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s2">&quot;V&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the thickening distance matrix at a given level. This distance is the amount of thickening needed before the given pair of vertices at that level map to the same connected component.</span>
+
+<span class="sd">        Parameters:</span>
+
+<span class="sd">            level : int. The level to get the thickening distance matrix at.</span>
+<span class="sd">            obj_type : str. &#39;V&#39; or &#39;E&#39; to get the distance matrix for vertices or edges, respectively. Default is &#39;V&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledMatrix</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Dict to get list of vertices at a level</span>
+        <span class="n">LevelVerts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_to_vertex_dict</span><span class="p">()</span>
+
+        <span class="c1"># Dict to get lists of edges at a level</span>
+        <span class="n">LevelEdges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_to_edge_dict</span><span class="p">()</span>
+
+        <span class="c1"># Current level to be checking</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">level</span>
+
+        <span class="c1"># Objects to be checking</span>
+        <span class="k">if</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s2">&quot;V&quot;</span><span class="p">:</span>
+            <span class="c1"># Vertices at the current level</span>
+            <span class="n">rowLabels</span> <span class="o">=</span> <span class="n">LevelVerts</span><span class="p">[</span><span class="n">L</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span>
+            <span class="c1"># Edges at the current level</span>
+            <span class="n">rowLabels</span> <span class="o">=</span> <span class="n">LevelEdges</span><span class="p">[</span><span class="n">L</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Type must be &#39;V&#39; or &#39;E&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If there&#39;s only one object, the distance is 0.</span>
+        <span class="c1"># Return the little matrix block</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">D</span> <span class="o">=</span> <span class="n">LM</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="n">rowLabels</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="n">rowLabels</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">D</span>
+
+        <span class="c1"># Max difference to check</span>
+        <span class="n">max_diff</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">L</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_f</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_f</span><span class="p">()</span> <span class="o">-</span> <span class="n">L</span><span class="p">)</span>
+
+        <span class="c1"># Distance matrix for this level</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">)))</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">D</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">))</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">LM</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="n">rowLabels</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="n">rowLabels</span><span class="p">)</span>
+
+        <span class="c1"># Initialize a union find object</span>
+        <span class="n">UF</span> <span class="o">=</span> <span class="n">UnionFind</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">()))</span>
+
+        <span class="c1"># Loop through the levels to add edges, and update teh distance matrix if</span>
+        <span class="c1"># a pair of objects not already merged.</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_diff</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s2">&quot;V&quot;</span><span class="p">:</span>
+                <span class="n">up_level</span> <span class="o">=</span> <span class="n">L</span> <span class="o">+</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">down_level</span> <span class="o">=</span> <span class="n">L</span> <span class="o">-</span> <span class="n">k</span>
+            <span class="k">elif</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span>
+                <span class="n">up_level</span> <span class="o">=</span> <span class="n">L</span> <span class="o">+</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">down_level</span> <span class="o">=</span> <span class="n">L</span> <span class="o">-</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="n">U</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># Add edges at each up and down level</span>
+            <span class="c1"># try/except is to ignore entries without edges</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># up verts</span>
+                <span class="n">U</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">LevelEdges</span><span class="p">[</span><span class="n">up_level</span><span class="p">])</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># down verts</span>
+                <span class="n">U</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">LevelEdges</span><span class="p">[</span><span class="n">down_level</span><span class="p">])</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="c1"># Add these edges to the union find object</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">U</span><span class="p">:</span>
+                <span class="n">UF</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s2">&quot;V&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">rowLabels</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">rowLabels</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">v</span> <span class="o">!=</span> <span class="n">u</span>
+                            <span class="ow">and</span> <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">v</span><span class="p">)][</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">u</span><span class="p">)]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
+                        <span class="p">):</span>
+                            <span class="k">if</span> <span class="n">UF</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="n">UF</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+                                <span class="c1"># print(f&quot;found {v} and {u}&quot;)</span>
+                                <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">v</span><span class="p">)][</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">u</span><span class="p">)]</span> <span class="o">=</span> <span class="n">k</span>
+                                <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">u</span><span class="p">)][</span><span class="n">rowLabels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">k</span>
+            <span class="k">elif</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rowLabels</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">e</span> <span class="o">!=</span> <span class="n">f</span> <span class="ow">and</span> <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">UF</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">UF</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+                                <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="p">):</span>  <span class="c1"># and UF.find(e[1]) == UF.find(f[1]):</span>
+                                <span class="c1"># print(f&quot;found {e} and {f}&quot;)</span>
+                                <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+                                <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+
+            <span class="c1"># Check if there are still any entries of -1</span>
+            <span class="c1"># If there are none, no need to keep adding edges</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">array</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">break</span>
+
+        <span class="c1"># If there are still -1&#39;s, set them to np.inf</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">array</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">D</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">D</span><span class="o">.</span><span class="n">array</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+        <span class="k">return</span> <span class="n">D</span></div>
+
+
+<div class="viewcode-block" id="MapperGraph.thickening_distance_matrix">
+<a class="viewcode-back" href="../../../modules/reeb/mappergraph.html#cereeberus.reeb.mapper.MapperGraph.thickening_distance_matrix">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">thickening_distance_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="s2">&quot;V&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the thickening distance matrix for the entire mapper graph. This is a labeled block matrix with rows and columns indexed by vertices, and entries given by the thickening distance between the two vertices.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LabeledBlockMatrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s2">&quot;V&quot;</span><span class="p">:</span>
+            <span class="n">V_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_to_vertex_dict</span><span class="p">()</span>
+            <span class="n">DistMat</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">rows_dict</span><span class="o">=</span><span class="n">V_dict</span><span class="p">,</span> <span class="n">cols_dict</span><span class="o">=</span><span class="n">V_dict</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">obj_type</span> <span class="o">==</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span>
+            <span class="n">E_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_to_edge_dict</span><span class="p">()</span>
+            <span class="n">DistMat</span> <span class="o">=</span> <span class="n">LBM</span><span class="p">(</span><span class="n">rows_dict</span><span class="o">=</span><span class="n">E_dict</span><span class="p">,</span> <span class="n">cols_dict</span><span class="o">=</span><span class="n">E_dict</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DistMat</span><span class="o">.</span><span class="n">get_all_block_indices</span><span class="p">():</span>
+            <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thickening_distance_by_level</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">obj_type</span><span class="o">=</span><span class="n">obj_type</span><span class="p">)</span>
+            <span class="n">DistMat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">D</span>
+
+        <span class="k">return</span> <span class="n">DistMat</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

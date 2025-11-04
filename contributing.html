@@ -1,0 +1,244 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Info on contributing to ceREEBerus &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Modules" href="modules/index.html" />
+    <link rel="prev" title="ceREEBerus: Reeb Graph Computations in Python" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-contribute-forking-and-pull-requests">How to Contribute: Forking and Pull Requests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pr-review-checklist">PR Review Checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#useful-makefile-commands">Useful Makefile Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#info-on-documentation">Info on documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#markdown-vs-restructuredtext">Markdown vs. reStructuredText</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#basic-examples">Basic Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#style-choices-we-ve-made">Style choices we’ve made</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Info on contributing to ceREEBerus</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contributing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="info-on-contributing-to-cereeberus">
+<h1>Info on contributing to ceREEBerus<a class="headerlink" href="#info-on-contributing-to-cereeberus" title="Link to this heading"></a></h1>
+<p>We love having new contributors! Please read the following guidelines to help you get started.</p>
+<section id="how-to-contribute-forking-and-pull-requests">
+<h2>How to Contribute: Forking and Pull Requests<a class="headerlink" href="#how-to-contribute-forking-and-pull-requests" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Visit the GitHub repository: <a class="reference external" href="https://github.com/MunchLab/ceREEBerus">https://github.com/MunchLab/ceREEBerus</a></p></li>
+<li><p>Click “Fork” in the top right to create your own copy of the repository.</p></li>
+<li><p>Clone your fork to your local machine:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/&lt;your-username&gt;/ceREEBerus.git
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Create a new branch for your changes:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>my-feature-branch
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Make your changes and commit them with clear messages.</p></li>
+<li><p>Push your branch to your fork:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>my-feature-branch
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Go to <a class="reference external" href="https://github.com/MunchLab/ceREEBerus">https://github.com/MunchLab/ceREEBerus</a> and click “Compare &amp; pull request” to open a pull request.</p></li>
+<li><p>Fill out the PR template and submit your pull request for review.</p></li>
+</ol>
+<p>For more details, see GitHub’s guide: <a class="reference external" href="https://docs.github.com/en/get-started/quickstart/contributing-to-projects">https://docs.github.com/en/get-started/quickstart/contributing-to-projects</a></p>
+<section id="pr-review-checklist">
+<h3>PR Review Checklist<a class="headerlink" href="#pr-review-checklist" title="Link to this heading"></a></h3>
+<p>Before we approve any pull request, we’ll ask you to do the following things:</p>
+<ul>
+<li><p>Ensure your code follows the code style of this project. You can run:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>format
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p>to autoformat your code using <a class="reference external" href="https://black.readthedocs.io/en/stable/">black</a>.</p>
+<p>If your change requires a change to the documentation, please update the documentation as necessary. You can compile the docs locally by running:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>docs
+</pre></div>
+</div>
+</div></blockquote>
+<p>to ensure everything looks good. You will be able to view your changes in the built documentation by opening the <code class="docutils literal notranslate"><span class="pre">docs/_build/html/index.html</span></code> file in your web browser. Do not add the Docs folder to your git repository. The final documentation will be built on github when your PR is merged.</p>
+<ul>
+<li><p>Add tests to cover your changes. You can run:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>tests
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p>to run the unit tests and ensure everything is passing. If the tests fail, we won’t be able to merge your PR.</p>
+<ul class="simple">
+<li><p>Please make sure to increment the version number in the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file if your changes require a new release to be pushed to PyPI. If the version number is not incremented, the package will not be pushed to PyPI, which is useful if your PR is only for updating documentation.</p></li>
+</ul>
+</section>
+</section>
+<section id="useful-makefile-commands">
+<h2>Useful Makefile Commands<a class="headerlink" href="#useful-makefile-commands" title="Link to this heading"></a></h2>
+<p>The Makefile in this project provides several helpful commands for development and documentation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install-requirements</span></code>: Install all dependencies from requirements.txt, including those needed for development and documentation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install-editable</span></code>: Install the package in editable mode for development</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">lint</span></code>: Run <a class="reference external" href="https://flake8.pycqa.org/en/latest/">flake8</a> linter on the code</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">format</span></code>: Format code using <a class="reference external" href="https://black.readthedocs.io/en/stable/">black</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">tests</span></code>: Run the unit tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docs</span></code>: Build the documentation in the docs/ folder</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">release</span></code>: Build the package for release</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">all</span></code>: Install requirements, install ceREEBerus in editable mode, then run format, tests, and docs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">help</span></code>: See a summary of all available commands.</p></li>
+</ul>
+</section>
+<section id="info-on-documentation">
+<h2>Info on documentation<a class="headerlink" href="#info-on-documentation" title="Link to this heading"></a></h2>
+<section id="markdown-vs-restructuredtext">
+<h3>Markdown vs. reStructuredText<a class="headerlink" href="#markdown-vs-restructuredtext" title="Link to this heading"></a></h3>
+<p>This project uses sphinx with reStructuredText for documentation. Here is a <a class="reference external" href="https://sphinx-tutorial.readthedocs.io/cheatsheet/">cheat sheet</a> for reStructuredText. While markdown also works, it tends to be less powerful for certain things like equations.</p>
+</section>
+<section id="basic-examples">
+<h3>Basic Examples<a class="headerlink" href="#basic-examples" title="Link to this heading"></a></h3>
+<p>Here are some minimal working examples.
+See <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/demo/api.html">sphinx-rtd-theme documentation</a> for full information.
+This is a docstring example for a method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Returns the subgraph of the Reeb graph with image in the open interval :math:`(a, b)`.</span>
+<span class="sd">This will convert any edges that cross the slice into vertices.</span>
+
+<span class="sd">Parameters:</span>
+<span class="sd">    a (float): The lower bound of the slice :math:`a`.</span>
+<span class="sd">    b (float): The upper bound of the slice :math:`b`.</span>
+
+<span class="sd">Returns:</span>
+<span class="sd">    ReebGraph: The subgraph of the Reeb graph with image in :math:`(a, b)`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="style-choices-we-ve-made">
+<h3>Style choices we’ve made<a class="headerlink" href="#style-choices-we-ve-made" title="Link to this heading"></a></h3>
+<p>There is lots of vocabulary around TDA constructions, and lots of opinions about coding styles. Here are some style choices we’ve made for this project. Are we consistent with them? Not always, but we try!</p>
+<ul class="simple">
+<li><p>Everything is a “vertex” or an “edge” (not a “node” or a “link”)</p></li>
+<li><p>File names are all lowercase with underscores (e.g., reeb_graph.py)</p></li>
+<li><p>Class names are in CamelCase (e.g., ReebGraph)</p></li>
+<li><p>Method and function names are in <code class="docutils literal notranslate"><span class="pre">snake_case</span></code>  or <code class="docutils literal notranslate"><span class="pre">camelCase</span></code> starting lower case (e.g., <code class="docutils literal notranslate"><span class="pre">compute_reeb_graph</span></code> or <code class="docutils literal notranslate"><span class="pre">computeReeb</span></code>)</p></li>
+<li><p>Plotting functions for a class are named <code class="docutils literal notranslate"><span class="pre">Thing.draw()</span></code>.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="ceREEBerus: Reeb Graph Computations in Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules/index.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
