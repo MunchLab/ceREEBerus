@@ -101,7 +101,7 @@ class Torus(LowerStar):
             
         super().assign_filtration(vertex, value)
         
-    def plot(self, ax = None, cmap = plt.cm.viridis, **kwargs):
+    def draw(self, ax = None, cmap = plt.cm.viridis, **kwargs):
         """Gives a flat plot of the torus's 1-skeleton using matplotlib.
 
         Args:
