@@ -42,6 +42,7 @@ jobs:
             echo "publish=true" >> $GITHUB_OUTPUT
           else
             echo "publish=false" >> $GITHUB_OUTPUT
+          fi
       - name: Install package for testing
         run: pip install .
       - name: Run tests
