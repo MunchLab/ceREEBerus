@@ -1,13 +1,13 @@
-from ..reeb.lowerstarSC import LowerStarSC 
+from ..reeb.lowerstar import LowerStar 
 import matplotlib.pyplot as plt
 import numpy as np
 
-class Torus(LowerStarSC):
+class Torus(LowerStar):
     """
-    Class to create an example torus using the LowerStarSC.
+    Class to create an example torus using the LowerStar.
 
     Inherits from:
-        LowerStarSC: A lower star simplicial complex.
+        LowerStar: A lower star simplicial complex.
 
     Methods:
         __init__(): Initializes the torus by inserting simplices.
@@ -101,7 +101,7 @@ class Torus(LowerStarSC):
             
         super().assign_filtration(vertex, value)
         
-    def plot(self, ax = None, cmap = plt.cm.viridis, **kwargs):
+    def draw(self, ax = None, cmap = plt.cm.viridis, **kwargs):
         """Gives a flat plot of the torus's 1-skeleton using matplotlib.
 
         Args:

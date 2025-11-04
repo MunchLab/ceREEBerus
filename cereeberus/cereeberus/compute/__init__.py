@@ -1,4 +1,4 @@
-__all__ = ['draw', 'unionfind', 'distance', 'reeb_of_lower_star']
+__all__ = ['draw', 'unionfind', 'computeReeb']
 from .draw import *
 from .unionfind import *
-from .reeb_of_lower_star import *
+from .computereeb import *
