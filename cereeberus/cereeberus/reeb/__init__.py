@@ -1,4 +1,4 @@
-__all__ = ['reebgraph', 'merge', 'mapper', 'embeddedgraph', 'lowerstar']
+__all__ = ["reebgraph", "merge", "mapper", "embeddedgraph", "lowerstar"]
 
 from .reebgraph import *
 from .merge import *
