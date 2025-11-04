@@ -1,13 +1,13 @@
 # Edited from https://yuminlee2.medium.com/union-find-algorithm-ffa9cd7d2dba
 
+
 class UnionFind:
-    """Union find data structure 
-    """
+    """Union find data structure"""
+
     def __init__(self, vertices):
         self.parent = {vertex: vertex for vertex in vertices}
         self.size = {vertex: 1 for vertex in vertices}
         self.count = len(vertices)
-    
 
     # Time: O(logn) | Space: O(1)
     def find(self, node):
@@ -16,7 +16,7 @@ class UnionFind:
             self.parent[node] = self.parent[self.parent[node]]
             node = self.parent[node]
         return node
-    
+
     # Time: O(1) | Space: O(1)
     def union(self, node1, node2):
         root1 = self.find(node1)
@@ -32,7 +32,7 @@ class UnionFind:
         else:
             self.parent[root1] = root2
             self.size[root2] += 1
-        
+
         self.count -= 1
 
     def components_dict(self):
@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     for node1, node2 in edges:
         uf.union(node1, node2)
-    
+
     print("number of connected components", uf.count)
 
 # output: ('number of connected components', 3)

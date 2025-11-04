@@ -1,4 +1,4 @@
-__all__ = ['ilp', 'interleave', 'labeled_blocks']
+__all__ = ["ilp", "interleave", "labeled_blocks"]
 
 from .ilp import *
 from .interleave import *

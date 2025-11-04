@@ -93,7 +93,7 @@ class EmbeddedGraph(nx.Graph):
                 The vertex whose coordinates are to be set.
             x (float):
                 The new x-coordinate of the vertex.
-            y (float): 
+            y (float):
                 The new y-coordinate of the vertex.
 
         Raises:
@@ -183,11 +183,11 @@ class EmbeddedGraph(nx.Graph):
 
     def g_omega_edges(self, theta):
         """
-        Calculates the function value of the edges of the graph by making the value equal to the max vertex value 
+        Calculates the function value of the edges of the graph by making the value equal to the max vertex value
 
         Parameters:
 
-            theta (float): 
+            theta (float):
                 The direction of the function to be calculated.
 
         Returns:
@@ -214,8 +214,8 @@ class EmbeddedGraph(nx.Graph):
 
         Returns:
             list
-                A list of vertices sorted in increasing order of the :math:`g(v)` values. 
-                If ``return_g`` is True, also returns the ``g`` dictionary with the function values ``g[vertex_name]=func_value``. 
+                A list of vertices sorted in increasing order of the :math:`g(v)` values.
+                If ``return_g`` is True, also returns the ``g`` dictionary with the function values ``g[vertex_name]=func_value``.
 
         """
         g = self.g_omega(theta)
@@ -245,8 +245,8 @@ class EmbeddedGraph(nx.Graph):
                 Whether to return the :math:`g(v)` values along with the sorted edges.
 
         Returns:
-            A list of edges sorted in increasing order of the :math:`g(v)` values. 
-            If ``return_g`` is True, also returns the ``g`` dictionary with the function values ``g[vertex_name]=func_value``. 
+            A list of edges sorted in increasing order of the :math:`g(v)` values.
+            If ``return_g`` is True, also returns the ``g`` dictionary with the function values ``g[vertex_name]=func_value``.
 
         """
         g_e = self.g_omega_edges(theta)
@@ -266,7 +266,7 @@ class EmbeddedGraph(nx.Graph):
         Parameters:
             v (str):
                 The vertex to compute the number of lower edges for.
-            omega (tuple): 
+            omega (tuple):
                 The direction vector to consider given as an angle in [0, 2pi].
 
         Returns:
@@ -301,26 +301,23 @@ class EmbeddedGraph(nx.Graph):
             color_map = [g[v] for v in self.nodes]
             # Some weird plotting to make the colorbar work.
             pathcollection = nx.draw_networkx_nodes(
-                self, pos, node_color=color_map, ax=ax)
-            nx.draw_networkx_labels(self, pos=pos, font_color='black', ax=ax)
+                self, pos, node_color=color_map, ax=ax
+            )
+            nx.draw_networkx_labels(self, pos=pos, font_color="black", ax=ax)
             nx.draw_networkx_edges(self, pos, ax=ax, width=1, **kwargs)
             fig.colorbar(pathcollection, ax=ax, **kwargs)
 
-        plt.axis('on')
-        ax.tick_params(left=True, bottom=True,
-                       labelleft=True, labelbottom=True)
+        plt.axis("on")
+        ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
 
         if bounding_circle:
             r = self.get_bounding_radius()
             ax = plt.gca()
-            circle1 = plt.Circle((0, 0), r, fill=False,
-                                 linestyle='--', color='r')
+            circle1 = plt.Circle((0, 0), r, fill=False, linestyle="--", color="r")
             ax.add_patch(circle1)
-            plt.axis('square')
+            plt.axis("square")
 
         return ax
-
-
 
     def reeb_graph_from_direction(self, theta):
         """
@@ -335,45 +332,50 @@ class EmbeddedGraph(nx.Graph):
 
         """
 
-        sorted_verts, g_verts= self.sort_vertices(theta, return_g = True)
+        sorted_verts, g_verts = self.sort_vertices(theta, return_g=True)
         g_vert_list = np.array([g_verts[v] for v in sorted_verts])
 
         # Get the locations of a new function value since those will collapse down to a single vertex in the Reeb graph
-        new_val_locs = np.where(1-np.isclose(g_vert_list[:-1] , g_vert_list[1:]))[0] +1
-        new_val_locs = np.concatenate([[0,], new_val_locs])
+        new_val_locs = (
+            np.where(1 - np.isclose(g_vert_list[:-1], g_vert_list[1:]))[0] + 1
+        )
+        new_val_locs = np.concatenate(
+            [
+                [
+                    0,
+                ],
+                new_val_locs,
+            ]
+        )
 
         # This dictionary will be find_comp[vertex_name] = new_vertex_name
         find_comp = {}
         vert_list = []
         f_dict_new = {}
 
-        for val_i,i in enumerate(new_val_locs):
+        for val_i, i in enumerate(new_val_locs):
 
-            
-
-            if val_i == len(new_val_locs)-1:
+            if val_i == len(new_val_locs) - 1:
                 verts = sorted_verts[i:]
             else:
-                verts = sorted_verts[i:new_val_locs[val_i+1]]
+                verts = sorted_verts[i : new_val_locs[val_i + 1]]
 
-            L = list(nx.connected_components(nx.induced_subgraph(self,verts)))
+            L = list(nx.connected_components(nx.induced_subgraph(self, verts)))
             for cc_list in L:
-                new_vert = '-'.join(cc_list)
+                new_vert = "-".join(cc_list)
                 vert_list.append(new_vert)
                 for v in cc_list:
                     find_comp[v] = new_vert
                 f_dict_new[new_vert] = g_vert_list[i]
 
         R = ReebGraph()
-        R.add_nodes_from(vert_list,f_dict_new)
+        R.add_nodes_from(vert_list, f_dict_new)
 
         for e in self.edges:
             if find_comp[e[0]] != find_comp[e[1]]:
-                R.add_edge(find_comp[e[0]],find_comp[e[1]])
-        
+                R.add_edge(find_comp[e[0]], find_comp[e[1]])
+
         return R
-
-
 
 
 if __name__ == "__main__":
@@ -383,23 +385,23 @@ if __name__ == "__main__":
     graph = EmbeddedGraph()
 
     # Add vertices with their coordinates
-    graph.add_node('A', 1, 2)
-    graph.add_node('B', 3, 4)
-    graph.add_node('C', 5, 6)
+    graph.add_node("A", 1, 2)
+    graph.add_node("B", 3, 4)
+    graph.add_node("C", 5, 6)
 
     # Add edges between vertices
-    graph.add_edge('A', 'B')
-    graph.add_edge('B', 'C')
+    graph.add_edge("A", "B")
+    graph.add_edge("B", "C")
 
     # Get coordinates of a vertex
-    coords = graph.get_coordinates('A')
-    print(f'Coordinates of A: {coords}')
+    coords = graph.get_coordinates("A")
+    print(f"Coordinates of A: {coords}")
 
     # Set new coordinates for a vertex
-    graph.set_coordinates('A', 7, 8)
-    coords = graph.get_coordinates('A')
-    print(f'New coordinates of A: {coords}')
+    graph.set_coordinates("A", 7, 8)
+    coords = graph.get_coordinates("A")
+    print(f"New coordinates of A: {coords}")
 
     # Get the bounding box of the vertex coordinates
     bbox = graph.get_bounding_box()
-    print(f'Bounding box: {bbox}')
+    print(f"Bounding box: {bbox}")

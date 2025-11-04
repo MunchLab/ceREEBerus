@@ -23,24 +23,34 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.9"
-      - name: Install pypa/build
-        run: >-
-          python -m
-          pip install
-          build
-          --user
+      - name: Install dependencies for version check
+        run: pip install requests packaging build
+      - name: Get local version
+        id: get_local_version
+        run: |
+          local_version=$(grep -m1 version pyproject.toml | sed 's/.*= "\(.*\)"/\1/')
+          echo "local_version=$local_version" >> $GITHUB_OUTPUT
+      - name: Get PyPI version
+        id: get_pypi_version
+        run: |
+          pypi_version=$(python -c "import requests; print(requests.get('https://pypi.org/pypi/cereeberus/json').json()['info']['version'])")
+          echo "pypi_version=$pypi_version" >> $GITHUB_OUTPUT
+      - name: Check if version is incremented
+        id: check_version
+        run: |
+          if python -c "from packaging.version import parse; print(parse('${{ steps.get_local_version.outputs.local_version }}') > parse('${{ steps.get_pypi_version.outputs.pypi_version }}'))" | grep -q True; then
+            echo "publish=true" >> $GITHUB_OUTPUT
+          else
+            echo "publish=false" >> $GITHUB_OUTPUT
       - name: Install package for testing
         run: pip install .
       - name: Run tests
         run: make tests
       - name: Build a binary wheel and a source tarball
-        run: >-
-          python -m
-          build
-          --sdist
-          --wheel
-          --outdir dist/
+        run: |
+          python -m build --sdist --wheel --outdir dist/
       - name: Publish distribution 📦 to PyPI
+        if: steps.check_version.outputs.publish == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI }}

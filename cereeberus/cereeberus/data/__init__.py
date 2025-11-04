@@ -1,5 +1,10 @@
-
-__all__ = ['ex_reebgraphs', 'ex_mergetrees', 'ex_mappergraphs', 'ex_embedgraphs', 'ex_torus']
+__all__ = [
+    "ex_reebgraphs",
+    "ex_mergetrees",
+    "ex_mappergraphs",
+    "ex_embedgraphs",
+    "ex_torus",
+]
 
 from .ex_reebgraphs import *
 from .ex_mergetrees import *
