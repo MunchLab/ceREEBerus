@@ -85,7 +85,7 @@ def __addedges(clusterpoints):
 
 
 #Does the Mapper Algorithm in order
-def runmapper(self, pointcloud, lensfunction, cover, clusteralgorithm):
+def computeMapper(self, pointcloud, lensfunction, cover, clusteralgorithm):
     """
     Computes the Mapper Alogirthm
 
@@ -109,7 +109,7 @@ def runmapper(self, pointcloud, lensfunction, cover, clusteralgorithm):
 #cover(min, max, #covers, %overlap)
 def cover(min=-1, max=1, numcovers=10, percentoverlap=.5):
     """
-    Creates a cover to be used for inputs in the runmapper function
+    Creates a cover to be used for inputs in the computeMapper function
 
     Parameters:
         min: the minimum for the range of the covering sets
