@@ -1,20 +1,13 @@
-#This is probably bad
-from asteval import Interpreter
-aeval = Interpreter()
-
 from ..reeb.mapper import MapperGraph
-
-
-
-
 
 #Interprets the lensfunction as a python function, does it, then returns the new location of each point for every point
 def __runlensfunction(lensfunction, pointcloud):
-    lensfunctionoutput = []
-    for val in range(len(pointcloud)):
-        aeval.symtable['x'] = pointcloud[val][0]
-        aeval.symtable['y'] = pointcloud[val][1]
-        lensfunctionoutput.append((aeval(lensfunction), pointcloud[val][0], pointcloud[val][1]))
+    if callable(lensfunction):
+        lensfunctionoutput = []
+        for val in range(len(pointcloud)):
+            lensfunctionoutput.append(lensfunction(pointcloud[val]))
+    else:
+        print("Invalid lens function")
     return lensfunctionoutput
 
 
