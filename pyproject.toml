@@ -2,7 +2,7 @@
 
 [project]
 name = "cereeberus"
-version = "0.1.6"
+version = "0.1.9"
 authors = [
   { name="Liz Munch", email="muncheli@msu.edu" },
 ]
@@ -18,7 +18,8 @@ dependencies = ["numpy",
             "matplotlib",
             "pandas",
             "scipy", 
-            "pulp"
+            "pulp",
+            "gudhi"
             ]
 
 [tool.setuptools.packages.find]

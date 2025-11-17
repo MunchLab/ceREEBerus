@@ -1,0 +1,13 @@
+numpy
+networkx
+matplotlib
+pandas
+scipy
+pulp
+gudhi
+sphinx
+nbsphinx
+myst-parser
+sphinx_rtd_theme
+flake8
+black
