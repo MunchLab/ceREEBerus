@@ -5,9 +5,10 @@ def __runlensfunction(lensfunction, pointcloud):
     if callable(lensfunction):
         lensfunctionoutput = []
         for val in range(len(pointcloud)):
-            lensfunctionoutput.append([lensfunction(pointcloud[val]), pointcloud[val]])
+            lensfunctionoutput.append([lensfunction(pointcloud[val]), tuple(pointcloud[val])])
     else:
         print("Invalid lens function")
+    print("Lens Function Output: ")
     print(lensfunctionoutput)
     return lensfunctionoutput
 
@@ -33,6 +34,8 @@ def __createcoveringsets(points, cover):
             coveringsets.pop(position)
         else:
             position += 1
+    print("Covering Sets Output: ")
+    print(coveringsets)
     return coveringsets
 
 
@@ -40,10 +43,17 @@ def __createcoveringsets(points, cover):
 def __cluster(coveringsets, clusteralgorithm):
     #trivial clustering
     if clusteralgorithm == "trivial":
-        for val in range(len(coveringsets)):
-            location = coveringsets[val].pop(0)
-            coveringsets[val].insert(0, location[2])
-        return coveringsets
+        finished_cluster = list()
+        cluster = list()
+        for val1 in range(len(coveringsets)):
+            cluster.append(coveringsets[val1][0][2])
+            for val2 in range(1, len(coveringsets[val1])):
+                cluster.append(coveringsets[val1][val2][1])
+            finished_cluster.append([cluster[0], cluster[1]])
+            cluster.clear()
+        print("Clustering Output: ")
+        print(finished_cluster)
+        return finished_cluster
     #execute sklearn clusterings
     elif callable(clusteralgorithm):
         finished_cluster = list()
@@ -64,6 +74,8 @@ def __cluster(coveringsets, clusteralgorithm):
                 finished_cluster.append(cluster[val2])
             coverpointcloud.clear()
             cluster.clear()
+        print("Clustering Output: ")
+        print(finished_cluster)
         return finished_cluster
     else:
         print("input not valid")
@@ -78,12 +90,12 @@ def __addedges(clusterpoints):
         outputgraph.add_node(val1, clusterpoints[val1][0])
         while val2 < val1:
             if clusterpoints[val1][0] != clusterpoints[val2][0]:
-                print(clusterpoints[val1])
-                print(set(clusterpoints[val1]))
                 if len(set(clusterpoints[val1]) & set(clusterpoints[val2])) > 0:
                     outputgraph.add_edge(val1, val2)
             val2 += 1
         val2 = 0
+    print("Final Output: ")
+    print(outputgraph)
     return outputgraph
 
 
