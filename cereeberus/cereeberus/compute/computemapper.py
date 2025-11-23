@@ -5,9 +5,10 @@ def __runlensfunction(lensfunction, pointcloud):
     if callable(lensfunction):
         lensfunctionoutput = []
         for val in range(len(pointcloud)):
-            lensfunctionoutput.append(lensfunction(pointcloud[val]))
+            lensfunctionoutput.append([lensfunction(pointcloud[val]), pointcloud[val]])
     else:
         print("Invalid lens function")
+    print(lensfunctionoutput)
     return lensfunctionoutput
 
 
@@ -51,7 +52,7 @@ def __cluster(coveringsets, clusteralgorithm):
         for val1 in range(len(coveringsets)):
             #alters data to fit with sklearn clustering algorithms
             for val2 in range(1, len(coveringsets[val1])):   
-                coverpointcloud.append((coveringsets[val1][val2][1],coveringsets[val1][val2][2]))
+                coverpointcloud.append((coveringsets[val1][val2][1][0],coveringsets[val1][val2][1][1]))
             #does clustering algorithm
             cluster_out = clusteralgorithm(coverpointcloud)
             #puts points into list
@@ -77,6 +78,8 @@ def __addedges(clusterpoints):
         outputgraph.add_node(val1, clusterpoints[val1][0])
         while val2 < val1:
             if clusterpoints[val1][0] != clusterpoints[val2][0]:
+                print(clusterpoints[val1])
+                print(set(clusterpoints[val1]))
                 if len(set(clusterpoints[val1]) & set(clusterpoints[val2])) > 0:
                     outputgraph.add_edge(val1, val2)
             val2 += 1
@@ -85,23 +88,23 @@ def __addedges(clusterpoints):
 
 
 #Does the Mapper Algorithm in order
-def computeMapper(self, pointcloud, lensfunction, cover, clusteralgorithm):
+def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm):
     """
     Computes the Mapper Alogirthm
 
     Parameters:
         A pointcloud (as a list)
-        A lens function (as a string)
+        A lens function (as a callable)
         A cover (as a list of intervals)
         A clustering algorithm (as a callable)
 
     Returns:
         A MapperGraph object as given by the Mapper Algorithm run on the parameters
     """
-    lensfunctionoutput = self.__runlensfunction(lensfunction, pointcloud) #move to compute folder, change name to computemapper
-    coveringsets = self.__createcoveringsets(lensfunctionoutput, cover)
-    clusterpoints = self.__cluster(coveringsets, clusteralgorithm)
-    outputgraph = self.__addedges(clusterpoints)
+    lensfunctionoutput = __runlensfunction(lensfunction, pointcloud) #move to compute folder, change name to computemapper
+    coveringsets = __createcoveringsets(lensfunctionoutput, cover)
+    clusterpoints = __cluster(coveringsets, clusteralgorithm)
+    outputgraph = __addedges(clusterpoints)
     return outputgraph
 
 
@@ -128,8 +131,6 @@ def cover(min=-1, max=1, numcovers=10, percentoverlap=.5):
         output.append(((-0.5*coversize) + center, (0.5*coversize) + center))
         val += 1
     return output
-    
-
 
 
 
