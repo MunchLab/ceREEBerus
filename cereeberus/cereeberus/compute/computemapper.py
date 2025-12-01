@@ -8,8 +8,8 @@ def __runlensfunction(lensfunction, pointcloud):
             lensfunctionoutput.append([lensfunction(pointcloud[val]), tuple(pointcloud[val])])
     else:
         print("Invalid lens function")
-    print("Lens Function Output: ")
-    print(lensfunctionoutput)
+    #print("Lens Function Output: ")
+    #print(lensfunctionoutput)
     return lensfunctionoutput
 
 
@@ -34,8 +34,8 @@ def __createcoveringsets(points, cover):
             coveringsets.pop(position)
         else:
             position += 1
-    print("Covering Sets Output: ")
-    print(coveringsets)
+    #print("Covering Sets Output: ")
+    #print(coveringsets)
     return coveringsets
 
 
@@ -48,11 +48,11 @@ def __cluster(coveringsets, clusteralgorithm):
         for val1 in range(len(coveringsets)):
             cluster.append(coveringsets[val1][0][2])
             for val2 in range(1, len(coveringsets[val1])):
-                cluster.append(coveringsets[val1][val2][1])
-            finished_cluster.append([cluster[0], cluster[1]])
+                cluster.append((coveringsets[val1][val2][1][0],coveringsets[val1][val2][1][1]))
+            finished_cluster.append(cluster[:])   #Works like this to avoid passing by reference in python lists
             cluster.clear()
-        print("Clustering Output: ")
-        print(finished_cluster)
+        #print("Clustering Output: ")
+        #print(finished_cluster)
         return finished_cluster
     #execute sklearn clusterings
     elif callable(clusteralgorithm):
@@ -61,7 +61,7 @@ def __cluster(coveringsets, clusteralgorithm):
         cluster = list()
         for val1 in range(len(coveringsets)):
             #alters data to fit with sklearn clustering algorithms
-            for val2 in range(1, len(coveringsets[val1])):   
+            for val2 in range(1, len(coveringsets[val1])):
                 coverpointcloud.append((coveringsets[val1][val2][1][0],coveringsets[val1][val2][1][1]))
             #does clustering algorithm
             cluster_out = clusteralgorithm(coverpointcloud)
@@ -94,8 +94,8 @@ def __addedges(clusterpoints):
                     outputgraph.add_edge(val1, val2)
             val2 += 1
         val2 = 0
-    print("Final Output: ")
-    print(outputgraph)
+    #print("Final Output: ")
+    #print(outputgraph)
     return outputgraph
 
 
