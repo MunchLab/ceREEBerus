@@ -85,8 +85,8 @@ def __cluster(coveringsets, clusteralgorithm):
                 finished_cluster.append(cluster[val2])
             coverpointcloud.clear()
             cluster.clear()
-        #print("Clustering Output: ")
-        #print(finished_cluster)
+        # print("Clustering Output: ")
+        # print(finished_cluster)
         return finished_cluster
     else:
         print("input not valid")
