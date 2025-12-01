@@ -1,73 +1,84 @@
 from ..reeb.mapper import MapperGraph
 
-#Interprets the lensfunction as a python function, does it, then returns the new location of each point for every point
+
+# Interprets the lensfunction as a python function, does it, then returns the new location of each point for every point
 def __runlensfunction(lensfunction, pointcloud):
     if callable(lensfunction):
         lensfunctionoutput = []
         for val in range(len(pointcloud)):
-            lensfunctionoutput.append([lensfunction(pointcloud[val]), tuple(pointcloud[val])])
+            lensfunctionoutput.append(
+                [lensfunction(pointcloud[val]), tuple(pointcloud[val])]
+            )
     else:
         print("Invalid lens function")
-    #print("Lens Function Output: ")
-    #print(lensfunctionoutput)
+    # print("Lens Function Output: ")
+    # print(lensfunctionoutput)
     return lensfunctionoutput
 
 
-#Creates a list of covers, together with any points inside the cover, ie, [[cover, point1, point2], [cover, point3]]
-#Also removes any covers that have no points inside of them
-#this would probably be better done as a struct, containing a covering set, the covering set's position in the cover, and an array of points
+# Creates a list of covers, together with any points inside the cover, ie, [[cover, point1, point2], [cover, point3]]
+# Also removes any covers that have no points inside of them
+# this would probably be better done as a struct, containing a covering set, the covering set's position in the cover, and an array of points
 def __createcoveringsets(points, cover):
-    #adds location information to cover
+    # adds location information to cover
     for val0 in range(len(cover)):
         cover[val0] = (cover[val0][0], cover[val0][1], val0)
-    #creates the list
+    # creates the list
     coveringsets = []
     for val1 in range(len(cover)):
         coveringsets.append([cover[val1]])
         for val2 in range(len(points)):
             if points[val2][0] >= cover[val1][0] and points[val2][0] <= cover[val1][1]:
                 coveringsets[val1].append(points[val2])
-    #removes unused covers
+    # removes unused covers
     position = 0
     while position < len(coveringsets):
         if len(coveringsets[position]) == 1:
             coveringsets.pop(position)
         else:
             position += 1
-    #print("Covering Sets Output: ")
-    #print(coveringsets)
+    # print("Covering Sets Output: ")
+    # print(coveringsets)
     return coveringsets
 
 
-#cluster the points using a number of existing clustering algorithms
+# cluster the points using a number of existing clustering algorithms
 def __cluster(coveringsets, clusteralgorithm):
-    #trivial clustering
+    # trivial clustering
     if clusteralgorithm == "trivial":
         finished_cluster = list()
         cluster = list()
         for val1 in range(len(coveringsets)):
             cluster.append(coveringsets[val1][0][2])
             for val2 in range(1, len(coveringsets[val1])):
-                cluster.append((coveringsets[val1][val2][1][0],coveringsets[val1][val2][1][1]))
-            finished_cluster.append(cluster[:])   #Works like this to avoid passing by reference in python lists
+                cluster.append(
+                    (coveringsets[val1][val2][1][0], coveringsets[val1][val2][1][1])
+                )
+            finished_cluster.append(
+                cluster[:]
+            )  # Works like this to avoid passing by reference in python lists
             cluster.clear()
-        #print("Clustering Output: ")
-        #print(finished_cluster)
+        # print("Clustering Output: ")
+        # print(finished_cluster)
         return finished_cluster
-    #execute sklearn clusterings
+    # execute sklearn clusterings
     elif callable(clusteralgorithm):
         finished_cluster = list()
         coverpointcloud = list()
         cluster = list()
         for val1 in range(len(coveringsets)):
-            #alters data to fit with sklearn clustering algorithms
+            # alters data to fit with sklearn clustering algorithms
             for val2 in range(1, len(coveringsets[val1])):
-                coverpointcloud.append((coveringsets[val1][val2][1][0],coveringsets[val1][val2][1][1]))
-            #does clustering algorithm
+                coverpointcloud.append(
+                    (coveringsets[val1][val2][1][0], coveringsets[val1][val2][1][1])
+                )
+            # does clustering algorithm
             cluster_out = clusteralgorithm(coverpointcloud)
-            #puts points into list
-            for val2 in range(max(cluster_out.labels_)+1):
-                cluster.append([coveringsets[val1][0][2]])   #The position of the covering set in the cover (preserved for distance purposes)
+            # puts points into list
+            for val2 in range(max(cluster_out.labels_) + 1):
+                cluster.append(
+                    [coveringsets[val1][0][2]]
+                )  # The position of the covering set in the cover (preserved for distance purposes)
                 for val3 in range(len(cluster_out.labels_)):
                     if cluster_out.labels_[val3] == val2:
                         cluster[val2].append(coverpointcloud[val3])
@@ -82,7 +93,7 @@ def __cluster(coveringsets, clusteralgorithm):
         return list()
 
 
-#Adds edges between the cluster that share points
+# Adds edges between the cluster that share points
 def __addedges(clusterpoints):
     outputgraph = MapperGraph()
     val2 = 0
@@ -94,12 +105,12 @@ def __addedges(clusterpoints):
                     outputgraph.add_edge(val1, val2)
             val2 += 1
         val2 = 0
-    #print("Final Output: ")
-    #print(outputgraph)
+    # print("Final Output: ")
+    # print(outputgraph)
     return outputgraph
 
 
-#Does the Mapper Algorithm in order
+# Does the Mapper Algorithm in order
 def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm):
     """
     Computes the Mapper Alogirthm
@@ -113,16 +124,18 @@ def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm):
     Returns:
         A MapperGraph object as given by the Mapper Algorithm run on the parameters
     """
-    lensfunctionoutput = __runlensfunction(lensfunction, pointcloud) #move to compute folder, change name to computemapper
+    lensfunctionoutput = __runlensfunction(
+        lensfunction, pointcloud
+    )  # move to compute folder, change name to computemapper
     coveringsets = __createcoveringsets(lensfunctionoutput, cover)
     clusterpoints = __cluster(coveringsets, clusteralgorithm)
     outputgraph = __addedges(clusterpoints)
     return outputgraph
 
 
-#function to create covers
-#cover(min, max, #covers, %overlap)
-def cover(min=-1, max=1, numcovers=10, percentoverlap=.5):
+# function to create covers
+# cover(min, max, #covers, %overlap)
+def cover(min=-1, max=1, numcovers=10, percentoverlap=0.5):
     """
     Creates a cover to be used for inputs in the computeMapper function
 
@@ -137,12 +150,9 @@ def cover(min=-1, max=1, numcovers=10, percentoverlap=.5):
     """
     output = []
     val = 0
-    coversize = (max - min)/numcovers * (1+(percentoverlap))
+    coversize = (max - min) / numcovers * (1 + (percentoverlap))
     while val < numcovers:
-        center = (min*(numcovers-(val+0.5)) + max*(val+0.5))/numcovers
-        output.append(((-0.5*coversize) + center, (0.5*coversize) + center))
+        center = (min * (numcovers - (val + 0.5)) + max * (val + 0.5)) / numcovers
+        output.append(((-0.5 * coversize) + center, (0.5 * coversize) + center))
         val += 1
     return output
-
-
-
