@@ -1,6 +1,6 @@
-# Compute Module
+# Draw Module
 
-The ``compute`` module has helper code used throughout the package. 
+The ``draw`` module has helper code used throughout the package. 
 
 ```{eval-rst}
 .. toctree::
