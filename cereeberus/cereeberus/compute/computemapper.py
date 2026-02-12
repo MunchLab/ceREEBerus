@@ -123,7 +123,7 @@ def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm):
     
     The point cloud should be given as a list of tuples or as a numpy array. 
     
-    The lens function should be given as either a list of numbers with the same length as the number of points; or as a callable function where $f(point) = lensfunction(point)$ so long as the function can be determined from the coordinate values of the point. 
+    The lens function should be given as either a list of numbers with the same length as the number of points; or as a callable function where :math:`f(point) = \text{value}` so long as the function can be determined from the coordinate values of the point.    
     
     The cover should be given as a list of intervals. This can be done, for example, using the 'cereeberus.cover' function in this module, which takes in a minimum, maximum, number of covers, and percentage of overlap to create a cover. 
     
