@@ -11,3 +11,4 @@ myst-parser
 sphinx_rtd_theme
 flake8
 black
+scikit-learn

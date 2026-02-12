@@ -7,6 +7,6 @@ The ``compute`` module has helper code used throughout the package.
    :maxdepth: 2
    
     Compute Reeb Graph from Lower Star Filtration <compute_reeb.rst>
-    Draw <compute_draw.rst>
+    Compute Mapper Graph from a Point Cloud <compute_mapper.rst>
     Union Find <compute_unionfind.rst>
 ```

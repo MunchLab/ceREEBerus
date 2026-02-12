@@ -14,3 +14,4 @@ This section is for adding example jupyter notebooks.
    example_graphs.ipynb
    interleaving_basics.ipynb
    compute_reeb.ipynb
+   compute_mapper.ipynb

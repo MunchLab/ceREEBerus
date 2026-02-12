@@ -1,4 +1,3 @@
-__all__ = ["draw", "unionfind", "computeReeb"]
-from .draw import *
+__all__ = ["unionfind", "computeReeb"]
 from .unionfind import *
 from .computereeb import *

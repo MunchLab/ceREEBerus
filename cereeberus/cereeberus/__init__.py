@@ -2,6 +2,7 @@ __all__ = [
     "ReebGraph",
     "LowerStar",
     "computeReeb",
+    "computeMapper",
     "MergeTree",
     "MapperGraph",
     "EmbeddedGraph",
@@ -20,6 +21,8 @@ from .reeb.embeddedgraph import EmbeddedGraph
 from .distance.interleave import Interleave, Assignment
 from .reeb.lowerstar import LowerStar
 from .compute.computereeb import computeReeb
+from .compute.computemapper import computeMapper
+from .compute.computemapper import cover
 
 # Examples
 from .data import (

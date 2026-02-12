@@ -1,8 +1,10 @@
-[build]
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "cereeberus"
-version = "0.1.9"
+version = "0.1.10"
 authors = [
   { name="Liz Munch", email="muncheli@msu.edu" },
 ]
@@ -19,7 +21,8 @@ dependencies = ["numpy",
             "pandas",
             "scipy", 
             "pulp",
-            "gudhi"
+            "gudhi",
+            "scikit-learn"
             ]
 
 [tool.setuptools.packages.find]

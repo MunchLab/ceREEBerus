@@ -1,5 +1,5 @@
 import networkx as nx
-from ..compute import draw
+from ..draw import draw
 import matplotlib.pyplot as plt
 import numpy as np
 
