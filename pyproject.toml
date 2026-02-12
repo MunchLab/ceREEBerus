@@ -1,4 +1,6 @@
-[build]
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "cereeberus"
@@ -19,7 +21,8 @@ dependencies = ["numpy",
             "pandas",
             "scipy", 
             "pulp",
-            "gudhi"
+            "gudhi",
+            "scikit-learn"
             ]
 
 [tool.setuptools.packages.find]
