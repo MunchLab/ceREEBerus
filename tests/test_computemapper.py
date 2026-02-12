@@ -1,8 +1,11 @@
 import unittest
-from cereeberus import MapperGraph, computeMapper, cover
+
 import networkx as nx
-from sklearn.datasets import make_circles
 from sklearn.cluster import DBSCAN
+from sklearn.datasets import make_circles
+
+from cereeberus import MapperGraph, computeMapper, cover
+
 
 class TestReebClass(unittest.TestCase):
     def test_cover(self):
@@ -20,6 +23,19 @@ class TestReebClass(unittest.TestCase):
         examplegraph1.add_edge(0,1)
         testgraph1 = computeMapper([(0.6, 0), (-0.1, 0.5)], (lambda a : a[0]), [(-1,0),(-0.5,0.5),(0,1)], "trivial")
         check = nx.utils.graphs_equal(examplegraph1, testgraph1)
+        self.assertEqual(check, True)
+
+    def test_computeMapper_lens_list(self):
+        #checks that a list-valued lens function works
+        examplegraph = MapperGraph()
+        examplegraph.add_node(0,0)
+        examplegraph.add_node(1,1)
+        examplegraph.add_node(2,2)
+        examplegraph.add_edge(0,1)
+        pointcloud = [(0.6, 0), (-0.1, 0.5)]
+        lens = [0.6, -0.1]
+        testgraph = computeMapper(pointcloud, lens, [(-1,0),(-0.5,0.5),(0,1)], "trivial")
+        check = nx.utils.graphs_equal(examplegraph, testgraph)
         self.assertEqual(check, True)
         
     def test_computeMapper_nontrivial(self):

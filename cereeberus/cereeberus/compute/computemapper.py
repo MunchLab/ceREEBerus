@@ -3,16 +3,22 @@ from ..reeb.mapper import MapperGraph
 
 # Interprets the lensfunction as a python function, does it, then returns the new location of each point for every point
 def __runlensfunction(lensfunction, pointcloud):
+    lensfunctionoutput = []
     if callable(lensfunction):
-        lensfunctionoutput = []
         for val in range(len(pointcloud)):
             lensfunctionoutput.append(
                 [lensfunction(pointcloud[val]), tuple(pointcloud[val])]
             )
-    else:
-        print("Invalid lens function")
-    # print("Lens Function Output: ")
-    # print(lensfunctionoutput)
+        return lensfunctionoutput
+
+    if len(lensfunction) != len(pointcloud):
+        raise ValueError(
+            "If the lens function is given as a list of numbers, it must have the same length as the number of points in the point cloud."
+        )
+
+    for val in range(len(pointcloud)):
+        lensfunctionoutput.append([lensfunction[val], tuple(pointcloud[val])])
+
     return lensfunctionoutput
 
 
@@ -113,23 +119,31 @@ def __addedges(clusterpoints):
 # Does the Mapper Algorithm in order
 def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm):
     """
-    Computes the Mapper Alogirthm
+    Computes the mapper graph of an input function. 
+    
+    The point cloud should be given as a list of tuples or as a numpy array. 
+    
+    The lens function should be given as either a list of numbers with the same length as the number of points; or as a callable function where $f(point) = lensfunction(point)$ so long as the function can be determined from the coordinate values of the point. 
+    
+    The cover should be given as a list of intervals. This can be done, for example, using the 'cereeberus.cover' function in this module, which takes in a minimum, maximum, number of covers, and percentage of overlap to create a cover. 
+    
+    The clustering algorithm should be given as a callable that takes in a point cloud and outputs cluster labels (for example, `sklearn.cluster.DBSCAN(min_samples=2,eps=0.3).fit`).
 
     Parameters:
-        A pointcloud (as a list)
-        A lens function (as a callable)
+        A pointcloud (as a list of tuples or as a numpy array)
+        A lens function (as a callable or a list of numbers)
         A cover (as a list of intervals)
         A clustering algorithm (as a callable)
 
     Returns:
-        A MapperGraph object as given by the Mapper Algorithm run on the parameters
+        A `MapperGraph` object representing the mapper graph of the input data and lens function.
     """
-    lensfunctionoutput = __runlensfunction(
-        lensfunction, pointcloud
-    )  # move to compute folder, change name to computemapper
+    
+    lensfunctionoutput = __runlensfunction(lensfunction, pointcloud)                           
     coveringsets = __createcoveringsets(lensfunctionoutput, cover)
     clusterpoints = __cluster(coveringsets, clusteralgorithm)
     outputgraph = __addedges(clusterpoints)
+    
     return outputgraph
 
 
