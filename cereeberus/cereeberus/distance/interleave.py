@@ -48,8 +48,8 @@ class Interleave:
             verbose (bool, optional): 
                 If True, print the progress of the optimization. Defaults to False.
             max_n_for_error (int, optional): 
-            The maximum value of `n` to search for. If the interleaving distance is not found by this value, a ValueError is raised. Defaults to 100. ####NOTE: this can be replaced by the bounding box.
-        
+                The maximum value of `n` to search for. If the interleaving distance is not found by this value, a ValueError is raised. Defaults to 100. ####NOTE: this can be replaced by the bounding box.
+            
         Returns:
             int: smallest feasible n
     """
@@ -75,7 +75,7 @@ class Interleave:
 
         
         
-        if prob_status == 1:
+        if prob_status == True:
             self.n = min_n
             self.assignment = myAssgn
             return self.n
@@ -98,7 +98,7 @@ class Interleave:
             
             
 
-            if prob_status == 1:
+            if prob_status == True:
                 found_feasible_n = True
                 break
             low, high = high, high * 2 # double n
@@ -126,7 +126,7 @@ class Interleave:
                 print(f"n = {mid}, status = {prob_status}")
 
             
-            if prob_status == 1:
+            if prob_status == True:
                 best_n = mid
                 high = mid - 1 # try smaller n
 
@@ -138,7 +138,7 @@ class Interleave:
         prob_status, myAssgn = checked_results[self.n]
         self.assignment = myAssgn
 
-        if prob_status != 1:
+        if prob_status != True:
             raise ValueError(f"Final fit object is not an interleaving. Status = {prob_status} for n = {self.n}.")
         
         return self.n
@@ -2063,7 +2063,7 @@ class Assignment:
         map_dict, prob_status = solve_ilp(self, pulp_solver = pulp_solver)
 
         if prob_status != 'Optimal':
-            return None
+            return False
             
         self.phi_['0'] = {'V': map_dict['phi_0_V'], 'E': map_dict['phi_0_E']}
         self.phi_['n'] = {'V': map_dict['phi_n_V'], 'E': map_dict['phi_n_E']}
@@ -2071,7 +2071,7 @@ class Assignment:
         self.psi_['n'] = {'V': map_dict['psi_n_V'], 'E': map_dict['psi_n_E']}
         
         
-        return 1
+        return True
 
     def dist_optimize(self, pulp_solver = None):
         """Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.

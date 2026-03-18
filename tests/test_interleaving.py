@@ -106,10 +106,19 @@ class TestInterleaving(unittest.TestCase):
             for obj_type in ['V', 'E']:
                 P = myAssgn.parallelogram_matrix(maptype, obj_type)
                 self.assertTrue(np.all(P.col_sum() == 0))
+
+        # check that the optimize function works and has the same output value as recomputing internally
+        result = myAssgn.optimize()
+        self.assertFalse(result) 
+
+        newmyAssgn = Assignment(T, L, n=2, initialize_random_maps=True)
+        new_result = newmyAssgn.optimize()
+        self.assertTrue(new_result)
+
                 
-        # Check that the optimize function works and has the same output value as recomputing internally 
+        # Check that the dist_optimize function works and has the same output value as recomputing internally 
         
-        loss_out = myAssgn.optimize()
+        loss_out = myAssgn.dist_optimize()
         loss_in = myAssgn.loss()
         self.assertEqual(loss_out, loss_in)
 
