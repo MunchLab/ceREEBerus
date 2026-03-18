@@ -212,10 +212,12 @@ class Interleave:
             raise ValueError(f"Interleaving distance not found for n <= {max_n_for_error}.")
         
         high = min(high, max_n_for_error)  # Clamp to max allowed
-        # step 2: binary search for the optimal n
         
-        low = (high//2) + 1 if high > 1 else 1
+        # step 2: binary search for the optimal n
+        # low = (high//2) + 1 if high > 1 else 1
+        low = low #keep the last infeasible n as the lower bound
         best_n = high
+        best_bound = high
 
         while low <= high:
             mid = (low + high) // 2 
@@ -230,12 +232,17 @@ class Interleave:
                 if verbose:
                     print(f"\n-\nTrying n = {mid}...")
                     print(f"n = {mid}, Loss = {Loss}, distance_bound = {mid + Loss}")
+
+                # bound = mid + Loss
+                # if bound < best_bound:
+                #     best_bound = bound # to tighten the upper bound on the search space.
                 
                 if Loss == 0:
                     best_n = mid
-                    high = mid - 1 # decrease n to increase the loss
+                    high = mid - 1 # decrease n to increase the loss. this tries to  go lower
                 else:
                     low = mid + 1
+                    high = min(high, best_bound - 1) # to tighten the upper bound on the search space. this tries to go higher
             except ValueError: # infeasible assignment
                 low = mid + 1  
         
@@ -246,6 +253,113 @@ class Interleave:
             raise ValueError(f"Unexpected non-zero loss (Loss={Loss}) for n={self.n}")
         self.assignment = myAssgn
         return self.n
+    
+
+    # def og_dist_fit(self, pulp_solver = None, verbose= False, max_n_for_error = 100):
+    #     """
+    #     Compute the interleaving distance between the two Mapper graphs.
+        
+    #     Parameters:
+    #         pulp_solver (pulp.LpSolver): 
+    #             The solver to use for the ILP optimization. If None, the default solver is used.
+    #         verbose (bool, optional): 
+    #             If True, print the progress of the optimization. Defaults to False.
+    #         max_n_for_error (int, optional): 
+    #             The maximum value of `n` to search for. If the interleaving distance is not found by this value, a ValueError is raised. Defaults to 100. ####NOTE: this can be replaced by the bounding box.
+            
+    #     Returns:
+    #         Int:
+    #             The interleaving distance, that is, the smallest n for which loss is zero.
+    #     """
+
+    #     # catch the results to avoid recomputation
+    #     checked_results = {}
+
+    #     # Step 0: Check for smallest possible n (n=0 when they both have same function ranges)
+    #     min_n = max(abs(self.F.min_f()-self.G.min_f()), abs(self.F.max_f()-self.G.max_f())) # minimum possible n based on function ranges
+
+
+    #     if min_n not in checked_results:
+    #         myAssgn = Assignment(self.F, self.G, n = min_n)
+    #         Loss = myAssgn.dist_optimize(pulp_solver = pulp_solver)
+    #         checked_results[min_n] = (Loss, myAssgn)
+    #     Loss, myAssgn = checked_results[min_n]
+
+    #     if verbose:
+    #         print(f"\n-\nTrying n = {min_n}...")
+    #         print(f"n = {min_n}, Loss = {Loss}, distance_bound = {min_n + Loss}")
+
+    #     # if loss is 0, we're done
+    #     if Loss == 0:
+    #         self.n = min_n
+    #         self.assignment = myAssgn
+    #         return self.n
+        
+    #     # step 1: exponential search for the upperbound
+    #     low, high = min_n, min_n+1
+    #     found_valid_n = False
+
+    #     while high <= max_n_for_error:
+    #         try:
+    #             if high not in checked_results:
+    #                 myAssgn = Assignment(self.F, self.G, n = high)
+    #                 Loss = myAssgn.dist_optimize(pulp_solver = pulp_solver)
+    #                 checked_results[high] = (Loss, myAssgn)
+
+    #             Loss, myAssgn = checked_results[high]
+
+    #             if verbose:
+    #                 print(f"\n-\nTrying n = {high}...")
+    #                 print(f"n = {high}, Loss = {Loss}, distance_bound = {high + Loss}")
+
+    #             if  Loss == 0:
+    #                 found_valid_n = True
+    #                 break
+    #             low, high = high, high*2
+    #         except ValueError: # infeasible assignment
+    #             low, high = high, high*2
+
+    #     if not found_valid_n:
+    #         raise ValueError(f"Interleaving distance not found for n <= {max_n_for_error}.")
+        
+    #     high = min(high, max_n_for_error)  # Clamp to max allowed
+    #     # step 2: binary search for the optimal n
+        
+    #     # low = (high//2) + 1 if high > 1 else 1
+    #     low = low
+    #     best_n = high
+
+    #     while low <= high:
+    #         mid = (low + high) // 2 
+    #         try:
+    #             if mid not in checked_results:
+    #                 myAssgn = Assignment(self.F, self.G, n = mid)
+    #                 Loss = myAssgn.dist_optimize(pulp_solver = pulp_solver)
+    #                 checked_results[mid] = (Loss, myAssgn)
+
+    #             Loss, myAssgn = checked_results[mid]
+
+    #             if verbose:
+    #                 print(f"\n-\nTrying n = {mid}...")
+    #                 print(f"n = {mid}, Loss = {Loss}, distance_bound = {mid + Loss}")
+                
+    #             if Loss == 0:
+    #                 best_n = mid
+    #                 high = mid - 1 # decrease n to increase the loss
+    #             else:
+    #                 low = mid + 1
+    #         except ValueError: # infeasible assignment
+    #             low = mid + 1  
+        
+    #     # validate the final solution
+    #     self.n = best_n
+    #     Loss, myAssgn = checked_results[self.n]
+    #     if Loss != 0:
+    #         raise ValueError(f"Unexpected non-zero loss (Loss={Loss}) for n={self.n}")
+    #     self.assignment = myAssgn
+    #     return self.n
+            
+    
             
     
 
