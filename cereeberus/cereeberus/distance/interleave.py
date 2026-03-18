@@ -213,11 +213,12 @@ class Interleave:
             )
 
         high = min(high, max_n_for_error)  # Clamp to max allowed
-
+        
         # step 2: binary search for the optimal n
         # low = (high//2) + 1 if high > 1 else 1
-        low = low  # keep the last infeasible n as the lower bound
+        low = low #keep the last infeasible n as the lower bound
         best_n = high
+        best_bound = high
 
         while low <= high:
             mid = (low + high) // 2
@@ -233,6 +234,10 @@ class Interleave:
                     print(f"\n-\nTrying n = {mid}...")
                     print(f"n = {mid}, Loss = {Loss}, distance_bound = {mid + Loss}")
 
+                # bound = mid + Loss
+                # if bound < best_bound:
+                #     best_bound = bound # to tighten the upper bound on the search space.
+                
                 if Loss == 0:
                     best_n = mid
                     high = (
@@ -243,9 +248,10 @@ class Interleave:
                     if bound < best_bound:
                         best_bound = bound  # to tighten the upper bound on the search space. this tries to go higher
                     low = mid + 1
-            except ValueError:  # infeasible assignment
-                low = mid + 1
-
+                    high = min(high, best_bound - 1) # to tighten the upper bound on the search space. this tries to go higher
+            except ValueError: # infeasible assignment
+                low = mid + 1  
+        
         # validate the final solution
         self.n = best_n
         Loss, myAssgn = checked_results[self.n]
