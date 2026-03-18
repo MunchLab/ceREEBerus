@@ -1,1 +1,3 @@
-__all__ = ['degree', 'draw', 'unionfind', 'distance']
+__all__ = ["unionfind", "computeReeb"]
+from .unionfind import *
+from .computereeb import *

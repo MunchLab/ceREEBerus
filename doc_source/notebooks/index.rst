@@ -1,7 +1,7 @@
-Jupyter Notebooks
-=================
+Tutorial Jupyter Notebooks
+========================================
 
-This section is for adding example jupyter notebooks.  Please be patient with us, these are still being updated.
+This section is for adding example jupyter notebooks.  
 
 .. toctree::
    :maxdepth: 2
@@ -13,3 +13,5 @@ This section is for adding example jupyter notebooks.  Please be patient with us
    mapper_basics.ipynb
    example_graphs.ipynb
    interleaving_basics.ipynb
+   compute_reeb.ipynb
+   compute_mapper.ipynb

@@ -11,4 +11,5 @@ See below for the full documentation of the modules available in `ceREEBerus`.
    Distances <distance/index.rst>
    Example data and graphs <data/index.md>
    Compute <compute/index.md>
+   Draw <draw/index.md>
 ```
