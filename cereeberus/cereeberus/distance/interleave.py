@@ -1,14 +1,17 @@
+import os
+import sys
+
+import networkx as nx
 import numpy as np
 import pandas as pd
-import networkx as nx
-from scipy.linalg import block_diag
 from matplotlib import pyplot as plt
+from scipy.linalg import block_diag
+
 from ..compute.unionfind import UnionFind
+from ..compute.utils import HiddenPrints
+from .ilp import solve_ilp, solve_ilp_dist
 from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
-from .ilp import solve_ilp, solve_ilp_dist
-from ..compute.utils import HiddenPrints
-import sys, os
 
 
 class Interleave:
@@ -2055,8 +2058,8 @@ class Assignment:
         Parameters:
             pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.
         Returns:
-            int or None:
-                Returns 1 if an optimal solution was found and None otherwise.
+            bool:
+                Returns True if an optimal solution was found and False otherwise.
             
         """
 
@@ -2082,7 +2085,7 @@ class Assignment:
             pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.
         Returns:
             int or None:
-                Returns 1 if an optimal solution was found and None otherwise.
+                Returns the loss value if an optimal solution was found and None otherwise.
             
         """
 
