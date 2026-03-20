@@ -105,6 +105,14 @@ def reeb_x_layout(G, f, seed=None, repulsion=0.5):
     Returns:
         dict: Mapping node -> x-position.
     """
+
+    def _normalize_to_unit_interval(x):
+        """Normalize coordinates to [-1, 1] if there is nonzero spread."""
+        x_range = x.max() - x.min()
+        if x_range > 1e-9:
+            return 2 * (x - x.min()) / x_range - 1
+        return x
+
     nodes = list(G.nodes)
     n = len(nodes)
     if n == 0:
@@ -135,8 +143,22 @@ def reeb_x_layout(G, f, seed=None, repulsion=0.5):
 
     # Initialise with barycenter ordering, then add tiny jitter to break ties
     x0 = _barycenter_init(n, f_vals, edges, level_nodes)
+
+    # With no edges, the spring term is absent and repulsion alone can drive
+    # points apart indefinitely. In this case, return the barycenter layout
+    # directly (normalised), which is deterministic and finite.
+    if len(edges) == 0:
+        x0 = _normalize_to_unit_interval(x0)
+        return {v: float(x0[idx[v]]) for v in nodes}
+
     rng = np.random.default_rng(seed)
     x0 = x0 + rng.standard_normal(n) * 1e-3
+
+    # Keep the optimizer in a compact region and add a tiny centering term so
+    # the objective remains well-conditioned.
+    bounds = [(-2.0, 2.0)] * n
+    center_weight = 1e-6
+    x0 = np.clip(x0, -2.0, 2.0)
 
     def energy(x):
         e = 0.0
@@ -146,6 +168,7 @@ def reeb_x_layout(G, f, seed=None, repulsion=0.5):
             for i, j in same_height_pairs:
                 diff = x[i] - x[j]
                 e += repulsion / (diff**2 + 1e-6)
+        e += center_weight * np.dot(x, x)
         return e
 
     def gradient(x):
@@ -161,14 +184,13 @@ def reeb_x_layout(G, f, seed=None, repulsion=0.5):
                 grad_val = -2 * repulsion * diff / denom
                 g[i] += grad_val
                 g[j] -= grad_val
+        g += 2 * center_weight * x
         return g
 
-    result = minimize(energy, x0, jac=gradient, method="L-BFGS-B")
+    result = minimize(energy, x0, jac=gradient, method="L-BFGS-B", bounds=bounds)
     x_opt = result.x
 
     # Normalise to [-1, 1]
-    x_range = x_opt.max() - x_opt.min()
-    if x_range > 1e-9:
-        x_opt = 2 * (x_opt - x_opt.min()) / x_range - 1
+    x_opt = _normalize_to_unit_interval(x_opt)
 
     return {v: float(x_opt[idx[v]]) for v in nodes}
