@@ -1,7 +1,10 @@
 import unittest
-from cereeberus import ReebGraph
+
 from cereeberus.data import ex_graphs as ex_g
 from cereeberus.data import ex_reebgraphs as ex_rg
+
+from cereeberus import ReebGraph
+
 
 class TestReebClass(unittest.TestCase):
 
@@ -227,11 +230,22 @@ class TestReebClass(unittest.TestCase):
         B = R.boundary_matrix()
         self.assertEqual(B.shape, (len(R.nodes), len(R.edges)))
 
+    def test_set_pos_from_f_preserves_y_function_values(self):
+        # The constrained layout updates x-coordinates only; y should remain f(v).
+        R = ex_rg.torus(multigraph=False)
+        R.set_pos_from_f(seed=3, repulsion=1.2)
+
+        self.assertEqual(set(R.nodes), set(R.pos_f.keys()))
+        for v in R.nodes:
+            self.assertEqual(R.pos_f[v][1], R.f[v])
+
 
 
 
        
 
 
+if __name__ == '__main__':
+    unittest.main()
 if __name__ == '__main__':
     unittest.main()

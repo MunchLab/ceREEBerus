@@ -1,9 +1,12 @@
 import unittest
-from cereeberus import ReebGraph, MapperGraph
-from cereeberus.data import ex_graphs as ex_g
-from cereeberus.data import ex_reebgraphs as ex_rg
-from cereeberus.data import ex_mappergraphs as ex_mg
+
 import numpy as np
+from cereeberus.data import ex_graphs as ex_g
+from cereeberus.data import ex_mappergraphs as ex_mg
+from cereeberus.data import ex_reebgraphs as ex_rg
+
+from cereeberus import MapperGraph, ReebGraph
+
 
 class TestMapperClass(unittest.TestCase):
 
@@ -129,8 +132,19 @@ class TestMapperClass(unittest.TestCase):
         # Check the whole put together matrix
         M = R.thickening_distance_matrix()
         self.assertEqual(M[5][3,10], np.inf)
+
+    def test_set_pos_from_f_preserves_delta_scaled_y_values(self):
+        # Mapper layout should keep y = delta * f(v), with repulsion only affecting x.
+        MG = ex_mg.torus(delta=0.2, seed=11)
+        MG.set_pos_from_f(seed=5, repulsion=0.9)
+
+        self.assertEqual(set(MG.nodes), set(MG.pos_f.keys()))
+        for v in MG.nodes:
+            self.assertEqual(MG.pos_f[v][1], MG.delta * MG.f[v])
        
 
 
+if __name__ == '__main__':
+    unittest.main()
 if __name__ == '__main__':
     unittest.main()
