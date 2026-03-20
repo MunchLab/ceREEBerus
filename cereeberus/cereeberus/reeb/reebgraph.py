@@ -16,7 +16,7 @@ class ReebGraph(nx.MultiDiGraph):
         Parameters:
             G : nx.graph, optional. If not None, a graph to initialize the Reeb graph.
             f : dict, optional. If not an empty dictionary, a dictionary of function values associated with the graph nodes.
-            seed : int, optional. If not None, a seed to pass to the spring layout.
+            seed : int, optional. If not None, a seed used when initializing constrained x-positions for drawing.
             verbose: bool, optional. If True, will print out additional information during initialization.
         """
 
@@ -494,25 +494,32 @@ class ReebGraph(nx.MultiDiGraph):
     # ----------------------------------#
     # Methods for drawing the Reeb graph
     # ----------------------------------#
-    def set_pos_from_f(self, seed=None, verbose=False):
-        """Set the position of the nodes based on the function values. The result will be the (spring layout x, function value y). Note that this will overwrite the previous positions.
+    def set_pos_from_f(self, seed=None, repulsion=0.5, verbose=False):
+        """Set the position of the nodes based on the function values.
+
+        x-coordinates are chosen by a constrained spring-layout optimiser that
+        pulls connected nodes together horizontally while pushing apart nodes
+        that share the same height.  y-coordinates are always exactly ``f[v]``.
 
         Parameters:
-            verbose (bool): Optional. If True, will print out the function values and the positions.
+            seed (int or None): Random seed for reproducible x-placement.
+            repulsion (float): Weight of the same-height repulsion term.
+                Larger values spread out nodes at the same height more
+                aggressively.  Default is 0.5.
+            verbose (bool): If True, print function values and final positions.
         """
+        from ..draw.layout import reeb_x_layout
+
         if len(self.nodes) == 0:
             if verbose:
                 print("Nothing to be done, no nodes here")
             self.pos = {}
             self.pos_f = {}
         else:
-            pos = nx.spring_layout(self, seed=seed)
-            self.pos = pos
+            x_positions = reeb_x_layout(self, self.f, seed=seed, repulsion=repulsion)
 
-            self.pos_f = {}
-
-            for v in self.nodes:
-                self.pos_f[v] = (self.pos[v][0], self.f[v])
+            self.pos = {v: (x_positions[v], self.f[v]) for v in self.nodes}
+            self.pos_f = dict(self.pos)
 
             if verbose:
                 print("Function values:", self.f)

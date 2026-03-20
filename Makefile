@@ -13,6 +13,15 @@ docs:
 	rsync -a docs/html/ docs/
 	rm -rf docs/html
 
+.PHONY: docs-execute
+docs-execute:
+	# Running sphinx-build and forcing nbsphinx to execute all notebooks.
+	rm -rf docs
+	mkdir -p docs
+	sphinx-build -M html doc_source docs -D nbsphinx_execute=always
+	rsync -a docs/html/ docs/
+	rm -rf docs/html
+
 install-editable:
 	@pip install -e .
 
@@ -41,6 +50,7 @@ help:
 	@echo "  make format              - Format code using black"
 	@echo "  make install-editable     - Install the package in editable mode for development"
 	@echo "  make docs                - Build the documentation in the docs/ folder"
+	@echo "  make docs-execute        - Build docs and execute all notebooks"
 	@echo "  make release             - Build the package for release"
 	@echo "  make tests               - Run the unit tests"
 	@echo "  make install-requirements- Install all dependencies from requirements.txt"
