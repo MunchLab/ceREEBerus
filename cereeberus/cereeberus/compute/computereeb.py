@@ -235,4 +235,3 @@ def computeReeb(K: LowerStar, verbose=False):
 
     return R
 
-    return R
