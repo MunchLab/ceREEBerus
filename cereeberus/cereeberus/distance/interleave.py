@@ -615,16 +615,15 @@ class Assignment:
                 B_up = LBM()
 
                 for i in self.val_to_verts[graph_name][key]:
-                    if i in self.val_to_edges[graph_name][key]:
-                        edges = self.val_to_edges[graph_name][key][i]
-                        verts_down = self.val_to_verts[graph_name][key][i]
-                        verts_up = self.val_to_verts[graph_name][key][i + 1]
-                        B_down[i] = LM(rows=verts_down, cols=edges)
-                        B_up[i] = LM(rows=verts_up, cols=edges)
+                    edges = self.val_to_edges[graph_name][key].get(i, [])
+                    verts_down = self.val_to_verts[graph_name][key][i]
+                    verts_up = self.val_to_verts[graph_name][key].get(i + 1, [])
+                    B_down[i] = LM(rows=verts_down, cols=edges)
+                    B_up[i] = LM(rows=verts_up, cols=edges)
 
-                        for e in edges:
-                            B_down[i][e[0], e] = 1
-                            B_up[i][e[1], e] = 1
+                    for e in edges:
+                        B_down[i][e[0], e] = 1
+                        B_up[i][e[1], e] = 1
 
                 min_i = min(list(self.val_to_verts[graph_name][key].keys()))
                 max_i = max(list(self.val_to_verts[graph_name][key].keys()))

@@ -1,10 +1,9 @@
-from .labeled_blocks import LabeledBlockMatrix as LBM
-from .labeled_blocks import LabeledMatrix as LM
-
 import matplotlib.pyplot as plt
 import numpy as np
-
 import pulp  # for ILP optimization
+
+from .labeled_blocks import LabeledBlockMatrix as LBM
+from .labeled_blocks import LabeledMatrix as LM
 
 
 # function to build the phi and psi matrices after the ILP optimization
@@ -213,9 +212,6 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
                         cat="Binary",
                     )
 
-
-
-    
     # create the constraints
     for block in func_vals:
         for starting_map in ['F', 'G']:
@@ -232,7 +228,7 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
                 if block == myAssgn.all_func_vals(map=starting_map)[-1]: # skip the last block for this type of diagrams
                     continue
                 
-               #set the matrices
+                # set the matrices
                 if up_or_down == 'up': #NOTE: the change in block indices
                     bou_n = myAssgn.B_up(other_map, 'n')[block].get_array()
                     bou_0 = myAssgn.B_up(starting_map, '0')[block].get_array()
@@ -319,8 +315,6 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
                 if starting_map == 'F':
                     shape_n_tri = myAssgn.psi('n', obj_type)[block].get_array().shape[1] # for triangles
                     shape_o_tri = myAssgn.phi('0', obj_type)[block].get_array().shape[1] # for triangles
-
-
 
                     shape_m_para = myAssgn.phi('n', obj_type)[block].get_array().shape[0] # for parallelograms
                     shape_p_para = myAssgn.phi('0', obj_type)[block].get_array().shape[1] # for parallelograms
@@ -906,4 +900,5 @@ def solve_ilp_dist(myAssgn, pulp_solver = None, verbose=False):
     
 
     # return results
+    return final_maps, pulp.value(minmax_var)
     return final_maps, pulp.value(minmax_var)
