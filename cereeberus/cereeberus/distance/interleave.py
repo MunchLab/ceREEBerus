@@ -52,7 +52,7 @@ class Interleave:
             
         Returns:
             int: smallest feasible n
-    """
+        """
         # catch the results to avoid recomputation
         checked_results = {}
 
@@ -236,14 +236,14 @@ class Interleave:
                     print(f"\n-\nTrying n = {mid}...")
                     print(f"n = {mid}, Loss = {Loss}, distance_bound = {mid + Loss}")
 
-                # bound = mid + Loss
-                # if bound < best_bound:
-                #     best_bound = bound # to tighten the upper bound on the search space.
                 
                 if Loss == 0:
                     best_n = mid
                     high = mid - 1 # decrease n to increase the loss. this tries to  go lower
                 else:
+                    bound = mid + Loss
+                    if bound < best_bound:
+                        best_bound = bound # to tighten the upper bound on the search space. this tries to go higher
                     low = mid + 1
                     high = min(high, best_bound - 1) # to tighten the upper bound on the search space. this tries to go higher
             except ValueError: # infeasible assignment
@@ -2056,7 +2056,7 @@ class Assignment:
             pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.
         Returns:
             int or None:
-                Returns 1 if an optimal solution was found and None otherwise.
+                Returns boolean True if an optimal solution was found and False otherwise.
             
         """
 
@@ -2082,7 +2082,7 @@ class Assignment:
             pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.
         Returns:
             int or None:
-                Returns 1 if an optimal solution was found and None otherwise.
+                Returns the optimized loss value
             
         """
 
