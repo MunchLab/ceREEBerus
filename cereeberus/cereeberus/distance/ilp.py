@@ -341,8 +341,8 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
                 for h in range(shape_m_tri):
                     for k in range(shape_o_tri):
                         prob += (
-                            i_n_i_0[h, k]
-                            == map_product_vars[block][starting_map][obj_type][h, k]
+                            map_product_vars[block][starting_map][obj_type][h, k]
+                            == float(i_n_i_0[h, k])
                         )
 
 
