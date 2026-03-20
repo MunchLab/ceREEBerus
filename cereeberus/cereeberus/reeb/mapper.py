@@ -67,11 +67,11 @@ class MapperGraph(ReebGraph):
             raise ValueError("Function values must be integers.")
         return super().add_node(vertex, f_vertex, reset_pos)
 
-    def set_pos_from_f(self, seed=None, verbose=False):
+    def set_pos_from_f(self, seed=None, repulsion=0.5, verbose=False):
         """
         Same as the Reeb graph function, but we want to draw the vertex locations at delta*function value.
         """
-        super().set_pos_from_f(seed, verbose)
+        super().set_pos_from_f(seed=seed, repulsion=repulsion, verbose=verbose)
 
         for v in self.nodes():
             self.pos_f[v] = (self.pos_f[v][0], self.delta * self.f[v])

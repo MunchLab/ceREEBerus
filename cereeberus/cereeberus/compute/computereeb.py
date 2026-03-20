@@ -79,8 +79,7 @@ def computeReeb(K: LowerStar, verbose=False):
     # A horizontal edge (both endpoints at the same height) must be processed
     # within one batch so it properly merges its endpoints into a single Reeb node.
     grouped = [
-        (filt, list(grp))
-        for filt, grp in _groupby(funcVals, key=lambda x: x[1])
+        (filt, list(grp)) for filt, grp in _groupby(funcVals, key=lambda x: x[1])
     ]
 
     R = ReebGraph()
@@ -101,9 +100,7 @@ def computeReeb(K: LowerStar, verbose=False):
 
     for group_idx, (filt, group_verts) in enumerate(grouped):
         now_min = filt
-        now_max = (
-            grouped[group_idx + 1][0] if group_idx + 1 < len(grouped) else np.inf
-        )
+        now_max = grouped[group_idx + 1][0] if group_idx + 1 < len(grouped) else np.inf
         vert_names = [v for v, _ in group_verts]
 
         if verbose:
@@ -183,9 +180,7 @@ def computeReeb(K: LowerStar, verbose=False):
             for e in edges_at_prev_level:
                 prev_comp = vert_to_component[e]
                 if any(
-                    is_face(prev_simp, simp)
-                    for simp in comp
-                    for prev_simp in prev_comp
+                    is_face(prev_simp, simp) for simp in comp for prev_simp in prev_comp
                 ):
                     R.add_edge(e, nextNodeName)
 
@@ -227,11 +222,8 @@ def computeReeb(K: LowerStar, verbose=False):
             for v in verts_at_level:
                 prev_comp = vert_to_component[v]
                 if any(
-                    is_face(simp, prev_simp)
-                    for simp in comp
-                    for prev_simp in prev_comp
+                    is_face(simp, prev_simp) for simp in comp for prev_simp in prev_comp
                 ):
                     R.add_edge(v, e_name)
 
     return R
-

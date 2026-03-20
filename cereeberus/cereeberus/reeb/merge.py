@@ -187,11 +187,11 @@ class MergeTree(ReebGraph):
             # Get the drawing location of the neighbor to have same x coordinate as the neighbor, but y coordinate at .3*height above the maximum function value.
             self.pos_f["v_inf"] = (self.pos_f[top_vertex][0], Lmax + 0.3 * height)
 
-    def set_pos_from_f(self, seed=None, verbose=False):
+    def set_pos_from_f(self, seed=None, repulsion=0.5, verbose=False):
         """
         Fix the drawing locations for the function values.
         """
-        super().set_pos_from_f(seed, verbose)
+        super().set_pos_from_f(seed=seed, repulsion=repulsion, verbose=verbose)
         if "v_inf" in self.pos_f.keys():
             self.fix_pos_f()
 

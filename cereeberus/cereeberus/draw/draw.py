@@ -65,16 +65,16 @@ def bezier_curve(pt0, midpt, pt1):
         points (np array): array of points to be used in plotting
     """
 
-    (x1, y1, x2, y2) = (pt0[0], pt0[1], midpt[0], midpt[1])
-    (a1, b1) = slope_intercept(pt0, midpt)
-    (a2, b2) = slope_intercept(midpt, pt1)
+    x1, y1, x2, y2 = (pt0[0], pt0[1], midpt[0], midpt[1])
+    a1, b1 = slope_intercept(pt0, midpt)
+    a2, b2 = slope_intercept(midpt, pt1)
     points = []
 
     for i in range(0, 100):
         if x1 == x2:
             continue
         else:
-            (a, b) = slope_intercept((x1, y1), (x2, y2))
+            a, b = slope_intercept((x1, y1), (x2, y2))
         x = i * (x2 - x1) / 100 + x1
         y = a * x + b
         points.append((x, y))

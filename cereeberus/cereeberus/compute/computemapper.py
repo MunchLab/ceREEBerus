@@ -119,14 +119,14 @@ def __addedges(clusterpoints):
 # Does the Mapper Algorithm in order
 def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm):
     """
-    Computes the mapper graph of an input function. 
-    
-    The point cloud should be given as a list of tuples or as a numpy array. 
-    
-    The lens function should be given as either a list of numbers with the same length as the number of points; or as a callable function where :math:`f(point) = \text{value}` so long as the function can be determined from the coordinate values of the point.    
-    
-    The cover should be given as a list of intervals. This can be done, for example, using the 'cereeberus.cover' function in this module, which takes in a minimum, maximum, number of covers, and percentage of overlap to create a cover. 
-    
+    Computes the mapper graph of an input function.
+
+    The point cloud should be given as a list of tuples or as a numpy array.
+
+    The lens function should be given as either a list of numbers with the same length as the number of points; or as a callable function where :math:`f(point) = \text{value}` so long as the function can be determined from the coordinate values of the point.
+
+    The cover should be given as a list of intervals. This can be done, for example, using the 'cereeberus.cover' function in this module, which takes in a minimum, maximum, number of covers, and percentage of overlap to create a cover.
+
     The clustering algorithm should be given as a callable that takes in a point cloud and outputs cluster labels (for example, `sklearn.cluster.DBSCAN(min_samples=2,eps=0.3).fit`).
 
     Parameters:
@@ -138,12 +138,12 @@ def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm):
     Returns:
         A `MapperGraph` object representing the mapper graph of the input data and lens function.
     """
-    
-    lensfunctionoutput = __runlensfunction(lensfunction, pointcloud)                           
+
+    lensfunctionoutput = __runlensfunction(lensfunction, pointcloud)
     coveringsets = __createcoveringsets(lensfunctionoutput, cover)
     clusterpoints = __cluster(coveringsets, clusteralgorithm)
     outputgraph = __addedges(clusterpoints)
-    
+
     return outputgraph
 
 
