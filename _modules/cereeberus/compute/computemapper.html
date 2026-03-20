@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cereeberus.compute.computemapper &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cereeberus.compute.computemapper</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cereeberus.compute.computemapper</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..reeb.mapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">MapperGraph</span>
+
+
+<span class="c1"># Interprets the lensfunction as a python function, does it, then returns the new location of each point for every point</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">__runlensfunction</span><span class="p">(</span><span class="n">lensfunction</span><span class="p">,</span> <span class="n">pointcloud</span><span class="p">):</span>
+    <span class="n">lensfunctionoutput</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">lensfunction</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pointcloud</span><span class="p">)):</span>
+            <span class="n">lensfunctionoutput</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">lensfunction</span><span class="p">(</span><span class="n">pointcloud</span><span class="p">[</span><span class="n">val</span><span class="p">]),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">pointcloud</span><span class="p">[</span><span class="n">val</span><span class="p">])]</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">lensfunctionoutput</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lensfunction</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pointcloud</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;If the lens function is given as a list of numbers, it must have the same length as the number of points in the point cloud.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pointcloud</span><span class="p">)):</span>
+        <span class="n">lensfunctionoutput</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lensfunction</span><span class="p">[</span><span class="n">val</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">pointcloud</span><span class="p">[</span><span class="n">val</span><span class="p">])])</span>
+
+    <span class="k">return</span> <span class="n">lensfunctionoutput</span>
+
+
+<span class="c1"># Creates a list of covers, together with any points inside the cover, ie, [[cover, point1, point2], [cover, point3]]</span>
+<span class="c1"># Also removes any covers that have no points inside of them</span>
+<span class="c1"># this would probably be better done as a struct, containing a covering set, the covering set&#39;s position in the cover, and an array of points</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">__createcoveringsets</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">cover</span><span class="p">):</span>
+    <span class="c1"># adds location information to cover</span>
+    <span class="k">for</span> <span class="n">val0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cover</span><span class="p">)):</span>
+        <span class="n">cover</span><span class="p">[</span><span class="n">val0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">cover</span><span class="p">[</span><span class="n">val0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cover</span><span class="p">[</span><span class="n">val0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">val0</span><span class="p">)</span>
+    <span class="c1"># creates the list</span>
+    <span class="n">coveringsets</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">val1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cover</span><span class="p">)):</span>
+        <span class="n">coveringsets</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">cover</span><span class="p">[</span><span class="n">val1</span><span class="p">]])</span>
+        <span class="k">for</span> <span class="n">val2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">points</span><span class="p">[</span><span class="n">val2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cover</span><span class="p">[</span><span class="n">val1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">points</span><span class="p">[</span><span class="n">val2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">cover</span><span class="p">[</span><span class="n">val1</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">coveringsets</span><span class="p">[</span><span class="n">val1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">val2</span><span class="p">])</span>
+    <span class="c1"># removes unused covers</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">coveringsets</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coveringsets</span><span class="p">[</span><span class="n">position</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">coveringsets</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">position</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="c1"># print(&quot;Covering Sets Output: &quot;)</span>
+    <span class="c1"># print(coveringsets)</span>
+    <span class="k">return</span> <span class="n">coveringsets</span>
+
+
+<span class="c1"># cluster the points using a number of existing clustering algorithms</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">__cluster</span><span class="p">(</span><span class="n">coveringsets</span><span class="p">,</span> <span class="n">clusteralgorithm</span><span class="p">):</span>
+    <span class="c1"># trivial clustering</span>
+    <span class="k">if</span> <span class="n">clusteralgorithm</span> <span class="o">==</span> <span class="s2">&quot;trivial&quot;</span><span class="p">:</span>
+        <span class="n">finished_cluster</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">cluster</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">val1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coveringsets</span><span class="p">)):</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coveringsets</span><span class="p">[</span><span class="n">val1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">val2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">coveringsets</span><span class="p">[</span><span class="n">val1</span><span class="p">])):</span>
+                <span class="n">cluster</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">coveringsets</span><span class="p">[</span><span class="n">val1</span><span class="p">][</span><span class="n">val2</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coveringsets</span><span class="p">[</span><span class="n">val1</span><span class="p">][</span><span class="n">val2</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+                <span class="p">)</span>
+            <span class="n">finished_cluster</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">cluster</span><span class="p">[:]</span>
+            <span class="p">)</span>  <span class="c1"># Works like this to avoid passing by reference in python lists</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="c1"># print(&quot;Clustering Output: &quot;)</span>
+        <span class="c1"># print(finished_cluster)</span>
+        <span class="k">return</span> <span class="n">finished_cluster</span>
+    <span class="c1"># execute sklearn clusterings</span>
+    <span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="n">clusteralgorithm</span><span class="p">):</span>
+        <span class="n">finished_cluster</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">coverpointcloud</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">cluster</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">val1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coveringsets</span><span class="p">)):</span>
+            <span class="c1"># alters data to fit with sklearn clustering algorithms</span>
+            <span class="k">for</span> <span class="n">val2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">coveringsets</span><span class="p">[</span><span class="n">val1</span><span class="p">])):</span>
+                <span class="n">coverpointcloud</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">coveringsets</span><span class="p">[</span><span class="n">val1</span><span class="p">][</span><span class="n">val2</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">coveringsets</span><span class="p">[</span><span class="n">val1</span><span class="p">][</span><span class="n">val2</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+                <span class="p">)</span>
+            <span class="c1"># does clustering algorithm</span>
+            <span class="n">cluster_out</span> <span class="o">=</span> <span class="n">clusteralgorithm</span><span class="p">(</span><span class="n">coverpointcloud</span><span class="p">)</span>
+            <span class="c1"># puts points into list</span>
+            <span class="k">for</span> <span class="n">val2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">cluster_out</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">cluster</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">coveringsets</span><span class="p">[</span><span class="n">val1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]]</span>
+                <span class="p">)</span>  <span class="c1"># The position of the covering set in the cover (preserved for distance purposes)</span>
+                <span class="k">for</span> <span class="n">val3</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster_out</span><span class="o">.</span><span class="n">labels_</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">cluster_out</span><span class="o">.</span><span class="n">labels_</span><span class="p">[</span><span class="n">val3</span><span class="p">]</span> <span class="o">==</span> <span class="n">val2</span><span class="p">:</span>
+                        <span class="n">cluster</span><span class="p">[</span><span class="n">val2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coverpointcloud</span><span class="p">[</span><span class="n">val3</span><span class="p">])</span>
+                <span class="n">finished_cluster</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster</span><span class="p">[</span><span class="n">val2</span><span class="p">])</span>
+            <span class="n">coverpointcloud</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="n">cluster</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="c1"># print(&quot;Clustering Output: &quot;)</span>
+        <span class="c1"># print(finished_cluster)</span>
+        <span class="k">return</span> <span class="n">finished_cluster</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;input not valid&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">()</span>
+
+
+<span class="c1"># Adds edges between the cluster that share points</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">__addedges</span><span class="p">(</span><span class="n">clusterpoints</span><span class="p">):</span>
+    <span class="n">outputgraph</span> <span class="o">=</span> <span class="n">MapperGraph</span><span class="p">()</span>
+    <span class="n">val2</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">val1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">clusterpoints</span><span class="p">)):</span>
+        <span class="n">outputgraph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">val1</span><span class="p">,</span> <span class="n">clusterpoints</span><span class="p">[</span><span class="n">val1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">while</span> <span class="n">val2</span> <span class="o">&lt;</span> <span class="n">val1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">clusterpoints</span><span class="p">[</span><span class="n">val1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">clusterpoints</span><span class="p">[</span><span class="n">val2</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">clusterpoints</span><span class="p">[</span><span class="n">val1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">clusterpoints</span><span class="p">[</span><span class="n">val2</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">outputgraph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">val1</span><span class="p">,</span> <span class="n">val2</span><span class="p">)</span>
+            <span class="n">val2</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">val2</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># print(&quot;Final Output: &quot;)</span>
+    <span class="c1"># print(outputgraph)</span>
+    <span class="k">return</span> <span class="n">outputgraph</span>
+
+
+<span class="c1"># Does the Mapper Algorithm in order</span>
+<div class="viewcode-block" id="computeMapper">
+<a class="viewcode-back" href="../../../modules/compute/compute_mapper.html#cereeberus.compute.computemapper.computeMapper">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">computeMapper</span><span class="p">(</span><span class="n">pointcloud</span><span class="p">,</span> <span class="n">lensfunction</span><span class="p">,</span> <span class="n">cover</span><span class="p">,</span> <span class="n">clusteralgorithm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the mapper graph of an input function.</span>
+
+<span class="sd">    The point cloud should be given as a list of tuples or as a numpy array.</span>
+
+<span class="sd">    The lens function should be given as either a list of numbers with the same length as the number of points; or as a callable function where :math:`f(point) = \text{value}` so long as the function can be determined from the coordinate values of the point.</span>
+
+<span class="sd">    The cover should be given as a list of intervals. This can be done, for example, using the &#39;cereeberus.cover&#39; function in this module, which takes in a minimum, maximum, number of covers, and percentage of overlap to create a cover.</span>
+
+<span class="sd">    The clustering algorithm should be given as a callable that takes in a point cloud and outputs cluster labels (for example, `sklearn.cluster.DBSCAN(min_samples=2,eps=0.3).fit`).</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        A pointcloud (as a list of tuples or as a numpy array)</span>
+<span class="sd">        A lens function (as a callable or a list of numbers)</span>
+<span class="sd">        A cover (as a list of intervals)</span>
+<span class="sd">        A clustering algorithm (as a callable)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A `MapperGraph` object representing the mapper graph of the input data and lens function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">lensfunctionoutput</span> <span class="o">=</span> <span class="n">__runlensfunction</span><span class="p">(</span><span class="n">lensfunction</span><span class="p">,</span> <span class="n">pointcloud</span><span class="p">)</span>
+    <span class="n">coveringsets</span> <span class="o">=</span> <span class="n">__createcoveringsets</span><span class="p">(</span><span class="n">lensfunctionoutput</span><span class="p">,</span> <span class="n">cover</span><span class="p">)</span>
+    <span class="n">clusterpoints</span> <span class="o">=</span> <span class="n">__cluster</span><span class="p">(</span><span class="n">coveringsets</span><span class="p">,</span> <span class="n">clusteralgorithm</span><span class="p">)</span>
+    <span class="n">outputgraph</span> <span class="o">=</span> <span class="n">__addedges</span><span class="p">(</span><span class="n">clusterpoints</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">outputgraph</span></div>
+
+
+
+<span class="c1"># function to create covers</span>
+<span class="c1"># cover(min, max, #covers, %overlap)</span>
+<div class="viewcode-block" id="cover">
+<a class="viewcode-back" href="../../../modules/compute/compute_mapper.html#cereeberus.compute.computemapper.cover">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cover</span><span class="p">(</span><span class="nb">min</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">numcovers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">percentoverlap</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a cover to be used for inputs in the computeMapper function</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        min: the minimum for the range of the covering sets</span>
+<span class="sd">        max: the maximum for the range of the covering sets</span>
+<span class="sd">        numcovers: number of covers to create</span>
+<span class="sd">        percentoverlap: percentage (from 0 to 1) of overlap between covers</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        An array of intervals</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">coversize</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span> <span class="o">-</span> <span class="nb">min</span><span class="p">)</span> <span class="o">/</span> <span class="n">numcovers</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">percentoverlap</span><span class="p">))</span>
+    <span class="k">while</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">numcovers</span><span class="p">:</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span> <span class="o">*</span> <span class="p">(</span><span class="n">numcovers</span> <span class="o">-</span> <span class="p">(</span><span class="n">val</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">))</span> <span class="o">+</span> <span class="nb">max</span> <span class="o">*</span> <span class="p">(</span><span class="n">val</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">))</span> <span class="o">/</span> <span class="n">numcovers</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(((</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">coversize</span><span class="p">)</span> <span class="o">+</span> <span class="n">center</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">coversize</span><span class="p">)</span> <span class="o">+</span> <span class="n">center</span><span class="p">))</span>
+        <span class="n">val</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

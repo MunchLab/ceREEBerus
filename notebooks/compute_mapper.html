@@ -1,0 +1,481 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8. Creating a mapper graph using computeMapper &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="7. Computing the Reeb graph of a filtered simplicial complex" href="compute_reeb.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial Notebooks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reeb_basics.html">1. Basic Tutorial: Reeb graph class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="merge_basics.html">2. Basic Tutorial: <code class="docutils literal notranslate"><span class="pre">MergeTree</span></code> class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="embed_graph_basics.html">3. Basic Tutorial: Embedded graph class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapper_basics.html">4. Basic tutorial: <code class="docutils literal notranslate"><span class="pre">MapperGraph</span></code> class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_graphs.html">5. Example graphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interleaving_basics.html">6. Basic tutorial: <code class="docutils literal notranslate"><span class="pre">Interleaving</span></code> class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compute_reeb.html">7. Computing the Reeb graph of a filtered simplicial complex</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">8. Creating a mapper graph using computeMapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Generate-example-data">8.1. Generate example data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Computing-an-example-mapper-graph">8.2. Computing an example mapper graph</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Breakdown-of-inputs">8.2.1. Breakdown of inputs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Tutorial Jupyter Notebooks</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">8. </span>Creating a mapper graph using computeMapper</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/notebooks/compute_mapper.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Creating-a-mapper-graph-using-computeMapper">
+<h1><span class="section-number">8. </span>Creating a mapper graph using computeMapper<a class="headerlink" href="#Creating-a-mapper-graph-using-computeMapper" title="Link to this heading"></a></h1>
+<p>This notebook will show how to construct a mapper graph from a point cloud using the <code class="docutils literal notranslate"><span class="pre">computeMapper</span></code> function.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Standard imports
+
+import matplotlib.pyplot as plt
+</pre></div>
+</div>
+</div>
+<section id="Generate-example-data">
+<h2><span class="section-number">8.1. </span>Generate example data<a class="headerlink" href="#Generate-example-data" title="Link to this heading"></a></h2>
+<p>In this case, we will use an example data set from the <code class="docutils literal notranslate"><span class="pre">sklearn</span></code> package.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from sklearn.datasets import make_circles
+
+number_of_points = 500
+data, labels = make_circles(n_samples=number_of_points, factor=0.4, noise=0.05, random_state=0)
+
+plt.scatter(data[:, 0], data[:, 1], c=labels)
+plt.axis(&#39;scaled&#39;);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_3_0.png" src="../_images/notebooks_compute_mapper_3_0.png" />
+</div>
+</div>
+</section>
+<section id="Computing-an-example-mapper-graph">
+<h2><span class="section-number">8.2. </span>Computing an example mapper graph<a class="headerlink" href="#Computing-an-example-mapper-graph" title="Link to this heading"></a></h2>
+<p>We may compute the mapper graph of this shape using <code class="docutils literal notranslate"><span class="pre">computeMapper</span></code>. In this example, we use a cover from <span class="math notranslate nohighlight">\(-1\)</span> to <span class="math notranslate nohighlight">\(1\)</span> with 7 intervals overlapping 50%. The lens function used is just the first coordinate of each data point.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from cereeberus import MapperGraph, computeMapper, cover
+import numpy as np
+import sklearn
+
+graph = MapperGraph()
+graph = computeMapper(pointcloud = data,
+                      lensfunction=(lambda a : a[0]),
+                      cover=cover(min=-1, max=1, numcovers=7, percentoverlap=.5),
+                      clusteralgorithm=sklearn.cluster.DBSCAN(min_samples=2,eps=0.3).fit
+                      )
+graph.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_5_0.png" src="../_images/notebooks_compute_mapper_5_0.png" />
+</div>
+</div>
+<section id="Breakdown-of-inputs">
+<h3><span class="section-number">8.2.1. </span>Breakdown of inputs<a class="headerlink" href="#Breakdown-of-inputs" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">computeMapper</span></code> function takes 4 inputs:</p>
+<ul class="simple">
+<li><p>A point cloud</p></li>
+<li><p>A lens function</p></li>
+<li><p>A cover</p></li>
+<li><p>A clustering algorithm</p></li>
+</ul>
+<p>Covers may be created using the cover method</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(cover(min=-1, max=1, numcovers=4, percentoverlap=.5))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[(-1.125, -0.375), (-0.625, 0.125), (-0.125, 0.625), (0.375, 1.125)]
+</pre></div></div>
+</div>
+<p>Covering sets may go beyond the specified range if they have a nonzero percentage overlap with other covering sets.</p>
+<p>Both covers and point clouds may be input manually</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph2 = computeMapper([(0.6, 0), (-0.1, 0.5)], (lambda a : a[0]), [(-1,0),(-0.5,0.5),(0,1)], &quot;trivial&quot;)
+graph2.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_11_0.png" src="../_images/notebooks_compute_mapper_11_0.png" />
+</div>
+</div>
+<p>computeMapper allows for any sklearn clustering algorithm to be used as input. It will also work with the trvial clustering.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from sklearn.datasets import make_moons
+
+number_of_points = 200
+
+data, labels = make_moons(n_samples=number_of_points, noise=0.05, random_state=0)
+
+val = 0
+pointcloud = []
+while val &lt; number_of_points:
+    pointcloud.append(data[val])
+    val += 1
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+
+plt.scatter(data[:, 0], data[:, 1], c=labels)
+plt.axis(&#39;scaled&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(np.float64(-1.2259004307319845),
+ np.float64(2.1731624220868624),
+ np.float64(-0.6639113257043391),
+ np.float64(1.162391196195627))
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_14_1.png" src="../_images/notebooks_compute_mapper_14_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph = MapperGraph()
+graph = computeMapper(pointcloud, (lambda a : a[1]), cover(min=-1, max=1, numcovers=7, percentoverlap=.4), sklearn.cluster.DBSCAN(min_samples=2,eps=0.3).fit)
+graph.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_15_0.png" src="../_images/notebooks_compute_mapper_15_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph = MapperGraph()
+graph = computeMapper(pointcloud, (lambda a : a[1]), cover(min=-1, max=1, numcovers=7, percentoverlap=.4), sklearn.cluster.KMeans(n_clusters=4).fit)
+graph.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_16_0.png" src="../_images/notebooks_compute_mapper_16_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph = MapperGraph()
+graph = computeMapper(pointcloud, (lambda a : a[1]), cover(min=-1, max=1, numcovers=7, percentoverlap=.4), sklearn.cluster.HDBSCAN(min_cluster_size=8, copy=False).fit)
+graph.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_17_0.png" src="../_images/notebooks_compute_mapper_17_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph = MapperGraph()
+graph = computeMapper(pointcloud, (lambda a : a[1]), cover(min=-1, max=1, numcovers=7, percentoverlap=.4), &quot;trivial&quot;)
+graph.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_18_0.png" src="../_images/notebooks_compute_mapper_18_0.png" />
+</div>
+</div>
+<p>computeMapper orders the coveringsets it takes as input, preserving the location of each for better computing the distances between graphs</p>
+<p>Notice where the labels for the graph start</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph = MapperGraph()
+graph = computeMapper(pointcloud, (lambda a : a[1]), cover(min=-10, max=10, numcovers=40, percentoverlap=.4), &quot;trivial&quot;)
+graph.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_21_0.png" src="../_images/notebooks_compute_mapper_21_0.png" />
+</div>
+</div>
+<p>computeMapper accepts any function recognizable by numpy as input</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from sklearn.datasets import make_swiss_roll
+number_of_points = 300
+
+data, labels = make_swiss_roll(n_samples=number_of_points, noise=0.1, random_state=0)
+
+val = 0
+pointcloud = []
+while val &lt; number_of_points:
+    pointcloud.append((data[val][0],data[val][2]))
+    val += 1
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+
+plt.scatter(data[:, 0], data[:, 2], c=labels)
+plt.axis(&#39;scaled&#39;);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_24_0.png" src="../_images/notebooks_compute_mapper_24_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph = MapperGraph()
+graph = computeMapper(pointcloud, (lambda a : a[1]), cover(min=-12, max=15, numcovers=10, percentoverlap=.4), sklearn.cluster.DBSCAN(min_samples=2,eps=3).fit)
+graph.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_25_0.png" src="../_images/notebooks_compute_mapper_25_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph = MapperGraph()
+graph = computeMapper(pointcloud, (lambda a : a[1] * a[0]), cover(min=-200, max=200, numcovers=7, percentoverlap=.4), sklearn.cluster.DBSCAN(min_samples=2,eps=3).fit)
+graph.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_26_0.png" src="../_images/notebooks_compute_mapper_26_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph = MapperGraph()
+graph = computeMapper(pointcloud, (lambda a : np.sqrt(a[0]+15)), cover(min=0, max=6, numcovers=7, percentoverlap=.4), sklearn.cluster.DBSCAN(min_samples=2,eps=3).fit)
+graph.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_27_0.png" src="../_images/notebooks_compute_mapper_27_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>graph = MapperGraph()
+graph = computeMapper(pointcloud, (lambda a : np.sqrt(a[0]**2 + a[1]**2)), cover(min=0, max=15, numcovers=10, percentoverlap=.4), sklearn.cluster.DBSCAN(min_samples=2,eps=3).fit)
+graph.draw()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_compute_mapper_28_0.png" src="../_images/notebooks_compute_mapper_28_0.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="compute_reeb.html" class="btn btn-neutral float-left" title="7. Computing the Reeb graph of a filtered simplicial complex" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

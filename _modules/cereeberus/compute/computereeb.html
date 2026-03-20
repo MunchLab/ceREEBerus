@@ -1,0 +1,336 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cereeberus.compute.computereeb &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ceREEBerus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cereeberus.compute.computereeb</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cereeberus.compute.computereeb</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">groupby</span> <span class="k">as</span> <span class="n">_groupby</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..reeb.lowerstar</span><span class="w"> </span><span class="kn">import</span> <span class="n">LowerStar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.unionfind</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnionFind</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_face</span><span class="p">(</span><span class="n">sigma</span><span class="p">,</span> <span class="n">tau</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if tau is a face of sigma</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sigma: A simplicial complex (a list of simplices).</span>
+<span class="sd">        tau: A simplex (a list of vertices).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if tau is a face of sigma, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sigma</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_levelset_components</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a list of simplices L representing a level set, compute the connected components. This function is really only helpful inside of computeReeb.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        L: A list of simplices (each simplex is a list of vertices).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary where keys are representative simplices and values are lists of simplices in the same connected component.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">UF</span> <span class="o">=</span> <span class="n">UnionFind</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">simplex1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">simplex2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span>
+                <span class="c1"># Check if they share a vertex</span>
+                <span class="k">if</span> <span class="n">is_face</span><span class="p">(</span><span class="n">simplex1</span><span class="p">,</span> <span class="n">simplex2</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_face</span><span class="p">(</span><span class="n">simplex2</span><span class="p">,</span> <span class="n">simplex1</span><span class="p">):</span>
+                    <span class="n">UF</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+
+    <span class="c1"># Replace indices with simplices</span>
+    <span class="n">components_index</span> <span class="o">=</span> <span class="n">UF</span><span class="o">.</span><span class="n">components_dict</span><span class="p">()</span>
+    <span class="n">components</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">components_index</span><span class="p">:</span>
+        <span class="n">components</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">key</span><span class="p">])]</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">components_index</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">components</span>
+
+
+<div class="viewcode-block" id="computeReeb">
+<a class="viewcode-back" href="../../../modules/compute/compute_reeb.html#cereeberus.compute.computereeb.computeReeb">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">computeReeb</span><span class="p">(</span><span class="n">K</span><span class="p">:</span> <span class="n">LowerStar</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes the Reeb graph of a Lower Star Simplicial Complex K.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        K (LowerStar): A Lower Star Simplicial Complex with assigned filtration values.</span>
+<span class="sd">        verbose (boolean): Make it True if you want lots of printouts.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ReebGraph: The computed Reeb graph.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; from cereeberus.reeb.LowerStar import LowerStar</span>
+<span class="sd">        &gt;&gt;&gt; K = LowerStar()</span>
+<span class="sd">        &gt;&gt;&gt; K.insert([0, 1, 2])</span>
+<span class="sd">        &gt;&gt;&gt; K.insert([1, 3])</span>
+<span class="sd">        &gt;&gt;&gt; K.insert([2,3])</span>
+<span class="sd">        &gt;&gt;&gt; K.assign_filtration([0], 0.0)</span>
+<span class="sd">        &gt;&gt;&gt; K.assign_filtration([1], 3.0)</span>
+<span class="sd">        &gt;&gt;&gt; K.assign_filtration([2], 5.0)</span>
+<span class="sd">        &gt;&gt;&gt; K.assign_filtration([3], 7)</span>
+<span class="sd">        &gt;&gt;&gt; R = computeReeb(K)</span>
+<span class="sd">        &gt;&gt;&gt; R.draw()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">..reeb.reebgraph</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReebGraph</span>
+
+    <span class="n">funcVals</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">K</span><span class="o">.</span><span class="n">filtration</span><span class="p">([</span><span class="n">i</span><span class="p">]))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">K</span><span class="o">.</span><span class="n">iter_vertices</span><span class="p">()]</span>
+    <span class="n">funcVals</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># Sort by filtration value</span>
+    <span class="c1"># Group vertices that share the same filtration value into batches.</span>
+    <span class="c1"># A horizontal edge (both endpoints at the same height) must be processed</span>
+    <span class="c1"># within one batch so it properly merges its endpoints into a single Reeb node.</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">grp</span><span class="p">))</span> <span class="k">for</span> <span class="n">filt</span><span class="p">,</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">_groupby</span><span class="p">(</span><span class="n">funcVals</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">]</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
+    <span class="n">currentLevelSet</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">half_edge_index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">vert_to_component</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">edges_at_prev_level</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dedup</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">for</span> <span class="n">group_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">group_verts</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">grouped</span><span class="p">):</span>
+        <span class="n">now_min</span> <span class="o">=</span> <span class="n">filt</span>
+        <span class="n">now_max</span> <span class="o">=</span> <span class="n">grouped</span><span class="p">[</span><span class="n">group_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">group_idx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">grouped</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">vert_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">group_verts</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">---</span><span class="se">\n</span><span class="s2"> Processing group at func val </span><span class="si">{</span><span class="n">filt</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">vert_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Classify all simplex stars for this batch into three groups:</span>
+        <span class="c1">#</span>
+        <span class="c1">#   lower_nonhoriz: s_filt == filt AND at least one vertex strictly below filt.</span>
+        <span class="c1">#       These were added to currentLevelSet by an earlier vertex; remove them now.</span>
+        <span class="c1">#</span>
+        <span class="c1">#   horizontal:     s_filt == filt AND ALL vertices are at filt.</span>
+        <span class="c1">#       These connect same-height vertices in the same batch.</span>
+        <span class="c1">#       Add them temporarily so they link the endpoints into one component.</span>
+        <span class="c1">#</span>
+        <span class="c1">#   upper:          s_filt &gt; filt.</span>
+        <span class="c1">#       Add persistently; they carry the level set upward to the next critical point.</span>
+        <span class="c1">#</span>
+        <span class="c1"># Note: because filt(simplex) = max(vertex filtrations) &gt;= filt for any simplex</span>
+        <span class="c1"># in the star of a vertex at height filt, s_filt &lt; filt is impossible here.</span>
+        <span class="n">all_lower_nonhoriz</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_upper</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_horizontal</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">vert</span> <span class="ow">in</span> <span class="n">vert_names</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">K</span><span class="o">.</span><span class="n">get_star</span><span class="p">([</span><span class="n">vert</span><span class="p">]):</span>
+                <span class="n">simplex</span><span class="p">,</span> <span class="n">s_filt</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">simplex</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">s_filt</span> <span class="o">&gt;</span> <span class="n">filt</span><span class="p">:</span>
+                    <span class="n">all_upper</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simplex</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">filtration</span><span class="p">([</span><span class="n">u</span><span class="p">])</span> <span class="o">==</span> <span class="n">filt</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">simplex</span><span class="p">):</span>
+                    <span class="n">all_horizontal</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simplex</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">all_lower_nonhoriz</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simplex</span><span class="p">)</span>
+
+        <span class="n">all_lower_nonhoriz</span> <span class="o">=</span> <span class="n">_dedup</span><span class="p">(</span><span class="n">all_lower_nonhoriz</span><span class="p">)</span>
+        <span class="n">all_upper</span> <span class="o">=</span> <span class="n">_dedup</span><span class="p">(</span><span class="n">all_upper</span><span class="p">)</span>
+        <span class="n">all_horizontal</span> <span class="o">=</span> <span class="n">_dedup</span><span class="p">(</span><span class="n">all_horizontal</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Lower (non-horiz) simplices: </span><span class="si">{</span><span class="n">all_lower_nonhoriz</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Horizontal simplices: </span><span class="si">{</span><span class="n">all_horizontal</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Upper simplices: </span><span class="si">{</span><span class="n">all_upper</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 1: Remove the lower non-horizontal simplices from the active level set.</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">all_lower_nonhoriz</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">currentLevelSet</span><span class="p">:</span>
+                <span class="n">currentLevelSet</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="c1"># Step 2: Add this batch&#39;s vertices and its horizontal simplices to the level set.</span>
+        <span class="k">for</span> <span class="n">vert</span> <span class="ow">in</span> <span class="n">vert_names</span><span class="p">:</span>
+            <span class="n">currentLevelSet</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">vert</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">all_horizontal</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">currentLevelSet</span><span class="p">:</span>
+                <span class="n">currentLevelSet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Current level set: </span><span class="si">{</span><span class="n">currentLevelSet</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 3: Compute connected components; create one Reeb node per component.</span>
+        <span class="n">components_at_level</span> <span class="o">=</span> <span class="n">get_levelset_components</span><span class="p">(</span><span class="n">currentLevelSet</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Level set components:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">components_at_level</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">comp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">verts_at_level</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">rep</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">components_at_level</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">nextNodeName</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">get_next_vert_name</span><span class="p">()</span>
+            <span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">nextNodeName</span><span class="p">,</span> <span class="n">now_min</span><span class="p">)</span>
+            <span class="n">vert_to_component</span><span class="p">[</span><span class="n">nextNodeName</span><span class="p">]</span> <span class="o">=</span> <span class="n">comp</span>
+            <span class="n">verts_at_level</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nextNodeName</span><span class="p">)</span>
+
+            <span class="c1"># Connect incoming half-edge sentinels whose component contains a face</span>
+            <span class="c1"># of a simplex in this component.</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges_at_prev_level</span><span class="p">:</span>
+                <span class="n">prev_comp</span> <span class="o">=</span> <span class="n">vert_to_component</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+                    <span class="n">is_face</span><span class="p">(</span><span class="n">prev_simp</span><span class="p">,</span> <span class="n">simp</span><span class="p">)</span> <span class="k">for</span> <span class="n">simp</span> <span class="ow">in</span> <span class="n">comp</span> <span class="k">for</span> <span class="n">prev_simp</span> <span class="ow">in</span> <span class="n">prev_comp</span>
+                <span class="p">):</span>
+                    <span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">nextNodeName</span><span class="p">)</span>
+
+        <span class="c1"># Step 4: Remove vertices and horizontal simplices – they live only at this exact height.</span>
+        <span class="k">for</span> <span class="n">vert</span> <span class="ow">in</span> <span class="n">vert_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">[</span><span class="n">vert</span><span class="p">]</span> <span class="ow">in</span> <span class="n">currentLevelSet</span><span class="p">:</span>
+                <span class="n">currentLevelSet</span><span class="o">.</span><span class="n">remove</span><span class="p">([</span><span class="n">vert</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">all_horizontal</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">currentLevelSet</span><span class="p">:</span>
+                <span class="n">currentLevelSet</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="c1"># Step 5: Add upper-star simplices to carry the level set forward.</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">all_upper</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">currentLevelSet</span><span class="p">:</span>
+                <span class="n">currentLevelSet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  Updated level set: </span><span class="si">{</span><span class="n">currentLevelSet</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 6: Compute components above this level; create half-edge sentinel nodes</span>
+        <span class="c1"># at height (now_min + now_max) / 2 and connect them downward to the Reeb nodes</span>
+        <span class="c1"># created in Step 3.</span>
+        <span class="n">components_above</span> <span class="o">=</span> <span class="n">get_levelset_components</span><span class="p">(</span><span class="n">currentLevelSet</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Level set components above:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">components_above</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">comp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">edges_at_prev_level</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">components_above</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">e_name</span> <span class="o">=</span> <span class="s2">&quot;e_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">half_edge_index</span><span class="p">)</span>
+            <span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">e_name</span><span class="p">,</span> <span class="p">(</span><span class="n">now_min</span> <span class="o">+</span> <span class="n">now_max</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">vert_to_component</span><span class="p">[</span><span class="n">e_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">comp</span>
+            <span class="n">half_edge_index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">edges_at_prev_level</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e_name</span><span class="p">)</span>
+
+            <span class="c1"># Connect downward to Reeb nodes at this level.</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">verts_at_level</span><span class="p">:</span>
+                <span class="n">prev_comp</span> <span class="o">=</span> <span class="n">vert_to_component</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+                    <span class="n">is_face</span><span class="p">(</span><span class="n">simp</span><span class="p">,</span> <span class="n">prev_simp</span><span class="p">)</span> <span class="k">for</span> <span class="n">simp</span> <span class="ow">in</span> <span class="n">comp</span> <span class="k">for</span> <span class="n">prev_simp</span> <span class="ow">in</span> <span class="n">prev_comp</span>
+                <span class="p">):</span>
+                    <span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">e_name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">R</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
