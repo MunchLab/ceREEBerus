@@ -1,9 +1,12 @@
 import unittest
-from cereeberus.data.ex_mappergraphs import torus, line
-from cereeberus.distance.labeled_blocks import LabeledMatrix as LM 
-from cereeberus.distance.labeled_blocks import LabeledBlockMatrix as LBM
+
 import numpy as np
-from cereeberus import Interleave, Assignment
+from cereeberus.data.ex_mappergraphs import line, torus
+from cereeberus.distance.labeled_blocks import LabeledBlockMatrix as LBM
+from cereeberus.distance.labeled_blocks import LabeledMatrix as LM
+
+from cereeberus import Assignment, Interleave, MapperGraph
+
 
 class TestInterleaving(unittest.TestCase):
     def test_torus_line(self):
@@ -106,12 +109,49 @@ class TestInterleaving(unittest.TestCase):
             for obj_type in ['V', 'E']:
                 P = myAssgn.parallelogram_matrix(maptype, obj_type)
                 self.assertTrue(np.all(P.col_sum() == 0))
+
+        # check that the optimize function works and has the same output value as recomputing internally
+        result = myAssgn.optimize()
+        self.assertFalse(result) 
+
+        newmyAssgn = Assignment(T, L, n=2, initialize_random_maps=True)
+        new_result = newmyAssgn.optimize()
+        self.assertTrue(new_result)
+
                 
-        # Check that the optimize function works and has the same output value as recomputing internally 
+        # Check that the dist_optimize function works and has the same output value as recomputing internally 
         
-        loss_out = myAssgn.optimize()
+        loss_out = myAssgn.dist_optimize()
         loss_in = myAssgn.loss()
         self.assertEqual(loss_out, loss_in)
+
+    def test_edgeless_level_boundary_blocks(self):
+        """Regression test: levels with vertices but no edges should still have boundary blocks."""
+        F = MapperGraph()
+        F.add_node("f0", 0)
+        F.add_node("f1", 1)
+        F.add_node("f2", 2)
+        F.add_edge("f0", "f1")
+
+        G = MapperGraph()
+        G.add_node("g0", 0)
+        G.add_node("g1", 1)
+        G.add_node("g2", 2)
+        G.add_edge("g0", "g1")
+
+        myAssgn = Assignment(F, G, n=1, initialize_random_maps=True)
+
+        # Level 1 has vertices but no outgoing edges, so boundary blocks should exist with zero columns.
+        self.assertIn(1, myAssgn.B_up("F", "0").get_all_block_indices())
+        self.assertIn(1, myAssgn.B_down("F", "0").get_all_block_indices())
+        self.assertEqual(myAssgn.B_up("F", "0")[1].get_array().shape[1], 0)
+        self.assertEqual(myAssgn.B_down("F", "0")[1].get_array().shape[1], 0)
+
+        # This used to raise KeyError when solve_ilp accessed missing boundary blocks.
+        myAssgn.optimize()
+
+
+
 
 
 
