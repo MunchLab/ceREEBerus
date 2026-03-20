@@ -223,7 +223,6 @@ class Interleave:
         # low = (high//2) + 1 if high > 1 else 1
         low = low #keep the last infeasible n as the lower bound
         best_n = high
-        best_bound = high
 
         while low <= high:
             mid = (low + high) // 2
@@ -248,7 +247,6 @@ class Interleave:
                     high = mid - 1 # decrease n to increase the loss. this tries to  go lower
                 else:
                     low = mid + 1
-                    high = min(high, best_bound - 1) # to tighten the upper bound on the search space. this tries to go higher
             except ValueError: # infeasible assignment
                 low = mid + 1  
         
@@ -2051,7 +2049,7 @@ class Assignment:
             return all_func_vals
     
     def optimize(self, pulp_solver = None):
-        """Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.
+        """Uses the ILP to check feasibility of an interleaving at the current ``n``. If feasible, stores the corresponding phi and psi maps, which can be returned using ``self.phi`` and ``self.psi``.
         This function requires the `pulp` package to be installed.
 
         Parameters:
@@ -2076,15 +2074,19 @@ class Assignment:
         return True
 
     def dist_optimize(self, pulp_solver = None):
-        """Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.
+        """Uses the ILP with distance-matrix constraints and returns the optimized loss value. It also stores the corresponding phi and psi maps, which can be returned using ``self.phi`` and ``self.psi``.
         ## NOTE: This version uses the D matrices in the constraints, which makes it slower. ##
         This function requires the `pulp` package to be installed.
         
         Parameters:
             pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.
         Returns:
-            int or None:
-                Returns the loss value if an optimal solution was found and None otherwise.
+            float:
+                The optimized loss value.
+
+        Raises:
+            ValueError:
+                If the ILP optimization does not converge.
             
         """
 

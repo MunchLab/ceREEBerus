@@ -72,7 +72,7 @@ def build_map_matrices(myAssgn, map_results):
 
 def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
     """
-    Function to solve the ILP optimization problem for interleaving maps. The function creates a linear programming problem using the PuLP library and solves it to find the optimal interleaving maps.
+    Function to solve the ILP feasibility problem for interleaving maps. The function creates a linear programming problem using the PuLP library and solves it to find feasible interleaving maps.
 
     Parameters:
         myAssgn (Assignment): the Assignment object containing the interleaving maps and other relevant data
@@ -80,7 +80,11 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
         verbose (bool): whether to print the optimization status and results
 
     Returns:
-        tuple: a tuple containing the final interleaving maps (as a dictionary of LabeledBlockMatrices) and the optimized loss value
+        tuple:
+            A tuple ``(final_maps, status_str)`` where ``final_maps`` is a dictionary
+            of LabeledBlockMatrices when feasible and ``status_str`` is the PuLP
+            status string (for example ``"Optimal"``). If infeasible,
+            ``final_maps`` is ``None`` and ``status_str`` contains the solver status.
     """
     # function values
     func_vals = myAssgn.all_func_vals()
@@ -333,15 +337,13 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
 
                 #  constraint 1: loss is bigger than the absolute value of each matrix elements
             
-                # for triangles
-                for  h in range(shape_m_tri):                    
-
-                    tri_expression = pulp.lpSum( (i_n_i_0[h,k] - map_product_vars[block][starting_map][obj_type][h,k]) for k in range(shape_o_tri))
-
-                    # prob += aux_vars[block][starting_map][obj_type] * 2 >= tri_expression # ceiling of half of the expression
-
-
-                    prob += tri_expression == 0
+                # for triangles, enforce commutativity entry-wise
+                for h in range(shape_m_tri):
+                    for k in range(shape_o_tri):
+                        prob += (
+                            i_n_i_0[h, k]
+                            == map_product_vars[block][starting_map][obj_type][h, k]
+                        )
 
 
 
@@ -350,14 +352,14 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
                 for i in range(shape_m_para):
                     for k in range(shape_p_para):
                         # inner difference
-                            first_term = pulp.lpSum([map_n_para_vars[i,j] * inc_0_para[j][k] for j in range(shape_n_para)])
-                            second_term = pulp.lpSum([inc_n_para[i][l]  * map_0_para_vars[l,k] for l in range(shape_o_para)])
+                        first_term = pulp.lpSum([map_n_para_vars[i,j] * inc_0_para[j][k] for j in range(shape_n_para)])
+                        second_term = pulp.lpSum([inc_n_para[i][l]  * map_0_para_vars[l,k] for l in range(shape_o_para)])
 
 
-                            # total expression
-                            para_expression = first_term - second_term
+                        # total expression
+                        para_expression = first_term - second_term
 
-                            prob += para_expression == 0
+                        prob += para_expression == 0
 
 
                 # constraint 2: map_multiplication and z relation. This is for triangles
