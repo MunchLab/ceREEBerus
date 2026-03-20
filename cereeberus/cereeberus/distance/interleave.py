@@ -1,14 +1,17 @@
+import os
+import sys
+
+import networkx as nx
 import numpy as np
 import pandas as pd
-import networkx as nx
-from scipy.linalg import block_diag
 from matplotlib import pyplot as plt
+from scipy.linalg import block_diag
+
 from ..compute.unionfind import UnionFind
+from ..compute.utils import HiddenPrints
+from .ilp import solve_ilp, solve_ilp_dist
 from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
-from .ilp import solve_ilp, solve_ilp_dist
-from ..compute.utils import HiddenPrints
-import sys, os
 
 
 class Interleave:
@@ -220,7 +223,6 @@ class Interleave:
         # low = (high//2) + 1 if high > 1 else 1
         low = low #keep the last infeasible n as the lower bound
         best_n = high
-        best_bound = high
 
         while low <= high:
             mid = (low + high) // 2
@@ -245,7 +247,6 @@ class Interleave:
                     if bound < best_bound:
                         best_bound = bound # to tighten the upper bound on the search space. this tries to go higher
                     low = mid + 1
-                    high = min(high, best_bound - 1) # to tighten the upper bound on the search space. this tries to go higher
             except ValueError: # infeasible assignment
                 low = mid + 1  
         
@@ -612,16 +613,15 @@ class Assignment:
                 B_up = LBM()
 
                 for i in self.val_to_verts[graph_name][key]:
-                    if i in self.val_to_edges[graph_name][key]:
-                        edges = self.val_to_edges[graph_name][key][i]
-                        verts_down = self.val_to_verts[graph_name][key][i]
-                        verts_up = self.val_to_verts[graph_name][key][i + 1]
-                        B_down[i] = LM(rows=verts_down, cols=edges)
-                        B_up[i] = LM(rows=verts_up, cols=edges)
+                    edges = self.val_to_edges[graph_name][key].get(i, [])
+                    verts_down = self.val_to_verts[graph_name][key][i]
+                    verts_up = self.val_to_verts[graph_name][key].get(i + 1, [])
+                    B_down[i] = LM(rows=verts_down, cols=edges)
+                    B_up[i] = LM(rows=verts_up, cols=edges)
 
-                        for e in edges:
-                            B_down[i][e[0], e] = 1
-                            B_up[i][e[1], e] = 1
+                    for e in edges:
+                        B_down[i][e[0], e] = 1
+                        B_up[i][e[1], e] = 1
 
                 min_i = min(list(self.val_to_verts[graph_name][key].keys()))
                 max_i = max(list(self.val_to_verts[graph_name][key].keys()))
@@ -2049,14 +2049,19 @@ class Assignment:
             return all_func_vals
     
     def optimize(self, pulp_solver = None):
-        """Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.
+        """Uses the ILP to check feasibility of an interleaving at the current ``n``. If feasible, stores the corresponding phi and psi maps, which can be returned using ``self.phi`` and ``self.psi``.
         This function requires the `pulp` package to be installed.
 
         Parameters:
             pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.
         Returns:
+<<<<<<< HEAD
             int or None:
                 Returns boolean True if an optimal solution was found and False otherwise.
+=======
+            bool:
+                Returns True if an optimal solution was found and False otherwise.
+>>>>>>> dcf4c3a66e25255da68ce080152d530e110d09e4
             
         """
 
@@ -2074,15 +2079,24 @@ class Assignment:
         return True
 
     def dist_optimize(self, pulp_solver = None):
-        """Uses the ILP to find the best interleaving distance bound, returns the loss value found. Further, it stores the optimal phi and psi maps which can be returned using the ``self.phi`` and ``self.psi`` attributes respectively.
+        """Uses the ILP with distance-matrix constraints and returns the optimized loss value. It also stores the corresponding phi and psi maps, which can be returned using ``self.phi`` and ``self.psi``.
         ## NOTE: This version uses the D matrices in the constraints, which makes it slower. ##
         This function requires the `pulp` package to be installed.
         
         Parameters:
             pulp_solver (pulp.LpSolver): the solver to use for the ILP optimization. If None, the default solver is used.
         Returns:
+<<<<<<< HEAD
             int or None:
                 Returns the optimized loss value
+=======
+            float:
+                The optimized loss value.
+
+        Raises:
+            ValueError:
+                If the ILP optimization does not converge.
+>>>>>>> dcf4c3a66e25255da68ce080152d530e110d09e4
             
         """
 
