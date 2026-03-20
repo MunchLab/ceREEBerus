@@ -17,8 +17,6 @@ class TestMapperClass(unittest.TestCase):
         # Check that all edges have adjacent function values
         for edge in MG.edges:
             v1, v2 = edge[:2]
-            print (v1, v2)
-            print(MG.f[v1], MG.f[v2])
             self.assertTrue(MG.f[v2] - MG.f[v1] == 1)
 
         # Check that the node list and the keys for f are the same 
