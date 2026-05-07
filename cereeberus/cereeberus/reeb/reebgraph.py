@@ -70,6 +70,47 @@ class ReebGraph(nx.MultiDiGraph):
         """
         return {"nodes": len(self.nodes), "edges": len(self.edges)}
 
+    def copy(self):
+        """Create a deep copy of the Reeb graph.
+
+        Returns:
+            ReebGraph
+                A new ReebGraph object with the same nodes, edges, and function values.
+        """
+        # Create a new ReebGraph with copies of the nodes and edges
+        H = ReebGraph()
+        
+        # Copy the function values dictionary
+        H.f = self.f.copy()
+        
+        # Copy all nodes and edges from the parent MultiDiGraph
+        for v in self.nodes():
+            H.add_node(v, self.f[v], reset_pos=False)
+        
+        for u, v, key in self.edges(keys=True):
+            super(ReebGraph, H).add_edge(u, v, key)
+        
+        # Copy position information if it exists
+        if hasattr(self, 'pos_f') and self.pos_f:
+            H.pos_f = self.pos_f.copy()
+        if hasattr(self, 'pos') and self.pos:
+            H.pos = self.pos.copy()
+        
+        return H
+
+    def branch_decomp(self):
+        """Compute and return the branch decomposition of the Reeb graph.
+
+        Returns:
+            BranchDecomp
+                A :class:`~cereeberus.reeb.branchdecomp.BranchDecomp` object whose
+                ``decompose`` method has already been called on this graph.
+        """
+        from .branchdecomp import BranchDecomp
+        bd = BranchDecomp()
+        bd.decompose(self)
+        return bd
+
     # -----------------#
     # Methods for getting info about the Reeb graph and its nodes
     # -----------------#
