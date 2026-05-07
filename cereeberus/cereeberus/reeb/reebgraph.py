@@ -1,7 +1,13 @@
-import networkx as nx
-from ..draw import draw
+from os import path
+
 import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
+
+from ..draw import draw
+
+# from build.lib.cereeberus.reeb import graph
+
 
 
 class ReebGraph(nx.MultiDiGraph):
@@ -63,6 +69,47 @@ class ReebGraph(nx.MultiDiGraph):
                 A dictionary with the number of nodes and edges in the Reeb graph.
         """
         return {"nodes": len(self.nodes), "edges": len(self.edges)}
+
+    def copy(self):
+        """Create a deep copy of the Reeb graph.
+
+        Returns:
+            ReebGraph
+                A new ReebGraph object with the same nodes, edges, and function values.
+        """
+        # Create a new ReebGraph with copies of the nodes and edges
+        H = ReebGraph()
+        
+        # Copy the function values dictionary
+        H.f = self.f.copy()
+        
+        # Copy all nodes and edges from the parent MultiDiGraph
+        for v in self.nodes():
+            H.add_node(v, self.f[v], reset_pos=False)
+        
+        for u, v, key in self.edges(keys=True):
+            super(ReebGraph, H).add_edge(u, v, key)
+        
+        # Copy position information if it exists
+        if hasattr(self, 'pos_f') and self.pos_f:
+            H.pos_f = self.pos_f.copy()
+        if hasattr(self, 'pos') and self.pos:
+            H.pos = self.pos.copy()
+        
+        return H
+
+    def branch_decomp(self):
+        """Compute and return the branch decomposition of the Reeb graph.
+
+        Returns:
+            BranchDecomp
+                A :class:`~cereeberus.reeb.branchdecomp.BranchDecomp` object whose
+                ``decompose`` method has already been called on this graph.
+        """
+        from .branchdecomp import BranchDecomp
+        bd = BranchDecomp()
+        bd.decompose(self)
+        return bd
 
     # -----------------#
     # Methods for getting info about the Reeb graph and its nodes
@@ -135,6 +182,27 @@ class ReebGraph(nx.MultiDiGraph):
                 The number of connected components in the Reeb graph.
         """
         return nx.number_connected_components(self.to_undirected())
+
+    def get_upward_path(self, start_vertex):
+        """Return an upward path from the starting vertex by greedy dynamic choice.
+        
+        Input:
+            start_vertex: a vertex in the graph to start from
+            
+        Output:
+            path: a list of vertices representing the upward path
+            
+        """
+        # Check that the vertex is in the graph 
+        if start_vertex not in self.nodes:
+            raise ValueError(f"The vertex {start_vertex} is not in the Reeb graph.")   
+        
+        path = [start_vertex]
+        while self.up_degree(path[-1]) > 0:
+            s = next(self.successors(path[-1]))
+            path.append(s)
+
+        return path
 
     def func_to_vertex_dict(self):
         """
@@ -422,6 +490,35 @@ class ReebGraph(nx.MultiDiGraph):
         """
         for edge in edges:
             self.add_edge(*edge, reset_pos=False)
+
+        if reset_pos:
+            self.set_pos_from_f()
+
+    def remove_edges_from(self, edges, reset_pos=True):
+        """Remove a list of edges from the Reeb graph.
+
+        Parameters:
+            edges (list): The list of edges to remove.
+            reset_pos (bool): Optional. If True, will reset the positions of the nodes based on the function values.
+        """
+        for edge in edges:
+            if self.has_edge(*edge):
+                super().remove_edge(*edge)
+
+        if reset_pos:
+            self.set_pos_from_f()
+    
+    def remove_path_from(self, path, reset_pos=True):
+        """Remove a path from the Reeb graph. A path is a list of vertices, and this method will remove one edge along each step of the path.
+
+        Parameters:
+            path (list): The list of vertices representing the path to remove.
+            reset_pos (bool): Optional. If True, will reset the positions of the nodes based on the function values.
+        """
+        for i in range(len(path) - 1):
+            u, v = path[i], path[i + 1]
+            if self.has_edge(u, v):
+                self.remove_edge(u, v)
 
         if reset_pos:
             self.set_pos_from_f()

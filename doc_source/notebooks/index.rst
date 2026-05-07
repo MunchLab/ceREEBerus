@@ -15,3 +15,4 @@ This section is for adding example jupyter notebooks.
    interleaving_basics.ipynb
    compute_reeb.ipynb
    compute_mapper.ipynb
+   branch_decomp_basics.ipynb

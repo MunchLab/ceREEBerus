@@ -113,6 +113,38 @@ class TestReebClass(unittest.TestCase):
         # General check of the Reeb graph
         self.check_reeb(R)
 
+    def test_get_upward_path(self):
+        # This test makes sure you can get an upward path from a starting vertex.
+        R = ex_rg.torus(multigraph=True)
+
+        self.assertEqual(R.get_upward_path("a"), ["a", "b", "c", "d"])
+        self.assertEqual(R.get_upward_path("d"), ["d"])
+        self.assertRaises(ValueError, R.get_upward_path, "chicken")
+
+    def test_remove_edges_from(self):
+        # This test makes sure you can remove a list of edges from a Reeb graph.
+        R = ex_rg.torus(multigraph=True)
+
+        self.assertEqual(R.number_of_edges("b", "c"), 2)
+
+        R.remove_edges_from([("b", "c"), ("b", "c"), ("a", "d")])
+
+        self.assertEqual(R.number_of_edges("b", "c"), 0)
+        self.assertEqual(R.summary(), {"nodes": 4, "edges": 2})
+        self.check_reeb(R)
+
+    def test_remove_path_from(self):
+        # This test makes sure you can remove one edge along each step of a path.
+        R = ex_rg.torus(multigraph=True)
+
+        R.remove_path_from(["a", "b", "c", "d"])
+
+        self.assertFalse(R.has_edge("a", "b"))
+        self.assertEqual(R.number_of_edges("b", "c"), 1)
+        self.assertFalse(R.has_edge("c", "d"))
+        self.assertEqual(R.summary(), {"nodes": 4, "edges": 1})
+        self.check_reeb(R)
+
     def test_subdivide_edge(self):
         # This test makes sure you can subdivide an edge in a Reeb graph.
         R = ex_rg.juggling_man()
