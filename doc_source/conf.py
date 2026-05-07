@@ -60,6 +60,9 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# Render notebooks from their saved contents during the default docs build.
+nbsphinx_execute = 'never'
+
 
 # -- Options for HTML output -------------------------------------------------
 

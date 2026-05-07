@@ -9,7 +9,7 @@ docs:
 	# Running sphinx-build to build html files in build folder.
 	rm -rf docs
 	mkdir -p docs
-	sphinx-build -M html doc_source docs
+	python -m sphinx -M html doc_source docs
 	rsync -a docs/html/ docs/
 	rm -rf docs/html
 
@@ -18,7 +18,7 @@ docs-execute:
 	# Running sphinx-build and forcing nbsphinx to execute all notebooks.
 	rm -rf docs
 	mkdir -p docs
-	sphinx-build -M html doc_source docs -D nbsphinx_execute=always
+	python -m sphinx -M html doc_source docs -D nbsphinx_execute=always
 	rsync -a docs/html/ docs/
 	rm -rf docs/html
 
