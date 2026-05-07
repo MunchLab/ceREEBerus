@@ -4,6 +4,20 @@ import numpy as np
 import networkx as nx
 
 
+def _format_node_label(node):
+    """Format node labels for cleaner plotting output.
+
+    Internal mapper subdivision nodes are stored as tuples like
+    ("mapper_subd", k). Render these compactly as "s{k}".
+    """
+    if isinstance(node, tuple) and len(node) == 2 and isinstance(node[1], int):
+        if node[0] == "mapper_subd":
+            return f"s{node[1]}"
+        if node[0] == "reeb_auto":
+            return f"r{node[1]}"
+    return node
+
+
 def dict_to_list(d):
     return list(d.values())
 
@@ -114,7 +128,10 @@ def reeb_plot(
         R, R.pos_f, node_color=color_map, ax=ax, **kwargs
     )
     if with_labels:
-        nx.draw_networkx_labels(R, pos=R.pos_f, font_color="black", ax=ax)
+        label_map = {node: _format_node_label(node) for node in R.nodes}
+        nx.draw_networkx_labels(
+            R, pos=R.pos_f, labels=label_map, font_color="black", ax=ax
+        )
     if with_colorbar:
         plt.colorbar(pathcollection)
 

@@ -1,23 +1,30 @@
 from ..reeb.mapper import MapperGraph
+import numpy as np
 
 
-# Interprets the lensfunction as a python function, does it, then returns the new location of each point for every point
-def __runlensfunction(lensfunction, pointcloud):
+# Interprets the lensfunction as a python function, does it, then returns the new location of each point for every point.
+# Point identifiers are always integer indices.
+def __runlensfunction(lensfunction, pointcloud, distance_matrix=None):
+    n = len(distance_matrix) if pointcloud is None else len(pointcloud)
     lensfunctionoutput = []
+
     if callable(lensfunction):
-        for val in range(len(pointcloud)):
-            lensfunctionoutput.append(
-                [lensfunction(pointcloud[val]), tuple(pointcloud[val])]
+        if pointcloud is None:
+            raise ValueError(
+                "A callable lens function requires a pointcloud. "
+                "When using only a distance_matrix, provide lensfunction as a precomputed list."
             )
+        for i in range(n):
+            lensfunctionoutput.append([lensfunction(pointcloud[i]), i])
         return lensfunctionoutput
 
-    if len(lensfunction) != len(pointcloud):
+    if len(lensfunction) != n:
         raise ValueError(
-            "If the lens function is given as a list of numbers, it must have the same length as the number of points in the point cloud."
+            "If the lens function is given as a list of numbers, it must have the same length as the number of points."
         )
 
-    for val in range(len(pointcloud)):
-        lensfunctionoutput.append([lensfunction[val], tuple(pointcloud[val])])
+    for i in range(n):
+        lensfunctionoutput.append([lensfunction[i], i])
 
     return lensfunctionoutput
 
@@ -49,50 +56,34 @@ def __createcoveringsets(points, cover):
 
 
 # cluster the points using a number of existing clustering algorithms
-def __cluster(coveringsets, clusteralgorithm):
+def __cluster(coveringsets, clusteralgorithm, pointcloud=None, distance_matrix=None):
     # trivial clustering
     if clusteralgorithm == "trivial":
         finished_cluster = list()
-        cluster = list()
         for val1 in range(len(coveringsets)):
-            cluster.append(coveringsets[val1][0][2])
+            cluster = [coveringsets[val1][0][2]]
             for val2 in range(1, len(coveringsets[val1])):
-                cluster.append(
-                    (coveringsets[val1][val2][1][0], coveringsets[val1][val2][1][1])
-                )
-            finished_cluster.append(
-                cluster[:]
-            )  # Works like this to avoid passing by reference in python lists
-            cluster.clear()
-        # print("Clustering Output: ")
-        # print(finished_cluster)
+                cluster.append(coveringsets[val1][val2][1])
+            finished_cluster.append(cluster)
         return finished_cluster
     # execute sklearn clusterings
     elif callable(clusteralgorithm):
         finished_cluster = list()
-        coverpointcloud = list()
-        cluster = list()
         for val1 in range(len(coveringsets)):
-            # alters data to fit with sklearn clustering algorithms
-            for val2 in range(1, len(coveringsets[val1])):
-                coverpointcloud.append(
-                    (coveringsets[val1][val2][1][0], coveringsets[val1][val2][1][1])
-                )
-            # does clustering algorithm
-            cluster_out = clusteralgorithm(coverpointcloud)
-            # puts points into list
+            indices = [coveringsets[val1][val2][1] for val2 in range(1, len(coveringsets[val1]))]
+            if distance_matrix is not None:
+                sub_matrix = distance_matrix[np.ix_(indices, indices)]
+                cluster_out = clusteralgorithm(sub_matrix)
+            else:
+                coverpointcloud = [pointcloud[idx] for idx in indices]
+                cluster_out = clusteralgorithm(coverpointcloud)
+            cluster = list()
             for val2 in range(max(cluster_out.labels_) + 1):
-                cluster.append(
-                    [coveringsets[val1][0][2]]
-                )  # The position of the covering set in the cover (preserved for distance purposes)
+                cluster.append([coveringsets[val1][0][2]])
                 for val3 in range(len(cluster_out.labels_)):
                     if cluster_out.labels_[val3] == val2:
-                        cluster[val2].append(coverpointcloud[val3])
+                        cluster[val2].append(indices[val3])
                 finished_cluster.append(cluster[val2])
-            coverpointcloud.clear()
-            cluster.clear()
-        # print("Clustering Output: ")
-        # print(finished_cluster)
         return finished_cluster
     else:
         print("input not valid")
@@ -102,46 +93,66 @@ def __cluster(coveringsets, clusteralgorithm):
 # Adds edges between the cluster that share points
 def __addedges(clusterpoints):
     outputgraph = MapperGraph()
-    val2 = 0
     for val1 in range(len(clusterpoints)):
         outputgraph.add_node(val1, clusterpoints[val1][0])
-        while val2 < val1:
-            if clusterpoints[val1][0] != clusterpoints[val2][0]:
-                if len(set(clusterpoints[val1]) & set(clusterpoints[val2])) > 0:
-                    outputgraph.add_edge(val1, val2)
-            val2 += 1
-        val2 = 0
+        for val2 in range(val1):
+            if clusterpoints[val1][0] == clusterpoints[val2][0]:
+                continue
+            # Compare only point memberships (skip cover index at position 0).
+            if len(set(clusterpoints[val1][1:]) & set(clusterpoints[val2][1:])) > 0:
+                outputgraph.add_edge(val1, val2)
     # print("Final Output: ")
     # print(outputgraph)
     return outputgraph
 
 
 # Does the Mapper Algorithm in order
-def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm):
+def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm, distance_matrix=None):
     """
     Computes the mapper graph of an input function.
 
-    The point cloud should be given as a list of tuples or as a numpy array.
+    The point cloud should be given as a list of tuples or as a numpy array. It may be
+    ``None`` when a ``distance_matrix`` is provided and the lens function is a precomputed list.
 
-    The lens function should be given as either a list of numbers with the same length as the number of points; or as a callable function where :math:`f(point) = \text{value}` so long as the function can be determined from the coordinate values of the point.
+    The lens function should be given as either a list of numbers with the same length as the
+    number of points; or as a callable function where :math:`f(point) = \\text{value}` so long
+    as the function can be determined from the coordinate values of the point. When only a
+    ``distance_matrix`` is supplied (no ``pointcloud``), the lens function must be a precomputed
+    list.
 
-    The cover should be given as a list of intervals. This can be done, for example, using the 'cereeberus.cover' function in this module, which takes in a minimum, maximum, number of covers, and percentage of overlap to create a cover.
+    The cover should be given as a list of intervals. This can be done, for example, using the
+    ``cereeberus.cover`` function in this module.
 
-    The clustering algorithm should be given as a callable that takes in a point cloud and outputs cluster labels (for example, `sklearn.cluster.DBSCAN(min_samples=2,eps=0.3).fit`).
+    The clustering algorithm should be given as a callable that takes in a point cloud and
+    outputs cluster labels (for example, ``sklearn.cluster.DBSCAN(min_samples=2, eps=0.3).fit``).
+    When a ``distance_matrix`` is provided, the callable receives a precomputed square
+    sub-matrix for each cover set, so it should be configured with ``metric='precomputed'``
+    (for example, ``sklearn.cluster.DBSCAN(metric='precomputed', eps=0.3).fit``).
 
     Parameters:
-        A pointcloud (as a list of tuples or as a numpy array)
-        A lens function (as a callable or a list of numbers)
-        A cover (as a list of intervals)
-        A clustering algorithm (as a callable)
+        pointcloud: a list of tuples or numpy array of coordinates, or ``None`` when using a distance matrix without coordinates.
+        lensfunction: a callable ``f(point) -> value`` or a precomputed list of values.
+        cover: a list of intervals (see ``cereeberus.cover``).
+        clusteralgorithm: ``'trivial'`` or a callable clustering algorithm.
+        distance_matrix: optional square numpy array of pairwise distances. When provided, clustering uses this matrix rather than raw coordinates.
 
     Returns:
-        A `MapperGraph` object representing the mapper graph of the input data and lens function.
+        A ``MapperGraph`` object representing the mapper graph of the input data and lens function.
     """
+    if pointcloud is None and distance_matrix is None:
+        raise ValueError("Either pointcloud or distance_matrix must be provided.")
 
-    lensfunctionoutput = __runlensfunction(lensfunction, pointcloud)
+    if distance_matrix is not None:
+        distance_matrix = np.asarray(distance_matrix)
+        n = len(pointcloud) if pointcloud is not None else len(distance_matrix)
+        if distance_matrix.shape != (n, n):
+            raise ValueError(
+                "distance_matrix must be a square array with one row/column per point."
+            )
+
+    lensfunctionoutput = __runlensfunction(lensfunction, pointcloud, distance_matrix)
     coveringsets = __createcoveringsets(lensfunctionoutput, cover)
-    clusterpoints = __cluster(coveringsets, clusteralgorithm)
+    clusterpoints = __cluster(coveringsets, clusteralgorithm, pointcloud, distance_matrix)
     outputgraph = __addedges(clusterpoints)
 
     return outputgraph

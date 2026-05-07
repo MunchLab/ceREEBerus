@@ -36,6 +36,17 @@ class MapperGraph(ReebGraph):
         super().add_edge(u, v, reset_pos)
         self.mapperify()
 
+    def _get_next_mapperify_vert_name(self):
+        """Return a fresh name for mapperify-inserted subdivision vertices.
+
+        These internal vertices use a non-integer namespace so they never
+        collide with user-provided integer node names.
+        """
+        idx = 0
+        while ("mapper_subd", idx) in self.nodes:
+            idx += 1
+        return ("mapper_subd", idx)
+
     def mapperify(self):
         """
         Take the internal structure and make sure it satisfies the requirement that all edges have adjacent function values.
@@ -55,7 +66,7 @@ class MapperGraph(ReebGraph):
             e_list = [e for e in self.edges() if self.f[e[0]] < i and self.f[e[1]] > i]
 
             for e in e_list:
-                w_name = self.get_next_vert_name()
+                w_name = self._get_next_mapperify_vert_name()
                 self.subdivide_edge(*e, w_name, i)
 
     def add_node(self, vertex, f_vertex, reset_pos=True):

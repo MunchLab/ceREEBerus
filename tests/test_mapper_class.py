@@ -32,6 +32,20 @@ class TestMapperClass(unittest.TestCase):
         for v in MG.nodes:
             self.assertEqual(MG.pos_f[v][1], MG.delta*MG.f[v])
 
+    def test_mapperify_subdivision_names_do_not_collide_with_future_int_nodes(self):
+        # Adding an edge can create subdivision vertices; those internal names
+        # should not prevent later insertion of integer-labeled nodes.
+        MG = MapperGraph()
+        MG.add_node(0, 0)
+        MG.add_node(2, 2)
+
+        # This forces a subdivision at function value 1.
+        MG.add_edge(0, 2)
+
+        # Historically this could fail if mapperify created integer node 3.
+        MG.add_node(3, 3)
+        self.assertIn(3, MG.nodes)
+
         # Check that all edges are pointing to the higher function value node
         for edge in MG.edges:
             v1, v2 = edge[:2]
