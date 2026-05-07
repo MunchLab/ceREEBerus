@@ -3,6 +3,7 @@ import unittest
 import networkx as nx
 from sklearn.cluster import DBSCAN
 from sklearn.datasets import make_circles
+from sklearn.metrics import pairwise_distances
 
 from cereeberus import MapperGraph, computeMapper, cover
 
@@ -81,6 +82,40 @@ class TestReebClass(unittest.TestCase):
         examplegraph2.add_edge(15,17)
         check = nx.utils.graphs_equal(examplegraph2, testgraph2)
         self.assertEqual(check, True)
+
+    def test_computeMapper_distance_matrix_vertex_collision_regression(self):
+        # Regression test for duplicate-vertex errors during mapper edge subdivision.
+        data, _ = make_circles(n_samples=300, factor=0.4, noise=0.05, random_state=0)
+        dm = pairwise_distances(data)
+        lens_values = [float(p[0]) for p in data]
+
+        graph = computeMapper(
+            pointcloud=None,
+            lensfunction=lens_values,
+            cover=cover(min=-1.5, max=1.5, numcovers=7, percentoverlap=0.5),
+            clusteralgorithm=DBSCAN(metric='precomputed', eps=0.3, min_samples=2).fit,
+            distance_matrix=dm,
+        )
+
+        self.assertIsInstance(graph, MapperGraph)
+        self.assertGreater(len(graph.nodes()), 0)
+
+    def test_computeMapper_distance_matrix_with_callable_lens(self):
+        # Regression test for using both pointcloud (callable lens) and
+        # precomputed distance_matrix clustering.
+        data, _ = make_circles(n_samples=300, factor=0.4, noise=0.05, random_state=0)
+        dm = pairwise_distances(data)
+
+        graph = computeMapper(
+            pointcloud=data,
+            lensfunction=lambda p: p[0],
+            cover=cover(min=-1.5, max=1.5, numcovers=7, percentoverlap=0.5),
+            clusteralgorithm=DBSCAN(metric='precomputed', eps=0.3, min_samples=2).fit,
+            distance_matrix=dm,
+        )
+
+        self.assertIsInstance(graph, MapperGraph)
+        self.assertGreater(len(graph.nodes()), 0)
 
 if __name__ == '__main__':
     unittest.main()

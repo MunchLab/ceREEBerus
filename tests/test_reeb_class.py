@@ -253,6 +253,19 @@ class TestReebClass(unittest.TestCase):
         # The Euler characteristic should be 0 for a small smoothing
         self.assertEqual(len(R_eps.nodes) - len(R_eps.edges), 0)
 
+    def test_smoothing_internal_namespaced_vertices(self):
+        # Internal smoothing vertices should use a dedicated namespace to avoid
+        # collisions with user integer labels.
+        R = ex_rg.juggling_man()
+        R_eps = R.smoothing(0.1)
+
+        internal_nodes = [
+            v
+            for v in R_eps.nodes
+            if isinstance(v, tuple) and len(v) == 2 and v[0] == "reeb_auto"
+        ]
+        self.assertGreater(len(internal_nodes), 0)
+
     def test_matrices(self):
         # This test makes sure you can get the adjacency matrix and boundary matrix of a Reeb graph.
         R = ex_rg.juggling_man()

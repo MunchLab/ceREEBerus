@@ -368,6 +368,17 @@ class ReebGraph(nx.MultiDiGraph):
         else:
             return max(integer_nodes) + 1
 
+    def _get_next_internal_vert_name(self, prefix="reeb_auto"):
+        """Return a fresh internal vertex name in a separate namespace.
+
+        Internal algorithm-generated vertices should use this helper so they do
+        not collide with user integer labels.
+        """
+        idx = 0
+        while (prefix, idx) in self.nodes:
+            idx += 1
+        return (prefix, idx)
+
     def add_node(self, vertex, f_vertex, reset_pos=True):
         """Add a vertex to the Reeb graph.
         If the vertex name is given as None, it will be assigned via the get_next_vert_name method.
@@ -973,7 +984,7 @@ class ReebGraph(nx.MultiDiGraph):
             comp_to_new_vert = {}
             # comp_to_new_vert is a dictionary with keys as indices of connected components in the list C and values as the name of the vertex in R_eps
             for i, c in enumerate(C):
-                vert_name = R_eps.get_next_vert_name()
+                vert_name = R_eps._get_next_internal_vert_name("reeb_auto")
                 R_eps.add_node(vert_name, cv, reset_pos=False)
                 comp_to_new_vert[i] = vert_name
 
