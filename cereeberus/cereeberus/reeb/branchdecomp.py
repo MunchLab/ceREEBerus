@@ -19,8 +19,13 @@ class BranchDecomp:
     process repeats until no edges remain. Isolated vertices (no edges) are added last
     as degenerate branches.
 
-    **Branch storage (``self.branches``):** An ``n x 4`` numpy array where each row
-    represents one branch in the order they were extracted:
+    **Branch storage:** Internally, branches are split into two arrays:
+
+    - ``self._branch_values`` (``n x 2``, float): ``[f_low, f_high]``
+    - ``self._branch_attach`` (``n x 2``, int): ``[low_attach, high_attach]``
+
+    For backward compatibility, ``self.branches`` exposes a combined ``n x 4``
+    array view where each row represents one branch in extraction order:
 
     - Column 0 (``f_low``): function value of the lower endpoint.
     - Column 1 (``f_high``): function value of the upper endpoint. Equal to ``f_low``
@@ -34,12 +39,12 @@ class BranchDecomp:
     Because branches are extracted in order, attachment indices always satisfy
     ``low_attach <= branch_id`` and ``high_attach <= branch_id``.
 
-    **Path storage (``self.paths``):** A list of lists, in the same order as
-    ``self.branches``. Each entry is the ordered list of vertex names (from the
-    original ReebGraph) that make up the branch path.
+    **Path storage:** By default, decomposition paths are not persisted after
+    ``decompose`` completes. Set ``store_paths=True`` to keep them.
 
-    **Reconstruction:** The original Reeb graph can be recovered exactly from the
-    stored paths and function values via :meth:`reconstruct`.
+    **Reconstruction:** :meth:`reconstruct` builds a canonical Reeb graph from
+    branch endpoint values and attachment structure, so it does not require a
+    stored copy of the original vertex labels or function dictionary.
 
     Example::
 
@@ -52,9 +57,37 @@ class BranchDecomp:
         bd.draw()
         R2 = bd.reconstruct()
     """
-    def __init__(self):
-        self.branches = np.empty((0, 4))
+    def __init__(self, store_paths=False):
+        self._branch_values = np.empty((0, 2), dtype=float)
+        self._branch_attach = np.empty((0, 2), dtype=int)
+        self.store_paths = store_paths
         self.paths = []
+
+    @property
+    def branches(self):
+        """Combined branch matrix [f_low, f_high, low_attach, high_attach]."""
+        if len(self._branch_values) == 0:
+            return np.empty((0, 4), dtype=float)
+        return np.column_stack((self._branch_values, self._branch_attach.astype(float)))
+
+    @property 
+    def _num_branches(self):
+        return len(self._branch_values)
+
+    @branches.setter
+    def branches(self, value):
+        arr = np.asarray(value)
+        if arr.size == 0:
+            self._branch_values = np.empty((0, 2), dtype=float)
+            self._branch_attach = np.empty((0, 2), dtype=int)
+            return
+
+        arr = np.asarray(arr, dtype=float)
+        if arr.ndim != 2 or arr.shape[1] != 4:
+            raise ValueError("branches must be a 2D array with shape (n, 4)")
+
+        self._branch_values = arr[:, :2].astype(float)
+        self._branch_attach = arr[:, 2:].astype(int)
         
 
     @staticmethod
@@ -112,7 +145,6 @@ class BranchDecomp:
         '''
         working = reebgraph.copy()
 
-        self._f = reebgraph.f.copy()
         self.paths = []
         branch_rows = []
 
@@ -125,7 +157,7 @@ class BranchDecomp:
                 break
 
             path = self._largest_upward_path(working, start)
-            branch_id = len(self.paths)
+            branch_id = len(branch_rows)
             start_v = path[0]
             end_v = path[-1]
 
@@ -135,7 +167,8 @@ class BranchDecomp:
             branch_rows.append(
                 (working.f[start_v], working.f[end_v], low_attach, high_attach)
             )
-            self.paths.append(path)
+            if self.store_paths:
+                self.paths.append(path)
 
             for v in path:
                 endpoint_owner.setdefault(v, branch_id)
@@ -145,15 +178,19 @@ class BranchDecomp:
         # Handle any remaining isolated vertices (never part of any path) as degenerate branches
         for v in working.nodes:
             if v not in endpoint_owner:
-                branch_id = len(self.paths)
+                branch_id = len(branch_rows)
                 f_v = working.f[v]
                 branch_rows.append((f_v, f_v, branch_id, branch_id))
-                self.paths.append([v])
+                if self.store_paths:
+                    self.paths.append([v])
 
         if len(branch_rows) == 0:
-            self.branches = np.empty((0, 4))
+            self._branch_values = np.empty((0, 2), dtype=float)
+            self._branch_attach = np.empty((0, 2), dtype=int)
         else:
-            self.branches = np.array(branch_rows, dtype=float)
+            rows = np.array(branch_rows, dtype=float)
+            self._branch_values = rows[:, :2]
+            self._branch_attach = rows[:, 2:].astype(int)
 
         return self.branches
     
@@ -171,6 +208,74 @@ class BranchDecomp:
             raise IndexError("branch_id out of range")
 
         return self.branches[branch_id]
+
+    def add_branch(self, f_low, f_high, low_attach, high_attach, path=None):
+        """Append a branch to the existing decomposition.
+
+        Parameters:
+            f_low (float): Function value at the lower endpoint.
+            f_high (float): Function value at the upper endpoint.
+            low_attach (int): Branch label for lower endpoint attachment.
+            high_attach (int): Branch label for upper endpoint attachment.
+            path (list, optional): Optional stored path for this branch. Only used
+                when ``store_paths=True``.
+
+        Returns:
+            numpy.ndarray: The appended branch row
+                ``[f_low, f_high, low_attach, high_attach]``.
+
+        Notes:
+            The new branch index is ``n`` where ``n`` is the current number of
+            branches. Attachment labels must be integers in ``[0, n]``. Using ``n``
+            indicates that endpoint is a local extremum on the newly added branch.
+        """
+        f_low = float(f_low)
+        f_high = float(f_high)
+
+        if f_low > f_high:
+            raise ValueError("f_low must be less than or equal to f_high")
+
+        branch_id = len(self._branch_values)
+        low_attach = int(low_attach)
+        high_attach = int(high_attach)
+
+        if not (0 <= low_attach <= branch_id):
+            raise ValueError(
+                f"low_attach must be an integer in [0, {branch_id}]"
+            )
+        if not (0 <= high_attach <= branch_id):
+            raise ValueError(
+                f"high_attach must be an integer in [0, {branch_id}]"
+            )
+
+        # Non-local endpoint attachments must lie on the owner branch by value.
+        if low_attach != branch_id:
+            owner_low, owner_high = self._branch_values[low_attach]
+            if not (owner_low <= f_low <= owner_high):
+                raise ValueError(
+                    "Lower endpoint value must lie in the interval of low_attach branch"
+                )
+        if high_attach != branch_id:
+            owner_low, owner_high = self._branch_values[high_attach]
+            if not (owner_low <= f_high <= owner_high):
+                raise ValueError(
+                    "Upper endpoint value must lie in the interval of high_attach branch"
+                )
+
+        self._branch_values = np.vstack(
+            (self._branch_values, np.array([[f_low, f_high]], dtype=float))
+        )
+        self._branch_attach = np.vstack(
+            (
+                self._branch_attach,
+                np.array([[low_attach, high_attach]], dtype=int),
+            )
+        )
+
+        if self.store_paths:
+            self.paths.append([] if path is None else list(path))
+
+        return self.branches[branch_id]
     
     def get_branch_path(self, branch_id):
         '''
@@ -182,40 +287,147 @@ class BranchDecomp:
         Returns:
             list: The list of vertices in the path for the given branch.
         '''
+        if not self.store_paths:
+            raise RuntimeError("paths were not stored; initialize with store_paths=True to access branch paths")
+
         if branch_id < 0 or branch_id >= len(self.paths):
             raise IndexError("branch_id out of range")
         
         return self.paths[branch_id]
     
     def reconstruct(self):
-        '''
-        Reconstructs the Reeb graph from the branch decomposition stored in self.paths and self._f.
-        
+        '''Reconstruct a Reeb graph from branch endpoint values and attachments.
+
+        Reconstruction proceeds branch-by-branch. When an endpoint attaches to a
+        previous branch at a height where no vertex exists yet, the owner branch
+        edge is subdivided and the new attachment vertex is reused.
+
         Returns:
-            ReebGraph: The reconstructed Reeb graph.
+            ReebGraph: A reconstructed Reeb graph.
         '''
         from .reebgraph import ReebGraph
 
-        if not self.paths:
+        if len(self._branch_values) == 0:
             return ReebGraph()
 
         R = ReebGraph()
+        branch_paths = {}
+        tol = 1e-12
+        counter = 0
 
-        # Add all unique vertices across all paths
-        seen = set()
-        for path in self.paths:
+        def new_vertex_name():
+            nonlocal counter
+            name = counter
+            counter += 1
+            return name
+
+        def add_vertex_at_height(f_val):
+            v = new_vertex_name()
+            R.add_node(v, float(f_val), reset_pos=False)
+            return v
+
+        def ensure_vertex_on_branch(branch_id, f_target):
+            f_target = float(f_target)
+            path = branch_paths[int(branch_id)]
+
+            # Existing vertex at this exact height.
             for v in path:
-                if v not in seen:
-                    R.add_node(v, self._f[v], reset_pos=False)
-                    seen.add(v)
+                if abs(R.f[v] - f_target) <= tol:
+                    return v
 
-        # Add one edge per step in each path
-        for path in self.paths:
-            for i in range(len(path) - 1):
-                R.add_edge(path[i], path[i + 1], reset_pos=False)
+            if len(path) == 1:
+                raise ValueError("Cannot attach at a new height on a degenerate branch")
+
+            # Subdivide the unique segment containing f_target.
+            for idx in range(len(path) - 1):
+                u, v = path[idx], path[idx + 1]
+                f_u, f_v = float(R.f[u]), float(R.f[v])
+                lo, hi = min(f_u, f_v), max(f_u, f_v)
+
+                if lo - tol <= f_target <= hi + tol:
+                    if abs(f_target - f_u) <= tol:
+                        return u
+                    if abs(f_target - f_v) <= tol:
+                        return v
+
+                    w = new_vertex_name()
+                    R.subdivide_edge(u, v, w, f_target)
+                    path.insert(idx + 1, w)
+                    return w
+
+            raise ValueError("Attachment height is not on owner branch")
+
+        for i in range(len(self._branch_values)):
+            low_f, high_f = map(float, self._branch_values[i])
+            low_attach, high_attach = map(int, self._branch_attach[i])
+
+            low_v = (
+                add_vertex_at_height(low_f)
+                if low_attach == i
+                else ensure_vertex_on_branch(low_attach, low_f)
+            )
+            high_v = (
+                add_vertex_at_height(high_f)
+                if high_attach == i
+                else ensure_vertex_on_branch(high_attach, high_f)
+            )
+
+            if low_v != high_v:
+                R.add_edge(low_v, high_v, reset_pos=False)
+                branch_paths[i] = [low_v, high_v]
+            else:
+                # Degenerate branch represented by a single isolated vertex.
+                branch_paths[i] = [low_v]
 
         R.set_pos_from_f()
         return R
+
+    def branch_smoothing(self, eps):
+        """Return a new BranchDecomp equal to the eps-smoothed decomposition.
+
+        This method is functional: it does not mutate the current instance.
+
+        Before shifting endpoints, branches with both endpoints non-local and
+        span < 2*eps are pruned when no later branch attaches to them.
+
+        Args:
+            eps (float/int): The amount to smooth the Reeb graph by.
+
+        Returns:
+            BranchDecomp: A new smoothed decomposition.
+        """
+        if eps < 0:
+            raise ValueError("eps must be non-negative")
+
+        smoothed = BranchDecomp(store_paths=self.store_paths)
+
+        
+        # For each branch 
+        for i in range(len(self.branches)):
+            f_low = self._branch_values[i, 0]
+            f_high = self._branch_values[i, 1]
+            low_attach = self._branch_attach[i, 0]
+            high_attach = self._branch_attach[i, 1]
+            
+            # If both endpoints are local extrema 
+            if low_attach == i and high_attach == i:
+                # add a new branch to the smoothed decoomposition with shifted endpoints
+                pass 
+                
+            
+            # If top is local max and bottom is not local min
+            elif low_attach != i and high_attach == i:
+                pass 
+            
+            # if botom is local min and top is not local max
+            elif low_attach == i and high_attach != i:
+                pass
+            
+            # if both are not min/max 
+            else:
+                pass
+
+        return smoothed
     
     def draw(self, ax=None, figsize=(12, 8)):
         '''
@@ -233,14 +445,14 @@ class BranchDecomp:
         Returns:
             ax: the matplotlib axis object
         '''
-        if len(self.branches) == 0:
+        if len(self._branch_values) == 0:
             print("No branches to draw.")
             return
         
         if ax is None:
             fig, ax = plt.subplots(figsize=figsize)
         
-        n_branches = len(self.branches)
+        n_branches = len(self._branch_values)
         
         # Evenly space branches horizontally
         x_positions = np.linspace(0, n_branches - 1, n_branches)
@@ -250,7 +462,9 @@ class BranchDecomp:
         green = '#5A8C5A'   # Darker green
         
         # Draw each branch as a vertical line
-        for i, (f_low, f_high, low_attach, high_attach) in enumerate(self.branches):
+        for i in range(n_branches):
+            f_low, f_high = self._branch_values[i]
+            low_attach, high_attach = self._branch_attach[i]
             x = x_positions[i]
             
             # Draw the branch line (black)
@@ -261,16 +475,18 @@ class BranchDecomp:
             ax.plot(x, f_high, 'o', color=green, markersize=10)      # Upper endpoint
             
             # Label lower endpoint with attachment info
-            ax.text(x - 0.12, f_low, f'B{int(low_attach)}', fontsize=12, 
+            lower_label = f'(B{int(low_attach)})' if low_attach == i else f'B{int(low_attach)}'
+            ax.text(x - 0.12, f_low, lower_label, fontsize=12, 
                    ha='right', va='center', color=purple, fontweight='bold')
             
             # Label upper endpoint with attachment info
-            ax.text(x - 0.12, f_high, f'B{int(high_attach)}', fontsize=12, 
+            upper_label = f'(B{int(high_attach)})' if high_attach == i else f'B{int(high_attach)}'
+            ax.text(x - 0.12, f_high, upper_label, fontsize=12, 
                    ha='right', va='center', color=green, fontweight='bold')
         
-        ax.set_xlabel('Branch (ordered left to right)', fontsize=14, fontweight='bold')
-        ax.set_ylabel('Function Value', fontsize=14, fontweight='bold')
-        ax.set_title('Branch Decomposition of Reeb Graph', fontsize=16, fontweight='bold')
+        ax.set_xlabel('Branch', fontsize=14 )
+        ax.set_ylabel('Function Value', fontsize=14 )
+        ax.set_title('Branch Decomposition of Reeb Graph', fontsize=16)
         ax.grid(True, alpha=0.3)
         ax.set_xticks(x_positions)
         ax.set_xticklabels([f'B{i}' for i in range(n_branches)], fontsize=12)

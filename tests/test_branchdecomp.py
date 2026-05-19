@@ -233,6 +233,92 @@ class TestBranchDecomp(unittest.TestCase):
         self.assertEqual(len(R2.nodes), 0)
         self.assertEqual(len(R2.edges), 0)
 
+    def test_branch_smoothing_returns_new_instance(self):
+        """branch_smoothing should return a new decomposition and keep original unchanged."""
+        R = ex_rg.dancing_man()
+        bd = BranchDecomp()
+        bd.decompose(R)
+
+        original = bd.branches.copy()
+        smoothed = bd.branch_smoothing(0.5)
+
+        self.assertIsInstance(smoothed, BranchDecomp)
+        self.assertIsNot(smoothed, bd)
+        np.testing.assert_array_equal(bd.branches, original)
+        self.assertTrue(np.any(np.abs(smoothed.branches[:, :2] - original[:, :2]) > 0))
+        np.testing.assert_array_equal(smoothed.branches[:, 2:], original[:, 2:])
+
+    def test_branch_smoothing_negative_eps_raises(self):
+        """Negative smoothing is invalid."""
+        R = ex_rg.dancing_man()
+        bd = BranchDecomp()
+        bd.decompose(R)
+
+        with self.assertRaises(ValueError):
+            bd.branch_smoothing(-0.1)
+
+    def test_add_branch_appends_and_returns_row(self):
+        """add_branch should append a branch with the requested endpoint values/attachments."""
+        bd = BranchDecomp()
+
+        row0 = bd.add_branch(0.0, 2.0, 0, 0)
+        np.testing.assert_array_equal(row0, np.array([0.0, 2.0, 0.0, 0.0]))
+        self.assertEqual(len(bd.branches), 1)
+
+        row1 = bd.add_branch(1.0, 1.5, 0, 0)
+        np.testing.assert_array_equal(row1, np.array([1.0, 1.5, 0.0, 0.0]))
+        self.assertEqual(len(bd.branches), 2)
+        np.testing.assert_array_equal(
+            bd.branches,
+            np.array(
+                [
+                    [0.0, 2.0, 0.0, 0.0],
+                    [1.0, 1.5, 0.0, 0.0],
+                ]
+            ),
+        )
+
+    def test_add_branch_with_store_paths_keeps_alignment(self):
+        """When store_paths=True, add_branch keeps paths aligned with branches."""
+        bd = BranchDecomp(store_paths=True)
+        bd.add_branch(0.0, 1.0, 0, 0, path=["a", "b"])
+        bd.add_branch(0.2, 0.8, 0, 0)
+
+        self.assertEqual(len(bd.paths), len(bd.branches))
+        self.assertEqual(bd.paths[0], ["a", "b"])
+        self.assertEqual(bd.paths[1], [])
+
+    def test_add_branch_invalid_inputs_raise(self):
+        """add_branch should reject malformed branches and bad attachments."""
+        bd = BranchDecomp()
+        bd.add_branch(0.0, 2.0, 0, 0)
+
+        with self.assertRaises(ValueError):
+            bd.add_branch(2.0, 1.0, 1, 1)
+
+        with self.assertRaises(ValueError):
+            bd.add_branch(0.5, 1.5, 2, 1)
+
+        with self.assertRaises(ValueError):
+            bd.add_branch(0.5, 1.5, 1, 2)
+
+        with self.assertRaises(ValueError):
+            bd.add_branch(-1.0, 1.0, 0, 1)
+
+        with self.assertRaises(ValueError):
+            bd.add_branch(0.5, 3.0, 1, 0)
+
+    def test_add_branch_manual_decomp_reconstructs(self):
+        """A decomposition built manually via add_branch should reconstruct."""
+        bd = BranchDecomp()
+        bd.add_branch(0.0, 4.0, 0, 0)
+        bd.add_branch(1.0, 3.0, 0, 0)
+        bd.add_branch(2.0, 2.0, 1, 1)
+
+        R = bd.reconstruct()
+        self.assertGreaterEqual(len(R.nodes), 3)
+        self.assertGreaterEqual(len(R.edges), 2)
+
 
 if __name__ == "__main__":
     unittest.main()
