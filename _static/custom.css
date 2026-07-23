@@ -1,0 +1,11 @@
+/* Override sidebar header background (the blue area with logo) */
+.wy-side-nav-search {
+    background-color: white;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.wy-side-nav-search input {
+    border-color: #ccc;
+}
+
+
