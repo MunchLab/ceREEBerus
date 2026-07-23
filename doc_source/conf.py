@@ -60,6 +60,11 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# Configure Pygments lexer mapping for ipython3
+from pygments.lexers import PythonLexer
+from sphinx.highlighting import lexer_classes
+lexer_classes['ipython3'] = PythonLexer
+
 # Render notebooks from their saved contents during the default docs build.
 nbsphinx_execute = 'never'
 
@@ -70,6 +75,7 @@ nbsphinx_execute = 'never'
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+html_logo = 'images/logo_with_text.png'
 autodoc_default_options = {
     'members': True,
     'member-order': 'bysource',
@@ -84,4 +90,5 @@ autodoc_typehints = "none"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = []
+html_static_path = ['_static']
+html_css_files = ['custom.css']
