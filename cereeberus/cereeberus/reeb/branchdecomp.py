@@ -1,5 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class BranchDecomp:
@@ -381,6 +381,168 @@ class BranchDecomp:
 
         R.set_pos_from_f()
         return R
+
+        
+    def check_branch_path(self, path):
+        """Given a list of branches in a branch decomposition, check that they satisfy the following properties meaning they constitute a valid upward path in the branch decomposition: 
+        - Denote the path entires as [B_1,B_2,...,B_k]. 
+        - Then for each i, either:
+            - The top of B_i is attached to B_{i+1}, or 
+            - The bottom of B_{i+1} is attached to B_i.
+        - Between each consecutive pair of braches, the property above gives a function value where the attaching happens, call this a_i. Then we need a_i < a_{i+1} for all i.
+
+        Args:
+            path (list): integers giving the branch numbers of the path we want to check. 
+        """
+        prev_attach_val = self._branch_values[path[0],0] # initialize this to the bottom of the first branch.
+        for i in range(len(path)-1):
+            b1 = path[i]
+            b2 = path[i+1]
+            attach1 = self._branch_attach[b1, 1] # branch that the top of b1 is attached to
+            attach2 = self._branch_attach[b2, 0] # branch that the bottom of b2 is attached to
+
+            if attach1 == b2:
+                # print(f"Branch {b1} is attached to {b2} at the top of {b1}.")
+                attach_val = self._branch_values[b1, 1]
+            elif attach2 == b1:
+                # print(f"Branch {b1} is attached to {b2} at the bottom of {b2}.")
+                attach_val = self._branch_values[b2, 0]
+            else:
+                print(f"Branches {b1} and {b2} are not properly attached (step {i} in the path).")
+                return False
+            
+            if attach_val < prev_attach_val:
+                print(f"Function values along the path at B{b1} and B{b2} (step {i} in the path) are not strictly increasing:")
+                print(f"Prev val = {prev_attach_val} > {attach_val} = attach val at current step.")
+                return False
+            
+            prev_attach_val = attach_val
+        
+        # print("The path is valid.")
+        return True
+    
+    def get_func_vals_for_path(self, path):
+        """Given a list of branches in a branch decomposition, return the function values between entries along the path. This is only well defined if the path is valid (i.e. satisfies the properties checked by check_branch_path). Specifically, `func_vals[i]` is the function value at which branch `path[i]` is attached to branch `path[i+1]`. This means the list `func_vals` has length one less than the length of `path`. 
+
+        Args:
+            branch_decomp (BranchDecomp): the branch decomposition object we are working with.
+            path (list): integers giving the branch numbers of the path we want to check. 
+        """
+        func_vals = []
+        for i in range(len(path)-1):
+            b1 = path[i]
+            b2 = path[i+1]
+            attach1 = self._branch_attach[b1, 1] # branch that the top of b1 is attached to
+            attach2 = self._branch_attach[b2, 0] # branch that the bottom of b2 is attached to
+
+            if attach1 == b2:
+                attach_val = self._branch_values[b1, 1]
+            elif attach2 == b1:
+                attach_val = self._branch_values[b2, 0]
+            else:
+                print(f"Branches {b1} and {b2} are not properly attached (step {i} in the path).")
+                return None
+            
+            func_vals.append(attach_val)
+        
+        return func_vals
+
+    def find_subpath(self, path, a, b=None):
+        """Given a branch decomposition and a valid path in the branch decomposition, find the branches for the subset of the path with function values between [a,b] with the assumption that the path is valid. If b= None, we assume b=a, and we return a single element [i] which is the branch containing the path at height a. Otherwise, we return the list of branches that are along the path between a and b.
+
+        Args:
+            branch_decomp (BranchDecomp): the branch decomposition we are working with 
+            path (list): a valid path in the branch decomposition, given as a list of branch numbers.
+            a (float): the function value we want to find the branch for.   
+            b (float, optional): the upper bound of the function value range. If None, we assume b=a. Defaults to None.
+        Returns:
+            list: the branch numbers of the branches that contain function values in the range [a,b]. If no branches contain values in this range, return an empty list.
+        """
+        
+        path_list = []
+
+        if b is None:
+            b = a
+
+        # check that b is above the bottom of the first branch in the path. If not, return None.
+        first_branch = path[0]
+        if b < self._branch_values[first_branch, 0]:
+            return []
+        
+        # If it's above that one, then we work our way up the path checking the attaching values until we find a spot where a is between the last attaching value and the next attaching value. 
+        for i in range(len(path)-1):
+            b1 = path[i]
+            b2 = path[i+1]
+            
+            # If b1 has top attached to b2, 
+            if self._branch_attach[b1, 1] == b2:
+                attach_val = self._branch_values[b1, 1]
+                if a <= attach_val:
+                    path_list.append(b1)
+                    if b <= attach_val:
+                        return path_list
+            elif self._branch_attach[b2, 0] == b1:
+                attach_val = self._branch_values[b2, 0]
+                if a < attach_val:
+                    path_list.append(b1)
+                    if b <= attach_val:
+                        return path_list
+        
+        
+        # If we get through the whole path and haven't returned, either a is still above everything, so we check if the top of the last branch is above a (add it to the path and return), or if then we check if the last branch has a top below b.  
+        last_branch = path[-1]
+        if a <= self._branch_values[last_branch, 1]:
+            path_list.append(last_branch)
+        return path_list
+
+    def path_image(self, path,a,b, branch_decomp_im, branch_map):
+        """Given a branch decomposition `myB` and a valid path (restricted to (a,b)) in the branch decomposition, along with a map from myB to myB2 using the branch_map, find the image of the subpath with interval (a,b) in myB2 as a valid branch path.  
+
+        Args:
+            path (list): a valid path in the branch decomposition, given as a list of branch numbers.
+            a (float): the function value we want to find the branch for.   
+            b (float, optional): the upper bound of the function value range. If None, we assume b=a. Defaults to None.
+            branch_decomp_im (BranchDecomp): the branch decomposition image we are mapping to
+            branch_map (dict): a map from branches in `branch_decomp` to branches in `branch_decomp_im`
+        Returns:
+            list: the branch numbers of the branches in `branch_decomp_im` that contain function values in the range (a,b). If no branches contain values in this range, return an empty list. (TODO: but this should not be possible???)
+        """ 
+        
+        subpath = self.find_subpath(path, a, b)
+        func_vals = self.get_func_vals_for_path(subpath)
+        
+        # get the interval for each branch in the subpath. 
+        relevant_intervals = []
+        for i in range(len(subpath)):
+            if i == 0: 
+                low = a 
+            else:
+                low = func_vals[i-1]
+            if i == len(subpath)-1:
+                high = b
+            else:
+                high = func_vals[i]
+            relevant_intervals.append((low, high))
+            
+        if len(subpath) == 0:
+            print("No branches in the path contain values in the given range in `branch_decomp`.")
+            return []
+        
+        im_subpath = []
+        for i in range(len(subpath)):
+            interval = relevant_intervals[i]
+            im_subpath_branch =  branch_map[subpath[i]]
+            im_subpath_branch_restricted_to_interval = branch_decomp_im.find_subpath( im_subpath_branch, interval[0], interval[1])
+            im_subpath.extend(im_subpath_branch_restricted_to_interval)
+            
+        # Get rid of adjacent duplicates in im_subpath (this can happen when we have a long interval that covers multiple branches in the image decomposition that are attached to each other).
+        im_subpath_no_dups = []
+        for i in range(len(im_subpath)):
+            if i == 0 or im_subpath[i] != im_subpath[i-1]:
+                im_subpath_no_dups.append(im_subpath[i])
+        im_subpath = im_subpath_no_dups
+        
+        return im_subpath
 
     def branch_smoothing(self, eps):
 
