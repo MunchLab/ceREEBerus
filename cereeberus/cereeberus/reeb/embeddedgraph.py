@@ -160,7 +160,7 @@ class EmbeddedGraph(nx.Graph):
         self.coordinates = self.get_mean_centered_coordinates()
 
     def g_omega(self, theta):
-        """
+        r"""
         Function to compute the function :math:`g_\omega(v)` for all vertices :math:`v` in the graph in the direction of :math:`\\theta \in [0,2\pi]` . This function is defined by :math:`g_\omega(v) = \langle \\texttt{pos}(v), \omega \\rangle` .
 
         Parameters:
@@ -182,7 +182,7 @@ class EmbeddedGraph(nx.Graph):
         return g
 
     def g_omega_edges(self, theta):
-        """
+        r"""
         Calculates the function value of the edges of the graph by making the value equal to the max vertex value
 
         Parameters:
@@ -203,7 +203,7 @@ class EmbeddedGraph(nx.Graph):
         return g_edges
 
     def sort_vertices(self, theta, return_g=False):
-        """
+        r"""
         Function to sort the vertices of the graph according to the function g_omega(v) in the direction of theta \in [0,2*np.pi].
 
         Parameters:
@@ -229,7 +229,7 @@ class EmbeddedGraph(nx.Graph):
             return v_list
 
     def sort_edges(self, theta, return_g=False):
-        """
+        r"""
         Function to sort the edges of the graph according to the function
 
         .. math ::
@@ -279,7 +279,7 @@ class EmbeddedGraph(nx.Graph):
         return sum(n >= gv for n in Lg)  # includes possible duplicate counts
 
     def plot(self, bounding_circle=False, color_nodes_theta=None, ax=None, **kwargs):
-        """
+        r"""
         Function to plot the graph with the embedded coordinates.
 
         If ``bounding_circle`` is True, a bounding circle is drawn around the graph.

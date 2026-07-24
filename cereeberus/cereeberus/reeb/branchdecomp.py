@@ -383,51 +383,141 @@ class BranchDecomp:
         return R
 
     def branch_smoothing(self, eps):
-        """Return a new BranchDecomp equal to the eps-smoothed decomposition.
 
-        This method is functional: it does not mutate the current instance.
-
-        Before shifting endpoints, branches with both endpoints non-local and
-        span < 2*eps are pruned when no later branch attaches to them.
+        """Given a branch decomposition of a Reeb graph, we want to return the branch decomposition of the smoothed Reeb graph, with parameter epsilon. We will also return the branch_map which gives the path in the smoothed Reeb graph which is the image of a branch from the input Reeb graph.
 
         Args:
-            eps (float/int): The amount to smooth the Reeb graph by.
-
-        Returns:
-            BranchDecomp: A new smoothed decomposition.
-        """
-        if eps < 0:
-            raise ValueError("eps must be non-negative")
-
-        smoothed = BranchDecomp(store_paths=self.store_paths)
-
+            branch_decomp (branch.BranchDecomposition): The branch decomposition of the input Reeb graph.
+            eps (float): The smoothing parameter.
         
-        # For each branch 
-        for i in range(len(self.branches)):
-            f_low = self._branch_values[i, 0]
-            f_high = self._branch_values[i, 1]
-            low_attach = self._branch_attach[i, 0]
-            high_attach = self._branch_attach[i, 1]
+        Returns:
+            tuple: A tuple containing the smoothed branch decomposition and the branch map.
+        """
+        
+        # Check that Epsilon is positive. If not, return an error.
+        if eps <= 0:
+            raise ValueError("Epsilon must be positive.")
             
-            # If both endpoints are local extrema 
-            if low_attach == i and high_attach == i:
-                # add a new branch to the smoothed decoomposition with shifted endpoints
-                pass 
+        # Create a new branch decomposition object for the smoothed Reeb graph.
+        smoothed_branch_decomp = branch.BranchDecomp()
+        
+        # Create the branch map dictionary to keep track of the mapping from branches in the input decomposition to paths in the smoothed decomposition.
+        branch_map = {}
+        
+        for i in range(branch_decomp._num_branches):
+            # Get the interval for the current branch.
+            low = branch_decomp._branch_values[i, 0]
+            high = branch_decomp._branch_values[i, 1]
+            
+            if branch_decomp._branch_attach[i, 0] == i: # Bottom is a local min
+                if branch_decomp._branch_attach[i, 1] == i: # Top is a local max
+                    # print(f"\nWorking on B{i}, (local min, local max) case.")
+                    # This means that both the top and bottom are local extrema, so we add a new branch with extended interval and no attachments. 
+                    new_branch_num = smoothed_branch_decomp._num_branches
+                    smoothed_branch_decomp.add_branch(low-eps, high+eps, new_branch_num, new_branch_num)
+                    branch_map[i] = [new_branch_num]
                 
-            
-            # If top is local max and bottom is not local min
-            elif low_attach != i and high_attach == i:
-                pass 
-            
-            # if botom is local min and top is not local max
-            elif low_attach == i and high_attach != i:
-                pass
-            
-            # if both are not min/max 
-            else:
-                pass
+                else: # (Local min, down fork) case
+                    # print(f"\nWorking on B{i}, (local min, downfork) case.")
+                    # The new branch will have interval [low-eps,high-eps]. 
+                    new_branch_num = smoothed_branch_decomp._num_branches
+                    
+                    # Starting with the down fork attachment, path_in_old will give the path of branches we get to by following the attaching information down from the top attachment of the current branch until we get to a branch that is below high-eps.
+                    check_attach_top = branch_decomp._branch_attach[i, 1]
+                    path_in_old = [check_attach_top] 
+                    
+                    # While the check_attach_top branch doesn't have a local min at the bottom but the function value at the bottom is still above high-eps, we keep following the attaching information down.
+                    while branch_decomp._branch_attach[check_attach_top, 0] != check_attach_top and branch_decomp._branch_values[check_attach_top, 0] >= high - eps:
+                        check_attach_top = branch_decomp._branch_attach[check_attach_top, 0]
+                        path_in_old.append(check_attach_top)
+                    
+                    print(f"Path in old branch decomposition to attach new branch for B{i}: {path_in_old}")
+                    
+                    # Attachment for top of new branch is the image (in the smoothed graph) of the last branch in path_in_old at the height value high-eps.
+                    # We get this from the function find_subpath 
+                    new_attach_top = find_subpath(smoothed_branch_decomp, branch_map[path_in_old[-1]], high-eps)[0]
+                    
+                    # Attaching maps are bottom is attached to itself, top is attached to new_attach_top
+                    smoothed_branch_decomp.add_branch(low-eps,high-eps, new_branch_num, new_attach_top)
 
-        return smoothed
+                    # Reverse the branch map because branch paths go up in the Reeb graph, but this one went down
+                    path_in_old = list(reversed(path_in_old))
+                    
+                    print(f"Reversed path: {path_in_old}")
+                    
+                    # Now get the image of this path in the new branch decomposition using the branch map.
+                    # We need to restrict the image to the interval 
+                    # (max(high-eps,low) , high)
+                    # since that's the portion that would actually get mapped there. Then after the fact, we add the new branch as a tail at the end.
+                    branch_map[i] = path_image(path_in_old, max(high-eps,low), high, branch_decomp, smoothed_branch_decomp, branch_map)
+                    
+                    print(f"Image of old-path {path_in_old} for range ({max(high-eps,low)},{high}) in new branch decomposition: {branch_map[i]}")
+
+                    # If new high (high-eps) is above low, then the bottom of the branch gets mapped to the new branch, so we need to add that to the beginning of the image as well.
+                    if high-eps > low :
+                        branch_map[i].insert(0, new_branch_num)
+
+                    # Add a check for valid path 
+                    if not check_branch_path(smoothed_branch_decomp, branch_map[i]):
+                        print(f" local min, down fork case made a bad path for branch {i}: {branch_map[i]}")
+                    
+            else: # Bottom is an up fork 
+                if branch_decomp._branch_attach[i, 1] == i: # (upfork, local max) case
+                    # print(f"\nWorking on B{i}, (upfork, local max) case.")
+                    # The new branch will have interval [low+eps, high+eps]. 
+                    new_branch_num = smoothed_branch_decomp._num_branches
+                    
+                    # Starting with the up fork attachment, path_in_old will give the path of branches we get to by following the attaching information up from the bottom attachment of the current branch until we get to a branch that contains low+eps.
+                    check_attach_bottom = branch_decomp._branch_attach[i, 0]
+                    path_in_old = [check_attach_bottom] 
+
+                    # While 
+                    #   - There is still a next branch to follow up at the top (which means branch_decomp._branch_attach[check_attach_bottom, 1] != check_attach_bottom )
+                    #   - The value a low+eps is not in the check_attach_bottom branch's interval (which means branch_decomp._branch_values[check_attach_bottom, 1] < low + eps. If the top of the branch checking is above low+eps, then we know low+eps is in that branch's interval since the bottom is attached to the previous branch in the path which is below low+eps).
+                    while branch_decomp._branch_attach[check_attach_bottom, 1] != check_attach_bottom and branch_decomp._branch_values[check_attach_bottom, 1] < low + eps:
+                        check_attach_bottom = branch_decomp._branch_attach[check_attach_bottom, 1]
+                        path_in_old.append(check_attach_bottom)
+                    
+                    # Attachment for bottom of new branch is the image of the last branch in path_in_old at the height value low+eps. We get this from the function find_subpath 
+                    new_attach_low = find_subpath(smoothed_branch_decomp, branch_map[path_in_old[-1]], low+eps)[0]
+                    
+                    # Attaching maps are top is attached to itself, bottom is attached to new_attach_low
+                    smoothed_branch_decomp.add_branch(low+eps, high+eps, new_attach_low, new_branch_num)
+
+                    # Now get the image of this path in the new branch decomposition using the branch map.
+                    # Like before, we need to restrict the image to the interval (low, min(low+eps,high)) since that's the portion that would actually get mapped there. Then after the fact, we add the new branch as a head at the beginning.
+                    branch_map[i] = path_image(path_in_old, low, min(low+eps,high), branch_decomp, smoothed_branch_decomp, branch_map)
+                    
+                    # If new low (low+eps) is below high, then the top of the branch gets mapped to the new branch, so we need to add that to the image as well.
+                    if high > low + eps: 
+                        branch_map[i].append(new_branch_num)
+    
+                    # Add a check for valid path 
+                    if not check_branch_path(smoothed_branch_decomp, branch_map[i]):
+                        print(f" upfork, local max case made a bad path for branch {i}: {branch_map[i]}")                   
+                    
+                else: # Top and bottom are both forks. This is the hard one.
+                    print(f"\nWarning: B{i} is an (upfork, downfork) case. - NOT IMPLEMENTED YET")
+                    if high-low <= 2*eps:
+                        # This is a short edge. It will go away, but how it does needs to be determined. 
+                        
+                        # TODO Update mapping 
+                        branch_map[i] = []
+                        pass 
+                    
+                    else:
+                        # The top will go down and the bottom will go up, so the new branch will have interval [low+eps, high-eps]. 
+                        new_branch_low = low+eps
+                        new_branch_high = high-eps
+                        new_branch_num = smoothed_branch_decomp._num_branches
+                        # TODO Fix attaching maps
+                        smoothed_branch_decomp.add_branch(new_branch_low, new_branch_high, new_branch_num, new_branch_num)
+                        # TODO Update mapping
+                        branch_map[i] = []
+                        
+        return smoothed_branch_decomp, branch_map
+  
+
     
     def draw(self, ax=None, figsize=(12, 8)):
         '''
