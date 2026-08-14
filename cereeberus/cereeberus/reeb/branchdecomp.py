@@ -2,6 +2,8 @@ import uuid
 import warnings
 from typing import Any, Hashable, Iterator, Optional
 
+import numpy as np
+
 
 class Branch:
     """A branch of the decomposition, stored as a single node in a doubly linked list.
@@ -43,11 +45,45 @@ class BranchDecomp:
     The branch decomposition of a Reeb graph, stored as a doubly linked list with UUID-based lookup.
     """
 
-    def __init__(self):
+    def __init__(self, reebgraph=None):
+        '''
+        Initialize an empty branch decomposition. If a Reeb graph is provided, the decomposition is computed immediately.
+        '''
         self.head: Optional[Branch] = None
         self.tail: Optional[Branch] = None
         self.by_key: dict[uuid.UUID, Branch] = {}
         self._size = 0
+        self.paths: list[list[Any]] = []
+
+        if reebgraph is not None:
+            self.decompose(reebgraph)
+
+    @property
+    def branches(self) -> np.ndarray:
+        """Compatibility view of the decomposition as a (n, 4) array.
+
+        Each row stores the branch interval and the list-order indices of the
+        branches attached at the lower and upper endpoints, respectively.
+        """
+        rows = []
+        for branch in self:
+            low_idx = self._index_of_branch(branch.bottom_branch) if branch.bottom_branch is not None else self._index_of_branch(branch)
+            high_idx = self._index_of_branch(branch.top_branch) if branch.top_branch is not None else self._index_of_branch(branch)
+            rows.append((branch.f_low, branch.f_high, low_idx, high_idx))
+
+        if not rows:
+            return np.empty((0, 4), dtype=float)
+        return np.asarray(rows, dtype=float)
+
+    def get_branch(self, branch_id: int) -> Branch:
+        if branch_id < 0 or branch_id >= self._size:
+            raise IndexError("branch_id out of range")
+        return self[branch_id]
+
+    def get_branch_path(self, branch_id: int) -> list[Any]:
+        if branch_id < 0 or branch_id >= len(self.paths):
+            raise IndexError("branch_id out of range")
+        return self.paths[branch_id]
 
     def __len__(self) -> int:
         return self._size
@@ -273,6 +309,79 @@ class BranchDecomp:
         self.tail = None
         self.by_key.clear()
         self._size = 0
+        self.paths.clear()
+
+    @staticmethod
+    def _lowest_available_vertex(graph):
+        """Return the lowest vertex with outgoing edges, or None if none remain."""
+        available_vertices = [v for v in graph.nodes if graph.up_degree(v) > 0]
+        if not available_vertices:
+            return None
+        return min(available_vertices, key=lambda v: graph.f[v])
+
+    @staticmethod
+    def _largest_upward_path(graph, start_vertex):
+        """Greedily follow upward edges until reaching a local maximum."""
+        path = [start_vertex]
+        current = start_vertex
+
+        while graph.up_degree(current) > 0:
+            next_vertex = next(graph.successors(current))
+            path.append(next_vertex)
+            current = next_vertex
+
+        return path
+
+    @staticmethod
+    def _remove_path_edges(graph, path):
+        """Remove the edges in a path from the working graph."""
+        for i in range(len(path) - 1):
+            u, v = path[i], path[i + 1]
+            if graph.has_edge(u, v):
+                graph.remove_edge(u, v)
+
+    def decompose(self, reebgraph):
+        """Decompose a Reeb graph into a linked-list of branches.
+
+        Repeatedly pick the lowest vertex with outgoing edges, take the greedy upward path from that point, and convert it into a branch. Any remaining isolated vertices are stored as degenerate branches with equal endpoint values.
+        """
+        working = reebgraph.copy()
+        self.clear()
+        self.paths = []
+        endpoint_owner = {}
+
+        while working.number_of_edges() > 0:
+            start = self._lowest_available_vertex(working)
+            if start is None:
+                break
+
+            path = self._largest_upward_path(working, start)
+            start_v = path[0]
+            end_v = path[-1]
+
+            low_ref = endpoint_owner.get(start_v)
+            high_ref = endpoint_owner.get(end_v)
+
+            new_branch = self.append(
+                f_low=working.f[start_v],
+                f_high=working.f[end_v],
+                bottom_branch=low_ref,
+                top_branch=high_ref,
+            )
+            self.paths.append(list(path))
+
+            for v in path:
+                endpoint_owner.setdefault(v, new_branch)
+
+            self._remove_path_edges(working, path)
+
+        for v in list(working.nodes):
+            if v not in endpoint_owner:
+                self.append(f_low=working.f[v], f_high=working.f[v], bottom_branch=None, top_branch=None)
+                self.paths.append([v])
+                endpoint_owner[v] = self.tail
+
+        return self
 
     def reconstruct(self):
         """Reconstruct a Reeb graph from the linked-list branch structure.
