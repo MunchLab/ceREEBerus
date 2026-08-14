@@ -148,6 +148,30 @@ class BranchDecomp:
             return self[ref]
         raise TypeError("branch reference must be a Branch, UUID, int, or None")
 
+    def _validate_attachment_values(
+        self,
+        f_low: float,
+        f_high: float,
+        top_branch: Optional[Branch],
+        bottom_branch: Optional[Branch],
+    ) -> None:
+        """Ensure attached endpoints lie strictly inside their owner intervals."""
+        if top_branch is not None and not (
+            top_branch.f_low < f_high < top_branch.f_high
+        ):
+            raise ValueError(
+                "Top attachment requires top_branch.f_low < f_high < "
+                "top_branch.f_high"
+            )
+
+        if bottom_branch is not None and not (
+            bottom_branch.f_low < f_low < bottom_branch.f_high
+        ):
+            raise ValueError(
+                "Bottom attachment requires bottom_branch.f_low < f_low < "
+                "bottom_branch.f_high"
+            )
+
     def append(
         self,
         f_low: float,
@@ -171,9 +195,15 @@ class BranchDecomp:
 
         """
 
+        resolved_top = self._resolve_branch_ref(top_branch)
+        resolved_bottom = self._resolve_branch_ref(bottom_branch)
+        self._validate_attachment_values(
+            f_low, f_high, resolved_top, resolved_bottom
+        )
+
         node = Branch(f_low=f_low, f_high=f_high, key=key)
-        node.top_branch = self._resolve_branch_ref(top_branch)
-        node.bottom_branch = self._resolve_branch_ref(bottom_branch)
+        node.top_branch = resolved_top
+        node.bottom_branch = resolved_bottom
         self.by_key[node.key] = node
 
         if self.tail is None:
@@ -211,9 +241,15 @@ class BranchDecomp:
         - The newly created Branch object.
         """
         if target is self.head:
+            resolved_top = self._resolve_branch_ref(top_branch)
+            resolved_bottom = self._resolve_branch_ref(bottom_branch)
+            self._validate_attachment_values(
+                f_low, f_high, resolved_top, resolved_bottom
+            )
+
             node = Branch(f_low=f_low, f_high=f_high, key=key)
-            node.top_branch = self._resolve_branch_ref(top_branch)
-            node.bottom_branch = self._resolve_branch_ref(bottom_branch)
+            node.top_branch = resolved_top
+            node.bottom_branch = resolved_bottom
             self.by_key[node.key] = node
             node.next = target
             target.prev = node
@@ -221,9 +257,15 @@ class BranchDecomp:
             self._size += 1
             return node
 
+        resolved_top = self._resolve_branch_ref(top_branch)
+        resolved_bottom = self._resolve_branch_ref(bottom_branch)
+        self._validate_attachment_values(
+            f_low, f_high, resolved_top, resolved_bottom
+        )
+
         node = Branch(f_low=f_low, f_high=f_high, key=key)
-        node.top_branch = self._resolve_branch_ref(top_branch)
-        node.bottom_branch = self._resolve_branch_ref(bottom_branch)
+        node.top_branch = resolved_top
+        node.bottom_branch = resolved_bottom
         self.by_key[node.key] = node
         node.prev = target.prev
         node.next = target
@@ -264,9 +306,15 @@ class BranchDecomp:
                 bottom_branch=bottom_branch,
             )
     
+        resolved_top = self._resolve_branch_ref(top_branch)
+        resolved_bottom = self._resolve_branch_ref(bottom_branch)
+        self._validate_attachment_values(
+            f_low, f_high, resolved_top, resolved_bottom
+        )
+
         node = Branch(f_low=f_low, f_high=f_high, key=key)
-        node.top_branch = self._resolve_branch_ref(top_branch)
-        node.bottom_branch = self._resolve_branch_ref(bottom_branch)
+        node.top_branch = resolved_top
+        node.bottom_branch = resolved_bottom
         self.by_key[node.key] = node
         node.prev = target
         node.next = target.next
@@ -383,6 +431,144 @@ class BranchDecomp:
 
         return self
 
+    def _resolve_path(self, path) -> list[Branch]:
+        """Resolve a path's branch references to branches in this decomposition."""
+        if not path:
+            raise ValueError("path must contain at least one branch")
+
+        resolved_path = [self._resolve_branch_ref(branch) for branch in path]
+        if any(branch is None for branch in resolved_path):
+            raise ValueError("path entries cannot be None")
+        return resolved_path
+
+    @staticmethod
+    def _attachment_value(first: Branch, second: Branch) -> Optional[float]:
+        """Return the height of an upward transition, or None when it is invalid."""
+        if first.top_branch is second:
+            return first.f_high
+        if second.bottom_branch is first:
+            return second.f_low
+        return None
+
+    def check_branch_path(self, path) -> bool:
+        """Return whether ``path`` represents a valid upward path through branches.
+
+        Consecutive entries must be connected by either the first branch's top
+        attachment or the second branch's bottom attachment. Attachment heights
+        must increase strictly along the path.
+        """
+        branches = self._resolve_path(path)
+        previous_value = branches[0].f_low
+
+        for first, second in zip(branches, branches[1:]):
+            attachment_value = self._attachment_value(first, second)
+            if attachment_value is None or attachment_value <= previous_value:
+                return False
+            previous_value = attachment_value
+
+        return True
+
+    def get_func_vals_for_path(self, path) -> list[float]:
+        """Return the ordered attachment heights for a valid branch path.
+
+        Path entries may be branch objects, UUIDs, or list-order indices. The
+        returned list has one value for each transition in ``path``.
+        """
+        branches = self._resolve_path(path)
+        if not self.check_branch_path(branches):
+            raise ValueError("path is not a valid upward branch path")
+
+        return [
+            self._attachment_value(first, second)
+            for first, second in zip(branches, branches[1:])
+        ]
+
+    def find_subpath(self, path, a: float, b: Optional[float] = None) -> list[Branch]:
+        """Return branches in a valid upward path that meet the interval ``[a, b]``.
+
+        When ``b`` is omitted, return the one branch containing height ``a``.
+        Path endpoint ownership follows the transition convention: a transition
+        at the first branch's top belongs to that branch; one at the next
+        branch's bottom belongs to the next branch.
+        """
+        branches = self._resolve_path(path)
+        if not self.check_branch_path(branches):
+            raise ValueError("path is not a valid upward branch path")
+
+        if b is None:
+            b = a
+        if b < a:
+            raise ValueError("b must be greater than or equal to a")
+
+        if b < branches[0].f_low:
+            return []
+
+        result = []
+
+        for first, second in zip(branches, branches[1:]):
+            attachment_value = self._attachment_value(first, second)
+
+            if first.top_branch is second:
+                if a <= attachment_value:
+                    result.append(first)
+                    if b <= attachment_value:
+                        return result
+            elif a < attachment_value:
+                result.append(first)
+                if b <= attachment_value:
+                    return result
+
+        last_branch = branches[-1]
+        if a <= last_branch.f_high:
+            result.append(last_branch)
+
+        return result
+
+    def path_image(
+        self,
+        path,
+        a: float,
+        b: float,
+        branch_map: "BranchDecompMap",
+    ) -> list[Branch]:
+        """Return the target image of ``path`` restricted to ``[a, b]``.
+
+        ``branch_map`` must map this decomposition to its target decomposition.
+        The returned target path is resolved from the map's internally stored
+        UUIDs and has adjacent duplicate branches removed.
+        """
+        if not isinstance(branch_map, BranchDecompMap):
+            raise TypeError("branch_map must be a BranchDecompMap")
+        if branch_map.source is not self:
+            raise ValueError("branch_map source must be this decomposition")
+        if b < a:
+            raise ValueError("b must be greater than or equal to a")
+
+        source_path = self._resolve_path(path)
+        if not self.check_branch_path(source_path):
+            raise ValueError("path is not a valid upward branch path")
+
+        source_subpath = self.find_subpath(source_path, a, b)
+        if not source_subpath:
+            return []
+
+        attachment_values = self.get_func_vals_for_path(source_subpath)
+        image_path = []
+
+        for index, source_branch in enumerate(source_subpath):
+            low = a if index == 0 else attachment_values[index - 1]
+            high = b if index == len(source_subpath) - 1 else attachment_values[index]
+            target_path = branch_map.get_image(source_branch)
+
+            if target_path:
+                image_path.extend(branch_map.target.find_subpath(target_path, low, high))
+
+        return [
+            branch
+            for index, branch in enumerate(image_path)
+            if index == 0 or branch is not image_path[index - 1]
+        ]
+
     def reconstruct(self):
         """Reconstruct a Reeb graph from the linked-list branch structure.
 
@@ -447,8 +633,11 @@ class BranchDecomp:
             low_obj = branch.bottom_branch
             high_obj = branch.top_branch
 
-            low_key = branch.key if low_obj is None else low_obj.key
-            high_key = branch.key if high_obj is None else high_obj.key
+            if branch.f_low == branch.f_high:
+                if low_obj is not None or high_obj is not None:
+                    raise ValueError("Degenerate branches cannot have attachments")
+                branch_paths[branch.key] = [add_vertex_at_height(branch.f_low)]
+                continue
 
             low_v = (
                 add_vertex_at_height(branch.f_low)
@@ -532,5 +721,72 @@ class BranchDecomp:
         ax.set_xlim(-0.5, n_branches - 0.5)
 
         return ax
+
+
+class BranchDecompMap:
+    """A map between two branch decompositions which are stored internally.
+
+    Source branches and target image paths are stored by UUID, so the mapping remains stable when either decomposition's linked-list order changes.
+    """
+
+    def __init__(self, source: BranchDecomp, target: BranchDecomp):
+        if not isinstance(source, BranchDecomp) or not isinstance(target, BranchDecomp):
+            raise TypeError("source and target must be BranchDecomp instances")
+
+        self.source = source
+        self.target = target
+        self.image_paths: dict[uuid.UUID, list[uuid.UUID]] = {}
+
+    def set_image(self, source_branch, target_path) -> None:
+        """Set a source branch's image as a path in the target decomposition.
+
+        References may be branches, UUIDs, or list-order indices. Internally,
+        the mapping is stored entirely as UUIDs. An empty target path is
+        permitted for a branch whose image vanishes.
+        """
+        source = self.source._resolve_branch_ref(source_branch)
+        if source is None:
+            raise ValueError("source_branch cannot be None")
+
+        if not target_path:
+            self.image_paths[source.key] = []
+            return
+
+        target_branches = self.target._resolve_path(target_path)
+        if not self.target.check_branch_path(target_branches):
+            raise ValueError("target_path is not a valid path in the target decomposition")
+
+        self.image_paths[source.key] = [branch.key for branch in target_branches]
+
+    def get_image_keys(self, source_branch) -> list[uuid.UUID]:
+        """Return a copy of a source branch's stored target UUID path."""
+        source = self.source._resolve_branch_ref(source_branch)
+        if source is None:
+            raise ValueError("source_branch cannot be None")
+        return list(self.image_paths[source.key])
+
+    def get_image(self, source_branch) -> list[Branch]:
+        """Resolve a source branch's image path to target branch objects."""
+        return [self.target.get_by_key(key) for key in self.get_image_keys(source_branch)]
+
+    def get_image_indices(self, source_branch) -> list[int]:
+        """Return a source branch's image path in the target's current list order."""
+        return [
+            self.target._index_of_branch(self.target.get_by_key(key))
+            for key in self.get_image_keys(source_branch)
+        ]
+
+    def __getitem__(self, source_index: int) -> list[int]:
+        """Return the image of a source list-order index as target indices."""
+        if not isinstance(source_index, int):
+            raise TypeError("source index must be an integer")
+        return self.get_image_indices(source_index)
+
+    def remove_image(self, source_branch) -> None:
+        """Remove the stored image of a source branch, if present."""
+        source = self.source._resolve_branch_ref(source_branch)
+        if source is None:
+            raise ValueError("source_branch cannot be None")
+        self.image_paths.pop(source.key, None)
 
 
