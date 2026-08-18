@@ -659,6 +659,143 @@ class BranchDecomp:
         R.set_pos_from_f()
         return R
 
+    def smooth(self, eps: float) -> tuple["BranchDecomp", "BranchDecompMap"]:
+        """Smooth this branch decomposition by expanding intervals by epsilon.
+        
+        Given this branch decomposition of a Reeb graph, returns the branch decomposition 
+        of the smoothed Reeb graph with parameter epsilon, along with a BranchDecompMap 
+        tracking how branches map to paths in the smoothed decomposition.
+        
+        Args:
+            eps (float): The smoothing parameter (must be positive).
+        
+        Returns:
+            tuple: (smoothed_decomp, branch_map) where:
+                - smoothed_decomp is a BranchDecomp of the smoothed graph
+                - branch_map is a BranchDecompMap tracking the image of each branch
+        
+        Raises:
+            ValueError: If eps <= 0
+        
+        Notes:
+            The (upfork, downfork) case is not fully implemented yet.
+        """
+        if eps <= 0:
+            raise ValueError("Epsilon must be positive.")
+        
+        B = self
+        B_smooth = BranchDecomp()
+        eta = BranchDecompMap(B, B_smooth)
+        
+        for i, b in enumerate(self):
+            print(f"Working on branch {i}: {b.f_low, b.f_high}")
+            low = b.f_low
+            high = b.f_high
+            
+            # Case 1: Local min at bottom
+            if b.bottom_branch is None:
+                print("Case 1a: Local min/max")
+                if b.top_branch is None:
+                    new_branch = B_smooth.append(low - eps, high + eps, top_branch=None, bottom_branch=None)
+                    eta.set_image(i, [new_branch])
+                
+                # Case 1b: Local min/down fork
+                else:
+                    print("Case 1b: Local min/down fork")
+                    # Follow down from top attachment until below high-eps
+                    check_attach_top = b.top_branch
+                    path_in_old = [check_attach_top]
+                    
+                    while (check_attach_top.bottom_branch is not None and 
+                           check_attach_top.f_low >= high - eps):
+                        check_attach_top = check_attach_top.bottom_branch
+                        path_in_old.append(check_attach_top)
+                    
+                    # Reverse path since we followed down but need to go up
+                    path_in_old = list(reversed(path_in_old))
+                    
+                    # The new branch (with local min at bottom) attaches at top to the first branch in the reversed path
+                    first_branch_image = eta.get_image(B._index_of_branch(path_in_old[0]))
+                    top_attach = first_branch_image[0] if first_branch_image else None
+                    
+                    # Create the new branch with attachment at top
+                    new_branch = B_smooth.append(low - eps, high - eps, top_branch=top_attach, bottom_branch=None)
+                    
+                    # Get image of path in new decomposition
+                    image = B.path_image(path_in_old, max(high - eps, low), high, eta)
+                    
+                    # Add new branch at beginning if needed
+                    if high - eps > low:
+                        image.insert(0, new_branch)
+                    
+                    eta.set_image(i, image)
+                    
+                    # Validate
+                    if not B_smooth.check_branch_path(image):
+                        warnings.warn(
+                            f"local min/downfork case created invalid path for branch {i}: {image}",
+                            UserWarning,
+                            stacklevel=2
+                        )
+            
+            # Case 2: Up fork at bottom
+            else:
+                print("Case 2a: Up fork / local max")
+                # Case 2a: Up fork/local max
+                if b.top_branch is None:
+                    # Follow up from bottom attachment until above low+eps
+                    check_attach_bottom = b.bottom_branch
+                    path_in_old = [check_attach_bottom]
+                    
+                    while (check_attach_bottom.top_branch is not None and 
+                           check_attach_bottom.f_high < low + eps):
+                        check_attach_bottom = check_attach_bottom.top_branch
+                        path_in_old.append(check_attach_bottom)
+                    
+                    # The new branch (with local max at top) attaches at bottom to the last branch in path_in_old
+                    last_branch_image = eta.get_image(B._index_of_branch(path_in_old[-1]))
+                    bottom_attach = last_branch_image[-1] if last_branch_image else None
+                    
+                    # Create the new branch with attachment at bottom (and local max at top)
+                    new_branch = B_smooth.append(low + eps, high + eps, top_branch=None, bottom_branch=bottom_attach)
+                    
+                    # Get image of path in new decomposition
+                    image = B.path_image(path_in_old, low, min(low + eps, high), eta)
+                    
+                    # Add new branch at end if needed
+                    if high > low + eps:
+                        image.append(new_branch)
+                    
+                    eta.set_image(i, image)
+                    
+                    # Validate
+                    if not B_smooth.check_branch_path(image):
+                        warnings.warn(
+                            f"upfork/local max case created invalid path for branch {i}: {image}",
+                            UserWarning,
+                            stacklevel=2
+                        )
+                
+                # Case 2b: Up fork/down fork (hard case - TODO)
+                else:
+                    print ("Case 2b: Up fork/down fork (not fully implemented)")
+                    warnings.warn(
+                        f"Branch {i} is an (upfork, downfork) case - NOT FULLY IMPLEMENTED",
+                        UserWarning,
+                        stacklevel=2
+                    )
+                    
+                    if high - low <= 2 * eps:
+                        # Short edge that disappears
+                        eta.set_image(i, [])
+                    else:
+                        # Long edge that gets contracted
+                        new_branch = B_smooth.append(low + eps, high - eps, top_branch=None, bottom_branch=None)
+                        # TODO: Implement proper mapping
+                        eta.set_image(i, [])
+        
+        return B_smooth, eta
+    
     def draw(self, ax=None, figsize=(12, 8)):
         """
         Draw the branch decomposition with branches ordered left to right.
@@ -737,12 +874,18 @@ class BranchDecompMap:
         self.target = target
         self.image_paths: dict[uuid.UUID, list[uuid.UUID]] = {}
 
-    def set_image(self, source_branch, target_path) -> None:
+    def set_image(self, source_branch, target_path, validate: bool = False) -> None:
         """Set a source branch's image as a path in the target decomposition.
 
         References may be branches, UUIDs, or list-order indices. Internally,
         the mapping is stored entirely as UUIDs. An empty target path is
         permitted for a branch whose image vanishes.
+        
+        Args:
+            source_branch: Reference to a source branch (Branch, UUID, or int index).
+            target_path: Path in the target decomposition (list of Branch/UUID/int references).
+            validate: Whether to validate that target_path forms a valid upward path.
+                     Defaults to False to allow incremental construction.
         """
         source = self.source._resolve_branch_ref(source_branch)
         if source is None:
@@ -753,7 +896,7 @@ class BranchDecompMap:
             return
 
         target_branches = self.target._resolve_path(target_path)
-        if not self.target.check_branch_path(target_branches):
+        if validate and not self.target.check_branch_path(target_branches):
             raise ValueError("target_path is not a valid path in the target decomposition")
 
         self.image_paths[source.key] = [branch.key for branch in target_branches]
