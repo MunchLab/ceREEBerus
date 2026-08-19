@@ -776,24 +776,85 @@ class BranchDecomp:
                             stacklevel=2
                         )
                 
-                # Case 2b: Up fork/down fork (hard case - TODO)
-                else:
-                    print ("Case 2b: Up fork/down fork (not fully implemented)")
-                    warnings.warn(
-                        f"Branch {i} is an (upfork, downfork) case - NOT FULLY IMPLEMENTED",
-                        UserWarning,
-                        stacklevel=2
-                    )
+                # # Case 2b: Up fork/down fork (hard case - TODO)
+                # else:
+                #     print ("Case 2b: Up fork/down fork (not fully implemented)")
+                #     warnings.warn(
+                #         f"Branch {i} is an (upfork, downfork) case - NOT FULLY IMPLEMENTED",
+                #         UserWarning,
+                #         stacklevel=2
+                #     )
                     
+                #     if high - low <= 2 * eps:
+                #         # Short edge that disappears
+                #         eta.set_image(i, [])
+                #     else:
+                #         # Long edge that gets contracted
+                #         new_branch = B_smooth.append(low + eps, high - eps, top_branch=None, bottom_branch=None)
+                #         # TODO: Implement proper mapping
+                #         eta.set_image(i, [])
+        
+                else:
+                    print ("Case 2b: Up fork/down fork")
+                
                     if high - low <= 2 * eps:
                         # Short edge that disappears
                         eta.set_image(i, [])
                     else:
-                        # Long edge that gets contracted
-                        new_branch = B_smooth.append(low + eps, high - eps, top_branch=None, bottom_branch=None)
-                        # TODO: Implement proper mapping
-                        eta.set_image(i, [])
-        
+                        # Long edge case: upfork slides up, downfork slides down
+                        # Follow up from bottom attachment until above low+eps
+                        check_attach_bottom = b.bottom_branch
+                        path_up = [check_attach_bottom]
+                    
+                        while (check_attach_bottom.top_branch is not None and 
+                                check_attach_bottom.f_high < low + eps):
+                            check_attach_bottom = check_attach_bottom.top_branch
+                            path_up.append(check_attach_bottom)
+                    
+                        # Follow down from top attachment until below high-eps
+                        check_attach_top = b.top_branch
+                        path_down = [check_attach_top]
+                    
+                        while (check_attach_top.bottom_branch is not None and 
+                                check_attach_top.f_low >= high - eps):
+                            check_attach_top = check_attach_top.bottom_branch
+                            path_down.append(check_attach_top)
+                    
+                        # Reverse path_down since we followed down but need to go up
+                        path_down = list(reversed(path_down))
+                    
+                        # Get attachments for the new middle branch
+                        # Bottom attachment comes from last branch in path_up
+                        last_branch_image_up = eta.get_image(B._index_of_branch(path_up[-1]))
+                        bottom_attach = last_branch_image_up[-1] if last_branch_image_up else None
+                    
+                        # Top attachment comes from first branch in path_down
+                        first_branch_image_down = eta.get_image(B._index_of_branch(path_down[0]))
+                        top_attach = first_branch_image_down[0] if first_branch_image_down else None
+                    
+                        # Create the middle branch with both attachments
+                        new_branch = B_smooth.append(low + eps, high - eps, top_branch=top_attach, bottom_branch=bottom_attach)
+                    
+                        # Get the image of the upfork path (restricted to interval (low, min(low+eps, high)))
+                        image_up = B.path_image(path_up, low, min(low + eps, high), eta)
+                    
+                        # Get the image of the downfork path (restricted to interval (max(high-eps, low), high))
+                        image_down = B.path_image(path_down, max(high - eps, low), high, eta)
+                    
+                        # Combine images: upfork path + new middle branch + downfork path
+                        image = image_up
+                        image.append(new_branch)
+                        image.extend(image_down)
+                    
+                        eta.set_image(i, image)
+                    
+                        # Validate
+                        if not B_smooth.check_branch_path(image):
+                            warnings.warn(
+                                f"upfork/downfork case created invalid path for branch {i}: {image}",
+                                UserWarning,
+                                stacklevel=2
+                            )
         return B_smooth, eta
     
     def draw(self, ax=None, figsize=(12, 8)):
