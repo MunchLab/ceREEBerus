@@ -1,4 +1,5 @@
 import unittest
+import warnings
 import numpy as np
 
 from cereeberus.data import ex_reebgraphs as ex_rg
@@ -300,6 +301,19 @@ class TestBranchDecomp(unittest.TestCase):
         with self.assertRaises(ValueError):
             bd.check_branch_path([])
 
+    def test_check_branch_path_allows_shared_vertex_tie(self):
+        """Equal consecutive attachment heights are valid when both attach into
+        the same branch's interior at the same point (several branches meeting
+        at one shared vertex), per the strict-interior invariant."""
+        bd = BranchDecomp()
+        bd.append(0.0, 10.0)                  # 0
+        bd.append(2.0, 8.0, bottom_branch=0)   # 1
+        bd.append(-2.0, 4.0, top_branch=1)     # 2: attaches into 1 at height 4
+        bd.append(4.0, 6.0, bottom_branch=1)   # 3: attaches into 1 at height 4 too
+
+        self.assertTrue(bd.check_branch_path([2, 1, 3]))
+        self.assertEqual(bd.get_func_vals_for_path([2, 1, 3]), [4.0, 4.0])
+
     def test_get_func_vals_for_path(self):
         """Path transition heights work with both indices and UUIDs."""
         bd = self.make_path_example()
@@ -367,6 +381,39 @@ class TestBranchDecomp(unittest.TestCase):
 
         image = source.path_image([0, 1, 2, 0], 3.0, 9.0, branch_map)
         self.assertEqual(image, [target[1], target[2], target[0]])
+
+    def test_smooth_upfork_downfork_shared_vertex_tie(self):
+        """smooth() handles a degenerate input where a downfork's smoothed
+        attachment and an upfork/downfork's smoothed attachment land on the
+        exact same height of a shared branch (branch 2's f_high and branch 4's
+        f_low differ by exactly 2*eps), instead of producing an invalid path."""
+        T = BranchDecomp()
+        T.append(-1.0, 8.0)
+        T.append(2.0, 6.0, bottom_branch=0)
+        T.append(-2.0, 4.0, top_branch=1)
+        T.append(0.0, 9.0)
+        T.append(3.0, 5.0, bottom_branch=2, top_branch=3)
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            T_smooth, eta = T.smooth(0.5)
+
+        self.assertEqual(
+            len(caught), 0,
+            msg=f"Unexpected warnings: {[str(w.message) for w in caught]}",
+        )
+
+        image = eta.get_image(4)
+        self.assertTrue(T_smooth.check_branch_path(image))
+
+        func_vals = T_smooth.get_func_vals_for_path(image)
+        self.assertEqual(len(func_vals), len(image) - 1)
+        # The tie: branch 2's smoothed top-attach and branch 4's smoothed
+        # bottom-attach coincide at the same height on the shared branch 1.
+        self.assertEqual(func_vals[0], func_vals[1])
+
+        # Reconstruction should still succeed despite the shared vertex.
+        T_smooth.reconstruct()
 
 
 if __name__ == "__main__":
