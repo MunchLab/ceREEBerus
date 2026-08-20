@@ -28,8 +28,50 @@ class Branch:
         self.key = key if key is not None else uuid.uuid4()
         self.prev = None
         self.next = None
-        self.top_branch = None
-        self.bottom_branch = None
+        self._top_branch = None
+        self._bottom_branch = None
+        # Backward pointers: branches whose top_branch/bottom_branch is this
+        # branch, kept in sync automatically by the top_branch/bottom_branch
+        # setters below. This lets code that needs to know "who attaches to
+        # me" look it up directly instead of scanning the whole decomposition.
+        self.attached_via_top: list["Branch"] = []
+        self.attached_via_bottom: list["Branch"] = []
+
+    @property
+    def top_branch(self) -> Optional["Branch"]:
+        return self._top_branch
+
+    @top_branch.setter
+    def top_branch(self, new_branch: Optional["Branch"]) -> None:
+        old_branch = self._top_branch
+        if old_branch is new_branch:
+            return
+        if old_branch is not None:
+            try:
+                old_branch.attached_via_top.remove(self)
+            except ValueError:
+                pass
+        if new_branch is not None:
+            new_branch.attached_via_top.append(self)
+        self._top_branch = new_branch
+
+    @property
+    def bottom_branch(self) -> Optional["Branch"]:
+        return self._bottom_branch
+
+    @bottom_branch.setter
+    def bottom_branch(self, new_branch: Optional["Branch"]) -> None:
+        old_branch = self._bottom_branch
+        if old_branch is new_branch:
+            return
+        if old_branch is not None:
+            try:
+                old_branch.attached_via_bottom.remove(self)
+            except ValueError:
+                pass
+        if new_branch is not None:
+            new_branch.attached_via_bottom.append(self)
+        self._bottom_branch = new_branch
 
     def __repr__(self) -> str:
         return (
@@ -346,6 +388,10 @@ class BranchDecomp:
         self.by_key.pop(node.key, None)
         node.prev = None
         node.next = None
+        # Clear outgoing pointers via the setters so this removed node no
+        # longer lingers in another branch's attached_via_top/bottom lists.
+        node.top_branch = None
+        node.bottom_branch = None
         self._size -= 1
 
 
@@ -507,18 +553,41 @@ class BranchDecomp:
             return []
 
         result = []
+        started = False
 
         for first, second in zip(branches, branches[1:]):
             attachment_value = self._attachment_value(first, second)
+            owned_by_first = first.top_branch is second
 
-            if first.top_branch is second:
-                if a <= attachment_value:
+            if not started:
+                if owned_by_first:
+                    if a <= attachment_value:
+                        result.append(first)
+                        started = True
+                    else:
+                        continue
+                elif a < attachment_value:
                     result.append(first)
-                    if b <= attachment_value:
-                        return result
-            elif a < attachment_value:
+                    started = True
+                else:
+                    continue
+            else:
+                # Once we've started including branches, every subsequent
+                # 'first' is the previous pair's 'second' -- a connector we've
+                # already committed to passing through, so it must be
+                # included regardless of whether it owns any of [a, b] itself
+                # (e.g. a zero-width pass-through branch at a shared vertex).
                 result.append(first)
+
+            if owned_by_first:
                 if b <= attachment_value:
+                    return result
+            else:
+                # This attachment height is owned by 'second' (its bottom), not
+                # 'first' -- so if b lands exactly on it, don't return yet;
+                # 'second' still needs to be included (via the next iteration
+                # or the last_branch fallback below).
+                if b < attachment_value:
                     return result
 
         last_branch = branches[-1]
@@ -690,6 +759,63 @@ class BranchDecomp:
         B_smooth = BranchDecomp()
         eta = BranchDecompMap(B, B_smooth)
 
+        def _find_connecting_path(start, end):
+            """Find the (ascending) sequence of branches connecting ``start`` to ``end`` in B_smooth.
+
+            Used when two branches (e.g. two halves of a just-split branch)
+            don't attach to each other directly, but still need to be joined
+            into a single ascending path -- since B_smooth is built up from a
+            connected Reeb graph, some route between any two of its branches
+            must already exist via other, unrelated attachments. This walks
+            the live graph (top_branch/bottom_branch plus the attached_via_top/
+            attached_via_bottom backward pointers) to find it, then returns it
+            in ascending-height order (``start`` and ``end`` are not attempted
+            to be reordered -- ``start`` must already be the lower one).
+            """
+            if start is end:
+                return [start]
+
+            visited = {start.key: None}
+            queue = [start]
+            while queue:
+                current = queue.pop(0)
+                neighbors = [
+                    current.top_branch, current.bottom_branch,
+                    *current.attached_via_top, *current.attached_via_bottom,
+                ]
+                for neighbor in neighbors:
+                    if neighbor is None or neighbor.key in visited:
+                        continue
+                    visited[neighbor.key] = current
+                    if neighbor is end:
+                        path = [end]
+                        while path[-1] is not start:
+                            path.append(visited[path[-1].key])
+                        return list(reversed(path))
+                    queue.append(neighbor)
+
+            raise ValueError(
+                "no connecting path found between two branches expected to be "
+                "in the same connected component of B_smooth"
+            )
+
+        def _merge_overlapping(first, second):
+            """Concatenate two ascending paths that may re-derive the same shared tail.
+
+            Used when a vanishing branch's up-path and down-path images both
+            resolve through the same underlying structure (since both sides
+            converge once the branch collapses) -- naively concatenating them
+            would repeat that shared portion. If ``second`` re-enters at some
+            branch already in ``first``, drop everything up through that
+            branch from ``second`` before joining.
+            """
+            if not first or not second:
+                return list(first) + list(second)
+            for idx, branch in enumerate(second):
+                if branch is first[-1]:
+                    return list(first) + list(second[idx + 1:])
+            return list(first) + list(second)
+
         def _attach_branch_at_height(path, height):
             """Find the branch in an image path whose interior strictly contains ``height``.
 
@@ -753,22 +879,84 @@ class BranchDecomp:
             if attach_branch.top_branch is first or first.bottom_branch is attach_branch:
                 image_slice.insert(0, attach_branch)
             return image_slice
+
+        def _repoint_stale_eta_paths(old_branch, low_half, high_half, split_height, bridge):
+            """Rewrite already-stored eta image paths that still reference a removed, split branch.
+
+            ``old_branch`` (e.g. B_later) has been removed from B_smooth and
+            replaced by ``low_half``/``high_half``. Any eta[j] path set for a
+            previously-processed branch j may still contain old_branch's key
+            (eta stores paths as UUIDs, independent of the live linked list),
+            which would raise a KeyError once resolved. For each occurrence,
+            the neighboring path entries (still valid) tell us the height at
+            which the path entered/exited old_branch, which determines whether
+            that occurrence belongs to low_half, high_half, or both (if the
+            occurrence spans across split_height). ``low_half`` and
+            ``high_half`` are not directly attached to each other even after
+            the post-split slide -- ``bridge`` is the already-resolved list of
+            branches (in ascending height order) that connects them (see
+            caller), so a spanning occurrence is replaced by
+            ``[low_half] + bridge + [high_half]``.
+            """
+            old_key = old_branch.key
+            target = eta.target
+            bridge_keys = [b.key for b in bridge]
+            for source_key, path_keys in eta.image_paths.items():
+                if old_key not in path_keys:
+                    continue
+
+                new_path_keys = []
+                n = len(path_keys)
+                for idx, key in enumerate(path_keys):
+                    if key != old_key:
+                        new_path_keys.append(key)
+                        continue
+
+                    if idx > 0:
+                        prev_branch = target.get_by_key(path_keys[idx - 1])
+                        entry_height = (
+                            old_branch.f_low if old_branch.bottom_branch is prev_branch
+                            else prev_branch.f_high
+                        )
+                    else:
+                        entry_height = old_branch.f_low
+
+                    if idx + 1 < n:
+                        next_branch = target.get_by_key(path_keys[idx + 1])
+                        exit_height = (
+                            old_branch.f_high if old_branch.top_branch is next_branch
+                            else next_branch.f_low
+                        )
+                    else:
+                        exit_height = old_branch.f_high
+
+                    entry_half = low_half if entry_height <= split_height else high_half
+                    exit_half = low_half if exit_height <= split_height else high_half
+
+                    if entry_half is exit_half:
+                        new_path_keys.append(entry_half.key)
+                    else:
+                        new_path_keys.append(low_half.key)
+                        new_path_keys.extend(bridge_keys)
+                        new_path_keys.append(high_half.key)
+
+                eta.image_paths[source_key] = new_path_keys
         
         for i, b in enumerate(self):
-            print(f"Working on branch {i}: {b.f_low, b.f_high}")
+            # print(f"Working on branch {i}: {b.f_low, b.f_high}")
             low = b.f_low
             high = b.f_high
             
             # Case 1: Local min at bottom
             if b.bottom_branch is None:
-                print("Case 1a: Local min/max")
+                # print("Case 1a: Local min/max")
                 if b.top_branch is None:
                     new_branch = B_smooth.append(low - eps, high + eps, top_branch=None, bottom_branch=None)
                     eta.set_image(i, [new_branch])
                 
                 # Case 1b: Local min/down fork
                 else:
-                    print("Case 1b: Local min/down fork")
+                    # print("Case 1b: Local min/down fork")
                     # Follow down from top attachment until below high-eps
                     check_attach_top = b.top_branch
                     path_in_old = [check_attach_top]
@@ -809,7 +997,7 @@ class BranchDecomp:
             
             # Case 2: Up fork at bottom
             else:
-                print("Case 2a: Up fork / local max")
+                # print("Case 2a: Up fork / local max")
                 # Case 2a: Up fork/local max
                 if b.top_branch is None:
                     # Follow up from bottom attachment until above low+eps
@@ -847,13 +1035,11 @@ class BranchDecomp:
                             stacklevel=2
                         )
                 
-
-        
                 else:
-                    print ("Case 2b: Up fork/down fork")
+                    # print ("Case 2b: Up fork/down fork")
                 
                     if high - low <= 2 * eps:
-                        print("Case 2c: Short upfork/downfork (splitting at midpoint)")
+                        # print("Case 2c: Short upfork/downfork (splitting at midpoint)")
                         # Sliding both endpoints by h/2 would make this branch
                         # horizontal (degenerate) exactly at the midpoint M, since
                         # low + h/2 == high - h/2 == M. Find where each side would
@@ -861,11 +1047,20 @@ class BranchDecomp:
                         # from both directions.
                         M = (low + high) / 2.0
 
+                        # Walk up/down in the *original* decomposition all the way to the
+                        # slide targets (low+eps / high-eps), not just to M. Since h <= 2*eps
+                        # guarantees low+eps >= M >= high-eps, a walk targeting the slide
+                        # height necessarily passes through M as well, so the same eta-mapped
+                        # image can resolve both the midpoint-split attachment and the final
+                        # post-slide attachment. (Walking structurally in B_smooth from B_older
+                        # after the split, as was done previously, is unreliable: Branch only
+                        # stores outgoing top_branch/bottom_branch pointers, not who else
+                        # attaches into it, so that walk can silently stop short.)
                         check_attach_bottom = b.bottom_branch
                         path_up = [check_attach_bottom]
 
                         while (check_attach_bottom.top_branch is not None and
-                                check_attach_bottom.f_high < M):
+                                check_attach_bottom.f_high < low + eps):
                             check_attach_bottom = check_attach_bottom.top_branch
                             path_up.append(check_attach_bottom)
 
@@ -873,17 +1068,19 @@ class BranchDecomp:
                         path_down = [check_attach_top]
 
                         while (check_attach_top.bottom_branch is not None and
-                                check_attach_top.f_low >= M):
+                                check_attach_top.f_low >= high - eps):
                             check_attach_top = check_attach_top.bottom_branch
                             path_down.append(check_attach_top)
 
                         path_down = list(reversed(path_down))
 
-                        last_branch_image_up = eta.get_image(B._index_of_branch(path_up[-1]))
-                        bottom_attach = _attach_branch_at_height(last_branch_image_up, M)
+                        image_up = eta.get_image(B._index_of_branch(path_up[-1]))
+                        bottom_attach = _attach_branch_at_height(image_up, M)
+                        final_bottom_attach = _attach_branch_at_height(image_up, low + eps)
 
-                        first_branch_image_down = eta.get_image(B._index_of_branch(path_down[0]))
-                        top_attach = _attach_branch_at_height(first_branch_image_down, M)
+                        image_down = eta.get_image(B._index_of_branch(path_down[0]))
+                        top_attach = _attach_branch_at_height(image_down, M)
+                        final_top_attach = _attach_branch_at_height(image_down, high - eps)
 
                         if bottom_attach is top_attach:
                             raise ValueError(
@@ -898,6 +1095,47 @@ class BranchDecomp:
                         else:
                             B_later, B_older = top_attach, bottom_attach
 
+                        # The pre-split slide targets were resolved from the same original
+                        # branch's own image as bottom_attach/top_attach. If that image is a
+                        # dead end (e.g. a lone local-min/max branch with nothing past it, as
+                        # smB3 is here), the target can come back as B_later itself, which
+                        # would be a self-attachment once B_later is split. In that case, the
+                        # slide target must instead be found on B_older's side: B_older is
+                        # already where both halves attach at M, so fall back to walking
+                        # structurally from B_older within B_smooth (same approach as the
+                        # eta-based walk, just starting one step further along).
+                        if final_bottom_attach is B_later:
+                            check = B_older
+                            walk = [check]
+                            while check.top_branch is not None and check.f_high < low + eps:
+                                check = check.top_branch
+                                walk.append(check)
+                            final_bottom_attach = _attach_branch_at_height(walk, low + eps)
+                            assert final_bottom_attach is not B_later, (
+                                "final bottom attachment fallback still resolved to B_later"
+                            )
+                        if final_top_attach is B_later:
+                            check = B_older
+                            walk = [check]
+                            while check.bottom_branch is not None and check.f_low >= high - eps:
+                                check = check.bottom_branch
+                                walk.append(check)
+                            walk = list(reversed(walk))
+                            final_top_attach = _attach_branch_at_height(walk, high - eps)
+                            assert final_top_attach is not B_later, (
+                                "final top attachment fallback still resolved to B_later"
+                            )
+
+                        # B_later_low and B_later_high will NOT be attached to each other once
+                        # split -- they become two independent branches, each wired to its own
+                        # final slide target (final_bottom_attach / final_top_attach), which
+                        # may lie on entirely unrelated parts of B_smooth. Any stale eta path
+                        # that needs to pass from one split half to the other must instead
+                        # route through whatever already connects final_top_attach to
+                        # final_bottom_attach elsewhere in the (connected) graph -- found here
+                        # via a live graph search rather than assumed.
+                        bridge = _find_connecting_path(final_top_attach, final_bottom_attach)
+
                         B_later_low = B_smooth.insert_before(
                             B_later, f_low=B_later.f_low, f_high=M,
                             bottom_branch=B_later.bottom_branch, top_branch=B_older,
@@ -909,64 +1147,47 @@ class BranchDecomp:
 
                         # Repoint any existing attachment into B_later to whichever half
                         # now contains it; an exact tie at M means it now shares B_older's point.
-                        for other in B_smooth:
-                            if other is B_later_low or other is B_later_high:
-                                continue
-                            if other.top_branch is B_later:
-                                if other.f_high < M:
-                                    other.top_branch = B_later_low
-                                elif other.f_high > M:
-                                    other.top_branch = B_later_high
-                                else:
-                                    other.top_branch = B_older
-                            if other.bottom_branch is B_later:
-                                if other.f_low < M:
-                                    other.bottom_branch = B_later_low
-                                elif other.f_low > M:
-                                    other.bottom_branch = B_later_high
-                                else:
-                                    other.bottom_branch = B_older
+                        # (list(...) copies since these setters mutate B_later's own lists.)
+                        for other in list(B_later.attached_via_top):
+                            if other.f_high < M:
+                                other.top_branch = B_later_low
+                            elif other.f_high > M:
+                                other.top_branch = B_later_high
+                            else:
+                                other.top_branch = B_older
+                        for other in list(B_later.attached_via_bottom):
+                            if other.f_low < M:
+                                other.bottom_branch = B_later_low
+                            elif other.f_low > M:
+                                other.bottom_branch = B_later_high
+                            else:
+                                other.bottom_branch = B_older
+
+                        # Fix up any previously-set eta[j] paths that still reference
+                        # B_later's key before B_later is removed and its own
+                        # top_branch/bottom_branch (needed to resolve entry/exit
+                        # heights) get cleared.
+                        _repoint_stale_eta_paths(B_later, B_later_low, B_later_high, M, bridge)
 
                         B_smooth.remove(B_later)
 
-                        # Slide the remaining (eps - h/2): B_later_high's bottom moves
-                        # up to low + eps, B_later_low's top moves down to high - eps,
-                        # following the same walk pattern as the long case but starting
-                        # from B_older directly (already inside B_smooth, so no eta
-                        # lookup is needed here).
-                        check_attach_bottom = B_older
-                        path_up_slide = [check_attach_bottom]
-                        while (check_attach_bottom.top_branch is not None and
-                                check_attach_bottom.f_high < low + eps):
-                            check_attach_bottom = check_attach_bottom.top_branch
-                            path_up_slide.append(check_attach_bottom)
-                        final_bottom_attach = _attach_branch_at_height(path_up_slide, low + eps)
-
-                        check_attach_top = B_older
-                        path_down_slide = [check_attach_top]
-                        while (check_attach_top.bottom_branch is not None and
-                                check_attach_top.f_low >= high - eps):
-                            check_attach_top = check_attach_top.bottom_branch
-                            path_down_slide.append(check_attach_top)
-                        path_down_slide = list(reversed(path_down_slide))
-                        final_top_attach = _attach_branch_at_height(path_down_slide, high - eps)
-
                         # Anything attached in the now-excluded sliver of B_later_high /
                         # B_later_low (the part the slide is moving past) must be
-                        # reattached to wherever it now falls along the walked path --
+                        # reattached to wherever it now falls along the eta-mapped image --
                         # which may be B_older itself, an intermediate branch, or the
                         # final target.
-                        for other in B_smooth:
-                            if other is B_later_high or other is B_later_low:
-                                continue
-                            if other.bottom_branch is B_later_high and other.f_low <= low + eps:
-                                other.bottom_branch = _attach_branch_at_height(path_up_slide, other.f_low)
-                            if other.top_branch is B_later_high and other.f_high <= low + eps:
-                                other.top_branch = _attach_branch_at_height(path_up_slide, other.f_high)
-                            if other.top_branch is B_later_low and other.f_high >= high - eps:
-                                other.top_branch = _attach_branch_at_height(path_down_slide, other.f_high)
-                            if other.bottom_branch is B_later_low and other.f_low >= high - eps:
-                                other.bottom_branch = _attach_branch_at_height(path_down_slide, other.f_low)
+                        for other in list(B_later_high.attached_via_bottom):
+                            if other.f_low <= low + eps:
+                                other.bottom_branch = _attach_branch_at_height(image_up, other.f_low)
+                        for other in list(B_later_high.attached_via_top):
+                            if other.f_high <= low + eps:
+                                other.top_branch = _attach_branch_at_height(image_up, other.f_high)
+                        for other in list(B_later_low.attached_via_top):
+                            if other.f_high >= high - eps:
+                                other.top_branch = _attach_branch_at_height(image_down, other.f_high)
+                        for other in list(B_later_low.attached_via_bottom):
+                            if other.f_low >= high - eps:
+                                other.bottom_branch = _attach_branch_at_height(image_down, other.f_low)
 
                         # Move B_later_high's bottom and B_later_low's top to their final
                         # positions. _attach_branch_at_height already guarantees strict
@@ -990,9 +1211,32 @@ class BranchDecomp:
                         B_later_low.top_branch = final_top_attach
                         B_later_low.f_high = high - eps
 
-                        # TODO: update eta[i] using path_up_slide / path_down_slide once
-                        # the map bookkeeping is worked out. Deferred for now.
-                        eta.set_image(i, [])
+                        # eta[i]: this branch vanishes, but its bottom- and top-side
+                        # neighbors (path_up/path_down) still need a continuous image
+                        # covering [low, high]. path_down's own source entries (e.g.
+                        # path_down[0]) may have had B_later in their *stored* eta
+                        # image, which _repoint_stale_eta_paths already rewrote above
+                        # to correctly route through B_later_low/the bridge/B_later_high
+                        # -- so path_image(path_down, ...) already resolves the correct
+                        # sub-path. Since both sides converge through the same shared
+                        # structure once the branch collapses, merge (not concatenate)
+                        # to drop whatever overlap results.
+                        image = B.path_image(path_up, low, min(low + eps, high), eta)
+                        image = _bridge_append(image, final_bottom_attach)
+
+                        image_top = B.path_image(path_down, max(high - eps, low), high, eta)
+                        image_top = _bridge_prepend(image_top, final_top_attach)
+                        image = _merge_overlapping(image, image_top)
+
+
+                        eta.set_image(i, image)
+
+                        if not B_smooth.check_branch_path(image):
+                            warnings.warn(
+                                f"short upfork/downfork case created invalid path for branch {i}: {image}",
+                                UserWarning,
+                                stacklevel=2
+                            )
                     else:
                         # Long edge case: upfork slides up, downfork slides down
                         # Follow up from bottom attachment until above low+eps
