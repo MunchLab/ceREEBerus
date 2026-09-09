@@ -34,7 +34,7 @@ def line_loop_index(R):
         - **line_index (list)** : list of indices for edges to be drawn as lines
         - **loop_index (list)** : list of indices for edges to be drawn as loops
     """
-    edge_list = list(R.edges)
+    edge_list = list(R.edges(keys=True))
     n = len(R.edges)
     loop_index = []
     line_index = []
