@@ -140,7 +140,22 @@ class MapperGraph(ReebGraph):
         M_n, _, _ = self.smoothing_and_maps(n)
         return M_n
 
-    def draw_pie(self, labels, categories=None, colors=None, zoom=0.15, size_by_points=False, min_zoom=0.08, max_zoom=0.3, with_edges=True, with_legend=True, with_labels=True, cpx=1.0, cpy=1.0, ax=None):
+    def draw_pie(
+        self,
+        labels,
+        categories=None,
+        colors=None,
+        zoom=0.15,
+        size_by_points=False,
+        min_zoom=0.08,
+        max_zoom=0.3,
+        with_edges=True,
+        with_legend=True,
+        with_labels=True,
+        cpx=0.1,
+        cpy=0.0,
+        ax=None,
+    ):
         """Draw this mapper graph with each vertex shown as a small pie
         chart of the ``labels`` breakdown among the data points assigned to
         that vertex.
