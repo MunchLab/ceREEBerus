@@ -70,7 +70,8 @@ def __cluster(coveringsets, clusteralgorithm, pointcloud=None, distance_matrix=N
     elif callable(clusteralgorithm):
         finished_cluster = list()
         for val1 in range(len(coveringsets)):
-            indices = [coveringsets[val1][val2][1] for val2 in range(1, len(coveringsets[val1]))]
+            indices = [coveringsets[val1][val2][1]
+                       for val2 in range(1, len(coveringsets[val1]))]
             if distance_matrix is not None:
                 sub_matrix = distance_matrix[np.ix_(indices, indices)]
                 cluster_out = clusteralgorithm(sub_matrix)
@@ -93,14 +94,18 @@ def __cluster(coveringsets, clusteralgorithm, pointcloud=None, distance_matrix=N
 # Adds edges between the cluster that share points
 def __addedges(clusterpoints):
     outputgraph = MapperGraph()
+    # track which point indices are in which clusters for drawing pie charts on each node
+    node_points = {}
     for val1 in range(len(clusterpoints)):
         outputgraph.add_node(val1, clusterpoints[val1][0])
+        node_points[val1] = list(clusterpoints[val1][1:])
         for val2 in range(val1):
             if clusterpoints[val1][0] == clusterpoints[val2][0]:
                 continue
             # Compare only point memberships (skip cover index at position 0).
             if len(set(clusterpoints[val1][1:]) & set(clusterpoints[val2][1:])) > 0:
                 outputgraph.add_edge(val1, val2)
+    outputgraph.node_points = node_points
     # print("Final Output: ")
     # print(outputgraph)
     return outputgraph
@@ -140,7 +145,8 @@ def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm, distance_ma
         A ``MapperGraph`` object representing the mapper graph of the input data and lens function.
     """
     if pointcloud is None and distance_matrix is None:
-        raise ValueError("Either pointcloud or distance_matrix must be provided.")
+        raise ValueError(
+            "Either pointcloud or distance_matrix must be provided.")
 
     if distance_matrix is not None:
         distance_matrix = np.asarray(distance_matrix)
@@ -150,9 +156,11 @@ def computeMapper(pointcloud, lensfunction, cover, clusteralgorithm, distance_ma
                 "distance_matrix must be a square array with one row/column per point."
             )
 
-    lensfunctionoutput = __runlensfunction(lensfunction, pointcloud, distance_matrix)
+    lensfunctionoutput = __runlensfunction(
+        lensfunction, pointcloud, distance_matrix)
     coveringsets = __createcoveringsets(lensfunctionoutput, cover)
-    clusterpoints = __cluster(coveringsets, clusteralgorithm, pointcloud, distance_matrix)
+    clusterpoints = __cluster(
+        coveringsets, clusteralgorithm, pointcloud, distance_matrix)
     outputgraph = __addedges(clusterpoints)
 
     return outputgraph
@@ -177,7 +185,9 @@ def cover(min=-1, max=1, numcovers=10, percentoverlap=0.5):
     val = 0
     coversize = (max - min) / numcovers * (1 + (percentoverlap))
     while val < numcovers:
-        center = (min * (numcovers - (val + 0.5)) + max * (val + 0.5)) / numcovers
-        output.append(((-0.5 * coversize) + center, (0.5 * coversize) + center))
+        center = (min * (numcovers - (val + 0.5)) +
+                  max * (val + 0.5)) / numcovers
+        output.append(((-0.5 * coversize) + center,
+                      (0.5 * coversize) + center))
         val += 1
     return output
