@@ -312,19 +312,8 @@ def _pie_image(sizes, colors, edgecolor="black", linewidth=0.6, dpi=100, px=120)
     return img
 
 
-def pie_plot(
-    R,
-    labels,
-    categories=None,
-    colors=None,
-    zoom=0.15,
-    with_edges=True,
-    with_legend=True,
-    with_labels=True,
-    cpx=0.1,
-    cpy=0.1,
-    ax=None,
-):
+
+def pie_plot(R,labels,categories=None,colors=None,zoom=0.15,size_by_points=False,min_zoom=0.08,max_zoom=0.3,with_edges=True,with_legend=True,with_labels=True,cpx=0.1,cpy=0.1,ax=None):
     """Plot a mapper graph with each vertex drawn as a small pie-chart
     picture showing the percentage breakdown of ``labels`` among the
     original data points assigned to that vertex.
@@ -346,6 +335,14 @@ def pie_plot(
             smaller zoom to avoid neighboring pies overlapping (which can
             create odd-looking visual artifacts where circles overlap).
             Start around 0.1-0.2 and adjust to taste.
+        size_by_points (bool): if True, scale each pie's size by the number of
+            points assigned to that node. This can be useful for emphasizing
+            nodes that represent more data, but can also make the graph harder
+            to read if the size differences are extreme. If True, ``min_zoom``
+            and ``max_zoom`` control the range of zoom values.
+        min_zoom, max_zoom (float): when ``size_by_points`` is True, the
+            minimum and maximum zoom values to use for the smallest and largest
+            nodes, respectively. 
         with_edges (bool): whether to draw the underlying graph edges.
         with_legend (bool): whether to add a legend mapping colors to
             category values.
@@ -372,13 +369,29 @@ def pie_plot(
 
     counts = node_label_counts(R, labels, categories=categories)
 
+    if size_by_points:
+        totals = {v: sum(counts[v].values()) for v in R.nodes}
+        t_min, t_max = min(totals.values()), max(totals.values())
+
+        def _node_zoom(v):
+            if t_max == t_min:
+                return zoom
+            else:
+                #sqrt scaling to make the area of the pie area scale with the number of points
+                frac = (np.sqrt(totals[v]) - np.sqrt(t_min)) / (np.sqrt(t_max) - np.sqrt(t_min))
+                return min_zoom + frac * (max_zoom - min_zoom)
+
+    else:
+        def _node_zoom(v):
+            return zoom
+        
     if with_edges:
         _draw_edges(R, ax, cpx=cpx, cpy=cpy)
 
     for v in R.nodes:
         sizes = [counts[v][c] for c in categories]
         img = _pie_image(sizes, colors=[colors[c] for c in categories])
-        imagebox = OffsetImage(img, zoom=zoom)
+        imagebox = OffsetImage(img, zoom=_node_zoom(v))
         ab = AnnotationBbox(imagebox, R.pos_f[v], frameon=False, pad=0)
         ax.add_artist(ab)
 

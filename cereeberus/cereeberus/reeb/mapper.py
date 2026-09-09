@@ -140,7 +140,7 @@ class MapperGraph(ReebGraph):
         M_n, _, _ = self.smoothing_and_maps(n)
         return M_n
 
-    def draw_pie(self, labels, categories=None, colors=None, zoom=0.15, with_edges=True, with_legend=True, with_labels=True, cpx=1.0, cpy=1.0, ax=None):
+    def draw_pie(self, labels, categories=None, colors=None, zoom=0.15, size_by_points=False, min_zoom=0.08, max_zoom=0.3, with_edges=True, with_legend=True, with_labels=True, cpx=1.0, cpy=1.0, ax=None):
         """Draw this mapper graph with each vertex shown as a small pie
         chart of the ``labels`` breakdown among the data points assigned to
         that vertex.
@@ -160,6 +160,14 @@ class MapperGraph(ReebGraph):
             zoom (float): size of each pie-chart glyph. Reduce this for
                 dense graphs where nodes sit close together, to avoid
                 neighboring pies overlapping.
+            size_by_points (bool): if True, scale each pie's size by the number of
+                points assigned to that node. This can be useful for emphasizing
+                nodes that represent more data, but can also make the graph harder
+                to read if the size differences are extreme. If True, ``min_zoom``
+                and ``max_zoom`` control the range of zoom values.
+            min_zoom, max_zoom (float): when ``size_by_points`` is True, the
+                minimum and maximum zoom values to use for the smallest and largest
+                nodes, respectively.
             with_edges (bool): whether to draw the underlying graph edges.
             with_legend (bool): whether to add a legend.
             with_labels (bool): whether to draw each node's index/name
@@ -173,7 +181,7 @@ class MapperGraph(ReebGraph):
         if ax is None:
             ax = plt.gca()
 
-        return draw.pie_plot(self, labels, categories=categories, colors=colors,zoom=zoom, with_edges=with_edges, with_legend=with_legend, with_labels=with_labels, cpx=cpx, cpy=cpy, ax=ax)
+        return draw.pie_plot(self, labels, categories=categories, colors=colors,zoom=zoom, size_by_points=size_by_points, min_zoom=min_zoom, max_zoom=max_zoom, with_edges=with_edges, with_legend=with_legend, with_labels=with_labels, cpx=cpx, cpy=cpy, ax=ax)
     
     # ------------------------------#
     # Functions for computing thickening distance matrix
