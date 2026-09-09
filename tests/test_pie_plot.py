@@ -4,7 +4,7 @@ import matplotlib
 matplotlib.use("Agg")  # non-interactive backend for headless test runs
 import matplotlib.pyplot as plt
 
-from cereeberus import MapperGraph, computeMapper, cover
+from cereeberus import MapperGraph, computeMapper
 from cereeberus.draw.draw import node_label_counts, pie_plot
 
 
