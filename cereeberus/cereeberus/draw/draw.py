@@ -416,6 +416,7 @@ def pie_plot(R,labels,categories=None,colors=None,zoom=0.15,size_by_points=False
         ax.legend(handles=handles, title="Category", loc="best")
 
     ax.relim()
+    ax.update_datalim(np.asarray(list(R.pos_f.values())))
     ax.autoscale_view()
     ax.tick_params(left=True, bottom=False, labelleft=True, labelbottom=False)
     return ax
