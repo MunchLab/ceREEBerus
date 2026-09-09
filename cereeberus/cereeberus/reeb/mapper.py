@@ -181,7 +181,22 @@ class MapperGraph(ReebGraph):
         if ax is None:
             ax = plt.gca()
 
-        return draw.pie_plot(self, labels, categories=categories, colors=colors,zoom=zoom, size_by_points=size_by_points, min_zoom=min_zoom, max_zoom=max_zoom, with_edges=with_edges, with_legend=with_legend, with_labels=with_labels, cpx=cpx, cpy=cpy, ax=ax)
+        return draw.pie_plot(
+            self,
+            labels,
+            categories=categories,
+            colors=colors,
+            zoom=zoom,
+            size_by_points=size_by_points,
+            min_zoom=min_zoom,
+            max_zoom=max_zoom,
+            with_edges=with_edges,
+            with_legend=with_legend,
+            with_labels=with_labels,
+            cpx=cpx,
+            cpy=cpy,
+            ax=ax,
+        )
     
     # ------------------------------#
     # Functions for computing thickening distance matrix
