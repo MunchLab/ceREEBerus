@@ -1,10 +1,11 @@
 from ..distance.labeled_blocks import LabeledBlockMatrix as LBM
 from ..distance.labeled_blocks import LabeledMatrix as LM
 from ..compute.unionfind import UnionFind
+from ..draw import draw
 import numpy as np
 
 from .reebgraph import ReebGraph
-
+import matplotlib.pyplot as plt
 
 class MapperGraph(ReebGraph):
     r"""
@@ -139,6 +140,41 @@ class MapperGraph(ReebGraph):
         M_n, _, _ = self.smoothing_and_maps(n)
         return M_n
 
+    def draw_pie(self, labels, categories=None, colors=None, zoom=0.15, with_edges=True, with_legend=True, with_labels=True, cpx=1.0, cpy=1.0, ax=None):
+        """Draw this mapper graph with each vertex shown as a small pie
+        chart of the ``labels`` breakdown among the data points assigned to
+        that vertex.
+
+        This requires the mapper graph to have been built via
+        :func:`cereeberus.computeMapper`, which records which original data
+        points ended up in each node.
+
+        Parameters:
+            labels (sequence): a category label for every point in the
+                point cloud (or distance matrix) used to build this mapper
+                graph via ``computeMapper``.
+            categories (list, optional): ordered category values to plot.
+                Defaults to the sorted set of unique labels.
+            colors (dict, optional): mapping from category value to a
+                matplotlib color. Defaults to the "tab10" colormap.
+            zoom (float): size of each pie-chart glyph. Reduce this for
+                dense graphs where nodes sit close together, to avoid
+                neighboring pies overlapping.
+            with_edges (bool): whether to draw the underlying graph edges.
+            with_legend (bool): whether to add a legend.
+            with_labels (bool): whether to draw each node's index/name
+            cpx, cpy (float): curvature parameters for multi-edges.
+            ax (matplotlib.axes.Axes, optional)
+
+        Returns:
+            matplotlib.axes.Axes
+        """
+
+        if ax is None:
+            ax = plt.gca()
+
+        return draw.pie_plot(self, labels, categories=categories, colors=colors,zoom=zoom, with_edges=with_edges, with_legend=with_legend, with_labels=with_labels, cpx=cpx, cpy=cpy, ax=ax)
+    
     # ------------------------------#
     # Functions for computing thickening distance matrix
     # ------------------------------#
