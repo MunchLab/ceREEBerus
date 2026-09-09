@@ -369,9 +369,7 @@ def pie_plot(R,labels,categories=None,colors=None,zoom=0.15,size_by_points=False
 
     counts = node_label_counts(R, labels, categories=categories)
 
-    if size_by_points:
-        totals = {v: sum(counts[v].values()) for v in R.nodes}
-        t_min, t_max = min(totals.values()), max(totals.values())
+    if size_by_points and len(R.nodes) > 0:
 
         def _node_zoom(v):
             if t_max == t_min:
