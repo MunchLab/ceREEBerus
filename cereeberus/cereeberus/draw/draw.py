@@ -274,6 +274,8 @@ def node_label_counts(R, labels, categories=None):
         pts = R.node_points.get(v, [])
         counts[v] = {c: 0 for c in categories}
         for p in pts:
+            if p < 0 or p >= len(labels):
+                raise ValueError("labels must contain one entry per original point index referenced by R.node_points")
             lbl = labels[p]
             if lbl in counts[v]:
                 counts[v][lbl] += 1
