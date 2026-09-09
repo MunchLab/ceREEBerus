@@ -370,14 +370,18 @@ def pie_plot(R,labels,categories=None,colors=None,zoom=0.15,size_by_points=False
     counts = node_label_counts(R, labels, categories=categories)
 
     if size_by_points and len(R.nodes) > 0:
+        totals = {v: len(R.node_points.get(v, [])) for v in R.nodes}
+        t_min = min(totals.values())
+        t_max = max(totals.values())
 
         def _node_zoom(v):
             if t_max == t_min:
                 return zoom
-            else:
-                #sqrt scaling to make the area of the pie area scale with the number of points
-                frac = (np.sqrt(totals[v]) - np.sqrt(t_min)) / (np.sqrt(t_max) - np.sqrt(t_min))
-                return min_zoom + frac * (max_zoom - min_zoom)
+            # sqrt scaling to make the pie area scale with the number of points
+            frac = (np.sqrt(totals[v]) - np.sqrt(t_min)) / (
+                np.sqrt(t_max) - np.sqrt(t_min)
+            )
+            return min_zoom + frac * (max_zoom - min_zoom)
 
     else:
         def _node_zoom(v):
