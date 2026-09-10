@@ -58,7 +58,29 @@ class TestMergeTree(unittest.TestCase):
         # Check that the LCA matrix is symmetric and of the same size as the leaf set 
         self.assertEqual(M.shape[0], len(Leaves))
 
-        # TODO: Add tests for specifc labeling functions, here I only have for the leaf version
+        self.assertEqual(M.shape[1], len(Leaves))
+
+    def test_merge_labels_by_labels_type(self):
+        MT = ex_mt.randomMergeTree(10)
+
+        # Label all leaves, then check the label-keyed LCA matrix matches
+        # the leaf-keyed one in shape and values.
+        MT.label_all_leaves()
+        M_labels = MT.LCA_matrix(type="labels")
+        M_leaves = MT.LCA_matrix()
+
+        self.assertEqual(M_labels.shape, M_leaves.shape)
+        np.testing.assert_array_equal(M_labels, M_leaves)
+
+        # add_label_edge should subdivide an edge and register a new label
+        leaves = MT.get_leaves()
+        u = leaves[0]
+        v = list(MT.successors(u))[0]
+        f_mid = (MT.f[u] + MT.f[v]) / 2
+        n_labels_before = len(MT.labels)
+        MT.add_label_edge(u, v, "mid_vertex", f_mid, label="mid")
+        self.assertIn("mid", MT.labels)
+        self.assertEqual(len(MT.labels), n_labels_before + 1)
 
     def test_smoothing_preserves_type_and_root(self):
         MT = ex_mt.randomMergeTree(9)
