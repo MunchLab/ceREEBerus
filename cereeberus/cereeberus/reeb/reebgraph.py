@@ -945,6 +945,11 @@ class ReebGraph(nx.MultiDiGraph):
         if inf_nodes:
             # smooth the finite part, then reattach inf vertices afterward
             finite_nodes = [v for v in self.nodes if v not in inf_nodes]
+
+            if not finite_nodes:
+                # the whole graph is infinite valued (eg MergeTree with only a root). There's nothing to smooth, so just return the graph
+                return(self, {v: v for v in self.nodes}, {e: [e] for e in self.edges(keys=True)})
+            
             f_finite = {v: self.f[v] for v in finite_nodes}
             G_finite = ReebGraph(self.subgraph(finite_nodes), f_finite)
             R_eps, map_V, map_E = G_finite.smoothing_and_maps(eps=eps, verbose=verbose)
