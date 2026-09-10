@@ -266,6 +266,22 @@ class TestReebClass(unittest.TestCase):
         ]
         self.assertGreater(len(internal_nodes), 0)
 
+    def test_smoothing_with_infinite_node(self):
+        # A vertex at +/- infinity (e.g. a MergeTree's v_inf root) should
+        # smooth without crashing, staying on top/bottom of the result.
+        R = ReebGraph()
+        R.add_node('a', 0)
+        R.add_node('b', 1)
+        R.add_node('c', 2)
+        R.add_node('top', float('inf'))
+        R.add_edge('a', 'b')
+        R.add_edge('b', 'c')
+        R.add_edge('c', 'top')
+
+        R_eps = R.smoothing(1)
+        self.check_reeb(R_eps)
+        self.assertEqual(R_eps.up_degree('top'), 0)
+
     def test_matrices(self):
         # This test makes sure you can get the adjacency matrix and boundary matrix of a Reeb graph.
         R = ex_rg.juggling_man()

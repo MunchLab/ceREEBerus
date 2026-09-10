@@ -60,7 +60,27 @@ class TestMergeTree(unittest.TestCase):
 
         # TODO: Add tests for specifc labeling functions, here I only have for the leaf version
 
+    def test_smoothing_preserves_type_and_root(self):
+        MT = ex_mt.randomMergeTree(9)
+        MT_eps = MT.smoothing(1)
 
+        self.assertIsInstance(MT_eps, MergeTree)
+        self.assertTrue('v_inf' in MT_eps.nodes)
+        self.assertEqual(MT_eps.f['v_inf'], np.inf)
+        self.assertEqual(MT_eps.up_degree('v_inf'), 0)
+        self.assertEqual(set(MT_eps.nodes), set(MT_eps.f.keys()))
+        self.assertEqual(set(MT_eps.nodes), set(MT_eps.pos_f.keys()))
 
+    def test_smoothing_two_separate_branches_to_root(self):
+        MT = MergeTree()
+        MT.add_node('p', 0)
+        MT.add_node('q', 1)
+        MT.add_edge('p', 'v_inf')
+        MT.add_edge('q', 'v_inf')
+
+        MT_eps, _, map_E = MT.smoothing_and_maps(0.5)
+        self.assertIsInstance(MT_eps, MergeTree)
+        self.assertEqual(MT_eps.down_degree('v_inf'), 2)
+        self.assertNotEqual(map_E[('p', 'v_inf', 0)], map_E[('q', 'v_inf', 0)])
 if __name__ == '__main__':
     unittest.main()
