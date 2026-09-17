@@ -436,6 +436,8 @@ class ReebGraph(nx.MultiDiGraph):
 
         if hasattr(self, "pos_f") and vertex in self.pos_f:
             del self.pos_f[vertex]
+        if hasattr(self, "pos") and vertex in self.pos:
+            del self.pos[vertex]
 
         if reset_pos and hasattr(self, "pos_f"):
             self.set_pos_from_f()
