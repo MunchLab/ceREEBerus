@@ -432,7 +432,7 @@ class ReebGraph(nx.MultiDiGraph):
         super().remove_node(vertex)
         del self.f[vertex]
 
-        # drop the old position for this vertex unconditonally. Skipping it leaves a pos_f entry for a vertex no longer in the graph.
+        # drop the old position for this vertex unconditionally. Skipping it leaves a pos_f entry for a vertex no longer in the graph.
 
         if hasattr(self, "pos_f") and vertex in self.pos_f:
             del self.pos_f[vertex]
