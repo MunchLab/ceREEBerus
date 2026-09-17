@@ -9,7 +9,6 @@ from ..draw import draw
 # from build.lib.cereeberus.reeb import graph
 
 
-
 class ReebGraph(nx.MultiDiGraph):
     """
     A Reeb graph stored as a networkx ``MultiDiGraph``. The function values are stored as a dictionary. The directedness of the edges follows the convention that the edge goes from the lower function value to the higher function value node.
@@ -79,23 +78,23 @@ class ReebGraph(nx.MultiDiGraph):
         """
         # Create a new ReebGraph with copies of the nodes and edges
         H = ReebGraph()
-        
+
         # Copy the function values dictionary
         H.f = self.f.copy()
-        
+
         # Copy all nodes and edges from the parent MultiDiGraph
         for v in self.nodes():
             H.add_node(v, self.f[v], reset_pos=False)
-        
+
         for u, v, key in self.edges(keys=True):
             super(ReebGraph, H).add_edge(u, v, key)
-        
+
         # Copy position information if it exists
-        if hasattr(self, 'pos_f') and self.pos_f:
+        if hasattr(self, "pos_f") and self.pos_f:
             H.pos_f = self.pos_f.copy()
-        if hasattr(self, 'pos') and self.pos:
+        if hasattr(self, "pos") and self.pos:
             H.pos = self.pos.copy()
-        
+
         return H
 
     def branch_decomp(self):
@@ -107,6 +106,7 @@ class ReebGraph(nx.MultiDiGraph):
                 ``decompose`` method has already been called on this graph.
         """
         from .branchdecomp import BranchDecomp
+
         bd = BranchDecomp()
         bd.decompose(self)
         return bd
@@ -185,18 +185,18 @@ class ReebGraph(nx.MultiDiGraph):
 
     def get_upward_path(self, start_vertex):
         """Return an upward path from the starting vertex by greedy dynamic choice.
-        
+
         Input:
             start_vertex: a vertex in the graph to start from
-            
+
         Output:
             path: a list of vertices representing the upward path
-            
+
         """
-        # Check that the vertex is in the graph 
+        # Check that the vertex is in the graph
         if start_vertex not in self.nodes:
-            raise ValueError(f"The vertex {start_vertex} is not in the Reeb graph.")   
-        
+            raise ValueError(f"The vertex {start_vertex} is not in the Reeb graph.")
+
         path = [start_vertex]
         while self.up_degree(path[-1]) > 0:
             s = next(self.successors(path[-1]))
@@ -432,8 +432,14 @@ class ReebGraph(nx.MultiDiGraph):
         super().remove_node(vertex)
         del self.f[vertex]
 
-        if reset_pos and hasattr(self, "pos_f"):
+        # drop the old position for this vertex unconditionally. Skipping it leaves a pos_f entry for a vertex no longer in the graph.
+
+        if hasattr(self, "pos_f") and vertex in self.pos_f:
             del self.pos_f[vertex]
+        if hasattr(self, "pos") and vertex in self.pos:
+            del self.pos[vertex]
+
+        if reset_pos and hasattr(self, "pos_f"):
             self.set_pos_from_f()
 
     def remove_nodes_from(self, nodes, reset_pos=True):
@@ -475,19 +481,18 @@ class ReebGraph(nx.MultiDiGraph):
         else:
             # the function values are the same, so the edge collapses the two vertices
             # wlog we're going to get rid of v, and add all its edges to u
-
             # get the edges of v
             edges_in = self.in_edges(v)
             edges_out = self.out_edges(v)
 
             # add the edges to u
             for e in edges_in:
-                self.add_edge(e[0], u)
+                self.add_edge(e[0], u, reset_pos=False)
             for e in edges_out:
-                self.add_edge(u, e[1])
+                self.add_edge(u, e[1], reset_pos=False)
 
             # Remove v
-            self.remove_node(v)
+            self.remove_node(v, reset_pos=False)
 
         if reset_pos:
             self.set_pos_from_f()
@@ -518,7 +523,7 @@ class ReebGraph(nx.MultiDiGraph):
 
         if reset_pos:
             self.set_pos_from_f()
-    
+
     def remove_path_from(self, path, reset_pos=True):
         """Remove a path from the Reeb graph. A path is a list of vertices, and this method will remove one edge along each step of the path.
 

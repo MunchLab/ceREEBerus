@@ -285,7 +285,51 @@ class TestReebClass(unittest.TestCase):
             self.assertEqual(R.pos_f[v][1], R.f[v])
 
 
+    def test_remove_node_deferred_pos_cleanup(self):
+        # Regression test: remove_node(reset_pos=False) must still drop the
+        # removed vertex's pos_f entry immediately. Previously this cleanup
+        # was bundled inside `if reset_pos:`, so a deferred removal left a
+        # dangling pos_f entry for a vertex no longer in the graph.
+        R = ex_rg.simple_loops()
+        R.set_pos_from_f()  # establish an initial pos_f for every node
 
+        v = next(iter(R.nodes))
+        R.remove_node(v, reset_pos=False)
+
+        self.assertNotIn(v, R.nodes)
+        self.assertNotIn(
+            v, R.pos_f,
+            "pos_f still has a stale entry for a removed vertex"
+        )
+        # No blanket check_reeb() here: an isolated deferred removal can
+        # leave pos_f short of an entry for OTHER now-orphaned nodes until
+        # the next set_pos_from_f() call; that's expected, not a bug.
+
+    def test_add_edge_collapse_respects_reset_pos_false(self):
+        R = ReebGraph()
+        R.add_node('a', 0.0, reset_pos=False)
+        R.add_node('b', 1.0, reset_pos=False)
+        R.add_node('c', 1.0, reset_pos=False)  # same f as 'b' -> collapse
+        R.add_node('d', 2.0, reset_pos=False)
+
+        R.add_edge('a', 'b', reset_pos=False)
+        R.add_edge('b', 'd', reset_pos=False)
+        # Triggers the tied-value collapse branch inside add_edge.
+        R.add_edge('a', 'c', reset_pos=False)
+
+        # pos_f exists (ReebGraph.__init__ always calls set_pos_from_f once,
+        # even on an empty graph) but should still be EMPTY here -- nothing
+        # after construction should have triggered a recompute, including
+        # the collapse's internal recursive add_edge/remove_node calls.
+        self.assertEqual(
+            R.pos_f, {},
+            "pos_f was populated even though every call used reset_pos=False "
+            "-- the collapse branch must be forwarding reset_pos incorrectly"
+        )
+
+        # Now do the single deferred layout call, as computeReeb does.
+        R.set_pos_from_f()
+        self.check_reeb(R)
 
        
 
