@@ -5,6 +5,12 @@ import numpy as np
 from ..reeb.lowerstar import LowerStar
 from .unionfind import UnionFind
 
+# Tolerance for treating two filtration values as float64-indistinguishable
+# (i.e. within ~1 ULP of each other, the scale of floating-point rounding
+# noise. It is not intended to merge genuinely distinct nearby values).
+_ULP_RTOL = 1e-9
+_ULP_ATOL = 1e-12
+
 
 def is_face(sigma, tau):
     """
@@ -48,6 +54,30 @@ def get_levelset_components(L):
     return components
 
 
+def _merge_close_values(sorted_vals, rtol=_ULP_RTOL, atol=_ULP_ATOL):
+    """
+    Snap chains of float64-indistinguishable values together.
+
+    Two floats are considered the same point if their midpoint rounds back
+    to one of them (no float64 value fits strictly between them), or more
+    generally if they fall within rtol/atol of each other. This only
+    catches floating-point rounding noise (~1 ULP), never genuinely
+    distinct nearby values from real data.
+    """
+    out = list(sorted_vals)
+    i, n = 0, len(out)
+    while i < n - 1:
+        j = i
+        while j + 1 < n and np.isclose(out[j + 1], out[i], rtol=rtol, atol=atol):
+            j += 1
+        if j > i:
+            rep = out[i]
+            for k in range(i, j + 1):
+                out[k] = rep
+        i = j + 1
+    return out
+
+
 def computeReeb(K: LowerStar, verbose=False):
     """Computes the Reeb graph of a Lower Star Simplicial Complex K.
 
@@ -78,6 +108,8 @@ def computeReeb(K: LowerStar, verbose=False):
     # Group vertices that share the same filtration value into batches.
     # A horizontal edge (both endpoints at the same height) must be processed
     # within one batch so it properly merges its endpoints into a single Reeb node.
+    snapped_vals = _merge_close_values([f for _, f in funcVals])
+    funcVals = [(i, snapped_vals[idx]) for idx, (i, _) in enumerate(funcVals)]
     grouped = [
         (filt, list(grp)) for filt, grp in _groupby(funcVals, key=lambda x: x[1])
     ]
@@ -129,9 +161,14 @@ def computeReeb(K: LowerStar, verbose=False):
                 simplex, s_filt = s[0], s[1]
                 if len(simplex) <= 1:
                     continue
-                if s_filt > filt:
+                if s_filt > filt and not np.isclose(
+                    s_filt, filt, rtol=_ULP_RTOL, atol=_ULP_ATOL
+                ):
                     all_upper.append(simplex)
-                elif all(K.filtration([u]) == filt for u in simplex):
+                elif all(
+                    np.isclose(K.filtration([u]), filt, rtol=_ULP_RTOL, atol=_ULP_ATOL)
+                    for u in simplex
+                ):
                     all_horizontal.append(simplex)
                 else:
                     all_lower_nonhoriz.append(simplex)
