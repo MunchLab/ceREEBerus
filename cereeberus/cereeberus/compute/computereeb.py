@@ -1,4 +1,5 @@
 from itertools import groupby as _groupby
+from itertools import combinations
 
 import numpy as np
 
@@ -32,14 +33,21 @@ def get_levelset_components(L):
     """
 
     UF = UnionFind(range(len(L)))
-    for i, simplex1 in enumerate(L):
-        for j, simplex2 in enumerate(L):
-            if i < j:
-                # Check if they share a vertex
-                if is_face(simplex1, simplex2) or is_face(simplex2, simplex1):
+    key_to_indices = {}
+    for i, simplex in enumerate(L):
+        key = tuple(sorted(simplex))
+        key_to_indices.setdefault(key, []).append(i)
+        for j in key_to_indices[key][:-1]:  # exact duplicates
+            UF.union(i, j)
+
+    for i, simplex in enumerate(L):
+        verts = sorted(simplex)
+        n = len(verts)
+        for r in range(1, n):  # all proper nonempty subsets, every dimension
+            for face in combinations(verts, r):
+                for j in key_to_indices.get(face, ()):
                     UF.union(i, j)
 
-    # Replace indices with simplices
     components_index = UF.components_dict()
     components = {}
     for key in components_index:
