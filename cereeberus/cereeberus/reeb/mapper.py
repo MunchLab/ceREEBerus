@@ -58,7 +58,6 @@ class MapperGraph(ReebGraph):
         try:
             n_low = min(self.f.values())
             n_high = max(self.f.values())
-
         except:
             return
 
@@ -67,7 +66,21 @@ class MapperGraph(ReebGraph):
 
             for e in e_list:
                 w_name = self._get_next_mapperify_vert_name()
-                self.subdivide_edge(*e, w_name, i)
+                self._subdivide_edge_no_mapperify(*e, w_name, i)
+
+    def _subdivide_edge_no_mapperify(self, u, v, w, f_w):
+        """
+        Same as ReebGraph.subdivide_edge, but reconnects the new vertex via
+        ReebGraph.add_edge directly instead of self.add_edge, so it doesn't
+        re-enter the overridden MapperGraph.add_edge (and its mapperify()
+        call) for every subdivision vertex mapperify() inserts.
+        """
+        edge = sorted([u, v], key=lambda x: self.f[x])
+        self.f[w] = f_w
+        self.remove_edge(*edge)
+        self.add_node(w, f_w, reset_pos=False)
+        ReebGraph.add_edge(self, u, w, reset_pos=False)
+        ReebGraph.add_edge(self, w, v, reset_pos=False)
 
     def add_node(self, vertex, f_vertex, reset_pos=True):
         """
