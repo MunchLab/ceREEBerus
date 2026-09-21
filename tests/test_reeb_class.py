@@ -285,8 +285,44 @@ class TestReebClass(unittest.TestCase):
             self.assertEqual(R.pos_f[v][1], R.f[v])
 
 
+    def test_slice(self):
+        # This test makes sure you can slice a Reeb graph.
+        R = ex_rg.juggling_man()
+        R.add_edge(7,9)
 
+        # Example chosen so that we have vertices with value on the endpoints (we're assuming open interval so shouldn't be included)
+        # We also have at least one edge that completely crosses the interval in question
+        H = R.slice( 2,5)
 
+        self.assertEqual(H.number_connected_components(),3 )
+        self.check_reeb(H)
+
+        # Example chosen so that we have vertices with value on the endpoints (we're using closed interval so now these should be included)
+        H = R.slice( 2,5, type = 'closed')
+
+        self.assertEqual(H.number_connected_components(),2 )
+        self.check_reeb(H)
+
+    def test_slice_multiedge(self):
+        # Slicing across a multiedge should produce one new lower/upper vertex
+        # pair per parallel copy, and the result should still be a well-formed
+        # Reeb graph (positions computed, edges pointing upward, etc).
+        R = ex_rg.torus()  # nodes a=0, b=1, c=4, d=5, with a double edge b-c
+
+        # Interval (2,3) falls strictly between b and c, so v_list is empty and
+        # both copies of the b-c multiedge cross the slice entirely.
+        H = R.slice(2, 3)
+
+        self.assertEqual(len(H.nodes), 4)   # 2 lower + 2 upper subdivision vertices
+        self.assertEqual(len(H.edges), 2)   # one edge per copy of the multiedge
+        self.assertEqual(H.number_connected_components(), 2)
+        self.check_reeb(H)
+
+        # Same check for the closed-interval case
+        H = R.slice(2, 3, type='closed')
+        self.assertEqual(len(H.nodes), 4)
+        self.assertEqual(len(H.edges), 2)
+        self.check_reeb(H)
        
 
 
