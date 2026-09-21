@@ -285,7 +285,42 @@ class TestReebClass(unittest.TestCase):
             self.assertEqual(R.pos_f[v][1], R.f[v])
 
 
+    def test_relabel_nodes(self):
+        # Test that we can relabel the nodes of a Reeb graph.
+        R = ex_rg.juggling_man()
+        R.add_edge(7, 9)
+        mapping = {v: f"n{v}" for v in R.nodes}
 
+        call_count = {"n": 0}
+        orig_set_pos = R.set_pos_from_f
+        def counting_set_pos(*args, **kwargs):
+            call_count["n"] += 1
+            return orig_set_pos(*args, **kwargs)
+        R.set_pos_from_f = counting_set_pos
+
+        R.relabel_nodes(mapping)
+
+        self.assertEqual(call_count["n"], 1)
+        self.assertEqual(set(R.nodes), set(mapping.values()))
+        self.check_reeb(R)
+
+    def test_relabel_nodes_multiedge(self):
+        R = ex_rg.torus()  # has a double edge between b and c
+        mapping = {"a": "w", "b": "x", "c": "y", "d": "z"}
+
+        call_count = {"n": 0}
+        orig_set_pos = R.set_pos_from_f
+        def counting_set_pos(*args, **kwargs):
+            call_count["n"] += 1
+            return orig_set_pos(*args, **kwargs)
+        R.set_pos_from_f = counting_set_pos
+
+        R.relabel_nodes(mapping)
+
+        self.assertEqual(call_count["n"], 1)
+        self.assertEqual(set(R.nodes), set(mapping.values()))
+        self.assertEqual(len(R.edges), 4)  # w-x, x-y (x2), y-z preserved
+        self.check_reeb(R)
 
        
 
