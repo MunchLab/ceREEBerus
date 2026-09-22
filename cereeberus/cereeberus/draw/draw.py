@@ -98,69 +98,6 @@ def bezier_curve(pt0, midpt, pt1):
         y2 = a2 * x2 + b2
     return points
 
-
-# def reeb_plot(
-#     R, with_labels=True, with_colorbar=False, cpx=0.1, cpy=0.1, ax=None, **kwargs
-# ):
-#     """Main plotting function for the Reeb Graph Class
-
-#     Parameters:
-#         R (Reeb Graph): object of Reeb Graph class
-#         with_labels (bool): parameter to control whether or not to plot labels
-#         with_colorbar (bool): parameter to control whether or not to plot colorbar
-#         cp (float): parameter to control curvature of loops in the plotting function. For vertical Reeb graph, only mess with cpx.
-
-#     """
-#     if ax is None:
-#         fig, ax = plt.subplots()
-
-#     viridis = mpl.colormaps["viridis"].resampled(16)
-
-#     n = len(R.nodes)
-
-#     edge_list = list(R.edges)
-#     line_index, loop_index = line_loop_index(R)
-
-#     # Some weird plotting to make the colored and labeled nodes work.
-#     # Taking the list of function values from the pos_f dicationary since the infinite node should already have a position set.
-#     color_map = [R.pos_f[v][1] for v in R.nodes]
-#     pathcollection = nx.draw_networkx_nodes(
-#         R, R.pos_f, node_color=color_map, ax=ax, **kwargs
-#     )
-#     if with_labels:
-#         label_map = {node: _format_node_label(node) for node in R.nodes}
-#         nx.draw_networkx_labels(
-#             R, pos=R.pos_f, labels=label_map, font_color="black", ax=ax
-#         )
-#     if with_colorbar:
-#         plt.colorbar(pathcollection)
-
-#     for i in line_index:
-#         node0 = edge_list[i][0]
-#         node1 = edge_list[i][1]
-#         x_pos = (R.pos_f[node0][0], R.pos_f[node1][0])
-#         y_pos = (R.pos_f[node0][1], R.pos_f[node1][1])
-#         ax.plot(x_pos, y_pos, color="grey", zorder=0)
-
-#     for i in loop_index:
-#         node0 = edge_list[i][0]
-#         node1 = edge_list[i][1]
-#         xmid = (R.pos_f[node0][0] + R.pos_f[node1][0]) / 2
-#         xmid0 = xmid - cpx * xmid
-#         xmid1 = xmid + cpx * xmid
-#         ymid = (R.pos_f[node0][1] + R.pos_f[node1][1]) / 2
-#         ymid0 = ymid - cpy * ymid
-#         ymid1 = ymid + cpy * ymid
-#         curve = bezier_curve(R.pos_f[node0], (xmid0, ymid0), R.pos_f[node1])
-#         c = np.array(curve)
-#         ax.plot(c[:, 0], c[:, 1], color="grey", zorder=0)
-#         curve = bezier_curve(R.pos_f[node0], (xmid1, ymid1), R.pos_f[node1])
-#         c = np.array(curve)
-#         ax.plot(c[:, 0], c[:, 1], color="grey", zorder=0)
-
-#     ax.tick_params(left=True, bottom=False, labelleft=True, labelbottom=False)
-
-
 def _draw_edges(R, ax, cpx=0.1, cpy=0.1):
     """Draw the edges of a Reeb-like graph onto ``ax``.
 
