@@ -19,7 +19,7 @@ class MergeTree(ReebGraph):
 
     """
 
-    def __init__(self, T=None, root=None, f={}, labels={}, seed=None, verbose=False):
+    def __init__(self, T=None, root=None, f={}, labels=None, seed=None, verbose=False):
         """
         Initialize a merge tree object.
 
@@ -42,7 +42,7 @@ class MergeTree(ReebGraph):
             # Fix up the drawing locations
             self.fix_pos_f()
 
-        self.labels = labels
+        self.labels = labels if labels is not None else {}
 
     def __str__(self):
         return f"MergeTree with {len(self.nodes)} nodes and {len(self.edges)} edges."
@@ -63,6 +63,41 @@ class MergeTree(ReebGraph):
         """
 
         return [v for v in self.nodes if self.down_degree(v) == 0]
+
+    def smoothing_and_maps(self, eps=1, verbose=False):
+        """
+        Builds the ``eps``-smoothed merge tree and the associated vertex/edge maps.
+
+        ``ReebGraph.smoothing_and_maps`` already handles the ``v_inf`` root
+        correctly (it treats any infinite-valued vertex as a formal marker
+        and reattaches it after smoothing the finite part), but it returns a
+        plain ``ReebGraph``. This override just re-wraps that result as a
+        ``MergeTree`` so callers get back the expected type.
+
+        Parameters:
+            eps (float): The amount of smoothing to apply.
+            verbose (bool): Optional. If True, prints additional information.
+
+        Returns:
+            tuple: MergeTree, vertex_map, edge_map.
+        """
+        R_eps_generic, map_V, map_E = super().smoothing_and_maps(
+            eps=eps, verbose=verbose
+        )
+
+        R_eps = MergeTree()  # constructor already adds v_inf at f=inf
+        for v in R_eps_generic.nodes():
+            if v == "v_inf":
+                continue
+            R_eps.add_node(v, R_eps_generic.f[v], reset_pos=False)
+        for u, v, _ in R_eps_generic.edges(keys=True):
+            R_eps.add_edge(u, v, reset_pos=False)
+
+        # remap each label's target vertex through map_V, as smoothing renames vertices, a plain copy of self.lables would point to vertex names that no longer exist in the smoothed tree.
+        R_eps.labels = {key: map_V[val] for key, val in self.labels.items()}
+
+        R_eps.set_pos_from_f()
+        return R_eps, map_V, map_E
 
     def add_node(self, vertex, f_vertex, reset_pos=True):
         """
