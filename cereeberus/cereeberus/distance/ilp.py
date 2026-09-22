@@ -1,9 +1,77 @@
+import os
+import shutil
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pulp  # for ILP optimization
 
 from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
+
+
+def select_pulp_solver(pulp_solver=None):
+    """Return a usable PuLP solver object, honoring explicit overrides and CBC paths.
+
+    Parameters
+    ----------
+    pulp_solver : str or pulp.LpSolver, optional
+        Explicit solver specification. Strings may be values like "CBC",
+        "GUROBI", or "GLPK". If omitted, the function checks the
+        ``CEREEBERUS_SOLVER``/``PULP_SOLVER`` environment variables and then
+        prefers a PATH-resolved CBC binary via ``CEREEBERUS_CBC_PATH``/
+        ``PULP_CBC_PATH`` before falling back to PuLP's default resolver.
+    """
+    if pulp_solver is None:
+        pulp_solver = os.environ.get("CEREEBERUS_SOLVER") or os.environ.get(
+            "PULP_SOLVER"
+        )
+
+    if isinstance(pulp_solver, str):
+        candidate = pulp_solver.upper()
+        if candidate == "CBC":
+            cbc_path = (
+                os.environ.get("CEREEBERUS_CBC_PATH")
+                or os.environ.get("PULP_CBC_PATH")
+                or shutil.which("cbc")
+            )
+            if cbc_path:
+                return pulp.COIN_CMD(msg=0, path=cbc_path)
+            return pulp.COIN_CMD(msg=0)
+        if candidate == "GLPK":
+            return pulp.GLPK_CMD(msg=0)
+        if candidate == "GUROBI":
+            return pulp.GUROBI_CMD(msg=0)
+        raise ValueError(f"Unsupported solver '{pulp_solver}'.")
+
+    if pulp_solver is not None:
+        return pulp_solver
+
+    cbc_path = (
+        os.environ.get("CEREEBERUS_CBC_PATH")
+        or os.environ.get("PULP_CBC_PATH")
+        or shutil.which("cbc")
+    )
+    if cbc_path:
+        return pulp.COIN_CMD(msg=0, path=cbc_path)
+
+    available = set(pulp.listSolvers(onlyAvailable=True))
+    solver_classes = {
+        "PULP_CBC_CMD": pulp.PULP_CBC_CMD,
+        "COIN_CMD": pulp.COIN_CMD,
+        "GLPK_CMD": pulp.GLPK_CMD,
+        "GUROBI": pulp.GUROBI,
+        "GUROBI_CMD": pulp.GUROBI_CMD,
+    }
+    for preferred in (
+        "PULP_CBC_CMD",
+        "COIN_CMD",
+        "GLPK_CMD",
+        "GUROBI",
+        "GUROBI_CMD",
+    ):
+        if preferred in available:
+            return solver_classes[preferred](msg=0)
+    return pulp.COIN_CMD(msg=0)
 
 
 # function to build the phi and psi matrices after the ILP optimization
@@ -525,11 +593,8 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
     # Set the objective function
     prob += 0
 
-    # solve the problem
-    if pulp_solver == "GUROBI":
-        prob.solve(pulp.GUROBI_CMD(msg=0))
-    else:
-        prob.solve(pulp.PULP_CBC_CMD(msg=0))
+    solver = select_pulp_solver(pulp_solver)
+    prob.solve(solver)
 
     status_str = pulp.LpStatus[prob.status]
 
@@ -1055,13 +1120,9 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
     # Set the objective function
     prob += minmax_var
 
-    # solve the problem
-    if pulp_solver == "GUROBI":
-        prob.solve(pulp.GUROBI_CMD(msg=0))
-    else:
-        prob.solve(pulp.PULP_CBC_CMD(msg=0))
+    solver = select_pulp_solver(pulp_solver)
+    prob.solve(solver)
 
-    # prob.solve(pulp.GUROBI_CMD(msg=0))
     if prob.status != 1:
         raise ValueError(
             "The ILP optimization did not converge. Please check the input data and try again."
