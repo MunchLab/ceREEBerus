@@ -432,8 +432,14 @@ class ReebGraph(nx.MultiDiGraph):
         super().remove_node(vertex)
         del self.f[vertex]
 
-        if reset_pos and hasattr(self, "pos_f"):
+        # drop the old position for this vertex unconditionally. Skipping it leaves a pos_f entry for a vertex no longer in the graph.
+
+        if hasattr(self, "pos_f") and vertex in self.pos_f:
             del self.pos_f[vertex]
+        if hasattr(self, "pos") and vertex in self.pos:
+            del self.pos[vertex]
+
+        if reset_pos and hasattr(self, "pos_f"):
             self.set_pos_from_f()
 
     def remove_nodes_from(self, nodes, reset_pos=True):
@@ -475,19 +481,18 @@ class ReebGraph(nx.MultiDiGraph):
         else:
             # the function values are the same, so the edge collapses the two vertices
             # wlog we're going to get rid of v, and add all its edges to u
-
             # get the edges of v
             edges_in = self.in_edges(v)
             edges_out = self.out_edges(v)
 
             # add the edges to u
             for e in edges_in:
-                self.add_edge(e[0], u)
+                self.add_edge(e[0], u, reset_pos=False)
             for e in edges_out:
-                self.add_edge(u, e[1])
+                self.add_edge(u, e[1], reset_pos=False)
 
             # Remove v
-            self.remove_node(v)
+            self.remove_node(v, reset_pos=False)
 
         if reset_pos:
             self.set_pos_from_f()

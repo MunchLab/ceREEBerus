@@ -171,7 +171,7 @@ def computeReeb(K: LowerStar, verbose=False):
         verts_at_level = []
         for rep, comp in components_at_level.items():
             nextNodeName = R.get_next_vert_name()
-            R.add_node(nextNodeName, now_min)
+            R.add_node(nextNodeName, now_min, reset_pos=False)
             vert_to_component[nextNodeName] = comp
             verts_at_level.append(nextNodeName)
 
@@ -182,7 +182,7 @@ def computeReeb(K: LowerStar, verbose=False):
                 if any(
                     is_face(prev_simp, simp) for simp in comp for prev_simp in prev_comp
                 ):
-                    R.add_edge(e, nextNodeName)
+                    R.add_edge(e, nextNodeName, reset_pos=False)
 
         # Step 4: Remove vertices and horizontal simplices – they live only at this exact height.
         for vert in vert_names:
@@ -213,7 +213,7 @@ def computeReeb(K: LowerStar, verbose=False):
         edges_at_prev_level = []
         for comp in components_above.values():
             e_name = "e_" + str(half_edge_index)
-            R.add_node(e_name, (now_min + now_max) / 2)
+            R.add_node(e_name, (now_min + now_max) / 2, reset_pos=False)
             vert_to_component[e_name] = comp
             half_edge_index += 1
             edges_at_prev_level.append(e_name)
@@ -224,6 +224,8 @@ def computeReeb(K: LowerStar, verbose=False):
                 if any(
                     is_face(simp, prev_simp) for simp in comp for prev_simp in prev_comp
                 ):
-                    R.add_edge(v, e_name)
+                    R.add_edge(v, e_name, reset_pos=False)
 
+    # All the nodes and edges above were added with reset_pos=False, so now we need to call set_pos_from_f() to set the positions
+    R.set_pos_from_f()
     return R
