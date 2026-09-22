@@ -100,6 +100,22 @@ class TestReebClass(unittest.TestCase):
         self.assertIsInstance(graph, MapperGraph)
         self.assertGreater(len(graph.nodes()), 0)
 
+    def test_computeMapper_node_points_trivial(self):
+        # computeMapper should record which original point indices ended up
+        # at each node, so that downstream tools (e.g. pie_plot) can compute
+        # per-node label percentages.
+        # pointcloud[0] = (0.6, 0) has lens value 0.6, which only falls in
+        # the (0, 1) cover interval (node 2).
+        # pointcloud[1] = (-0.1, 0.5) has lens value -0.1, which falls in
+        # both the (-1, 0) and (-0.5, 0.5) cover intervals (nodes 0 and 1).
+        pointcloud = [(0.6, 0), (-0.1, 0.5)]
+        testgraph = computeMapper(pointcloud, (lambda a: a[0]), [(-1, 0), (-0.5, 0.5), (0, 1)], "trivial")
+        self.assertTrue(hasattr(testgraph, "node_points"))
+        self.assertEqual(set(testgraph.node_points[0]), {1})
+        self.assertEqual(set(testgraph.node_points[1]), {1})
+        self.assertEqual(set(testgraph.node_points[2]), {0})
+
+
     def test_computeMapper_distance_matrix_with_callable_lens(self):
         # Regression test for using both pointcloud (callable lens) and
         # precomputed distance_matrix clustering.
