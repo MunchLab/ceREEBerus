@@ -55,12 +55,22 @@ def select_pulp_solver(pulp_solver=None):
         return pulp.COIN_CMD(msg=0, path=cbc_path)
 
     available = set(pulp.listSolvers(onlyAvailable=True))
-    for preferred in ("CBC", "GLPK", "GUROBI"):
+    solver_classes = {
+        "PULP_CBC_CMD": pulp.PULP_CBC_CMD,
+        "COIN_CMD": pulp.COIN_CMD,
+        "GLPK_CMD": pulp.GLPK_CMD,
+        "GUROBI": pulp.GUROBI,
+        "GUROBI_CMD": pulp.GUROBI_CMD,
+    }
+    for preferred in (
+        "PULP_CBC_CMD",
+        "COIN_CMD",
+        "GLPK_CMD",
+        "GUROBI",
+        "GUROBI_CMD",
+    ):
         if preferred in available:
-            return getattr(pulp, f"PULP_{preferred}_CMD", pulp.GLPK_CMD)(msg=0)
-    if available:
-        first = next(iter(available))
-        return getattr(pulp, f"{first}_CMD", pulp.COIN_CMD)(msg=0)
+            return solver_classes[preferred](msg=0)
     return pulp.COIN_CMD(msg=0)
 
 
