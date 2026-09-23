@@ -347,6 +347,32 @@ class TestReebClass(unittest.TestCase):
         R.set_pos_from_f()
         self.check_reeb(R)
 
+
+    def test_boundary_map_parallel_edges(self):
+        # Every edge, including each copy of a multi-edge, gets its own entry
+        # keyed by its real (u, v, key), mapped to its two endpoints.
+        T = ex_rg.torus()  # double edge ('b', 'c', 0) and ('b', 'c', 1)
+        B = T.boundary_matrix(astype='map')
+        self.assertEqual(set(B), set(T.edges(keys=True)))
+        for e in T.edges(keys=True):
+            self.assertEqual(B[e], [e[0], e[1]])
+
+    def test_boundary_map_keys_after_edge_removal(self):
+        # After removing key 0 of a multi-edge, the map reports the key that's left.
+        T = ex_rg.torus()
+        T.remove_edge('b', 'c', 0)
+        B = T.boundary_matrix(astype='map')
+        self.assertEqual(set(B), set(T.edges(keys=True)))
+        self.assertIn(('b', 'c', 1), B)
+        self.assertNotIn(('b', 'c', 0), B)
+
+    def test_boundary_matrix_numpy_with_parallel_edges(self):
+        # The numpy form has one column per edge, each with exactly two 1s.
+        T = ex_rg.torus()
+        B = T.boundary_matrix()
+        self.assertEqual(B.shape, (len(T.nodes), len(T.edges)))
+        self.assertTrue((B.sum(axis=0) == 2).all())
+
        
 
 
