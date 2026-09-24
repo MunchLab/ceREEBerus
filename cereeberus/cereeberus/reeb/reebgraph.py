@@ -904,7 +904,7 @@ class ReebGraph(nx.MultiDiGraph):
 
         V = list(self.nodes())
         V.sort(key=lambda x: self.f[x])
-        E = list(self.edges())
+        E = list(self.edges(keys=True))
         E.sort(key=lambda x: self.f[x[0]])
         if astype == "numpy":
             B = np.zeros((len(V), len(E)))
@@ -921,8 +921,6 @@ class ReebGraph(nx.MultiDiGraph):
         elif astype == "map":
             B = {}
             for e in E:
-                if not len(e) == 3:
-                    e = (e[0], e[1], 0)
                 B[e] = [e[0], e[1]]
             return B
 
