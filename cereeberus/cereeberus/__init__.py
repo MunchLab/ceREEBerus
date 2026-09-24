@@ -10,7 +10,6 @@ __all__ = [
     "Interleave",
     "Assignment",
     "data",
-    "dist",
     "reeb",
     "compute",
 ]

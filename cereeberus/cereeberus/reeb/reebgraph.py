@@ -567,7 +567,7 @@ class ReebGraph(nx.MultiDiGraph):
 
         self.set_pos_from_f()
 
-    def remove_regular_vertex(self, v):
+    def remove_regular_vertex(self, v, reset_pos=True):
         """Remove a regular vertex from the Reeb graph. A regular vertex is one for which down degree = up degree = 1, so it can be removed and replaed with a single edge.
 
         Parameters:
@@ -584,10 +584,13 @@ class ReebGraph(nx.MultiDiGraph):
         u = list(self.predecessors(v))[0]
         w = list(self.successors(v))[0]
 
-        self.add_edge(u, w)
-        self.remove_node(v)
+        self.add_edge(u, w, reset_pos=False)
+        self.remove_node(v, reset_pos=False)
 
-    def remove_all_regular_vertices(self):
+        if reset_pos:
+            self.set_pos_from_f()
+
+    def remove_all_regular_vertices(self, reset_pos=True):
         """
         Remove all regular vertices from the Reeb graph.
         """
@@ -596,7 +599,10 @@ class ReebGraph(nx.MultiDiGraph):
         ]
 
         for v in regular_vertices:
-            self.remove_regular_vertex(v)
+            self.remove_regular_vertex(v, reset_pos=False)
+
+        if reset_pos and regular_vertices:
+            self.set_pos_from_f()
 
     def remove_isolates(self):
         """
@@ -699,6 +705,10 @@ class ReebGraph(nx.MultiDiGraph):
         Returns:
             ReebGraph: The subgraph of the Reeb graph with image in (a,b).
         """
+
+        if type == "open" and a == b:
+            # (a, a) is an empty interval for open type
+            return ReebGraph()
         if type == "open":
             v_list = [v for v in self.nodes() if self.f[v] > a and self.f[v] < b]
         elif type == "closed":
@@ -706,10 +716,19 @@ class ReebGraph(nx.MultiDiGraph):
 
         # Keep the edges where either endpoint (or both) is in (a,b)
         e_list = [e for e in self.edges() if e[0] in v_list or e[1] in v_list]
-        # Include the edges that cover the entire slice.
+        # Include the edges that cover the entire slice, , including edges whose
+        # endpoint sits exactly on an excluded open bound. Skip edges already
+        # selected through an included endpoint so they aren't counted twice.
         # Note this assumes that all edges are ordered twoards teh upper function value
         e_list.extend(
-            [e for e in self.edges() if self.f[e[0]] < a and self.f[e[1]] > b]
+            [
+                e
+                for e in self.edges()
+                if e[0] not in v_list
+                and e[1] not in v_list
+                and self.f[e[0]] <= a
+                and self.f[e[1]] >= b
+            ]
         )
 
         # Make a dictionary of counts to deal with multiedges
@@ -951,8 +970,12 @@ class ReebGraph(nx.MultiDiGraph):
 
             if not finite_nodes:
                 # the whole graph is infinite valued (eg MergeTree with only a root). There's nothing to smooth, so just return the graph
-                return(self, {v: v for v in self.nodes}, {e: [e] for e in self.edges(keys=True)})
-            
+                return (
+                    self,
+                    {v: v for v in self.nodes},
+                    {e: [e] for e in self.edges(keys=True)},
+                )
+
             f_finite = {v: self.f[v] for v in finite_nodes}
             G_finite = ReebGraph(self.subgraph(finite_nodes), f_finite)
             R_eps, map_V, map_E = G_finite.smoothing_and_maps(eps=eps, verbose=verbose)
