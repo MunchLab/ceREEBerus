@@ -705,6 +705,10 @@ class ReebGraph(nx.MultiDiGraph):
         Returns:
             ReebGraph: The subgraph of the Reeb graph with image in (a,b).
         """
+
+        if type == "open" and a == b:
+            # (a, a) is an empty interval for open type
+            return ReebGraph()
         if type == "open":
             v_list = [v for v in self.nodes() if self.f[v] > a and self.f[v] < b]
         elif type == "closed":
@@ -712,10 +716,19 @@ class ReebGraph(nx.MultiDiGraph):
 
         # Keep the edges where either endpoint (or both) is in (a,b)
         e_list = [e for e in self.edges() if e[0] in v_list or e[1] in v_list]
-        # Include the edges that cover the entire slice.
+        # Include the edges that cover the entire slice, , including edges whose
+        # endpoint sits exactly on an excluded open bound. Skip edges already
+        # selected through an included endpoint so they aren't counted twice.
         # Note this assumes that all edges are ordered twoards teh upper function value
         e_list.extend(
-            [e for e in self.edges() if self.f[e[0]] < a and self.f[e[1]] > b]
+            [
+                e
+                for e in self.edges()
+                if e[0] not in v_list
+                and e[1] not in v_list
+                and self.f[e[0]] <= a
+                and self.f[e[1]] >= b
+            ]
         )
 
         # Make a dictionary of counts to deal with multiedges

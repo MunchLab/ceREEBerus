@@ -347,6 +347,71 @@ class TestReebClass(unittest.TestCase):
         R.set_pos_from_f()
         self.check_reeb(R)
 
+
+    def _edge(self, multiplicity=1, high_first=False):
+        # One interval from f=0 to f=2, optionally with parallel copies.
+        R = ReebGraph()
+        if high_first:
+            R.add_node('high', 2, reset_pos=False)
+            R.add_node('low', 0, reset_pos=False)
+        else:
+            R.add_node('low', 0, reset_pos=False)
+            R.add_node('high', 2, reset_pos=False)
+        for _ in range(multiplicity):
+            if high_first:
+                R.add_edge('high', 'low', reset_pos=False)
+            else:
+                R.add_edge('low', 'high', reset_pos=False)
+        R.set_pos_from_f()
+        return R
+
+    def _shape(self, H):
+        return (len(H.nodes), len(H.edges), H.number_connected_components())
+
+    def test_slice_open_endpoint_on_bound(self):
+        # An edge whose endpoint sits exactly on an open bound still has its
+        # interior inside the slice, so it must not be dropped.
+        for high_first in [False, True]:
+            R = self._edge(high_first=high_first)
+            for a, b in [(0, 2), (0, 1), (1, 2)]:
+                H = R.slice(a, b)
+                self.assertEqual(self._shape(H), (2, 1, 1), f'open slice ({a}, {b})')
+                self.assertEqual(sorted(H.f.values()), [a, b])
+                self.check_reeb(H)
+
+    def test_slice_open_parallel_edges_on_bounds(self):
+        # Removing the shared endpoints leaves the parallel edges disconnected.
+        R = self._edge(multiplicity=3)
+        H = R.slice(0, 2)
+        self.assertEqual(self._shape(H), (6, 3, 3))
+        self.check_reeb(H)
+
+        # Torus example: vertices at 0, 1, 4, 5 with a double edge from 1 to 4.
+        T = ex_rg.torus()
+        H = T.slice(1, 4)
+        self.assertEqual(self._shape(H), (4, 2, 2))
+        self.check_reeb(H)
+
+    def test_slice_open_zero_width_is_empty(self):
+        # (a, a) is empty, even when edges cross height a.
+        T = ex_rg.torus()
+        for a in [0, 1, 2, 4, 5]:
+            H = T.slice(a, a)
+            self.assertEqual(len(H.nodes), 0, f'open slice ({a}, {a})')
+            self.assertEqual(len(H.edges), 0)
+
+    def test_slice_closed_unchanged(self):
+        # Closed slices keep boundary vertices and don't double-count edges.
+        R = self._edge(multiplicity=3)
+        self.assertEqual(self._shape(R.slice(0, 2, type='closed')), (2, 3, 1))
+        self.assertEqual(self._shape(R.slice(0, 1, type='closed')), (4, 3, 1))
+        self.assertEqual(self._shape(R.slice(1, 1, type='closed')), (3, 0, 3))
+
+        T = ex_rg.torus()
+        self.assertEqual(self._shape(T.slice(1, 4, type='closed')), (2, 2, 1))
+        self.assertEqual(self._shape(T.slice(2, 2, type='closed')), (2, 0, 2))
+    
+
        
 
 
