@@ -567,7 +567,7 @@ class ReebGraph(nx.MultiDiGraph):
 
         self.set_pos_from_f()
 
-    def remove_regular_vertex(self, v):
+    def remove_regular_vertex(self, v, reset_pos=True):
         """Remove a regular vertex from the Reeb graph. A regular vertex is one for which down degree = up degree = 1, so it can be removed and replaed with a single edge.
 
         Parameters:
@@ -584,10 +584,13 @@ class ReebGraph(nx.MultiDiGraph):
         u = list(self.predecessors(v))[0]
         w = list(self.successors(v))[0]
 
-        self.add_edge(u, w)
-        self.remove_node(v)
+        self.add_edge(u, w, reset_pos=False)
+        self.remove_node(v, reset_pos=False)
 
-    def remove_all_regular_vertices(self):
+        if reset_pos:
+            self.set_pos_from_f()
+
+    def remove_all_regular_vertices(self, reset_pos=True):
         """
         Remove all regular vertices from the Reeb graph.
         """
@@ -596,7 +599,10 @@ class ReebGraph(nx.MultiDiGraph):
         ]
 
         for v in regular_vertices:
-            self.remove_regular_vertex(v)
+            self.remove_regular_vertex(v, reset_pos=False)
+
+        if reset_pos and regular_vertices:
+            self.set_pos_from_f()
 
     def remove_isolates(self):
         """
