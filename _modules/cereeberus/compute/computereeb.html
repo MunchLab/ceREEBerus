@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cereeberus.compute.computereeb &mdash; ceREEBerus 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=431f656a" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ceREEBerus
+              <img src="../../../_static/logo_with_text.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">Modules and Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Tutorial Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ceREEBerus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cereeberus.compute.computereeb</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cereeberus.compute.computereeb</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Compute Reeb graphs of lower-star filtered simplicial complexes."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..reeb.lowerstar</span><span class="w"> </span><span class="kn">import</span> <span class="n">LowerStar</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_DenseUnionFind</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Small array-backed union-find used by the exact slice sweep."""</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"parent"</span><span class="p">,</span> <span class="s2">"rank"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">item</span>
+        <span class="k">while</span> <span class="n">parent</span><span class="p">[</span><span class="n">root</span><span class="p">]</span> <span class="o">!=</span> <span class="n">root</span><span class="p">:</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">parent</span><span class="p">[</span><span class="n">root</span><span class="p">]</span>
+        <span class="k">while</span> <span class="n">parent</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">!=</span> <span class="n">item</span><span class="p">:</span>
+            <span class="n">item</span><span class="p">,</span> <span class="n">parent</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent</span><span class="p">[</span><span class="n">item</span><span class="p">],</span> <span class="n">root</span>
+        <span class="k">return</span> <span class="n">root</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">left</span> <span class="o">==</span> <span class="n">right</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">rank</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span>
+        <span class="k">if</span> <span class="n">rank</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">rank</span><span class="p">[</span><span class="n">right</span><span class="p">]:</span>
+            <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="k">if</span> <span class="n">rank</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">==</span> <span class="n">rank</span><span class="p">[</span><span class="n">right</span><span class="p">]:</span>
+            <span class="n">rank</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+
+<div class="viewcode-block" id="computeReeb">
+<a class="viewcode-back" href="../../../modules/compute/compute_reeb.html#cereeberus.compute.computereeb.computeReeb">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">computeReeb</span><span class="p">(</span>
+    <span class="n">K</span><span class="p">:</span> <span class="n">LowerStar</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">set_pos</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">keep_regular_nodes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compute the Reeb graph of a lower-star filtered simplicial complex.</span>
+
+<span class="sd">    The function on the complex is the piecewise-linear extension of the</span>
+<span class="sd">    values assigned to its vertices.  The complex can have any dimension and</span>
+<span class="sd">    need not be a manifold: boundaries, edges shared by three or more</span>
+<span class="sd">    triangles, and singular vertices are all allowed.</span>
+
+<span class="sd">    By default the returned graph contains only the nodes where the topology</span>
+<span class="sd">    of the level sets changes (minima, maxima, merges and splits), plus</span>
+<span class="sd">    isolated components.  Pass ``keep_regular_nodes=True`` to also get a node</span>
+<span class="sd">    for every level-set component at every vertex height, with a midpoint</span>
+<span class="sd">    node on each edge between them.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    K : LowerStar</span>
+<span class="sd">        The filtered complex.  Only the values on the vertices are used; the</span>
+<span class="sd">        filtration of every other simplex must be the maximum of its vertex</span>
+<span class="sd">        values (this is what :class:`LowerStar` maintains).</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Print progress every 1000 vertex heights.</span>
+<span class="sd">    set_pos : bool, default=True</span>
+<span class="sd">        Compute node positions once at the end, so the result can be drawn</span>
+<span class="sd">        with :meth:`ReebGraph.draw` immediately.  Set to False to skip the</span>
+<span class="sd">        layout when only the graph itself is needed, for example in batch</span>
+<span class="sd">        jobs on large complexes.</span>
+<span class="sd">    validate : bool, default=True</span>
+<span class="sd">        Check that every simplex's filtration equals the maximum of its</span>
+<span class="sd">        vertex values.  Vertex values are always checked to be finite.  Set</span>
+<span class="sd">        to False to skip this check on large complexes that are known to be</span>
+<span class="sd">        valid.</span>
+<span class="sd">    keep_regular_nodes : bool, default=False</span>
+<span class="sd">        If True, keep one node for every level-set component at every vertex</span>
+<span class="sd">        height, and add a midpoint node named ``"e_0"``, ``"e_1"``, ... on</span>
+<span class="sd">        each edge between consecutive heights.  This is the output format of</span>
+<span class="sd">        cereeberus 0.1.20 and earlier.  If False, those nodes (one edge in,</span>
+<span class="sd">        one edge out) are left out, which gives the same Reeb graph up to</span>
+<span class="sd">        subdivision with far fewer nodes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ReebGraph</span>
+<span class="sd">        The Reeb graph.  Edges point from the lower to the higher function</span>
+<span class="sd">        value, and parallel edges (loops) are kept.  By default, nodes are</span>
+<span class="sd">        named ``0, 1, 2, ...`` and their function values are vertex values.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If ``K`` is not a :class:`LowerStar`.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If a vertex value is not finite, the lower-star condition fails</span>
+<span class="sd">        (with ``validate=True``), the complex is malformed, or, with</span>
+<span class="sd">        ``keep_regular_nodes=True``, no floating-point number lies strictly</span>
+<span class="sd">        between two consecutive vertex values.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The algorithm sweeps upward through the distinct vertex values.  At each</span>
+<span class="sd">    value it computes the connected components of the level set with a</span>
+<span class="sd">    union-find over the vertices at that height and the edges crossing it;</span>
+<span class="sd">    it does the same for one level strictly between consecutive values.</span>
+<span class="sd">    Each component between two values becomes an edge, attached to the</span>
+<span class="sd">    unique components it meets at the values above and below.</span>
+
+<span class="sd">    Each triangle meets a level set in a convex (hence connected) set, so</span>
+<span class="sd">    joining the points where a level crosses a triangle's boundary gives</span>
+<span class="sd">    exactly the level-set components.  Only vertices, edges and triangles</span>
+<span class="sd">    are needed, even for higher-dimensional input: a level set of any</span>
+<span class="sd">    simplex is a convex polytope whose edges lie in the sliced triangles.</span>
+
+<span class="sd">    Equal vertex values are treated as exact ties (flat regions); no</span>
+<span class="sd">    tolerance is applied, so round values yourself first if you want nearby</span>
+<span class="sd">    values treated as equal.  The result is the Reeb graph of the abstract</span>
+<span class="sd">    complex given; for meshes, duplicated vertices (for example along</span>
+<span class="sd">    texture seams) should be merged before building ``K``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from cereeberus import LowerStar, computeReeb</span>
+<span class="sd">    &gt;&gt;&gt; K = LowerStar()</span>
+<span class="sd">    &gt;&gt;&gt; K.insert([0, 1, 2])</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; K.insert([1, 3])</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; K.insert([2, 3])</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; K.assign_filtration([0], 0.0)</span>
+<span class="sd">    &gt;&gt;&gt; K.assign_filtration([1], 3.0)</span>
+<span class="sd">    &gt;&gt;&gt; K.assign_filtration([2], 5.0)</span>
+<span class="sd">    &gt;&gt;&gt; K.assign_filtration([3], 7)</span>
+<span class="sd">    &gt;&gt;&gt; R = computeReeb(K)</span>
+<span class="sd">    &gt;&gt;&gt; R.number_of_nodes(), R.number_of_edges()</span>
+<span class="sd">    (3, 3)</span>
+<span class="sd">    &gt;&gt;&gt; R.draw()</span>
+
+<span class="sd">    To get the subdivided output (the format of cereeberus 0.1.20):</span>
+
+<span class="sd">    &gt;&gt;&gt; R_full = computeReeb(K, keep_regular_nodes=True)</span>
+<span class="sd">    &gt;&gt;&gt; R_full.number_of_nodes(), R_full.number_of_edges()</span>
+<span class="sd">    (10, 10)</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">..reeb.reebgraph</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReebGraph</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">LowerStar</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"K must be a LowerStar"</span><span class="p">)</span>
+
+    <span class="c1"># A scalar PL Reeb graph is determined by the input's 2-skeleton.</span>
+    <span class="c1"># Do not materialize higher-dimensional simplices just to discard them.</span>
+    <span class="n">simplices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">get_skeleton</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">simplices</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ReebGraph</span><span class="p">()</span>
+    <span class="n">input_dimension</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">dimension</span><span class="p">()</span>
+
+    <span class="n">vertex_labels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">simplex</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">simplex</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">simplices</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">simplex</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">label_to_vertex</span> <span class="o">=</span> <span class="p">{</span><span class="n">label</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vertex_labels</span><span class="p">)}</span>
+    <span class="n">vertex_values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">filtration</span><span class="p">([</span><span class="n">label</span><span class="p">]))</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">vertex_labels</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">vertex_values</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"All vertex function values must be finite"</span><span class="p">)</span>
+
+    <span class="n">distinct_values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">vertex_values</span><span class="p">))</span>
+    <span class="n">value_to_level</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">:</span> <span class="n">level</span> <span class="k">for</span> <span class="n">level</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">distinct_values</span><span class="p">)}</span>
+    <span class="n">vertex_level</span> <span class="o">=</span> <span class="p">[</span><span class="n">value_to_level</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">vertex_values</span><span class="p">]</span>
+    <span class="n">level_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">distinct_values</span><span class="p">)</span>
+    <span class="n">vertex_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertex_labels</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">validate</span><span class="p">:</span>
+        <span class="c1"># Higher cells do not affect the sweep, but their filtration must still</span>
+        <span class="c1"># satisfy the advertised input invariant. Stream this validation pass.</span>
+        <span class="k">for</span> <span class="n">simplex</span><span class="p">,</span> <span class="n">filtration</span> <span class="ow">in</span> <span class="n">K</span><span class="o">.</span><span class="n">get_simplices</span><span class="p">():</span>
+            <span class="n">expected</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">vertex_values</span><span class="p">[</span><span class="n">label_to_vertex</span><span class="p">[</span><span class="n">label</span><span class="p">]]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">simplex</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">filtration</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">filtration</span><span class="p">)</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Simplex </span><span class="si">{</span><span class="n">simplex</span><span class="si">}</span><span class="s2"> violates the lower-star invariant: "</span>
+                    <span class="sa">f</span><span class="s2">"filtration=</span><span class="si">{</span><span class="n">filtration</span><span class="si">!r}</span><span class="s2">, expected=</span><span class="si">{</span><span class="n">expected</span><span class="si">!r}</span><span class="s2">"</span>
+                <span class="p">)</span>
+
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">triangles_by_label</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">simplex</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">simplices</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">simplex</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">label_to_vertex</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">simplex</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">simplex</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">triangles_by_label</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">tuple</span><span class="p">(</span><span class="n">label_to_vertex</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">simplex</span><span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="n">edge_id</span> <span class="o">=</span> <span class="p">{</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">edge</span><span class="p">)):</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">edge</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">edges</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge_id</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The simplex tree contains duplicate edges"</span><span class="p">)</span>
+
+    <span class="n">edge_low_level</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">edge_high_level</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">edge_low_vertex</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">edge_high_vertex</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">edge_start</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">level_count</span><span class="p">)]</span>
+    <span class="n">edge_end</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">level_count</span><span class="p">)]</span>
+    <span class="n">horizontal_edges</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">level_count</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">eid</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">edges</span><span class="p">):</span>
+        <span class="n">left_level</span><span class="p">,</span> <span class="n">right_level</span> <span class="o">=</span> <span class="n">vertex_level</span><span class="p">[</span><span class="n">left</span><span class="p">],</span> <span class="n">vertex_level</span><span class="p">[</span><span class="n">right</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">left_level</span> <span class="o">&lt;=</span> <span class="n">right_level</span><span class="p">:</span>
+            <span class="n">low_vertex</span><span class="p">,</span> <span class="n">high_vertex</span> <span class="o">=</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span>
+            <span class="n">low_level</span><span class="p">,</span> <span class="n">high_level</span> <span class="o">=</span> <span class="n">left_level</span><span class="p">,</span> <span class="n">right_level</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">low_vertex</span><span class="p">,</span> <span class="n">high_vertex</span> <span class="o">=</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span>
+            <span class="n">low_level</span><span class="p">,</span> <span class="n">high_level</span> <span class="o">=</span> <span class="n">right_level</span><span class="p">,</span> <span class="n">left_level</span>
+        <span class="n">edge_low_vertex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">low_vertex</span><span class="p">)</span>
+        <span class="n">edge_high_vertex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">high_vertex</span><span class="p">)</span>
+        <span class="n">edge_low_level</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">low_level</span><span class="p">)</span>
+        <span class="n">edge_high_level</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">high_level</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">low_level</span> <span class="o">==</span> <span class="n">high_level</span><span class="p">:</span>
+            <span class="n">horizontal_edges</span><span class="p">[</span><span class="n">low_level</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eid</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">edge_start</span><span class="p">[</span><span class="n">low_level</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eid</span><span class="p">)</span>
+            <span class="n">edge_end</span><span class="p">[</span><span class="n">high_level</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eid</span><span class="p">)</span>
+
+    <span class="n">triangles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">face_start</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">level_count</span><span class="p">)]</span>
+    <span class="n">face_end</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">level_count</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">vertices</span> <span class="ow">in</span> <span class="n">triangles_by_label</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">boundary</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">edge_id</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">((</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">])))],</span>
+                <span class="n">edge_id</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">((</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">2</span><span class="p">])))],</span>
+                <span class="n">edge_id</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">((</span><span class="n">vertices</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">2</span><span class="p">])))],</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"The input does not contain the faces of every triangle"</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="n">fid</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">triangles</span><span class="p">)</span>
+        <span class="n">triangles</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">vertices</span><span class="p">,</span> <span class="n">boundary</span><span class="p">))</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertex_level</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+        <span class="n">face_start</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">levels</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fid</span><span class="p">)</span>
+        <span class="n">face_end</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">levels</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fid</span><span class="p">)</span>
+
+    <span class="n">vertices_at_level</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">level_count</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vertex_level</span><span class="p">):</span>
+        <span class="n">vertices_at_level</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">component_map</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">unions</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return token-&gt;component and deterministic component token lists."""</span>
+        <span class="n">token_index</span> <span class="o">=</span> <span class="p">{</span><span class="n">token</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tokens</span><span class="p">)}</span>
+        <span class="n">uf</span> <span class="o">=</span> <span class="n">_DenseUnionFind</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">unions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="n">token_index</span><span class="p">[</span><span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">group</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">token_index</span><span class="p">[</span><span class="n">token</span><span class="p">])</span>
+        <span class="n">root_groups</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+            <span class="n">root_groups</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">uf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">index</span><span class="p">),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">root_groups</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">group</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
+        <span class="n">token_component</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">token</span><span class="p">:</span> <span class="n">component</span>
+            <span class="k">for</span> <span class="n">component</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">group</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">token_component</span><span class="p">,</span> <span class="n">components</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">exact_components</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">active_edge_ids</span><span class="p">,</span> <span class="n">active_face_ids</span><span class="p">):</span>
+        <span class="c1"># Vertex tokens are [0,n); a strict edge-crossing token is n + eid.</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vertices_at_level</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+        <span class="n">tokens</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">vertex_count</span> <span class="o">+</span> <span class="n">eid</span> <span class="k">for</span> <span class="n">eid</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">active_edge_ids</span><span class="p">))</span>
+        <span class="n">unions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">eid</span> <span class="ow">in</span> <span class="n">horizontal_edges</span><span class="p">[</span><span class="n">level</span><span class="p">]:</span>
+            <span class="n">unions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="n">eid</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">fid</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">active_face_ids</span><span class="p">):</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">boundary</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">[</span><span class="n">fid</span><span class="p">]</span>
+            <span class="n">intersection</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">eid</span> <span class="ow">in</span> <span class="n">boundary</span><span class="p">:</span>
+                <span class="n">low_level</span> <span class="o">=</span> <span class="n">edge_low_level</span><span class="p">[</span><span class="n">eid</span><span class="p">]</span>
+                <span class="n">high_level</span> <span class="o">=</span> <span class="n">edge_high_level</span><span class="p">[</span><span class="n">eid</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">low_level</span> <span class="o">==</span> <span class="n">level</span> <span class="o">==</span> <span class="n">high_level</span><span class="p">:</span>
+                    <span class="n">intersection</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="n">eid</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">low_level</span> <span class="o">==</span> <span class="n">level</span><span class="p">:</span>
+                    <span class="n">intersection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge_low_vertex</span><span class="p">[</span><span class="n">eid</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">high_level</span> <span class="o">==</span> <span class="n">level</span><span class="p">:</span>
+                    <span class="n">intersection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge_high_vertex</span><span class="p">[</span><span class="n">eid</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">low_level</span> <span class="o">&lt;</span> <span class="n">level</span> <span class="o">&lt;</span> <span class="n">high_level</span><span class="p">:</span>
+                    <span class="n">intersection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertex_count</span> <span class="o">+</span> <span class="n">eid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">intersection</span><span class="p">:</span>
+                <span class="c1"># A repeated vertex token is harmless but wastes union calls.</span>
+                <span class="n">unions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">intersection</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">component_map</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">unions</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">regular_components</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">active_edge_ids</span><span class="p">,</span> <span class="n">active_face_ids</span><span class="p">):</span>
+        <span class="c1"># Token eid denotes the unique intersection of edge eid with any level</span>
+        <span class="c1"># strictly between distinct_values[level] and [level + 1].</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">active_edge_ids</span><span class="p">)</span>
+        <span class="n">unions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fid</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">active_face_ids</span><span class="p">):</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">boundary</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">[</span><span class="n">fid</span><span class="p">]</span>
+            <span class="n">crossings</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">eid</span>
+                <span class="k">for</span> <span class="n">eid</span> <span class="ow">in</span> <span class="n">boundary</span>
+                <span class="k">if</span> <span class="n">edge_low_level</span><span class="p">[</span><span class="n">eid</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">level</span> <span class="o">&lt;</span> <span class="n">edge_high_level</span><span class="p">[</span><span class="n">eid</span><span class="p">]</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="n">crossings</span><span class="p">:</span>
+                <span class="n">unions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">crossings</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">components</span> <span class="o">=</span> <span class="n">component_map</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">unions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">components</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">unique_component</span><span class="p">(</span><span class="n">edge_ids</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">token_component</span><span class="p">,</span> <span class="n">upper</span><span class="p">):</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">eid</span> <span class="ow">in</span> <span class="n">edge_ids</span><span class="p">:</span>
+            <span class="n">endpoint_level</span> <span class="o">=</span> <span class="n">edge_high_level</span><span class="p">[</span><span class="n">eid</span><span class="p">]</span> <span class="k">if</span> <span class="n">upper</span> <span class="k">else</span> <span class="n">edge_low_level</span><span class="p">[</span><span class="n">eid</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">endpoint_level</span> <span class="o">==</span> <span class="n">level</span><span class="p">:</span>
+                <span class="n">token</span> <span class="o">=</span> <span class="n">edge_high_vertex</span><span class="p">[</span><span class="n">eid</span><span class="p">]</span> <span class="k">if</span> <span class="n">upper</span> <span class="k">else</span> <span class="n">edge_low_vertex</span><span class="p">[</span><span class="n">eid</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">token</span> <span class="o">=</span> <span class="n">vertex_count</span> <span class="o">+</span> <span class="n">eid</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">token_component</span><span class="p">[</span><span class="n">token</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="s2">"upper"</span> <span class="k">if</span> <span class="n">upper</span> <span class="k">else</span> <span class="s2">"lower"</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"A regular fiber component has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">direction</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="s2">"endpoint components; the input may not be a simplicial complex"</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">ReebGraph</span><span class="p">()</span>
+    <span class="n">R</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">algorithm</span><span class="o">=</span><span class="s2">"exact_slice_sweep_2skeleton"</span><span class="p">,</span>
+        <span class="n">input_dimension</span><span class="o">=</span><span class="n">input_dimension</span><span class="p">,</span>
+        <span class="n">sweep_dimension</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">input_dimension</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">keep_regular_nodes</span><span class="o">=</span><span class="n">keep_regular_nodes</span><span class="p">,</span>
+        <span class="n">exact_ties</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">supports_nonmanifold</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">input_vertices</span><span class="o">=</span><span class="n">vertex_count</span><span class="p">,</span>
+        <span class="n">input_edges</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">),</span>
+        <span class="n">input_triangles</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">triangles</span><span class="p">),</span>
+        <span class="n">input_levels</span><span class="o">=</span><span class="n">level_count</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">next_node</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">next_half_edge</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">active_edges</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">active_faces</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="c1"># Each pending regular band is (source Reeb node, its crossing edge tokens).</span>
+    <span class="n">pending</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">level</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">distinct_values</span><span class="p">):</span>
+        <span class="n">active_faces</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">face_start</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+        <span class="n">active_edges</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="n">edge_end</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+        <span class="n">token_component</span><span class="p">,</span> <span class="n">exact_groups</span> <span class="o">=</span> <span class="n">exact_components</span><span class="p">(</span>
+            <span class="n">level</span><span class="p">,</span> <span class="n">active_edges</span><span class="p">,</span> <span class="n">active_faces</span>
+        <span class="p">)</span>
+
+        <span class="n">incoming</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">exact_groups</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">pending</span><span class="p">:</span>
+            <span class="n">component</span> <span class="o">=</span> <span class="n">unique_component</span><span class="p">(</span><span class="n">band</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">token_component</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">incoming</span><span class="p">[</span><span class="n">component</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="n">active_edges</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">edge_start</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+        <span class="n">active_faces</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="n">face_end</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+        <span class="n">outgoing_bands</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">regular_components</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">active_edges</span><span class="p">,</span> <span class="n">active_faces</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">level_count</span>
+            <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="n">outgoing</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">exact_groups</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">outgoing_bands</span><span class="p">:</span>
+            <span class="n">component</span> <span class="o">=</span> <span class="n">unique_component</span><span class="p">(</span><span class="n">band</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">token_component</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">outgoing</span><span class="p">[</span><span class="n">component</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">band</span><span class="p">)</span>
+
+        <span class="n">new_pending</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">exact_groups</span><span class="p">)):</span>
+            <span class="n">sources</span> <span class="o">=</span> <span class="n">incoming</span><span class="p">[</span><span class="n">component</span><span class="p">]</span>
+            <span class="n">bands</span> <span class="o">=</span> <span class="n">outgoing</span><span class="p">[</span><span class="n">component</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">keep_regular_nodes</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">bands</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">continuation_source</span> <span class="o">=</span> <span class="n">sources</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">next_node</span>
+                <span class="n">next_node</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
+                    <span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">continuation_source</span> <span class="o">=</span> <span class="n">node</span>
+            <span class="k">for</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">bands</span><span class="p">:</span>
+                <span class="n">new_pending</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">continuation_source</span><span class="p">,</span> <span class="n">band</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">keep_regular_nodes</span> <span class="ow">and</span> <span class="n">new_pending</span><span class="p">:</span>
+            <span class="n">upper_value</span> <span class="o">=</span> <span class="n">distinct_values</span><span class="p">[</span><span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># Halving first avoids overflow from value + upper_value.</span>
+            <span class="n">midpoint</span> <span class="o">=</span> <span class="n">value</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">upper_value</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">midpoint</span> <span class="o">&lt;</span> <span class="n">upper_value</span><span class="p">:</span>
+                <span class="n">midpoint</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">upper_value</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">midpoint</span> <span class="o">&lt;</span> <span class="n">upper_value</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"keep_regular_nodes=True requires a representable floating-point "</span>
+                    <span class="sa">f</span><span class="s2">"height strictly between </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2"> and </span><span class="si">{</span><span class="n">upper_value</span><span class="si">!r}</span><span class="s2">; "</span>
+                    <span class="s2">"use keep_regular_nodes=False for reduced output"</span>
+                <span class="p">)</span>
+            <span class="n">subdivided_pending</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">new_pending</span><span class="p">:</span>
+                <span class="nb">sentinel</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"e_</span><span class="si">{</span><span class="n">next_half_edge</span><span class="si">}</span><span class="s2">"</span>
+                <span class="n">next_half_edge</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">R</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="nb">sentinel</span><span class="p">,</span> <span class="n">midpoint</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">R</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">sentinel</span><span class="p">,</span> <span class="n">reset_pos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">subdivided_pending</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">sentinel</span><span class="p">,</span> <span class="n">band</span><span class="p">))</span>
+            <span class="n">new_pending</span> <span class="o">=</span> <span class="n">subdivided_pending</span>
+        <span class="n">pending</span> <span class="o">=</span> <span class="n">new_pending</span>
+
+        <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">level</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">level_count</span>
+        <span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"processed </span><span class="si">{</span><span class="n">level</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">level_count</span><span class="si">}</span><span class="s2"> levels; "</span>
+                <span class="sa">f</span><span class="s2">"Reeb graph has </span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span><span class="si">}</span><span class="s2"> nodes and "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">R</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span><span class="si">}</span><span class="s2"> edges"</span>
+            <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pending</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s2">"Internal error: regular components remain above the maximum"</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">set_pos</span><span class="p">:</span>
+        <span class="n">R</span><span class="o">.</span><span class="n">set_pos_from_f</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">R</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
