@@ -155,7 +155,55 @@ class TestMapperClass(unittest.TestCase):
         self.assertEqual(set(MG.nodes), set(MG.pos_f.keys()))
         for v in MG.nodes:
             self.assertEqual(MG.pos_f[v][1], MG.delta * MG.f[v])
-       
+
+    def test_mapperify_no_recursion_correctness(self):
+        """Adding an edge spanning multiple integer levels still produces a
+        subdivision vertex at every crossed level, without relying on
+        recursive re-entry through add_edge."""
+        M = MapperGraph()
+        M.add_node(0, 0, reset_pos=False)
+        M.add_node(1, 6, reset_pos=False)
+        M.set_pos_from_f()
+        M.add_edge(0, 1)
+
+        # 2 endpoints + 5 subdivision vertices at levels 1..5
+        self.assertEqual(len(M.nodes), 7)
+        self.assertEqual(sorted(M.f.values()), [0, 1, 2, 3, 4, 5, 6])
+
+    def test_mapperify_no_exponential_blowup(self):
+        """mapperify() should not re-scan the whole graph once per subdivision
+        vertex it inserts. This guards against the recursive add_edge ->
+        mapperify() re-entry bug regressing."""
+        import time
+        M = MapperGraph()
+        for i in range(20):
+            M.add_node(i, i, reset_pos=False)
+        M.set_pos_from_f()
+
+        t0 = time.time()
+        M.add_edge(0, 19)  # spans 18 levels -> 18 subdivisions in one add_edge
+        elapsed = time.time() - t0
+
+        self.assertLess(elapsed, 1.0)  # was exponential before the fix
+
+    def test_mapperify_called_once_per_add_edge(self):
+        """A single add_edge() call should trigger exactly one top-level
+        mapperify() scan, not one per subdivision vertex it creates."""
+        M = MapperGraph()
+        M.add_node(0, 0, reset_pos=False)
+        M.add_node(1, 6, reset_pos=False)
+        M.set_pos_from_f()
+
+        call_count = {"n": 0}
+        orig_mapperify = M.mapperify
+        def counting_mapperify(*a, **kw):
+            call_count["n"] += 1
+            return orig_mapperify(*a, **kw)
+        M.mapperify = counting_mapperify
+
+        M.add_edge(0, 1)
+        self.assertEqual(call_count["n"], 1)
+        
 
 
 if __name__ == '__main__':
