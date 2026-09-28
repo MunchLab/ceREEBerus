@@ -266,6 +266,22 @@ class TestReebClass(unittest.TestCase):
         ]
         self.assertGreater(len(internal_nodes), 0)
 
+    def test_smoothing_with_infinite_node(self):
+        # A vertex at +/- infinity (e.g. a MergeTree's v_inf root) should
+        # smooth without crashing, staying on top/bottom of the result.
+        R = ReebGraph()
+        R.add_node('a', 0)
+        R.add_node('b', 1)
+        R.add_node('c', 2)
+        R.add_node('top', float('inf'))
+        R.add_edge('a', 'b')
+        R.add_edge('b', 'c')
+        R.add_edge('c', 'top')
+
+        R_eps = R.smoothing(1)
+        self.check_reeb(R_eps)
+        self.assertEqual(R_eps.up_degree('top'), 0)
+
     def test_matrices(self):
         # This test makes sure you can get the adjacency matrix and boundary matrix of a Reeb graph.
         R = ex_rg.juggling_man()
@@ -293,6 +309,116 @@ class TestReebClass(unittest.TestCase):
         # Example chosen so that we have vertices with value on the endpoints (we're assuming open interval so shouldn't be included)
         # We also have at least one edge that completely crosses the interval in question
         H = R.slice( 2,5)
+    def test_remove_node_deferred_pos_cleanup(self):
+        # Regression test: remove_node(reset_pos=False) must still drop the
+        # removed vertex's pos_f entry immediately. Previously this cleanup
+        # was bundled inside `if reset_pos:`, so a deferred removal left a
+        # dangling pos_f entry for a vertex no longer in the graph.
+        R = ex_rg.simple_loops()
+        R.set_pos_from_f()  # establish an initial pos_f for every node
+
+        v = next(iter(R.nodes))
+        R.remove_node(v, reset_pos=False)
+
+        self.assertNotIn(v, R.nodes)
+        self.assertNotIn(
+            v, R.pos_f,
+            "pos_f still has a stale entry for a removed vertex"
+        )
+        # No blanket check_reeb() here: an isolated deferred removal can
+        # leave pos_f short of an entry for OTHER now-orphaned nodes until
+        # the next set_pos_from_f() call; that's expected, not a bug.
+
+    def test_add_edge_collapse_respects_reset_pos_false(self):
+        R = ReebGraph()
+        R.add_node('a', 0.0, reset_pos=False)
+        R.add_node('b', 1.0, reset_pos=False)
+        R.add_node('c', 1.0, reset_pos=False)  # same f as 'b' -> collapse
+        R.add_node('d', 2.0, reset_pos=False)
+
+        R.add_edge('a', 'b', reset_pos=False)
+        R.add_edge('b', 'd', reset_pos=False)
+        # Triggers the tied-value collapse branch inside add_edge.
+        R.add_edge('a', 'c', reset_pos=False)
+
+        # pos_f exists (ReebGraph.__init__ always calls set_pos_from_f once,
+        # even on an empty graph) but should still be EMPTY here -- nothing
+        # after construction should have triggered a recompute, including
+        # the collapse's internal recursive add_edge/remove_node calls.
+        self.assertEqual(
+            R.pos_f, {},
+            "pos_f was populated even though every call used reset_pos=False "
+            "-- the collapse branch must be forwarding reset_pos incorrectly"
+        )
+
+        # Now do the single deferred layout call, as computeReeb does.
+        R.set_pos_from_f()
+        self.check_reeb(R)
+
+
+    def _edge(self, multiplicity=1, high_first=False):
+        # One interval from f=0 to f=2, optionally with parallel copies.
+        R = ReebGraph()
+        if high_first:
+            R.add_node('high', 2, reset_pos=False)
+            R.add_node('low', 0, reset_pos=False)
+        else:
+            R.add_node('low', 0, reset_pos=False)
+            R.add_node('high', 2, reset_pos=False)
+        for _ in range(multiplicity):
+            if high_first:
+                R.add_edge('high', 'low', reset_pos=False)
+            else:
+                R.add_edge('low', 'high', reset_pos=False)
+        R.set_pos_from_f()
+        return R
+
+    def _shape(self, H):
+        return (len(H.nodes), len(H.edges), H.number_connected_components())
+
+    def test_slice_open_endpoint_on_bound(self):
+        # An edge whose endpoint sits exactly on an open bound still has its
+        # interior inside the slice, so it must not be dropped.
+        for high_first in [False, True]:
+            R = self._edge(high_first=high_first)
+            for a, b in [(0, 2), (0, 1), (1, 2)]:
+                H = R.slice(a, b)
+                self.assertEqual(self._shape(H), (2, 1, 1), f'open slice ({a}, {b})')
+                self.assertEqual(sorted(H.f.values()), [a, b])
+                self.check_reeb(H)
+
+    def test_slice_open_parallel_edges_on_bounds(self):
+        # Removing the shared endpoints leaves the parallel edges disconnected.
+        R = self._edge(multiplicity=3)
+        H = R.slice(0, 2)
+        self.assertEqual(self._shape(H), (6, 3, 3))
+        self.check_reeb(H)
+
+        # Torus example: vertices at 0, 1, 4, 5 with a double edge from 1 to 4.
+        T = ex_rg.torus()
+        H = T.slice(1, 4)
+        self.assertEqual(self._shape(H), (4, 2, 2))
+        self.check_reeb(H)
+
+    def test_slice_open_zero_width_is_empty(self):
+        # (a, a) is empty, even when edges cross height a.
+        T = ex_rg.torus()
+        for a in [0, 1, 2, 4, 5]:
+            H = T.slice(a, a)
+            self.assertEqual(len(H.nodes), 0, f'open slice ({a}, {a})')
+            self.assertEqual(len(H.edges), 0)
+
+    def test_slice_closed_unchanged(self):
+        # Closed slices keep boundary vertices and don't double-count edges.
+        R = self._edge(multiplicity=3)
+        self.assertEqual(self._shape(R.slice(0, 2, type='closed')), (2, 3, 1))
+        self.assertEqual(self._shape(R.slice(0, 1, type='closed')), (4, 3, 1))
+        self.assertEqual(self._shape(R.slice(1, 1, type='closed')), (3, 0, 3))
+
+        T = ex_rg.torus()
+        self.assertEqual(self._shape(T.slice(1, 4, type='closed')), (2, 2, 1))
+        self.assertEqual(self._shape(T.slice(2, 2, type='closed')), (2, 0, 2))
+    
 
         self.assertEqual(H.number_connected_components(),3 )
         self.check_reeb(H)
@@ -325,6 +451,30 @@ class TestReebClass(unittest.TestCase):
         self.check_reeb(H)
        
 
+    def test_boundary_map_parallel_edges(self):
+        # Every edge, including each copy of a multi-edge, gets its own entry
+        # keyed by its real (u, v, key), mapped to its two endpoints.
+        T = ex_rg.torus()  # double edge ('b', 'c', 0) and ('b', 'c', 1)
+        B = T.boundary_matrix(astype='map')
+        self.assertEqual(set(B), set(T.edges(keys=True)))
+        for e in T.edges(keys=True):
+            self.assertEqual(B[e], [e[0], e[1]])
+
+    def test_boundary_map_keys_after_edge_removal(self):
+        # After removing key 0 of a multi-edge, the map reports the key that's left.
+        T = ex_rg.torus()
+        T.remove_edge('b', 'c', 0)
+        B = T.boundary_matrix(astype='map')
+        self.assertEqual(set(B), set(T.edges(keys=True)))
+        self.assertIn(('b', 'c', 1), B)
+        self.assertNotIn(('b', 'c', 0), B)
+
+    def test_boundary_matrix_numpy_with_parallel_edges(self):
+        # The numpy form has one column per edge, each with exactly two 1s.
+        T = ex_rg.torus()
+        B = T.boundary_matrix()
+        self.assertEqual(B.shape, (len(T.nodes), len(T.edges)))
+        self.assertTrue((B.sum(axis=0) == 2).all())
 
 if __name__ == '__main__':
     unittest.main()
