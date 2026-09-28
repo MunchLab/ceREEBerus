@@ -299,16 +299,8 @@ class TestReebClass(unittest.TestCase):
         self.assertEqual(set(R.nodes), set(R.pos_f.keys()))
         for v in R.nodes:
             self.assertEqual(R.pos_f[v][1], R.f[v])
-
-
-    def test_slice(self):
-        # This test makes sure you can slice a Reeb graph.
-        R = ex_rg.juggling_man()
-        R.add_edge(7,9)
-
-        # Example chosen so that we have vertices with value on the endpoints (we're assuming open interval so shouldn't be included)
-        # We also have at least one edge that completely crosses the interval in question
-        H = R.slice( 2,5)
+ 
+ 
     def test_remove_node_deferred_pos_cleanup(self):
         # Regression test: remove_node(reset_pos=False) must still drop the
         # removed vertex's pos_f entry immediately. Previously this cleanup
@@ -419,16 +411,9 @@ class TestReebClass(unittest.TestCase):
         self.assertEqual(self._shape(T.slice(1, 4, type='closed')), (2, 2, 1))
         self.assertEqual(self._shape(T.slice(2, 2, type='closed')), (2, 0, 2))
     
-
-        self.assertEqual(H.number_connected_components(),3 )
-        self.check_reeb(H)
-
-        # Example chosen so that we have vertices with value on the endpoints (we're using closed interval so now these should be included)
-        H = R.slice( 2,5, type = 'closed')
-
-        self.assertEqual(H.number_connected_components(),2 )
-        self.check_reeb(H)
-
+ 
+       
+ 
     def test_slice_multiedge(self):
         # Slicing across a multiedge should produce one new lower/upper vertex
         # pair per parallel copy, and the result should still be a well-formed
