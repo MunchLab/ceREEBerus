@@ -1,7 +1,10 @@
+import os
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 from cereeberus.data.ex_mappergraphs import line, torus
+from cereeberus.distance.ilp import select_pulp_solver
 from cereeberus.distance.labeled_blocks import LabeledBlockMatrix as LBM
 from cereeberus.distance.labeled_blocks import LabeledMatrix as LM
 
@@ -149,6 +152,63 @@ class TestInterleaving(unittest.TestCase):
 
         # This used to raise KeyError when solve_ilp accessed missing boundary blocks.
         myAssgn.optimize()
+
+    @patch("cereeberus.distance.ilp.shutil.which", return_value="/custom/cbc")
+    @patch("cereeberus.distance.ilp.pulp.COIN_CMD")
+    def test_select_pulp_solver_prefers_custom_cbc_path(self, mock_coin_cmd, _mock_which):
+        mock_coin_cmd.return_value = "coin-solver"
+
+        with patch.dict(
+            os.environ,
+            {"CEREEBERUS_SOLVER": "CBC", "CEREEBERUS_CBC_PATH": "/custom/cbc"},
+            clear=True,
+        ):
+            solver = select_pulp_solver()
+
+        self.assertEqual(solver, "coin-solver")
+        mock_coin_cmd.assert_called_once_with(msg=0, path="/custom/cbc")
+
+    @patch("cereeberus.distance.ilp.pulp.GLPK_CMD")
+    def test_select_pulp_solver_explicit_argument_overrides_env(self, mock_glpk_cmd):
+        mock_glpk_cmd.return_value = "glpk-solver"
+
+        with patch.dict(
+            os.environ,
+            {"CEREEBERUS_SOLVER": "CBC", "PULP_SOLVER": "CBC"},
+            clear=True,
+        ):
+            solver = select_pulp_solver("GLPK")
+
+        self.assertEqual(solver, "glpk-solver")
+        mock_glpk_cmd.assert_called_once_with(msg=0)
+
+    @patch("cereeberus.distance.ilp.shutil.which", return_value=None)
+    @patch("cereeberus.distance.ilp.pulp.GLPK_CMD")
+    @patch("cereeberus.distance.ilp.pulp.listSolvers", return_value=["GLPK_CMD"])
+    def test_select_pulp_solver_falls_back_to_available_solver(
+        self, mock_list_solvers, mock_glpk_cmd, _mock_which
+    ):
+        mock_glpk_cmd.return_value = "fallback-glpk"
+
+        with patch.dict(os.environ, {}, clear=True):
+            solver = select_pulp_solver()
+
+        self.assertEqual(solver, "fallback-glpk")
+        mock_list_solvers.assert_called_once_with(onlyAvailable=True)
+        mock_glpk_cmd.assert_called_once_with(msg=0)
+
+    @patch("cereeberus.distance.ilp.shutil.which", return_value=None)
+    @patch("cereeberus.distance.ilp.pulp.listSolvers", return_value=[])
+    def test_select_pulp_solver_uses_coin_fallback_when_no_solver_is_available(
+        self, mock_list_solvers, _mock_which
+    ):
+        with patch.dict(os.environ, {}, clear=True):
+            with patch("cereeberus.distance.ilp.pulp.COIN_CMD", return_value="coin-fallback") as mock_coin_cmd:
+                solver = select_pulp_solver()
+
+        self.assertEqual(solver, "coin-fallback")
+        mock_list_solvers.assert_called_once_with(onlyAvailable=True)
+        mock_coin_cmd.assert_called_once_with(msg=0)
 
 
 
