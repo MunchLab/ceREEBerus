@@ -5,6 +5,7 @@ import networkx as nx
 import numpy as np
 
 from ..draw import draw
+from collections import Counter
 
 # from build.lib.cereeberus.reeb import graph
 
@@ -710,9 +711,9 @@ class ReebGraph(nx.MultiDiGraph):
             # (a, a) is an empty interval for open type
             return ReebGraph()
         if type == "open":
-            v_list = [v for v in self.nodes() if self.f[v] > a and self.f[v] < b]
+            v_list = set(v for v in self.nodes() if self.f[v] > a and self.f[v] < b)
         elif type == "closed":
-            v_list = [v for v in self.nodes() if self.f[v] >= a and self.f[v] <= b]
+            v_list = set(v for v in self.nodes() if self.f[v] >= a and self.f[v] <= b)
 
         # Keep the edges where either endpoint (or both) is in (a,b)
         e_list = [e for e in self.edges() if e[0] in v_list or e[1] in v_list]
@@ -732,7 +733,7 @@ class ReebGraph(nx.MultiDiGraph):
         )
 
         # Make a dictionary of counts to deal with multiedges
-        e_dict = {e: e_list.count(e) for e in e_list}
+        e_dict = Counter(e_list)
 
         if verbose:
             print("Vertices (v,f(v)):", [(v, self.f[v]) for v in v_list])
@@ -743,7 +744,7 @@ class ReebGraph(nx.MultiDiGraph):
         H = ReebGraph()
 
         for v in v_list:
-            H.add_node(v, self.f[v])
+            H.add_node(v, self.f[v], reset_pos=False)
 
         for e in e_dict:
             if e[0] in v_list and e[1] in v_list:
@@ -752,7 +753,7 @@ class ReebGraph(nx.MultiDiGraph):
                     print(f"Adding {e_dict[e]} of edge {e} entirely inside slice:")
 
                 for i in range(e_dict[e]):  # Add an edge for each copy in the list
-                    H.add_edge(e[0], e[1])
+                    H.add_edge(e[0], e[1], reset_pos=False)
 
             elif e[0] not in v_list and e[1] not in v_list:
                 # The edge is entirely crossing the slice, so we add two vertices and an edge
@@ -764,9 +765,9 @@ class ReebGraph(nx.MultiDiGraph):
                 for i in range(e_dict[e]):
                     v1 = "-".join([str(v) for v in e]) + "_" + str(i) + "_lower"
                     v2 = "-".join([str(v) for v in e]) + "_" + str(i) + "_upper"
-                    H.add_node(v1, a)
-                    H.add_node(v2, b)
-                    H.add_edge(v1, v2)
+                    H.add_node(v1, a, reset_pos=False)
+                    H.add_node(v2, b, reset_pos=False)
+                    H.add_edge(v1, v2, reset_pos=False)
             else:
                 # One vertex is in the set and one is out.
                 # Need to check (for the closed case) that this isn't an edge going up from the top bound or down from the bottom bound
@@ -805,8 +806,8 @@ class ReebGraph(nx.MultiDiGraph):
                         func_val = b
 
                         # Add a new vertex called edge_name with value b
-                        H.add_node(edge_name, func_val)
-                        H.add_edge(e[0], edge_name)
+                        H.add_node(edge_name, func_val, reset_pos=False)
+                        H.add_edge(e[0], edge_name, reset_pos=False)
                     else:
                         # The higher edge is in the set, so the other vertex must have
                         # value below the min
@@ -823,8 +824,9 @@ class ReebGraph(nx.MultiDiGraph):
                         func_val = a
 
                         # Add a new vertex called edge_name with value a
-                        H.add_node(edge_name, func_val)
-                        H.add_edge(edge_name, e[1])
+                        H.add_node(edge_name, func_val, reset_pos=False)
+                        H.add_edge(edge_name, e[1], reset_pos=False)
+        H.set_pos_from_f()
         return H
 
     def connected_components(self):

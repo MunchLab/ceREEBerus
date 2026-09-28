@@ -20,7 +20,7 @@ dependencies = ["numpy",
             "matplotlib",
             "pandas",
             "scipy", 
-            "pulp",
+            "pulp<4",
             "gudhi",
             "scikit-learn"
             ]

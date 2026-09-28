@@ -299,8 +299,8 @@ class TestReebClass(unittest.TestCase):
         self.assertEqual(set(R.nodes), set(R.pos_f.keys()))
         for v in R.nodes:
             self.assertEqual(R.pos_f[v][1], R.f[v])
-
-
+ 
+ 
     def test_remove_node_deferred_pos_cleanup(self):
         # Regression test: remove_node(reset_pos=False) must still drop the
         # removed vertex's pos_f entry immediately. Previously this cleanup
@@ -411,7 +411,29 @@ class TestReebClass(unittest.TestCase):
         self.assertEqual(self._shape(T.slice(1, 4, type='closed')), (2, 2, 1))
         self.assertEqual(self._shape(T.slice(2, 2, type='closed')), (2, 0, 2))
     
+ 
+       
+ 
+    def test_slice_multiedge(self):
+        # Slicing across a multiedge should produce one new lower/upper vertex
+        # pair per parallel copy, and the result should still be a well-formed
+        # Reeb graph (positions computed, edges pointing upward, etc).
+        R = ex_rg.torus()  # nodes a=0, b=1, c=4, d=5, with a double edge b-c
 
+        # Interval (2,3) falls strictly between b and c, so v_list is empty and
+        # both copies of the b-c multiedge cross the slice entirely.
+        H = R.slice(2, 3)
+
+        self.assertEqual(len(H.nodes), 4)   # 2 lower + 2 upper subdivision vertices
+        self.assertEqual(len(H.edges), 2)   # one edge per copy of the multiedge
+        self.assertEqual(H.number_connected_components(), 2)
+        self.check_reeb(H)
+
+        # Same check for the closed-interval case
+        H = R.slice(2, 3, type='closed')
+        self.assertEqual(len(H.nodes), 4)
+        self.assertEqual(len(H.edges), 2)
+        self.check_reeb(H)
        
 
     def test_boundary_map_parallel_edges(self):
