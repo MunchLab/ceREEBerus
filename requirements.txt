@@ -3,7 +3,7 @@ networkx
 matplotlib
 pandas
 scipy
-pulp
+pulp<4
 gudhi
 sphinx
 nbsphinx
