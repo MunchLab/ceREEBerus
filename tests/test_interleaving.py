@@ -13,44 +13,44 @@ from cereeberus import Assignment, Interleave, MapperGraph
 
 class TestInterleaving(unittest.TestCase):
     def test_torus_line(self):
-        T = torus(0, 2, 10, 12, delta = 1, seed = 17)
+        T = torus(0, 2, 10, 12, delta=1, seed=17)
         L = line(0, 12)
 
         myAssgn = Assignment(T, L, n=1, initialize_random_maps=True)
 
-        # Make sure all the matrices have the right row and column labels 
+        # Make sure all the matrices have the right row and column labels
 
-        #--- B ---# 
+        # --- B ---#
 
-        for H, graph in [(myAssgn.F, 'F'), (myAssgn.G, 'G')]: 
-            for key in ['0', 'n']:
+        for H, graph in [(myAssgn.F, "F"), (myAssgn.G, "G")]:
+            for key in ["0", "n"]:
                 mygraph = H(key)
 
                 rows_ = mygraph.sorted_vertices()
                 cols_ = mygraph.sorted_edges()
 
-                B_mat = myAssgn.B(graph,key)
+                B_mat = myAssgn.B(graph, key)
                 self.assertEqual(rows_, B_mat.rows)
                 self.assertEqual(cols_, B_mat.cols)
 
-                # Check all columns sum to 2 
+                # Check all columns sum to 2
                 self.assertTrue(np.all(B_mat.col_sum()[[2]]))
-                
-        #--- I ---# 
 
-        for H, graph in [(myAssgn.F, 'F'), (myAssgn.G, 'G')]: 
-            for key in ['0', 'n']:
+        # --- I ---#
+
+        for H, graph in [(myAssgn.F, "F"), (myAssgn.G, "G")]:
+            for key in ["0", "n"]:
                 mygraph = H(key)
 
-                if key == '0':
-                    nextkey = 'n'
-                elif key == 'n':
-                    nextkey = '2n'
+                if key == "0":
+                    nextkey = "n"
+                elif key == "n":
+                    nextkey = "2n"
 
                 mynextgraph = H(nextkey)
 
-                # vertex version 
-                myI = myAssgn.I(graph, key, 'V')
+                # vertex version
+                myI = myAssgn.I(graph, key, "V")
                 cols_ = mygraph.sorted_vertices()
                 rows_ = mynextgraph.sorted_vertices()
                 self.assertEqual(cols_, myI.get_all_cols())
@@ -60,7 +60,7 @@ class TestInterleaving(unittest.TestCase):
                 self.assertTrue(np.all(myI.col_sum()[[1]]))
 
                 # edge version
-                myI = myAssgn.I(graph, key, 'E')
+                myI = myAssgn.I(graph, key, "E")
                 cols_ = mygraph.sorted_edges()
                 rows_ = mynextgraph.sorted_edges()
                 self.assertEqual(cols_, myI.get_all_cols())
@@ -69,61 +69,74 @@ class TestInterleaving(unittest.TestCase):
                 # Check all columns sum to 1
                 self.assertTrue(np.all(myI.col_sum()[[1]]))
 
-        #--- Phi ---# 
+        # --- Phi ---#
 
         # Checks that the intial setting of Phi is correct
 
-        for key, nextkey in [('0','n'), ('n', '2n')]:
-            for obj_type in ['V', 'E']:
+        for key, nextkey in [("0", "n"), ("n", "2n")]:
+            for obj_type in ["V", "E"]:
                 myphi = myAssgn.phi(key, obj_type)
-                cols = myAssgn.F(key).sorted_vertices() if obj_type == 'V' else myAssgn.F(key).sorted_edges()
-                rows = myAssgn.G(nextkey).sorted_vertices() if obj_type == 'V' else myAssgn.G(nextkey).sorted_edges()
+                cols = (
+                    myAssgn.F(key).sorted_vertices()
+                    if obj_type == "V"
+                    else myAssgn.F(key).sorted_edges()
+                )
+                rows = (
+                    myAssgn.G(nextkey).sorted_vertices()
+                    if obj_type == "V"
+                    else myAssgn.G(nextkey).sorted_edges()
+                )
                 # print(f'key: {key}, nextkey: {nextkey}, obj_type: {obj_type}')
                 self.assertEqual(rows, myphi.get_all_rows())
                 self.assertEqual(cols, myphi.get_all_cols())
 
                 # Check all columns sum to 1
-                self.assertTrue( np.all(myphi.col_sum()== 1)) 
+                self.assertTrue(np.all(myphi.col_sum() == 1))
 
-
-        #--- Psi ---#
+        # --- Psi ---#
 
         # Checks that the intial setting of Psi is correct
 
-        for key, nextkey in [('0','n'), ('n', '2n')]:
-            for obj_type in ['V', 'E']:
+        for key, nextkey in [("0", "n"), ("n", "2n")]:
+            for obj_type in ["V", "E"]:
                 mypsi = myAssgn.psi(key, obj_type)
-                cols = myAssgn.G(key).sorted_vertices() if obj_type == 'V' else myAssgn.G(key).sorted_edges()
-                rows = myAssgn.F(nextkey).sorted_vertices() if obj_type == 'V' else myAssgn.F(nextkey).sorted_edges()
+                cols = (
+                    myAssgn.G(key).sorted_vertices()
+                    if obj_type == "V"
+                    else myAssgn.G(key).sorted_edges()
+                )
+                rows = (
+                    myAssgn.F(nextkey).sorted_vertices()
+                    if obj_type == "V"
+                    else myAssgn.F(nextkey).sorted_edges()
+                )
                 # print(f'key: {key}, nextkey: {nextkey}, obj_type: {obj_type}')
                 self.assertEqual(rows, mypsi.get_all_rows())
                 self.assertEqual(cols, mypsi.get_all_cols())
 
                 # Check all columns sum to 1
-                self.assertTrue( np.all(mypsi.col_sum()== 1))
+                self.assertTrue(np.all(mypsi.col_sum() == 1))
 
-        
-        # Check that the non-random setting of the phi_n and psi_n maps works 
-        # If this is true, then those diagrams already commute. 
+        # Check that the non-random setting of the phi_n and psi_n maps works
+        # If this is true, then those diagrams already commute.
 
-        myAssgn.set_random_assignment(random_n = False)
+        myAssgn.set_random_assignment(random_n=False)
 
-        for maptype in ['phi', 'psi']:
-            for obj_type in ['V', 'E']:
+        for maptype in ["phi", "psi"]:
+            for obj_type in ["V", "E"]:
                 P = myAssgn.parallelogram_matrix(maptype, obj_type)
                 self.assertTrue(np.all(P.col_sum() == 0))
 
         # check that the optimize function works and has the same output value as recomputing internally
         result = myAssgn.optimize()
-        self.assertFalse(result) 
+        self.assertFalse(result)
 
         newmyAssgn = Assignment(T, L, n=2, initialize_random_maps=True)
         new_result = newmyAssgn.optimize()
         self.assertTrue(new_result)
 
-                
-        # Check that the dist_optimize function works and has the same output value as recomputing internally 
-        
+        # Check that the dist_optimize function works and has the same output value as recomputing internally
+
         loss_out = myAssgn.dist_optimize()
         loss_in = myAssgn.loss()
         self.assertEqual(loss_out, loss_in)
@@ -155,7 +168,9 @@ class TestInterleaving(unittest.TestCase):
 
     @patch("cereeberus.distance.ilp.shutil.which", return_value="/custom/cbc")
     @patch("cereeberus.distance.ilp.pulp.COIN_CMD")
-    def test_select_pulp_solver_prefers_custom_cbc_path(self, mock_coin_cmd, _mock_which):
+    def test_select_pulp_solver_prefers_custom_cbc_path(
+        self, mock_coin_cmd, _mock_which
+    ):
         mock_coin_cmd.return_value = "coin-solver"
 
         with patch.dict(
@@ -203,7 +218,9 @@ class TestInterleaving(unittest.TestCase):
         self, mock_list_solvers, _mock_which
     ):
         with patch.dict(os.environ, {}, clear=True):
-            with patch("cereeberus.distance.ilp.pulp.COIN_CMD", return_value="coin-fallback") as mock_coin_cmd:
+            with patch(
+                "cereeberus.distance.ilp.pulp.COIN_CMD", return_value="coin-fallback"
+            ) as mock_coin_cmd:
                 solver = select_pulp_solver()
 
         self.assertEqual(solver, "coin-fallback")
@@ -211,8 +228,20 @@ class TestInterleaving(unittest.TestCase):
         mock_coin_cmd.assert_called_once_with(msg=0)
 
 
+class TestDistOptimizeUnequalRange(unittest.TestCase):
+    """Regression: dist_optimize must handle graphs whose function ranges differ
+    (e.g. G a smoothing of F), matching the feasibility solver."""
 
+    def test_graph_vs_smoothing(self):
+        F = line(0, 3)
+        G = F.smoothing(1)  # range extends to [-1, 4]
+        for first, second in [(F, G), (G, F)]:
+            A = Assignment(first, second, n=1)
+            self.assertTrue(A.optimize())
+            self.assertEqual(A.loss(), 0)
+            self.assertEqual(Assignment(first, second, n=1).dist_optimize(), 0)
+            self.assertEqual(Interleave(first, second).dist_fit(), 1)
 
-
-
-
+    def test_offset_ranges(self):
+        F, G = line(0, 3), line(1, 5)
+        self.assertEqual(Assignment(F, G, n=2).dist_optimize(), 0)

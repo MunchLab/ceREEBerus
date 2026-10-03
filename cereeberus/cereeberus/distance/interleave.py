@@ -218,6 +218,7 @@ class Interleave:
         # low = (high//2) + 1 if high > 1 else 1
         low = low  # keep the last infeasible n as the lower bound
         best_n = high
+        best_bound = high
 
         while low <= high:
             mid = (low + high) // 2
@@ -243,6 +244,8 @@ class Interleave:
                     if bound < best_bound:
                         best_bound = bound  # to tighten the upper bound on the search space. this tries to go higher
                     low = mid + 1
+                    # no n >= best_bound can beat the bound we already have
+                    high = min(high, best_bound - 1)
             except ValueError:  # infeasible assignment
                 low = mid + 1
 
