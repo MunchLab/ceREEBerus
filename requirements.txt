@@ -4,6 +4,7 @@ matplotlib
 pandas
 scipy
 pulp
+highspy; python_version >= "3.12"
 gudhi
 sphinx
 nbsphinx
