@@ -210,6 +210,24 @@ class TestInterleaving(unittest.TestCase):
         mock_list_solvers.assert_called_once_with(onlyAvailable=True)
         mock_coin_cmd.assert_called_once_with(msg=0)
 
+class TestDistOptimizeUnequalRange(unittest.TestCase):
+    """Regression: dist_optimize must handle graphs whose function ranges differ
+    (e.g. G a smoothing of F), matching the feasibility solver."""
+
+    def test_graph_vs_smoothing(self):
+        F = line(0, 3)
+        G = F.smoothing(1)  # range extends to [-1, 4]
+        for first, second in [(F, G), (G, F)]:
+            A = Assignment(first, second, n=1)
+            self.assertTrue(A.optimize())
+            self.assertEqual(A.loss(), 0)
+            self.assertEqual(Assignment(first, second, n=1).dist_optimize(), 0)
+            self.assertEqual(Interleave(first, second).dist_fit(), 1)
+
+    def test_offset_ranges(self):
+        F, G = line(0, 3), line(1, 5)
+        self.assertEqual(Assignment(F, G, n=2).dist_optimize(), 0)
+
 
 
 
