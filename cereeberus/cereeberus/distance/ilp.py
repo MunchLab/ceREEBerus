@@ -794,7 +794,9 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
     # create the constraints
     for block in func_vals:
         for starting_map in ["F", "G"]:
-            if block not in myAssgn.all_func_vals(map=starting_map):  # If the block is not in the starting map, skip it. This is to account for the graphs with different function values
+            if block not in myAssgn.all_func_vals(
+                map=starting_map
+            ):  # If the block is not in the starting map, skip it. This is to account for the graphs with different function values
                 continue
             # set the other map based on starting map
             if starting_map == "F":
