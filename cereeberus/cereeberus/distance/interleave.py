@@ -14,6 +14,99 @@ from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
 
 
+>>> ADDED (cross-height fix): smoothings built from window components ---------------------
+def _undirected(Y):
+    U = nx.Graph()
+    U.add_nodes_from(Y.nodes)
+    U.add_edges_from((u, v) for u, v, *_ in Y.edges)
+    return U
+
+
+def _window_components(Y, k):
+    """Components (as vertex sets) of the windows of Y thickened by k >= 1.
+
+    Vc[t] : components of the subgraph induced by vertices with height in [t-k, t+k]
+            (= the vertices of Y^k at height t).
+    Ec[t] : components of the subgraph induced by vertices with height in [t+1-k, t+k]
+            (= the edges of Y^k between heights t and t+1).
+    """
+    U = _undirected(Y)
+    vals = [Y.f[v] for v in Y.nodes]
+    lo, hi = min(vals) - k, max(vals) + k
+
+    def win(a, b):
+        keep = [v for v in Y.nodes if a <= Y.f[v] <= b]
+        cs = [frozenset(c) for c in nx.connected_components(U.subgraph(keep))]
+        return sorted(cs, key=lambda c: sorted(map(str, c)))
+
+    Vc = {t: win(t - k, t + k) for t in range(lo, hi + 1)}
+    Ec = {t: win(t + 1 - k, t + k) for t in range(lo, hi)}
+    return Vc, Ec
+
+
+def _window_smoothing(Y, k, tag):
+    """The k-smoothing of the mapper graph Y (k >= 1), built from window components.
+
+    Returns (S, vcomp, ecomp):
+      S     : MapperGraph; vertex (tag, t, i) = i-th component of Y[t-k, t+k];
+              one edge per component of Y[t+1-k, t+k], joining the two vertices containing it.
+      vcomp : vertex label -> vertex set of Y it stands for.
+      ecomp : edge label (a, b, key) -> vertex set of Y it stands for.
+    """
+    from ..reeb.mapper import MapperGraph
+
+    Vc, Ec = _window_components(Y, k)
+    X = nx.MultiGraph()
+    f, vcomp, by_t = {}, {}, {}
+    for t, cs in Vc.items():
+        by_t[t] = []
+        for i, C in enumerate(cs):
+            lab = (tag, t, i)
+            X.add_node(lab)
+            f[lab] = t
+            vcomp[lab] = C
+            by_t[t].append((lab, C))
+    pending = []
+    for t, cs in Ec.items():
+        for CE in cs:
+            a = [lab for lab, C in by_t[t] if CE <= C]
+            b = [lab for lab, C in by_t[t + 1] if CE <= C]
+            assert len(a) == 1 and len(b) == 1
+            pending.append((a[0], b[0], CE))
+    for a, b, _ in pending:
+        X.add_edge(a, b)
+    S = MapperGraph(X, f, delta=Y.delta)
+    ecomp, count = {}, {}
+    for a, b, CE in pending:
+        key = count.get((a, b), 0)
+        count[(a, b)] = key + 1
+        ecomp[(a, b, key)] = CE
+    assert set(ecomp) == set(S.edges(keys=True)), "edge keys of the smoothing did not line up"
+    return S, vcomp, ecomp
+
+
+def _smoothings_and_maps(Y, n, name):
+    """Y^n, Y^2n and the maps Y -> Y^n -> Y^2n (vertices and edges), plus the component records."""
+    Sn, vn, en = _window_smoothing(Y, n, name + "^n")
+    S2, v2, e2 = _window_smoothing(Y, 2 * n, name + "^2n")
+
+    def find(comps, t, X, f):
+        hits = [lab for lab, C in comps.items() if f(lab) == t and X <= C]
+        assert len(hits) == 1
+        return hits[0]
+
+    I0V = {y: find(vn, Y.f[y], frozenset([y]), lambda l: l[1]) for y in Y.nodes}
+    I0E = {}
+    for u, v, key in Y.edges(keys=True):
+        lo_v = u if Y.f[u] <= Y.f[v] else v
+        I0E[(u, v, key)] = find(en, Y.f[lo_v], frozenset([lo_v]), lambda e: e[0][1])
+    InV = {lab: find(v2, lab[1], C, lambda l: l[1]) for lab, C in vn.items()}
+    InE = {e: find(e2, e[0][1], C, lambda x: x[0][1]) for e, C in en.items()}
+    return Sn, S2, I0V, I0E, InV, InE, (vn, en, v2, e2)
+# <<< END ADDED --------------------------------------------------------------------------------
+
+
+
 class Interleave:
     # Import MapperGraph inside methods as needed to avoid circular import
     """
@@ -526,8 +619,21 @@ class Assignment:
         # Make F graphs and smoothed versions
         self.F_ = {}
         self.F_["0"] = F
-        self.F_["n"], I_0_V, I_0_E = F.smoothing_and_maps(self.n)
-        self.F_["2n"], I_n_V, I_n_E = self.F("n").smoothing_and_maps(self.n)
+        # >>> REMOVED (cross-height fix), for n >= 1 only; still used for n = 0:
+        # self.F_["n"], I_0_V, I_0_E = F.smoothing_and_maps(self.n)
+        # self.F_["2n"], I_n_V, I_n_E = self.F("n").smoothing_and_maps(self.n)
+        # >>> ADDED (cross-height fix): build the smoothings from window components and keep
+        # the component record (needed for the cross-height inclusion matrices).
+        self.comp_ = {}
+        self.Y0_ = {"F": F, "G": G}
+        self._I_cross_cache = {}
+        if self.n >= 1:
+            (self.F_["n"], self.F_["2n"], I_0_V, I_0_E, I_n_V, I_n_E,
+             self.comp_["F"]) = _smoothings_and_maps(F, self.n, "F")
+        else:
+            self.F_["n"], I_0_V, I_0_E = F.smoothing_and_maps(self.n)
+            self.F_["2n"], I_n_V, I_n_E = self.F("n").smoothing_and_maps(self.n)
+        # <<< END ADDED
 
         # Get the dictionaries needed for the induced maps' block structure
         for key in ["0", "n", "2n"]:
@@ -560,8 +666,17 @@ class Assignment:
         # Now do the same for G
         self.G_ = {}
         self.G_["0"] = G
-        self.G_["n"], I_0_V, I_0_E = G.smoothing_and_maps(self.n)
-        self.G_["2n"], I_n_V, I_n_E = self.G_["n"].smoothing_and_maps(self.n)
+        # >>> REMOVED (cross-height fix), for n >= 1 only; still used for n = 0:
+        # self.G_["n"], I_0_V, I_0_E = G.smoothing_and_maps(self.n)
+        # self.G_["2n"], I_n_V, I_n_E = self.G_["n"].smoothing_and_maps(self.n)
+        # >>> ADDED (cross-height fix)
+        if self.n >= 1:
+            (self.G_["n"], self.G_["2n"], I_0_V, I_0_E, I_n_V, I_n_E,
+             self.comp_["G"]) = _smoothings_and_maps(G, self.n, "G")
+        else:
+            self.G_["n"], I_0_V, I_0_E = G.smoothing_and_maps(self.n)
+            self.G_["2n"], I_n_V, I_n_E = self.G_["n"].smoothing_and_maps(self.n)
+        # <<< END ADDED
 
         # Get the dictionaries needed for the induced maps' block structure
         for key in ["0", "n", "2n"]:
@@ -1853,6 +1968,102 @@ class Assignment:
         return Result
 
     # --- Loss functions ----
+
+    # >>> ADDED (cross-height fix): cross-height inclusion matrices and their loss --------------
+    def I_cross(self, graph="F", key="0", obj_type="V", s=0, t=0):
+        """
+        Cross-height inclusion matrix (fixed 0/1 matrix, needs n >= 1).
+
+        key = '0' : I_Y(s -> t). Columns: vertices of Y at height s. Rows: vertices (obj_type 'V')
+                    or edges (obj_type 'E') of Y^n at height t. Entry 1 at the element containing
+                    the vertex. Valid for |s - t| <= n ('V') or t+1-n <= s <= t+n ('E').
+        key = 'n' : I_{Y^n}(s -> t). Columns: vertices of Y^n at height s. Rows: vertices / edges
+                    of Y^2n at height t. Entry 1 at the element containing that component.
+
+        For s = t and obj_type 'V' these are the existing self.I(graph, key, 'V')[t].
+        """
+        ck = (graph, key, obj_type, s, t)
+        if ck in self._I_cross_cache:
+            return self._I_cross_cache[ck]
+        vn, en, v2, e2 = self.comp_[graph]
+        if key == "0":
+            cols = self.val_to_verts[graph]["0"].get(s, [])
+            col_sets = {y: frozenset([y]) for y in cols}
+            tgt_key, tgt_v, tgt_e = "n", vn, en
+        elif key == "n":
+            cols = self.val_to_verts[graph]["n"].get(s, [])
+            col_sets = {c: vn[c] for c in cols}
+            tgt_key, tgt_v, tgt_e = "2n", v2, e2
+        else:
+            raise ValueError("key must be '0' or 'n'")
+        if obj_type == "V":
+            rows = self.val_to_verts[graph][tgt_key].get(t, [])
+            row_sets = {r: tgt_v[r] for r in rows}
+        else:
+            rows = self.val_to_edges[graph][tgt_key].get(t, [])
+            row_sets = {r: tgt_e[tuple(r)] for r in rows}
+        M = LM(rows=rows, cols=cols)
+        for c in cols:
+            hits = [r for r in rows if col_sets[c] <= row_sets[r]]
+            if len(hits) != 1:
+                raise ValueError(f"I_cross: {c} at height {s} is not in exactly one element at height {t}")
+            M[hits[0], c] = 1
+        self._I_cross_cache[ck] = M
+        return M
+
+    def cross_height_pairs(self, maptype="phi", obj_type="V"):
+        """
+        The (s, t) pairs of the cross-height thickening diagrams for this map:
+        'V': |s - t| <= n, s != t (s = t is the existing thickening parallelogram);
+        'E': t+1-n <= s <= t+n (vertex open at s inside the thickened edge open at t).
+        s runs over heights of the source graph, t over the blocks of the n-level map.
+        """
+        if self.n == 0:
+            return []
+        src = "F" if maptype == "phi" else "G"
+        M = self.get_interleaving_map(maptype, "n", obj_type)
+        out = []
+        for t in M.get_all_block_indices():
+            for s in self.val_to_verts[src]["0"]:
+                if obj_type == "V" and 0 < abs(s - t) <= self.n:
+                    out.append((s, t))
+                if obj_type == "E" and t + 1 - self.n <= s <= t + self.n:
+                    out.append((s, t))
+        return out
+
+    def cross_parallelogram_loss(self, maptype="phi", obj_type="V", s=0, t=0):
+        """
+        Loss of one cross-height thickening diagram, as in Definition 5 of [CGMPW]:
+        max over vertices y of the source graph at height s of
+        d_{2n}( map_n[t](I_src(s->t) y), I_{dst^n}(s->t)(map_0[s] y) ).
+        Undefined map columns have infinite loss.
+        """
+        src, dst = ("F", "G") if maptype == "phi" else ("G", "F")
+        Mn = self.get_interleaving_map(maptype, "n", obj_type)[t]
+        M0 = self.get_interleaving_map(maptype, "0", "V")[s]
+        top = Mn.get_array() @ self.I_cross(src, "0", obj_type, s, t).get_array()
+        bot = self.I_cross(dst, "n", obj_type, s, t).get_array() @ M0.get_array()
+        if top.shape[1] == 0:
+            return 0
+        if top.shape[0] == 0:
+            return np.inf
+        rows = list(Mn.rows)
+        Dlm = self.D(dst, "2n", obj_type)[t]
+        worst = 0
+        for k in range(top.shape[1]):
+            if top[:, k].max() < 0.5 or bot[:, k].max() < 0.5:
+                return np.inf
+            i, j = int(np.argmax(top[:, k])), int(np.argmax(bot[:, k]))
+            if i != j:
+                worst = max(worst, Dlm[rows[i], rows[j]])
+        return worst
+
+    def cross_parallelogram(self, maptype="phi", obj_type="V"):
+        """Max loss over all cross-height thickening diagrams of this map and object type."""
+        vals = [self.cross_parallelogram_loss(maptype, obj_type, s, t)
+                for s, t in self.cross_height_pairs(maptype, obj_type)]
+        return max(vals) if vals else 0
+    # <<< END ADDED --------------------------------------------------------------------------------
 
     def loss_table(self):
         """

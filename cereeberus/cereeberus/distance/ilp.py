@@ -9,6 +9,86 @@ from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
 
 
+# >>> ADDED (cross-height fix) ------------------------------------------------------------------
+def _add_cross_height_constraints(prob, myAssgn, phi_vars, psi_vars):
+    """
+    Add the cross-height thickening parallelograms
+
+        map_n[t] . I_src(s -> t)  =  I_{dst^n}(s -> t) . map_0[s]
+
+    for map = phi (src F, dst G) and psi (src G, dst F), for
+        vertex opens: 0 < |s - t| <= n      (s = t is the existing thickening parallelogram),
+        edge opens:   t+1-n <= s <= t+n     (vertex open at s inside the thickened edge open at t).
+    I_src and I_{dst^n} are the fixed 0/1 matrices from Assignment.I_cross.
+
+    These are hard equalities used only by solve_ilp. The distance optimizer
+    is maintained separately.
+    Returns the number of constraints added.
+    """
+    n = myAssgn.n
+    if n == 0:
+        return 0
+    added = 0
+    for maptype, start, other, vars_ in (("phi", "F", "G", phi_vars), ("psi", "G", "F", psi_vars)):
+        start_vals = myAssgn.all_func_vals(map=start)
+        for obj_type in ["V", "E"]:
+            blocks = myAssgn.get_interleaving_map(maptype, "n", obj_type).get_all_block_indices()
+            for t in blocks:
+                Mn = myAssgn.get_interleaving_map(maptype, "n", obj_type)[t]
+                n_rows, n_cols = Mn.get_array().shape
+                if n_rows == 0 or n_cols == 0:
+                    continue
+                if obj_type == "V":
+                    s_list = [s for s in start_vals if 0 < abs(s - t) <= n]
+                else:
+                    s_list = [s for s in start_vals if t + 1 - n <= s <= t + n]
+                for s in s_list:
+                    M0 = myAssgn.get_interleaving_map(maptype, "0", "V")[s]
+                    m0_rows, m0_cols = M0.get_array().shape
+                    if m0_cols == 0:
+                        continue
+                    I_src = myAssgn.I_cross(start, "0", obj_type, s, t).get_array()
+                    I_dst = myAssgn.I_cross(other, "n", obj_type, s, t).get_array()
+                    map_n = vars_[t]["n"][obj_type]
+                    map_0 = vars_[s]["0"]["V"]
+                    for k in range(m0_cols):
+                        j0 = int(np.argmax(I_src[:, k]))  # I_src has one 1 per column
+                        diff = [
+                            map_n[i, j0]
+                            - pulp.lpSum(I_dst[i, l] * map_0[l, k] for l in range(m0_rows) if I_dst[i, l])
+                            for i in range(n_rows)
+                        ]
+                        for i in range(n_rows):
+                            prob += diff[i] == 0
+                            added += 1
+    return added
+# <<< END ADDED ----------------------------------------------------------------------------------
+
+
+
+def _variable_blocks(myAssgn):
+    """All blocks on which any decision map has source objects, including smoothing tails."""
+    blocks = set(myAssgn.all_func_vals())
+    for maptype in ("phi", "psi"):
+        for key in ("0", "n"):
+            for obj_type in ("V", "E"):
+                blocks.update(myAssgn.get_interleaving_map(maptype, key, obj_type).get_all_block_indices())
+    return sorted(blocks)
+
+
+def _add_totality_constraints(prob, myAssgn, phi_vars, psi_vars):
+    """Every source component must have exactly one image, at every smoothed height."""
+    for maptype, vars_ in (("phi", phi_vars), ("psi", psi_vars)):
+        for key in ("0", "n"):
+            for obj_type in ("V", "E"):
+                M = myAssgn.get_interleaving_map(maptype, key, obj_type)
+                for t in M.get_all_block_indices():
+                    n_rows, n_cols = M[t].get_array().shape
+                    for col in range(n_cols):
+                        prob += pulp.lpSum(vars_[t][key][obj_type][row, col]
+                                           for row in range(n_rows)) == 1
+
+
 def select_pulp_solver(pulp_solver=None):
     """Return a usable PuLP solver object, honoring explicit overrides and CBC paths.
 
@@ -156,6 +236,7 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
     """
     # function values
     func_vals = myAssgn.all_func_vals()
+    var_blocks = _variable_blocks(myAssgn)
 
     # create the ILP problem
     prob = pulp.LpProblem("Interleave_Optimization_Problem", pulp.LpMinimize)
@@ -166,24 +247,25 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
             thickening: {obj_type: {} for obj_type in ["V", "E"]}
             for thickening in ["0", "n"]
         }
-        for block in func_vals
+        for block in var_blocks
     }
     psi_vars = {
         block: {
             thickening: {obj_type: {} for obj_type in ["V", "E"]}
             for thickening in ["0", "n"]
         }
-        for block in func_vals
+        for block in var_blocks
     }
 
     # create the decision variables (NOTE: these are all the decision variables for all the diagrams)
     for thickening in ["0", "n"]:
         for obj_type in ["V", "E"]:
-            for block in (func_vals[:-1] if obj_type == "E" else func_vals):
+            for block in var_blocks:
 
                 # create lp variables for phi
-                n_rows = myAssgn.phi(thickening, obj_type)[block].get_array().shape[0]
-                n_cols = myAssgn.phi(thickening, obj_type)[block].get_array().shape[1]
+                phi_map = myAssgn.phi(thickening, obj_type)
+                n_rows, n_cols = (phi_map[block].get_array().shape
+                                  if block in phi_map.blocks else (0, 0))
 
                 phi_vars[block][thickening][obj_type] = pulp.LpVariable.dicts(
                     "phi_" + thickening + obj_type + "_" + str(block),
@@ -197,8 +279,9 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
                 #         prob += phi_vars[block][thickening][obj_type][(a,b)] == myAssgn.phi(thickening, obj_type)[block].get_array()[a][b]
 
                 # create lp variables for psi
-                n_rows = myAssgn.psi(thickening, obj_type)[block].get_array().shape[0]
-                n_cols = myAssgn.psi(thickening, obj_type)[block].get_array().shape[1]
+                psi_map = myAssgn.psi(thickening, obj_type)
+                n_rows, n_cols = (psi_map[block].get_array().shape
+                                  if block in psi_map.blocks else (0, 0))
 
                 psi_vars[block][thickening][obj_type] = pulp.LpVariable.dicts(
                     "psi_" + thickening + obj_type + "_" + str(block),
@@ -589,6 +672,12 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
                             )
                             == 1
                         )
+
+    _add_totality_constraints(prob, myAssgn, phi_vars, psi_vars)
+
+    # >>> ADDED (cross-height fix): cross-height thickening parallelograms as equalities
+    _add_cross_height_constraints(prob, myAssgn, phi_vars, psi_vars)
+    # <<< END ADDED
 
     # Set the objective function
     prob += 0
