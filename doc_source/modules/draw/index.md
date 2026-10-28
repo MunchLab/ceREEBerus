@@ -1,10 +1,11 @@
 # Draw Module
 
-The ``draw`` module has helper code used throughout the package. 
+The ``draw`` module has helper code used throughout the package.
 
 ```{eval-rst}
 .. toctree::
    :maxdepth: 2
-   
+
     Draw <compute_draw.rst>
+    Metro interleaving maps <metro_maps.md>
 ```
