@@ -8,6 +8,7 @@ end-to-end solve against the installed PuLP.
 
 import os
 import sys
+import sys
 import unittest
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
@@ -187,6 +188,26 @@ class TestEndToEnd(unittest.TestCase):
         prob += t >= pulp.lpSum(x.values())
 
         code, status = _solve(prob, select_pulp_solver())
+
+        self.assertEqual((code, status), (1, "Optimal"))
+        self.assertEqual(round(pulp.value(t)), 3)
+        self.assertEqual(sum(round(pulp.value(v)) for v in x.values()), 3)
+
+    @unittest.skipIf(sys.version_info < (3, 12), "requires Python 3.12+")
+    def test_small_ilp_with_explicit_highs_python312plus(self):
+        available = set(pulp.listSolvers(onlyAvailable=True))
+        if "HiGHS" not in available:
+            self.fail("HiGHS solver must be available on Python 3.12+.")
+
+        prob = pulp.LpProblem("compatibility_test_highs", pulp.LpMinimize)
+        x = _new_var_dict(prob, "x", [(i, j) for i in range(2) for j in range(2)],
+                          cat="Binary")
+        t = _new_var(prob, "t", cat="Integer")
+        prob += t
+        prob += pulp.lpSum(x.values()) >= 3
+        prob += t >= pulp.lpSum(x.values())
+
+        code, status = _solve(prob, select_pulp_solver("highs"))
 
         self.assertEqual((code, status), (1, "Optimal"))
         self.assertEqual(round(pulp.value(t)), 3)
