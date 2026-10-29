@@ -358,7 +358,7 @@ class LabeledMatrix:
 
         # Add vertices as the row and column labels
         row_labels = [_format_matrix_label(r) for r in self.rows]
-        col_labels = [_format_matrix_label(c) for c in self.cols]eesdsess
+        col_labels = [_format_matrix_label(c) for c in self.cols]
 
         ax.set_xticks(range(len(self.cols)), col_labels, rotation=90)
         ax.set_yticks(range(len(self.rows)), row_labels)
