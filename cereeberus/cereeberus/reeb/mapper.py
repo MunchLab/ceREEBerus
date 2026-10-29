@@ -82,6 +82,7 @@ class MapperGraph(ReebGraph):
         self.add_node(w, f_w, reset_pos=False)
         ReebGraph.add_edge(self, u, w, reset_pos=False)
         ReebGraph.add_edge(self, w, v, reset_pos=False)
+        self.set_pos_from_f()
 
     def add_node(self, vertex, f_vertex, reset_pos=True):
         """
