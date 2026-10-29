@@ -2,7 +2,9 @@
 
 The paired view places the source graph beside its smoothed target: `phi`
 shows `F` with `G^n`, and `psi` shows `G` with `F^n`. Each source edge and
-its mapped target strand use the same color. Target stations show the vertex
+its mapped target strand use the same color. By default, adjacent edges
+belonging to one branch share that color; `color_by="edge"` gives every edge
+a separate color. Target stations show the vertex
 correspondences selected by the ILP. Node names use the same `s0` and `r0`
 display format as `ReebGraph.draw()`.
 
@@ -20,7 +22,8 @@ result.fit()
 
 fig_phi, axes_phi = draw_map_pair(result, direction="phi")  # F | G^n
 fig_psi, axes_psi = draw_map_pair(result, direction="psi")  # G | F^n
-fig_both, axes_both = draw_interleaving_map_pairs(result)   # both rows
+fig_both, axes_both = draw_interleaving_map_pairs(result, color_by="branch")
+fig_edges, axes_edges = draw_interleaving_map_pairs(result, color_by="edge")
 ```
 
 For `F^n -> G^2n` and `G^n -> F^2n`, pass `key="n"`. The earlier
@@ -31,8 +34,11 @@ None of these drawing functions reruns the solver or changes the graphs.
 For `key="n"`, auxiliary map columns at newly added boundary levels may be
 zero in a feasible ILP solution; these do not create strands. This is a direct
 view of the ILP matrices rather than a full MetroSets layout optimizer. A
-source edge is one strand; no path decomposition or uncertainty measure is
-inferred. Parallel edges with identical endpoint labels inherit the current
+source edge is still one mapped strand. Branches are maximal directed paths
+between endpoints or junctions, so degree-two subdivision vertices do not
+force a new color. Branch colors group the displayed strands; they do not
+assert that the ILP assigns a single image to an entire branch, nor do they
+encode an uncertainty measure. Parallel edges with identical endpoint labels inherit the current
 matrix labeling and may share a drawn centerline.
 
 For a worked, executed example, open the [metro interleaving notebook](../../notebooks/metro_interleaving_maps.ipynb).

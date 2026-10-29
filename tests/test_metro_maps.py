@@ -9,8 +9,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from cereeberus import Assignment
-from cereeberus.data.ex_mappergraphs import line
+from cereeberus.data.ex_mappergraphs import line, torus
 from cereeberus.draw.metro_maps import (
+    _branch_paths,
     _edge_label,
     _mapped_pairs,
     _node_label,
@@ -43,6 +44,18 @@ class TestMetroMaps(unittest.TestCase):
         fig, axes = draw_interleaving_map_pairs(assignment, label_stations=False)
         self.assertEqual(axes.shape, (2, 2))
         plt.close(fig)
+        fig, axes = draw_map_pair(assignment, "phi", color_by="edge")
+        self.assertTrue(axes[1].lines)
+        plt.close(fig)
+
+    def test_branch_partition_distinguishes_loop_sides(self):
+        graph = torus(0, 2, 10, 12, delta=1, seed=17)
+        paths = _branch_paths(graph)
+        self.assertEqual(len(paths), 4)
+        self.assertEqual(sum(map(len, paths)), len(graph.edges))
+        self.assertEqual({edge for path in paths for edge in path},
+                         set(graph.edges(keys=True)))
+        self.assertEqual(len(_branch_paths(line(0, 12, seed=5))), 1)
 
     def test_internal_names_match_reeb_draw(self):
         self.assertEqual(_node_label(("reeb_auto", 7)), "r7")

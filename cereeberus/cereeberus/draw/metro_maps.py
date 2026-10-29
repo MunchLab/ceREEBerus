@@ -25,6 +25,73 @@ def _edge_label(edge):
     return label if len(edge) < 3 or edge[2] == 0 else f"{label} ({edge[2]})"
 
 
+def _branch_paths(graph):
+    """Partition directed edges into maximal paths between junctions/endpoints.
+
+    A degree-two subdivision vertex has exactly one incoming and one outgoing
+    edge. Edge keys keep parallel routes through a loop distinct. Sorting the
+    starts makes branch IDs reproducible for a fixed labeled graph.
+    """
+    edges = list(graph.edges(keys=True))
+    internal = {
+        vertex for vertex in graph.nodes
+        if graph.in_degree(vertex) == 1 and graph.out_degree(vertex) == 1
+    }
+    outgoing = defaultdict(list)
+    for edge in edges:
+        outgoing[edge[0]].append(edge)
+
+    def order(edge):
+        return (graph.f[edge[0]], _node_label(edge[0]),
+                graph.f[edge[1]], _node_label(edge[1]), str(edge[2]))
+
+    paths = []
+    visited = set()
+    starts = sorted((edge for edge in edges if edge[0] not in internal), key=order)
+    for start in starts + sorted(edges, key=order):
+        if start in visited:
+            continue
+        path = []
+        edge = start
+        while edge not in visited:
+            path.append(edge)
+            visited.add(edge)
+            if edge[1] not in internal:
+                break
+            next_edges = outgoing[edge[1]]
+            if len(next_edges) != 1:
+                break
+            edge = next_edges[0]
+        paths.append(path)
+    return paths
+
+
+def _edge_styles(graph, edge_pairs, color_by):
+    """Return a color group and legend label for each mapped source edge."""
+    if color_by not in ("branch", "edge"):
+        raise ValueError("color_by must be 'branch' or 'edge'.")
+    if color_by == "edge":
+        return [(i, _edge_label(source)) for i, (source, *_rest) in enumerate(edge_pairs)]
+
+    paths = _branch_paths(graph)
+    branch_by_edge = {
+        edge: branch_id
+        for branch_id, path in enumerate(paths)
+        for edge in path
+    }
+    labels = [
+        f"B{i}: {_node_label(path[0][0])}→{_node_label(path[-1][1])}"
+        for i, path in enumerate(paths)
+    ]
+    styles = []
+    for source, *_rest in edge_pairs:
+        if source not in branch_by_edge:
+            raise ValueError(f"Source edge {source!r} is absent from its graph.")
+        branch_id = branch_by_edge[source]
+        styles.append((branch_id, labels[branch_id]))
+    return styles
+
+
 def _assignment(result):
     assignment = getattr(result, "assignment", result)
     if assignment is None or not all(hasattr(assignment, name) for name in ("phi", "psi", "F", "G")):
@@ -72,25 +139,27 @@ def _edge_curve(graph, edge, bend=0.0):
 
 
 def draw_metro_map(result, direction="phi", key="0", ax=None, *, label_stations=True,
-                   max_legend=16, strict=True):
+                   max_legend=16, strict=True, color_by="branch"):
     """Draw one ILP map over its destination graph.
 
     ``phi`` shows F -> G^n (or F^n -> G^2n with ``key='n'``);
-    ``psi`` shows G -> F^n (or G^n -> F^2n). Each source edge is a
-    colored strand on its mapped destination edge. A station lists the source
-    vertices mapped to it. Parallel strands are spaced to expose overlap.
+    ``psi`` shows G -> F^n (or G^n -> F^2n). ``color_by='branch'`` keeps
+    one color along a maximal source path between junctions; ``'edge'`` gives
+    each source edge a separate color. A station lists mapped source vertices.
 
     Returns ``(figure, axes)``. The original graphs and matrices are untouched.
     """
     assignment = _assignment(result)
     if direction not in ("phi", "psi") or key not in ("0", "n"):
         raise ValueError("direction must be 'phi' or 'psi', and key must be '0' or 'n'.")
+    source_graph = (assignment.F if direction == "phi" else assignment.G)(key)
     target = (assignment.G if direction == "phi" else assignment.F)("n" if key == "0" else "2n")
     # Auxiliary n maps can have zero columns at the added boundary levels.
     vertex_pairs = _mapped_pairs(getattr(assignment, direction)(key, "V"),
                                  allow_unmapped=key == "n", strict=strict)
     edge_pairs = _mapped_pairs(getattr(assignment, direction)(key, "E"),
                                allow_unmapped=key == "n", strict=strict)
+    styles = _edge_styles(source_graph, edge_pairs, color_by)
     if ax is None:
         fig, ax = plt.subplots(figsize=(8, 7))
     else:
@@ -101,12 +170,13 @@ def draw_metro_map(result, direction="phi", key="0", ax=None, *, label_stations=
         xy = _edge_curve(target, edge)
         ax.plot(xy[:, 0], xy[:, 1], color="#cbd5e1", linewidth=5, zorder=1)
 
-    # A distinct color per source edge. Indices preserve repeated edge labels.
+    # The same group color is used in the source and destination panels.
     palette = plt.get_cmap("tab20")
     grouped = defaultdict(list)
     for index, (source, dest, block, column) in enumerate(edge_pairs):
         grouped[dest].append((index, source, block, column))
     handles = []
+    legend_seen = set()
     all_x = [float(_position(target, v)[0]) for v in target.nodes]
     span = max(all_x) - min(all_x) if all_x else 1.0
     lane_gap = max(span * 0.025, 0.025)
@@ -122,11 +192,13 @@ def draw_metro_map(result, direction="phi", key="0", ax=None, *, label_stations=
         for lane, (index, source, _block, _column) in enumerate(strands):
             offset = (lane - (len(strands) - 1) / 2) * lane_gap
             xy = base + offset * perpendicular
-            color = palette(index % 20)
+            group_id, label = styles[index]
+            color = palette(group_id % 20)
             ax.plot(xy[:, 0], xy[:, 1], color=color, linewidth=2.8,
                     solid_capstyle="round", zorder=3)
-            if index < max_legend:
-                handles.append(Line2D([], [], color=color, linewidth=3, label=_edge_label(source)))
+            if group_id not in legend_seen and len(handles) < max_legend:
+                handles.append(Line2D([], [], color=color, linewidth=3, label=label))
+                legend_seen.add(group_id)
 
     stations = defaultdict(list)
     for source, dest, _block, _column in vertex_pairs:
@@ -156,7 +228,8 @@ def draw_metro_map(result, direction="phi", key="0", ax=None, *, label_stations=
     ax.margins(0.18)
     ax.set_aspect("auto")
     if handles:
-        ax.legend(handles=handles, title="Source edges", loc="best", fontsize=7,
+        ax.legend(handles=handles, title=f"Source {color_by}es" if color_by == "branch" else "Source edges",
+                  loc="best", fontsize=7,
                   title_fontsize=8, framealpha=0.9)
     return fig, ax
 
@@ -170,7 +243,8 @@ def draw_interleaving_metro_maps(result, key="0", *, figsize=(16, 7), **kwargs):
 
 
 def draw_map_pair(result, direction="phi", key="0", *, figsize=(15, 7),
-                  axes=None, label_stations=True, max_legend=12):
+                  axes=None, label_stations=True, max_legend=12,
+                  color_by="branch"):
     """Show the colored source graph beside its mapped smoothed target.
 
     Source edges and their destination strands share the same colors. Source
@@ -190,6 +264,7 @@ def draw_map_pair(result, direction="phi", key="0", *, figsize=(15, 7),
     source.draw(ax=source_ax, with_labels=True, node_size=360)
     pairs = _mapped_pairs(getattr(assignment, direction)(key, "E"),
                           allow_unmapped=key == "n")
+    styles = _edge_styles(source, pairs, color_by)
     palette = plt.get_cmap("tab20")
     for index, (edge, _destination, _block, _column) in enumerate(pairs):
         if not isinstance(edge, tuple) or len(edge) < 2:
@@ -197,14 +272,15 @@ def draw_map_pair(result, direction="phi", key="0", *, figsize=(15, 7),
         # The ILP's source edge column supplies the same color used in the
         # destination panel. This also keeps parallel edge columns distinct.
         xy = _edge_curve(source, edge, bend=0.08 * (edge[2] if len(edge) > 2 else 0))
-        source_ax.plot(xy[:, 0], xy[:, 1], color=palette(index % 20),
+        source_ax.plot(xy[:, 0], xy[:, 1], color=palette(styles[index][0] % 20),
                        linewidth=3, zorder=1)
     source_ax.set_title(f"{source_name}{'' if key == '0' else '^n'} · source")
     source_ax.set_xticks([])
     source_ax.set_ylabel("Function value")
     source_ax.margins(0.16)
     draw_metro_map(assignment, direction, key, ax=target_ax,
-                   label_stations=label_stations, max_legend=max_legend)
+                   label_stations=label_stations, max_legend=max_legend,
+                   color_by=color_by)
     target_ax.set_title(f"{target_name}^{('n' if key == '0' else '2n')} · mapped target")
     target_ax.set_ylabel("")
     fig.suptitle(f"{direction}: {source_name} → {target_name}^{('n' if key == '0' else '2n')}")
