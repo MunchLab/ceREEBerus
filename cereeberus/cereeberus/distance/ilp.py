@@ -1,9 +1,128 @@
+import os
+import shutil
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pulp  # for ILP optimization
 
 from .labeled_blocks import LabeledBlockMatrix as LBM
 from .labeled_blocks import LabeledMatrix as LM
+
+
+
+def _new_var(prob, name, cat="Continuous"):
+    """Create a PuLP variable in a way that works on PuLP 3.x and 4.x.
+
+    PuLP 4.0 requires variables to be created through the problem
+    (``prob.add_variable``); older versions use ``pulp.LpVariable``.
+    """
+    if hasattr(prob, "add_variable"):
+        return prob.add_variable(name, cat=cat)
+    return pulp.LpVariable(name, cat=cat)
+
+
+def _new_var_dict(prob, name, indices, cat="Continuous"):
+    """Version-independent replacement for ``pulp.LpVariable.dicts``.
+
+    Returns a dict mapping each index (an int or tuple) to a new variable.
+    """
+    if not hasattr(prob, "add_variable"):
+        return pulp.LpVariable.dicts(name, indices, cat=cat)
+    out = {}
+    for idx in indices:
+        key = idx if isinstance(idx, tuple) else (idx,)
+        out[idx] = prob.add_variable(
+            name + "_" + "_".join(str(k) for k in key), cat=cat
+        )
+    return out
+
+
+def _solve(prob, solver):
+    """Solve ``prob`` and return ``(status_code, status_str)``.
+
+    PuLP 4.0 returns an ``LpSolveStats`` object from ``prob.solve`` and drops
+    ``prob.status`` / ``pulp.LpStatus``; PuLP 3.x returns an int status code.
+    A status code of 1 means "Optimal" in both.
+    """
+    result = prob.solve(solver)
+    if hasattr(result, "status_str"):  # PuLP >= 4.0
+        code = int(result.status)
+        # Keep the PuLP 3 status strings (e.g. "Not Solved") for codes both
+        # versions share; pass through PuLP 4's newer codes as-is.
+        legacy = {
+            0: "Not Solved",
+            1: "Optimal",
+            -1: "Infeasible",
+            -2: "Unbounded",
+            -3: "Undefined",
+        }
+        return code, legacy.get(code, result.status_str)
+    return prob.status, pulp.LpStatus[prob.status]  # PuLP < 4.0
+
+
+def select_pulp_solver(pulp_solver=None):
+    """Return a usable PuLP solver object, honoring explicit overrides and CBC paths.
+
+    Parameters
+    ----------
+    pulp_solver : str or pulp.LpSolver, optional
+        Explicit solver specification. Strings may be values like "CBC",
+        "GUROBI", or "GLPK". If omitted, the function checks the
+        ``CEREEBERUS_SOLVER``/``PULP_SOLVER`` environment variables and then
+        prefers a PATH-resolved CBC binary via ``CEREEBERUS_CBC_PATH``/
+        ``PULP_CBC_PATH`` before falling back to PuLP's default resolver.
+    """
+    if pulp_solver is None:
+        pulp_solver = os.environ.get("CEREEBERUS_SOLVER") or os.environ.get(
+            "PULP_SOLVER"
+        )
+
+    if isinstance(pulp_solver, str):
+        candidate = pulp_solver.upper()
+        if candidate == "CBC":
+            cbc_path = (
+                os.environ.get("CEREEBERUS_CBC_PATH")
+                or os.environ.get("PULP_CBC_PATH")
+                or shutil.which("cbc")
+            )
+            if cbc_path:
+                return pulp.COIN_CMD(msg=0, path=cbc_path)
+            return pulp.COIN_CMD(msg=0)
+        if candidate == "HIGHS":
+            return pulp.HiGHS(msg=0)
+        if candidate == "GLPK":
+            return pulp.GLPK_CMD(msg=0)
+        if candidate == "GUROBI":
+            return pulp.GUROBI_CMD(msg=0)
+        raise ValueError(f"Unsupported solver '{pulp_solver}'.")
+
+    if pulp_solver is not None:
+        return pulp_solver
+
+    cbc_path = (
+        os.environ.get("CEREEBERUS_CBC_PATH")
+        or os.environ.get("PULP_CBC_PATH")
+        or shutil.which("cbc")
+    )
+    if cbc_path:
+        return pulp.COIN_CMD(msg=0, path=cbc_path)
+
+    available = set(pulp.listSolvers(onlyAvailable=True))
+    # Look solvers up by name: PuLP 4.0 removed PULP_CBC_CMD (and the bundled
+    # CBC binary), so referencing it directly raises AttributeError.
+    for preferred in (
+        "PULP_CBC_CMD",
+        "COIN_CMD",
+        "HiGHS",
+        "HiGHS_CMD",
+        "GLPK_CMD",
+        "GUROBI",
+        "GUROBI_CMD",
+    ):
+        solver_cls = getattr(pulp, preferred, None)
+        if preferred in available and solver_cls is not None:
+            return solver_cls(msg=0)
+    return pulp.COIN_CMD(msg=0)
 
 
 # function to build the phi and psi matrices after the ILP optimization
@@ -117,7 +236,8 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
                 n_rows = myAssgn.phi(thickening, obj_type)[block].get_array().shape[0]
                 n_cols = myAssgn.phi(thickening, obj_type)[block].get_array().shape[1]
 
-                phi_vars[block][thickening][obj_type] = pulp.LpVariable.dicts(
+                phi_vars[block][thickening][obj_type] = _new_var_dict(
+                    prob,
                     "phi_" + thickening + obj_type + "_" + str(block),
                     ((a, b) for a in range(n_rows) for b in range(n_cols)),
                     cat="Binary",
@@ -132,7 +252,8 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
                 n_rows = myAssgn.psi(thickening, obj_type)[block].get_array().shape[0]
                 n_cols = myAssgn.psi(thickening, obj_type)[block].get_array().shape[1]
 
-                psi_vars[block][thickening][obj_type] = pulp.LpVariable.dicts(
+                psi_vars[block][thickening][obj_type] = _new_var_dict(
+                    prob,
                     "psi_" + thickening + obj_type + "_" + str(block),
                     ((a, b) for a in range(n_rows) for b in range(n_cols)),
                     cat="Binary",
@@ -169,7 +290,8 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
 
                     # set the map product variables
                     map_product_vars[block][starting_map][obj_type] = (
-                        pulp.LpVariable.dicts(
+                        _new_var_dict(
+                            prob,
                             starting_map + "_" + obj_type + "_" + str(block),
                             ((a, b) for a in range(n_rows_1) for b in range(n_cols_1)),
                             cat="Integer",
@@ -179,7 +301,8 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
                     n_rowcol_1 = myAssgn.psi("n", obj_type)[block].get_array().shape[1]
 
                     # set the z variables
-                    z_vars[block][starting_map][obj_type] = pulp.LpVariable.dicts(
+                    z_vars[block][starting_map][obj_type] = _new_var_dict(
+                        prob,
                         "z_" + starting_map + "_" + obj_type + "_" + str(block),
                         (
                             (a, b, c)
@@ -196,7 +319,8 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
 
                     # set the map product variables
                     map_product_vars[block][starting_map][obj_type] = (
-                        pulp.LpVariable.dicts(
+                        _new_var_dict(
+                            prob,
                             starting_map + "_" + obj_type + "_" + str(block),
                             ((a, b) for a in range(n_rows_1) for b in range(n_cols_1)),
                             cat="Integer",
@@ -205,7 +329,8 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
 
                     n_rowcol_2 = myAssgn.phi("n", obj_type)[block].get_array().shape[1]
 
-                    z_vars[block][starting_map][obj_type] = pulp.LpVariable.dicts(
+                    z_vars[block][starting_map][obj_type] = _new_var_dict(
+                        prob,
                         "z_" + starting_map + "_" + obj_type + "_" + str(block),
                         (
                             (a, b, c)
@@ -525,16 +650,10 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
     # Set the objective function
     prob += 0
 
-    # solve the problem
-    if pulp_solver == "GUROBI":
-        prob.solve(pulp.GUROBI_CMD(msg=0))
-    else:
-        prob.solve(pulp.PULP_CBC_CMD(msg=0))
+    solver = select_pulp_solver(pulp_solver)
+    status_code, status_str = _solve(prob, solver)
 
-    status_str = pulp.LpStatus[prob.status]
-
-    # prob.solve(pulp.GUROBI_CMD(msg=0))
-    if prob.status != 1:
+    if status_code != 1:
         return None, status_str
 
     # create a dictionary to store the results
@@ -544,7 +663,7 @@ def solve_ilp(myAssgn, pulp_solver=None, verbose=False):
     final_maps = build_map_matrices(myAssgn, map_results)
 
     if verbose:
-        print("Status:", pulp.LpStatus[prob.status])
+        print("Status:", status_str)
         # prob.writeLP("model.lp")  # Write the model in LP format
 
     # return results
@@ -597,7 +716,8 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
                 n_rows = myAssgn.phi(thickening, obj_type)[block].get_array().shape[0]
                 n_cols = myAssgn.phi(thickening, obj_type)[block].get_array().shape[1]
 
-                phi_vars[block][thickening][obj_type] = pulp.LpVariable.dicts(
+                phi_vars[block][thickening][obj_type] = _new_var_dict(
+                    prob,
                     "phi_" + thickening + obj_type + "_" + str(block),
                     ((a, b) for a in range(n_rows) for b in range(n_cols)),
                     cat="Binary",
@@ -612,7 +732,8 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
                 n_rows = myAssgn.psi(thickening, obj_type)[block].get_array().shape[0]
                 n_cols = myAssgn.psi(thickening, obj_type)[block].get_array().shape[1]
 
-                psi_vars[block][thickening][obj_type] = pulp.LpVariable.dicts(
+                psi_vars[block][thickening][obj_type] = _new_var_dict(
+                    prob,
                     "psi_" + thickening + obj_type + "_" + str(block),
                     ((a, b) for a in range(n_rows) for b in range(n_cols)),
                     cat="Binary",
@@ -649,7 +770,8 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
 
                     # set the map product variables
                     map_product_vars[block][starting_map][obj_type] = (
-                        pulp.LpVariable.dicts(
+                        _new_var_dict(
+                            prob,
                             starting_map + "_" + obj_type + "_" + str(block),
                             ((a, b) for a in range(n_rows_1) for b in range(n_cols_1)),
                             cat="Integer",
@@ -659,7 +781,8 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
                     n_rowcol_1 = myAssgn.psi("n", obj_type)[block].get_array().shape[1]
 
                     # set the z variables
-                    z_vars[block][starting_map][obj_type] = pulp.LpVariable.dicts(
+                    z_vars[block][starting_map][obj_type] = _new_var_dict(
+                        prob,
                         "z_" + starting_map + "_" + obj_type + "_" + str(block),
                         (
                             (a, b, c)
@@ -676,7 +799,8 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
 
                     # set the map product variables
                     map_product_vars[block][starting_map][obj_type] = (
-                        pulp.LpVariable.dicts(
+                        _new_var_dict(
+                            prob,
                             starting_map + "_" + obj_type + "_" + str(block),
                             ((a, b) for a in range(n_rows_1) for b in range(n_cols_1)),
                             cat="Integer",
@@ -685,7 +809,8 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
 
                     n_rowcol_2 = myAssgn.phi("n", obj_type)[block].get_array().shape[1]
 
-                    z_vars[block][starting_map][obj_type] = pulp.LpVariable.dicts(
+                    z_vars[block][starting_map][obj_type] = _new_var_dict(
+                        prob,
                         "z_" + starting_map + "_" + obj_type + "_" + str(block),
                         (
                             (a, b, c)
@@ -718,17 +843,22 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
                         myAssgn.D("G", "2n", obj_type)[block].get_array().shape[0]
                     )
 
-                aux_vars[block][starting_map][obj_type] = pulp.LpVariable(
+                aux_vars[block][starting_map][obj_type] = _new_var(
+                    prob,
                     "aux_" + starting_map + "_" + obj_type + "_" + str(block),
                     cat="Integer",
                 )
 
     # create the minmax variable
-    minmax_var = pulp.LpVariable("minmax_var", cat="Integer")
+    minmax_var = _new_var(prob, "minmax_var", cat="Integer")
 
     # create the constraints
     for block in func_vals:
         for starting_map in ["F", "G"]:
+            if block not in myAssgn.all_func_vals(
+                map=starting_map
+            ):  # If the block is not in the starting map, skip it. This is to account for the graphs with different function values
+                continue
             # set the other map based on starting map
             if starting_map == "F":
                 other_map = "G"
@@ -741,7 +871,7 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
             ]:  # deals with 1 (up, down) and 2 (up, down)
 
                 if (
-                    block == func_vals[-1]
+                    block == myAssgn.all_func_vals(map=starting_map)[-1]
                 ):  # skip the last block for this type of diagrams
                     continue
 
@@ -1055,14 +1185,10 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
     # Set the objective function
     prob += minmax_var
 
-    # solve the problem
-    if pulp_solver == "GUROBI":
-        prob.solve(pulp.GUROBI_CMD(msg=0))
-    else:
-        prob.solve(pulp.PULP_CBC_CMD(msg=0))
+    solver = select_pulp_solver(pulp_solver)
+    status_code, status_str = _solve(prob, solver)
 
-    # prob.solve(pulp.GUROBI_CMD(msg=0))
-    if prob.status != 1:
+    if status_code != 1:
         raise ValueError(
             "The ILP optimization did not converge. Please check the input data and try again."
         )
@@ -1075,9 +1201,8 @@ def solve_ilp_dist(myAssgn, pulp_solver=None, verbose=False):
 
     if verbose:
         print(f"The optimized loss is: {pulp.value(minmax_var)}")
-        print("Status:", pulp.LpStatus[prob.status])
+        print("Status:", status_str)
         # prob.writeLP("model.lp")  # Write the model in LP format
 
     # return results
-    return final_maps, pulp.value(minmax_var)
     return final_maps, pulp.value(minmax_var)

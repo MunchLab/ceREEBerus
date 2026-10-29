@@ -9,7 +9,6 @@ from ..draw import draw
 # from build.lib.cereeberus.reeb import graph
 
 
-
 class ReebGraph(nx.MultiDiGraph):
     """
     A Reeb graph stored as a networkx ``MultiDiGraph``. The function values are stored as a dictionary. The directedness of the edges follows the convention that the edge goes from the lower function value to the higher function value node.
@@ -79,23 +78,23 @@ class ReebGraph(nx.MultiDiGraph):
         """
         # Create a new ReebGraph with copies of the nodes and edges
         H = ReebGraph()
-        
+
         # Copy the function values dictionary
         H.f = self.f.copy()
-        
+
         # Copy all nodes and edges from the parent MultiDiGraph
         for v in self.nodes():
             H.add_node(v, self.f[v], reset_pos=False)
-        
+
         for u, v, key in self.edges(keys=True):
             super(ReebGraph, H).add_edge(u, v, key)
-        
+
         # Copy position information if it exists
-        if hasattr(self, 'pos_f') and self.pos_f:
+        if hasattr(self, "pos_f") and self.pos_f:
             H.pos_f = self.pos_f.copy()
-        if hasattr(self, 'pos') and self.pos:
+        if hasattr(self, "pos") and self.pos:
             H.pos = self.pos.copy()
-        
+
         return H
 
     def branch_decomp(self):
@@ -107,6 +106,7 @@ class ReebGraph(nx.MultiDiGraph):
                 ``decompose`` method has already been called on this graph.
         """
         from .branchdecomp import BranchDecomp
+
         bd = BranchDecomp()
         bd.decompose(self)
         return bd
@@ -185,18 +185,18 @@ class ReebGraph(nx.MultiDiGraph):
 
     def get_upward_path(self, start_vertex):
         """Return an upward path from the starting vertex by greedy dynamic choice.
-        
+
         Input:
             start_vertex: a vertex in the graph to start from
-            
+
         Output:
             path: a list of vertices representing the upward path
-            
+
         """
-        # Check that the vertex is in the graph 
+        # Check that the vertex is in the graph
         if start_vertex not in self.nodes:
-            raise ValueError(f"The vertex {start_vertex} is not in the Reeb graph.")   
-        
+            raise ValueError(f"The vertex {start_vertex} is not in the Reeb graph.")
+
         path = [start_vertex]
         while self.up_degree(path[-1]) > 0:
             s = next(self.successors(path[-1]))
@@ -432,8 +432,14 @@ class ReebGraph(nx.MultiDiGraph):
         super().remove_node(vertex)
         del self.f[vertex]
 
-        if reset_pos and hasattr(self, "pos_f"):
+        # drop the old position for this vertex unconditionally. Skipping it leaves a pos_f entry for a vertex no longer in the graph.
+
+        if hasattr(self, "pos_f") and vertex in self.pos_f:
             del self.pos_f[vertex]
+        if hasattr(self, "pos") and vertex in self.pos:
+            del self.pos[vertex]
+
+        if reset_pos and hasattr(self, "pos_f"):
             self.set_pos_from_f()
 
     def remove_nodes_from(self, nodes, reset_pos=True):
@@ -475,19 +481,18 @@ class ReebGraph(nx.MultiDiGraph):
         else:
             # the function values are the same, so the edge collapses the two vertices
             # wlog we're going to get rid of v, and add all its edges to u
-
             # get the edges of v
             edges_in = self.in_edges(v)
             edges_out = self.out_edges(v)
 
             # add the edges to u
             for e in edges_in:
-                self.add_edge(e[0], u)
+                self.add_edge(e[0], u, reset_pos=False)
             for e in edges_out:
-                self.add_edge(u, e[1])
+                self.add_edge(u, e[1], reset_pos=False)
 
             # Remove v
-            self.remove_node(v)
+            self.remove_node(v, reset_pos=False)
 
         if reset_pos:
             self.set_pos_from_f()
@@ -518,7 +523,7 @@ class ReebGraph(nx.MultiDiGraph):
 
         if reset_pos:
             self.set_pos_from_f()
-    
+
     def remove_path_from(self, path, reset_pos=True):
         """Remove a path from the Reeb graph. A path is a list of vertices, and this method will remove one edge along each step of the path.
 
@@ -562,7 +567,7 @@ class ReebGraph(nx.MultiDiGraph):
 
         self.set_pos_from_f()
 
-    def remove_regular_vertex(self, v):
+    def remove_regular_vertex(self, v, reset_pos=True):
         """Remove a regular vertex from the Reeb graph. A regular vertex is one for which down degree = up degree = 1, so it can be removed and replaed with a single edge.
 
         Parameters:
@@ -579,10 +584,13 @@ class ReebGraph(nx.MultiDiGraph):
         u = list(self.predecessors(v))[0]
         w = list(self.successors(v))[0]
 
-        self.add_edge(u, w)
-        self.remove_node(v)
+        self.add_edge(u, w, reset_pos=False)
+        self.remove_node(v, reset_pos=False)
 
-    def remove_all_regular_vertices(self):
+        if reset_pos:
+            self.set_pos_from_f()
+
+    def remove_all_regular_vertices(self, reset_pos=True):
         """
         Remove all regular vertices from the Reeb graph.
         """
@@ -591,7 +599,10 @@ class ReebGraph(nx.MultiDiGraph):
         ]
 
         for v in regular_vertices:
-            self.remove_regular_vertex(v)
+            self.remove_regular_vertex(v, reset_pos=False)
+
+        if reset_pos and regular_vertices:
+            self.set_pos_from_f()
 
     def remove_isolates(self):
         """
@@ -694,6 +705,10 @@ class ReebGraph(nx.MultiDiGraph):
         Returns:
             ReebGraph: The subgraph of the Reeb graph with image in (a,b).
         """
+
+        if type == "open" and a == b:
+            # (a, a) is an empty interval for open type
+            return ReebGraph()
         if type == "open":
             v_list = [v for v in self.nodes() if self.f[v] > a and self.f[v] < b]
         elif type == "closed":
@@ -701,10 +716,19 @@ class ReebGraph(nx.MultiDiGraph):
 
         # Keep the edges where either endpoint (or both) is in (a,b)
         e_list = [e for e in self.edges() if e[0] in v_list or e[1] in v_list]
-        # Include the edges that cover the entire slice.
+        # Include the edges that cover the entire slice, , including edges whose
+        # endpoint sits exactly on an excluded open bound. Skip edges already
+        # selected through an included endpoint so they aren't counted twice.
         # Note this assumes that all edges are ordered twoards teh upper function value
         e_list.extend(
-            [e for e in self.edges() if self.f[e[0]] < a and self.f[e[1]] > b]
+            [
+                e
+                for e in self.edges()
+                if e[0] not in v_list
+                and e[1] not in v_list
+                and self.f[e[0]] <= a
+                and self.f[e[1]] >= b
+            ]
         )
 
         # Make a dictionary of counts to deal with multiedges
@@ -880,7 +904,7 @@ class ReebGraph(nx.MultiDiGraph):
 
         V = list(self.nodes())
         V.sort(key=lambda x: self.f[x])
-        E = list(self.edges())
+        E = list(self.edges(keys=True))
         E.sort(key=lambda x: self.f[x[0]])
         if astype == "numpy":
             B = np.zeros((len(V), len(E)))
@@ -897,8 +921,6 @@ class ReebGraph(nx.MultiDiGraph):
         elif astype == "map":
             B = {}
             for e in E:
-                if not len(e) == 3:
-                    e = (e[0], e[1], 0)
                 B[e] = [e[0], e[1]]
             return B
 
@@ -936,6 +958,69 @@ class ReebGraph(nx.MultiDiGraph):
                 {v: v for v in self.nodes},
                 {e: [e] for e in self.edges(keys=True)},
             )
+
+        # A vertex at infinity (like root of a mergetree) needs to be allowed to be smoothed. Perturbing it by a finite eps isn't meaningful. So we only smooth the finite part of the graph, then reattach each infinite vertex exactly as it was, reconneted to whichever finite vertices it end up adjacent to it after smoothing.
+
+        # For edges, they always point from lower to higher f value, a +inf vertex only has a predecessor and a -inf vertex only has a successor.
+
+        inf_nodes = [v for v in self.nodes if np.isinf(self.f[v])]
+        if inf_nodes:
+            # smooth the finite part, then reattach inf vertices afterward
+            finite_nodes = [v for v in self.nodes if v not in inf_nodes]
+
+            if not finite_nodes:
+                # the whole graph is infinite valued (eg MergeTree with only a root). There's nothing to smooth, so just return the graph
+                return (
+                    self,
+                    {v: v for v in self.nodes},
+                    {e: [e] for e in self.edges(keys=True)},
+                )
+
+            f_finite = {v: self.f[v] for v in finite_nodes}
+            G_finite = ReebGraph(self.subgraph(finite_nodes), f_finite)
+            R_eps, map_V, map_E = G_finite.smoothing_and_maps(eps=eps, verbose=verbose)
+
+            for inf_v in inf_nodes:
+                # map_V[u] can land mid-component; use the component's actual top/bottom
+                components = list(nx.weakly_connected_components(R_eps))
+                comp_top = {}
+                comp_bottom = {}
+                for comp in components:
+                    tops = [v for v in comp if R_eps.up_degree(v) == 0]
+                    bottoms = [v for v in comp if R_eps.down_degree(v) == 0]
+                    for v in comp:
+                        comp_top[v] = tops
+                        comp_bottom[v] = bottoms
+
+                R_eps.add_node(inf_v, self.f[inf_v], reset_pos=False)
+                map_V[inf_v] = inf_v
+
+                preds = list(self.predecessors(inf_v))
+                attach_up = {u: comp_top[map_V[u]] for u in preds}
+                for tv in set(v for verts in attach_up.values() for v in verts):
+                    R_eps.add_edge(tv, inf_v, reset_pos=False)
+                for u in preds:
+                    new_edges_u = [
+                        (tv, inf_v, R_eps.number_of_edges(tv, inf_v) - 1)
+                        for tv in attach_up[u]
+                    ]
+                    for key in range(self.number_of_edges(u, inf_v)):
+                        map_E[(u, inf_v, key)] = new_edges_u
+
+                succs = list(self.successors(inf_v))
+                attach_down = {w: comp_bottom[map_V[w]] for w in succs}
+                for bv in set(v for verts in attach_down.values() for v in verts):
+                    R_eps.add_edge(inf_v, bv, reset_pos=False)
+                for w in succs:
+                    new_edges_w = [
+                        (inf_v, bv, R_eps.number_of_edges(inf_v, bv) - 1)
+                        for bv in attach_down[w]
+                    ]
+                    for key in range(self.number_of_edges(inf_v, w)):
+                        map_E[(inf_v, w, key)] = new_edges_w
+
+            R_eps.set_pos_from_f()
+            return R_eps, map_V, map_E
 
         # Get the list of critical values to place new nodes
         crit_vals = list(set(self.f.values()))
@@ -1023,6 +1108,13 @@ class ReebGraph(nx.MultiDiGraph):
                 ]
                 if len(lower_vert) > 1:
                     print(f"{i,c} has multiple lower vertices")
+                elif len(lower_vert) == 0:
+                    raise ValueError(
+                        f"No component found below critical value {cv!r} "
+                        f"for component {c!r}; this usually means a "
+                        "critical value has no finite neighbor to shift "
+                        "toward (e.g. an unhandled infinite value)."
+                    )
                 else:
                     lower_vert = lower_vert[0]
 
@@ -1030,6 +1122,13 @@ class ReebGraph(nx.MultiDiGraph):
                 upper_vert = [comp_to_new_vert[u] for u in np.where(overlap_up > 0)[0]]
                 if len(upper_vert) > 1:
                     print(f"{i,c} has multiple upper vertices")
+                elif len(upper_vert) == 0:
+                    raise ValueError(
+                        f"No component found above critical value {cv!r} "
+                        f"for component {c!r}; this usually means a "
+                        "critical value has no finite neighbor to shift "
+                        "toward (e.g. an unhandled infinite value)."
+                    )
                 else:
                     upper_vert = upper_vert[0]
 

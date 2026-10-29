@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: [ "3.11", "3.12", "3.13", "3.14"]
 
     steps:
     - uses: actions/checkout@v4
@@ -33,6 +33,12 @@ jobs:
         uv venv
         source .venv/bin/activate
         uv pip install -e .
+        
+    - name: Install CBC solver
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y coinor-cbc
+        cbc -stop
 
     - name: Run tests
       run: |
