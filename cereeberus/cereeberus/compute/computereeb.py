@@ -4,6 +4,12 @@ import numpy as np
 
 from ..reeb.lowerstar import LowerStar
 
+# Tolerance for treating two filtration values as float64-indistinguishable
+# (i.e. within ~1 ULP of each other, the scale of floating-point rounding
+# noise. It is not intended to merge genuinely distinct nearby values).
+_ULP_RTOL = 1e-9
+_ULP_ATOL = 1e-12
+
 
 class _DenseUnionFind:
     """Small array-backed union-find used by the exact slice sweep."""
