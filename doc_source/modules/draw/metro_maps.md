@@ -37,3 +37,5 @@ labels inherit the current matrix labeling and may share a drawn centerline.
 Design references: [MetroSets](https://arxiv.org/abs/2008.09367),
 [Topological Characterization and Uncertainty Visualization of Atmospheric Rivers](https://www.sci.utah.edu/~beiwang/publications/AR_BeiWang_2024.pdf), and
 [Uncertainty Visualization for Approximated Barycenter of Contour Trees](https://www.sci.utah.edu/~beiwang/publications/Uncertainty_CT_BeiWang_2026.pdf).
+
+For a worked, executed example, open the [metro interleaving notebook](../../notebooks/metro_interleaving_maps.ipynb).
