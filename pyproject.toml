@@ -21,7 +21,7 @@ dependencies = ["numpy",
             "pandas",
             "scipy", 
             "pulp",
-            "highspy; python_version >= '3.12'",
+            "highspy<1.14; python_version >= '3.12'",
             "gudhi",
             "scikit-learn"
             ]
