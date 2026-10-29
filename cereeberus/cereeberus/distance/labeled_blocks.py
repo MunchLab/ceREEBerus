@@ -2,6 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.linalg import block_diag
 
+def _format_matrix_label(label):
+    """Short tick label for a vertex or an edge (u, v, key) of a Reeb/mapper graph."""
+    from ..draw.draw import _format_node_label
+
+    # Edges in a multigraph are (u, v, key); only print the endpoints.
+    if isinstance(label, tuple) and len(label) == 3:
+        return f"{_format_node_label(label[0])}, {_format_node_label(label[1])}"
+    return str(_format_node_label(label))
+
 
 class LabeledMatrix:
     """
@@ -348,20 +357,8 @@ class LabeledMatrix:
         im = ax.matshow(self.array, **kwargs)
 
         # Add vertices as the row and column labels
-
-        if type(self.rows[0]) == tuple:
-            row_labels = [str(row[0]) + ", " + str(row[1]) for row in self.rows]
-            # print('Warning: Row labels are tuples. Only printing entries 0 and 1. ')
-            # This is done because in multigraphs, edges are (u,v,count) and we only want to print u and v
-
-        else:
-            row_labels = self.rows
-
-        if type(self.cols[0]) == tuple:
-            col_labels = [str(col[0]) + ", " + str(col[1]) for col in self.cols]
-            # print('Warning: Col labels are tuples. Only printing entries 0 and 1. ')
-        else:
-            col_labels = self.cols
+        row_labels = [_format_matrix_label(r) for r in self.rows]
+        col_labels = [_format_matrix_label(c) for c in self.cols]
 
         ax.set_xticks(range(len(self.cols)), col_labels, rotation=90)
         ax.set_yticks(range(len(self.rows)), row_labels)
