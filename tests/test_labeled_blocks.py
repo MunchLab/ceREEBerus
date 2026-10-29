@@ -119,3 +119,33 @@ class TestBlockMatrixClasses(unittest.TestCase):
         bm @ lbm.T() # Block matrix @ labeled matrix
 
         lbm @ bm.T() # Labeled matrix @ block matrix
+
+
+class TestLabeledMatrixDrawLabels(unittest.TestCase):
+    def _tick_labels(self, M):
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+
+        fig, ax = plt.subplots()
+        M.draw(ax=ax)
+        rows = [t.get_text() for t in ax.get_yticklabels()]
+        cols = [t.get_text() for t in ax.get_xticklabels()]
+        plt.close(fig)
+        return rows, cols
+
+    def test_internal_vertex_labels_are_shortened(self):
+        rows = [("reeb_auto", 0), ("reeb_auto", 1)]
+        cols = [("mapper_subd", 3), 7]
+        M = LM(np.eye(2), rows=rows, cols=cols)
+        r, c = self._tick_labels(M)
+        self.assertEqual(r, ["r0", "r1"])
+        self.assertEqual(c, ["s3", "7"])
+
+    def test_edge_labels_show_formatted_endpoints(self):
+        rows = [(("reeb_auto", 0), ("reeb_auto", 1), 0)]
+        cols = [(0, 1, 0), (("mapper_subd", 2), 4, 1)]
+        M = LM(np.ones((1, 2)), rows=rows, cols=cols)
+        r, c = self._tick_labels(M)
+        self.assertEqual(r, ["r0, r1"])
+        self.assertEqual(c, ["0, 1", "s2, 4"])
