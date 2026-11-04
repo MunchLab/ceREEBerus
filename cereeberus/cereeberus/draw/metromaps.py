@@ -119,8 +119,8 @@ def _position(graph, vertex):
     return np.asarray(graph.pos_f[vertex], dtype=float)
 
 
-def _curve(graph, edge):
-    """Interpolate a straight drawing path between an edge's endpoints.
+def _edge_segment(graph, edge):
+    """Return the two endpoint positions of an edge for plotting.
 
     Parameters:
         graph (MapperGraph): Graph containing the edge.
@@ -128,12 +128,10 @@ def _curve(graph, edge):
             two entries are used for the geometry.
 
     Returns:
-        numpy.ndarray: Array of shape ``(30, 2)`` containing the path's
-        drawing coordinates.
+        numpy.ndarray: Array of shape ``(2, 2)`` containing the source
+        and target drawing positions.
     """
-    a, b = _position(graph, edge[0]), _position(graph, edge[1])
-    t = np.linspace(0, 1, 30)[:, None]
-    return (1 - t) * a + t * b
+    return np.vstack((_position(graph, edge[0]), _position(graph, edge[1])))
 
 
 def _styles(graph, edge_pairs, color_by):
@@ -196,12 +194,12 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, label_stations, ma
 
     source.draw(ax=source_ax, with_labels=True, node_size=360)
     for i, (edge, _) in enumerate(edge_pairs):
-        xy = _curve(source, edge)
+        xy = _edge_segment(source, edge)
         source_ax.plot(xy[:, 0], xy[:, 1], color=palette(styles[i][0] % 20),
                        linewidth=3, zorder=1)
 
     for edge in target.edges(keys=True):
-        xy = _curve(target, edge)
+        xy = _edge_segment(target, edge)
         target_ax.plot(xy[:, 0], xy[:, 1], color="#cbd5e1", linewidth=5, zorder=1)
 
     grouped = defaultdict(list)
@@ -213,7 +211,7 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, label_stations, ma
     gap = max((max(x_values) - min(x_values)) * .025, .025) if x_values else .025
     handles, seen = [], set()
     for target_edge, indices in grouped.items():
-        base = _curve(target, target_edge)
+        base = _edge_segment(target, target_edge)
         vector = base[-1] - base[0]
         normal = np.array((-vector[1], vector[0]))
         norm = np.linalg.norm(normal)
