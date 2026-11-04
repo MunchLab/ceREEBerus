@@ -11,6 +11,13 @@ between an endpoint or junction share one branch color. Set `color_by="edge"`
 to distinguish every edge. Target station labels show the mapped source
 vertices. Node labels follow `ReebGraph.draw()` (`s0`, `r0`, and so on).
 
+The graphs use ceREEBerus’s saved `pos_f` coordinates, produced by its general
+function-height layout (`set_pos_from_f`); this view does not assign positions
+for the loop example. Smoothed graphs are laid out independently. Target edges
+are thin gray lines until a selected map uses them; mapped strands are colored
+and slightly thicker. When several source edges use one target edge, their
+colors appear in parallel lanes. Many shared routes can still crowd a panel.
+
 ![Paired maps from a solved loop-to-line interleaving](metro_example.png)
 
 ```python

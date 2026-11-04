@@ -25,6 +25,12 @@ class TestMetroMaps(unittest.TestCase):
             self.assertEqual(len(figure.axes), 4)
             self.assertTrue(figure.axes[1].lines)
             self.assertTrue(figure.axes[3].lines)
+            self.assertTrue(any(line.get_linewidth() == 1.5
+                                for line in figure.axes[1].lines))
+            self.assertTrue(any(line.get_linewidth() == 2.6
+                                for line in figure.axes[1].lines))
+            self.assertTrue(all(size == 360 for collection in figure.axes[1].collections
+                                for size in collection.get_sizes()))
             plt.close(figure)
         figure = draw_metromaps(result, direction="phi", key="n")
         self.assertEqual(len(figure.axes), 2)

@@ -278,7 +278,7 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
 
     for edge in target.edges(keys=True):
         xy = _edge_segment(target, edge)
-        target_ax.plot(xy[:, 0], xy[:, 1], color="#cbd5e1", linewidth=5, zorder=1)
+        target_ax.plot(xy[:, 0], xy[:, 1], color="#9ca3af", linewidth=1.5, zorder=1)
 
     grouped = defaultdict(list)
     for i, (source_edge, target_edge) in enumerate(edge_pairs):
@@ -301,7 +301,7 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
             group, label = styles[i]
             xy = base + (lane - (len(indices) - 1) / 2) * gap * normal
             color = highlight_color if selected_edge is not None else colors[group]
-            target_ax.plot(xy[:, 0], xy[:, 1], color=color, linewidth=2.8, zorder=3)
+            target_ax.plot(xy[:, 0], xy[:, 1], color=color, linewidth=2.6, zorder=3)
             if group not in seen and len(handles) < max_legend:
                 handles.append(Line2D([], [], color=color, linewidth=3, label=label))
                 seen.add(group)
@@ -316,10 +316,10 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
     for vertex in target:
         x, y = _position(target, vertex)
         mapped = mapped_vertices[vertex]
-        target_ax.scatter([x], [y], s=130 if mapped else 75,
+        target_ax.scatter([x], [y], s=360,
                           color=plt.get_cmap("viridis")((target.f[vertex] - low) / span),
                           edgecolor="#172554" if mapped else "#94a3b8", zorder=5)
-        target_ax.annotate(_label(vertex), (x, y), ha="center", va="center", fontsize=7, zorder=6)
+        target_ax.annotate(_label(vertex), (x, y), ha="center", va="center", fontsize=9, zorder=6)
         if mapped and label_stations:
             target_ax.annotate("← " + ", ".join(map(_label, mapped)), (x, y),
                                xytext=(9, 8), textcoords="offset points", fontsize=7)
