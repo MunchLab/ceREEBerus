@@ -4,6 +4,8 @@
 
 The default figure has two rows. The top shows the `phi` map, with $F$ beside $G^n$; the bottom shows the `psi` map, with $G$ beside $F^n$. A source edge and its mapped target strand have the same color. By default, successive edges between an endpoint or junction share one branch color. Set `color_by="edge"` to distinguish every edge. Target station labels show the mapped source vertices. Node labels follow `ReebGraph.draw()` (`s0`, `r0`, and so on).
 
+Panel titles show `F` and `G` by default, or the input graphs’ `name` values if supplied. Smoothed panels show the fitted number, such as `G^2` and `F^2` when `n = 2`; auxiliary maps show `F^2` → `G^4` and `G^2` → `F^4`. Figures have no overall title.
+
 The graphs use ceREEBerus’s saved `pos_f` coordinates, produced by its general function-height layout (`set_pos_from_f`); this view does not assign positions for the loop example. Smoothed graphs are laid out independently. Target edges are thin gray lines until a selected map uses them; mapped strands are colored and slightly thicker. When several source edges use one target edge, their colors appear in parallel lanes. Many shared routes can still crowd a panel.
 
 ![Paired maps from a solved loop-to-line interleaving](metro_example.png)
@@ -13,7 +15,7 @@ from cereeberus import Interleave
 from cereeberus.data.ex_mappergraphs import line, torus
 from cereeberus.draw.metromaps import color_by_branch, color_by_edge, draw_metromaps
 
-F = torus(0, 2, 10, 12, delta=1, seed=17)
+F = torus(0, 2, 8, 10, delta=1, seed=17)
 G = line(0, 12, seed=5)
 result = Interleave(F, G)
 result.fit()

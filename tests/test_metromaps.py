@@ -52,7 +52,9 @@ class TestMetroMaps(unittest.TestCase):
                                  for line in ax.lines), len(branch_edges))
         plt.close(focused)
         focused = color_by_branch(result, 0)
-        self.assertIn("branch B0", focused._suptitle.get_text())
+        self.assertEqual(focused.axes[1].get_legend().get_title().get_text(),
+                         "Selected branch B0")
+        self.assertIsNone(focused._suptitle)
         plt.close(focused)
         with self.assertRaisesRegex(ValueError, "out of range"):
             color_by_branch(result, 99)
@@ -62,6 +64,22 @@ class TestMetroMaps(unittest.TestCase):
         plt.close(figure)
         with self.assertRaisesRegex(ValueError, "absent"):
             color_by_edge(result, ("missing", "edge"))
+
+    def test_graph_titles_use_fitted_n_and_input_names(self):
+        F = line(0, 2, seed=1)
+        G = line(0, 3, seed=2)
+        F.name, G.name = "Input A", "Input B"
+        result = Interleave(F, G)
+        self.assertEqual(result.fit(max_n_for_error=3), 1)
+        figure = draw_metromaps(result)
+        self.assertEqual([ax.get_title() for ax in figure.axes],
+                         ["Input A", "Input B^1", "Input B", "Input A^1"])
+        self.assertIsNone(figure._suptitle)
+        plt.close(figure)
+        auxiliary = draw_metromaps(result, direction="phi", key="n")
+        self.assertEqual([ax.get_title() for ax in auxiliary.axes],
+                         ["Input A^1", "Input B^2"])
+        plt.close(auxiliary)
 
     def test_palette_reuse_and_parallel_edge_selection(self):
         styles = [(i, str(i)) for i in range(21)]

@@ -227,6 +227,22 @@ def _validated_assignment(interleaving, direction, key, *, allow_both=False):
     return interleaving.assignment
 
 
+def _graph_title(assignment, which, exponent=None):
+    """Format an original or smoothed graph name for an axis title.
+
+    Parameters:
+        assignment (Assignment): Fitted graphs and smoothing parameter.
+        which (str): ``'F'`` or ``'G'`` original graph.
+        exponent (int or None): Smoothing amount, omitted for the original graph.
+
+    Returns:
+        str: Input graph name (or ``F``/``G``) with a numeric smoothing exponent when requested.
+    """
+    graph = (assignment.F if which == "F" else assignment.G)("0")
+    name = str(graph.name or which)
+    return name if exponent is None else f"{name}^{exponent}"
+
+
 def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
                warn_color_reuse, label_stations, max_legend, selected_edges=None,
                selected_label=None, highlight_color="crimson"):
@@ -326,8 +342,10 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
             target_ax.annotate("← " + ", ".join(map(_label, mapped)), (x, y),
                                xytext=(9, 8), textcoords="offset points", fontsize=7)
 
-    source_ax.set_title(f"{source_name}{'' if key == '0' else '^n'} · source")
-    target_ax.set_title(f"{target_name}^{target_key} · mapped target")
+    source_ax.set_title(_graph_title(assignment, source_name,
+                                     None if key == "0" else assignment.n))
+    target_ax.set_title(_graph_title(assignment, target_name,
+                                     assignment.n if key == "0" else 2 * assignment.n))
     for ax in axes:
         ax.set_xticks([])
         ax.margins(.16)
@@ -375,7 +393,6 @@ def draw_metromaps(interleaving, *, direction="both", key="0", color_by="branch"
                    warn_color_reuse=warn_color_reuse,
                    label_stations=label_stations,
                    max_legend=max_legend)
-    fig.suptitle("Solved interleaving maps")
     return fig
 
 
@@ -411,7 +428,6 @@ def color_by_edge(interleaving, edge, *, direction="phi", key="0",
                label_stations=label_stations, max_legend=1,
                selected_edges={selected_edge}, selected_label="Selected edge",
                highlight_color=color)
-    fig.suptitle(f"{direction}: selected edge and ILP image")
     return fig
 
 
@@ -456,5 +472,4 @@ def color_by_branch(interleaving, branch, *, direction="phi", key="0",
                label_stations=label_stations, max_legend=1,
                selected_edges=selected_edges, selected_label=f"Selected branch B{branch_index}",
                highlight_color=color)
-    fig.suptitle(f"{direction}: branch B{branch_index} and ILP edge images")
     return fig
