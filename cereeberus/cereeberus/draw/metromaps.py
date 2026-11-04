@@ -223,6 +223,33 @@ def _resolve_edge(graph, edge):
     return (u, v, keys[0])
 
 
+def _validated_assignment(interleaving, direction, key, *, allow_both=False):
+    """Validate a map request and return the fitted ILP assignment.
+
+    Parameters:
+        interleaving (Interleave): Object with a solved ``assignment``.
+        direction (str): ``'phi'``, ``'psi'``, or ``'both'`` if allowed.
+        key (str): Map level, ``'0'`` or ``'n'``.
+        allow_both (bool): Permit the two-direction view.
+    Returns:
+        Assignment: Graphs and solved maps to draw.
+    Raises:
+        TypeError: If the object is not an ``Interleave``.
+        ValueError: If it is unfitted or an option is invalid.
+    """
+    if not isinstance(interleaving, Interleave):
+        raise TypeError("Pass an Interleave object.")
+    if interleaving.assignment is None:
+        raise ValueError("Call interleaving.fit() before drawing its maps.")
+    directions = ("both", "phi", "psi") if allow_both else ("phi", "psi")
+    if direction not in directions:
+        choices = ", ".join(repr(value) for value in directions)
+        raise ValueError(f"direction must be {choices}.")
+    if key not in ("0", "n"):
+        raise ValueError("key must be '0' or 'n'.")
+    return interleaving.assignment
+
+
 def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
                warn_color_reuse, label_stations, max_legend, selected_edges=None,
                selected_label=None, highlight_color="crimson"):
@@ -384,21 +411,14 @@ def draw_metromaps(interleaving, *, direction="both", key="0", color_by="branch"
         TypeError: If ``interleaving`` is not an ``Interleave`` object.
         ValueError: If the object has not been fitted or an option is invalid.
     """
-    if not isinstance(interleaving, Interleave):
-        raise TypeError("Pass an Interleave object.")
-    if interleaving.assignment is None:
-        raise ValueError("Call interleaving.fit() before drawing its maps.")
-    if direction not in ("both", "phi", "psi"):
-        raise ValueError("direction must be 'both', 'phi', or 'psi'.")
-    if key not in ("0", "n"):
-        raise ValueError("key must be '0' or 'n'.")
+    assignment = _validated_assignment(interleaving, direction, key, allow_both=True)
     if color_by not in ("branch", "edge"):
         raise ValueError("color_by must be 'branch' or 'edge'.")
     directions = ("phi", "psi") if direction == "both" else (direction,)
     fig, axes = plt.subplots(len(directions), 2, figsize=figsize or (16, 7 * len(directions)),
                              squeeze=False, sharey="row", constrained_layout=True)
     for row, map_name in enumerate(directions):
-        _draw_pair(interleaving.assignment, map_name, key, axes[row],
+        _draw_pair(assignment, map_name, key, axes[row],
                    color_by=color_by, color_scheme=color_scheme,
                    warn_color_reuse=warn_color_reuse,
                    label_stations=label_stations,
@@ -439,20 +459,12 @@ def color_by_edge(interleaving, edge, *, direction="phi", key="0",
         ValueError: If the object is unfitted, the direction or key is invalid,
             the edge is missing or ambiguous, or it has no selected ILP image.
     """
-    if not isinstance(interleaving, Interleave):
-        raise TypeError("Pass an Interleave object.")
-    if interleaving.assignment is None:
-        raise ValueError("Call interleaving.fit() before drawing its maps.")
-    if direction not in ("phi", "psi"):
-        raise ValueError("direction must be 'phi' or 'psi'.")
-    if key not in ("0", "n"):
-        raise ValueError("key must be '0' or 'n'.")
-    source_family = (interleaving.assignment.F if direction == "phi"
-                     else interleaving.assignment.G)
+    assignment = _validated_assignment(interleaving, direction, key)
+    source_family = assignment.F if direction == "phi" else assignment.G
     selected_edge = _resolve_edge(source_family(key), edge)
     fig, axes = plt.subplots(1, 2, figsize=figsize, sharey=True,
                              constrained_layout=True)
-    _draw_pair(interleaving.assignment, direction, key, axes,
+    _draw_pair(assignment, direction, key, axes,
                color_by="edge", color_scheme="tab20", warn_color_reuse=False,
                label_stations=label_stations, max_legend=1,
                selected_edges={selected_edge}, selected_label="Selected edge",
@@ -493,16 +505,8 @@ def color_by_branch(interleaving, branch, *, direction="phi", key="0",
         ValueError: If the object is unfitted, an option or branch is invalid,
             or a branch edge has no selected ILP image.
     """
-    if not isinstance(interleaving, Interleave):
-        raise TypeError("Pass an Interleave object.")
-    if interleaving.assignment is None:
-        raise ValueError("Call interleaving.fit() before drawing its maps.")
-    if direction not in ("phi", "psi"):
-        raise ValueError("direction must be 'phi' or 'psi'.")
-    if key not in ("0", "n"):
-        raise ValueError("key must be '0' or 'n'.")
-    source_family = (interleaving.assignment.F if direction == "phi"
-                     else interleaving.assignment.G)
+    assignment = _validated_assignment(interleaving, direction, key)
+    source_family = assignment.F if direction == "phi" else assignment.G
     source = source_family(key)
     branches = _branches(source)
     if isinstance(branch, int) and not isinstance(branch, bool):
@@ -515,7 +519,7 @@ def color_by_branch(interleaving, branch, *, direction="phi", key="0",
     selected_edges = set(branches[branch_index])
     fig, axes = plt.subplots(1, 2, figsize=figsize, sharey=True,
                              constrained_layout=True)
-    _draw_pair(interleaving.assignment, direction, key, axes,
+    _draw_pair(assignment, direction, key, axes,
                color_by="branch", color_scheme="tab20", warn_color_reuse=False,
                label_stations=label_stations, max_legend=1,
                selected_edges=selected_edges, selected_label=f"Selected branch B{branch_index}",
