@@ -26,8 +26,7 @@ def _label(node):
     """Format a graph node using the labels shown by ``ReebGraph.draw``.
 
     Parameters:
-        node (hashable): A Mapper graph node identifier. Internal tuple
-            identifiers such as ``("mapper_subd", 3)`` are shortened.
+        node (hashable): A Mapper graph node identifier. Internal tuple identifiers such as ``("mapper_subd", 3)`` are shortened.
 
     Returns:
         str: The displayed node label, such as ``"s3"``.
@@ -38,18 +37,13 @@ def _label(node):
 def _branches(graph):
     """Partition source edges into directed branches for coloring.
 
-    A branch continues through each vertex with exactly one incoming and one
-    outgoing edge. It ends at a leaf or junction. Edge keys preserve distinct
-    parallel routes, and sorting gives stable branch numbers for a fixed graph.
+    A branch continues through each vertex with exactly one incoming and one outgoing edge. It ends at a leaf or junction. Edge keys preserve distinct parallel routes, and sorting gives stable branch numbers for a fixed graph.
 
     Parameters:
-        graph (MapperGraph): Source graph with directed, keyed edges and a
-            function-value dictionary ``graph.f``.
+        graph (MapperGraph): Source graph with directed, keyed edges and a function-value dictionary ``graph.f``.
 
     Returns:
-        list[list[tuple]]: Maximal branches, each containing its directed
-        ``(source, target, key)`` edges in traversal order. Every edge occurs
-        in exactly one branch.
+        list[list[tuple]]: Maximal branches, each containing its directed ``(source, target, key)`` edges in traversal order. Every edge occurs in exactly one branch.
     """
     edges = list(graph.edges(keys=True))
     regular = {v for v in graph if graph.in_degree(v) == graph.out_degree(v) == 1}
@@ -74,22 +68,17 @@ def _branches(graph):
 def _pairs(matrix, *, allow_empty=False):
     """Extract source-to-target assignments from a solved ILP map matrix.
 
-    Each source object is a column in one function-value block. Its selected
-    row identifies the target object. A column with multiple selected rows,
-    or no selected row when ``allow_empty`` is false, is rejected.
+    Each source object is a column in one function-value block. Its selected row identifies the target object. A column with multiple selected rows, or no selected row when ``allow_empty`` is false, is rejected.
 
     Parameters:
-        matrix (LabeledBlockMatrix): A vertex or edge map returned by
-            ``Assignment.phi`` or ``Assignment.psi``.
-        allow_empty (bool): Skip zero columns in auxiliary ``key='n'`` maps.
-            Defaults to ``False``.
+        matrix (LabeledBlockMatrix): A vertex or edge map returned by ``Assignment.phi`` or ``Assignment.psi``.
+        allow_empty (bool): Skip zero columns in auxiliary ``key='n'`` maps. Defaults to ``False``.
 
     Returns:
         list[tuple]: ``(source, target)`` pairs in block and column order.
 
     Raises:
-        ValueError: If a required column has anything other than one
-            selected target.
+        ValueError: If a required column has anything other than one selected target.
     """
     pairs = []
     for level in matrix.get_all_block_indices():
@@ -109,16 +98,14 @@ def _position(graph, vertex):
     """Read a vertex's position from the graph's own drawing layout.
 
     Parameters:
-        graph (MapperGraph): Graph containing the vertex and its ``pos_f``
-            drawing positions, as used by ``ReebGraph.draw``.
+        graph (MapperGraph): Graph containing the vertex and its ``pos_f`` drawing positions, as used by ``ReebGraph.draw``.
         vertex (hashable): Vertex identifier in ``graph``.
 
     Returns:
         numpy.ndarray: ``[x, y]`` position from ``graph.pos_f``.
 
     Raises:
-        KeyError: If the vertex has no drawing position. Call
-            ``graph.set_pos_from_f()`` to refresh the graph layout.
+        KeyError: If the vertex has no drawing position. Call ``graph.set_pos_from_f()`` to refresh the graph layout.
     """
     return np.asarray(graph.pos_f[vertex], dtype=float)
 
@@ -128,12 +115,10 @@ def _edge_segment(graph, edge):
 
     Parameters:
         graph (MapperGraph): Graph containing the edge.
-        edge (tuple): Directed edge ``(source, target, key)``. Only its first
-            two entries are used for the geometry.
+        edge (tuple): Directed edge ``(source, target, key)``. Only its first two entries are used for the geometry.
 
     Returns:
-        numpy.ndarray: Array of shape ``(2, 2)`` containing the source
-        and target drawing positions.
+        numpy.ndarray: Array of shape ``(2, 2)`` containing the source and target drawing positions.
     """
     return np.vstack((_position(graph, edge[0]), _position(graph, edge[1])))
 
@@ -143,14 +128,11 @@ def _styles(graph, edge_pairs, color_by):
 
     Parameters:
         graph (MapperGraph): Source graph used to identify branches.
-        edge_pairs (list[tuple]): ``(source_edge, target_edge)`` assignments
-            extracted from the ILP edge map.
-        color_by (str): ``'branch'`` to share colors along maximal branches,
-            or ``'edge'`` to color each source edge separately.
+        edge_pairs (list[tuple]): ``(source_edge, target_edge)`` assignments extracted from the ILP edge map.
+        color_by (str): ``'branch'`` to share colors along maximal branches, or ``'edge'`` to color each source edge separately.
 
     Returns:
-        list[tuple[int, str]]: Color-group number and legend label for each
-        edge pair, in the same order as ``edge_pairs``.
+        list[tuple[int, str]]: Color-group number and legend label for each edge pair, in the same order as ``edge_pairs``.
     """
     if color_by == "edge":
         return [(i, f"{_label(e[0])}→{_label(e[1])}" +
@@ -167,16 +149,12 @@ def _group_colors(styles, color_scheme, warn_color_reuse):
     """Assign colors to the source groups shown in one map direction.
 
     Parameters:
-        styles (list[tuple[int, str]]): Group number and label for each
-            mapped source edge.
+        styles (list[tuple[int, str]]): Group number and label for each mapped source edge.
         color_scheme (str): Name of a Matplotlib colormap.
-        warn_color_reuse (bool): Warn when a listed palette has fewer colors
-            than the number of displayed groups.
+        warn_color_reuse (bool): Warn when a listed palette has fewer colors than the number of displayed groups.
 
     Returns:
-        dict[int, tuple]: RGBA color keyed by source group number. Listed
-        palettes cycle after their final color; continuous palettes sample
-        evenly across their range.
+        dict[int, tuple]: RGBA color keyed by source group number. Listed palettes cycle after their final color; continuous palettes sample evenly across their range.
     """
     palette = plt.get_cmap(color_scheme)
     groups = sorted({group for group, _ in styles})
@@ -199,8 +177,7 @@ def _resolve_edge(graph, edge):
 
     Parameters:
         graph (MapperGraph): Source graph for one map direction.
-        edge (tuple): ``(u, v, key)`` or ``(u, v)`` when exactly one edge
-            joins the two vertices.
+        edge (tuple): ``(u, v, key)`` or ``(u, v)`` when exactly one edge joins the two vertices.
 
     Returns:
         tuple: Keyed ``(u, v, key)`` edge in ``graph``.
@@ -255,24 +232,19 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
                selected_label=None, highlight_color="crimson"):
     """Draw one source graph beside the target of one interleaving map.
 
-    This helper reads both vertex and edge ILP maps, overlays colored source
-    edges and mapped target strands, and labels destination stations.
+    This helper reads both vertex and edge ILP maps, overlays colored source edges and mapped target strands, and labels destination stations.
 
     Parameters:
-        assignment (Assignment): Solved assignment stored by a fitted
-            ``Interleave`` object.
+        assignment (Assignment): Solved assignment stored by a fitted ``Interleave`` object.
         direction (str): ``'phi'`` for F to G, or ``'psi'`` for G to F.
         key (str): ``'0'`` for the main map or ``'n'`` for the auxiliary map.
-        axes (sequence[matplotlib.axes.Axes]): Two axes in source, target
-            order. The helper draws into these axes.
+        axes (sequence[matplotlib.axes.Axes]): Two axes in source, target order. The helper draws into these axes.
         color_by (str): ``'branch'`` or ``'edge'`` source coloring.
         color_scheme (str): Matplotlib colormap name for the source groups.
         warn_color_reuse (bool): Warn if a listed palette repeats colors.
-        label_stations (bool): Whether to annotate mapped source vertices
-            beside target stations.
+        label_stations (bool): Whether to annotate mapped source vertices beside target stations.
         max_legend (int): Maximum number of colored groups in the legend.
-        selected_edges (set[tuple] or None): If given, color only these keyed
-            source edges and their selected target strands.
+        selected_edges (set[tuple] or None): If given, color only these keyed source edges and their selected target strands.
         selected_label (str or None): Legend heading for a focused view.
         highlight_color (str): Matplotlib color for selected edges and strands.
 
@@ -371,41 +343,21 @@ def draw_metromaps(interleaving, *, direction="both", key="0", color_by="branch"
                    label_stations=True, max_legend=16):
     """Draw a fitted interleaving as paired source and target graphs.
 
-    Each row places a colored source Mapper graph next to its smoothed target.
-    Colored strands on the target show the selected ILP edge images; target
-    stations indicate the selected vertex images. The function only reads the
-    fitted result and does not solve or modify the interleaving.
+    Each row places a colored source Mapper graph next to its smoothed target. Colored strands on the target show the selected ILP edge images; target stations indicate the selected vertex images. The function only reads the fitted result and does not solve or modify the interleaving.
 
     Parameters:
-        interleaving (Interleave): An ``Interleave(F, G)`` object after a
-            successful ``fit()`` call. Its ``assignment`` supplies the graphs
-            and solved vertex and edge maps.
-        direction (str): ``'both'`` (default) makes two rows, F beside G^n
-            and G beside F^n. ``'phi'`` or ``'psi'`` makes one corresponding row.
-        key (str): ``'0'`` (default) shows the main maps F→G^n and G→F^n.
-            ``'n'`` shows the auxiliary maps F^n→G^2n and G^n→F^2n.
-        color_by (str): ``'branch'`` (default) gives each maximal source path
-            between leaves or junctions one color. ``'edge'`` gives each source
-            edge its own color. This affects only the display.
-        color_scheme (str): Matplotlib colormap name for source groups.
-            Defaults to ``'tab20'``, whose 20 colors repeat when more than 20
-            branches or edges are shown in one map direction. A continuous
-            colormap such as ``'hsv'`` samples colors across its range.
-        warn_color_reuse (bool): Emit a ``UserWarning`` when a listed color
-            scheme has fewer colors than source groups. Defaults to ``True``.
-        figsize (tuple[float, float] or None): Matplotlib figure size in
-            inches. If ``None``, uses ``(16, 7)`` for one row or ``(16, 14)``
-            for both rows.
-        label_stations (bool): Whether to annotate target vertices with the
-            source vertices mapped there. Defaults to ``True``.
-        max_legend (int): Maximum number of source color groups displayed in
-            each target-panel legend. Defaults to 16; groups beyond this limit
-            are still drawn.
+        interleaving (Interleave): An ``Interleave(F, G)`` object after a successful ``fit()`` call. Its ``assignment`` supplies the graphs and solved vertex and edge maps.
+        direction (str): ``'both'`` (default) makes two rows, F beside G^n and G beside F^n. ``'phi'`` or ``'psi'`` makes one corresponding row.
+        key (str): ``'0'`` (default) shows the main maps F→G^n and G→F^n. ``'n'`` shows the auxiliary maps F^n→G^2n and G^n→F^2n.
+        color_by (str): ``'branch'`` (default) gives each maximal source path between leaves or junctions one color. ``'edge'`` gives each source edge its own color. This affects only the display.
+        color_scheme (str): Matplotlib colormap name for source groups. Defaults to ``'tab20'``, whose 20 colors repeat when more than 20 branches or edges are shown in one map direction. A continuous colormap such as ``'hsv'`` samples colors across its range.
+        warn_color_reuse (bool): Emit a ``UserWarning`` when a listed color scheme has fewer colors than source groups. Defaults to ``True``.
+        figsize (tuple[float, float] or None): Matplotlib figure size in inches. If ``None``, uses ``(16, 7)`` for one row or ``(16, 14)`` for both rows.
+        label_stations (bool): Whether to annotate target vertices with the source vertices mapped there. Defaults to ``True``.
+        max_legend (int): Maximum number of source color groups displayed in each target-panel legend. Defaults to 16; groups beyond this limit are still drawn.
 
     Returns:
-        matplotlib.figure.Figure: Figure containing two axes per map
-        direction, ordered source then target. Access them through
-        ``figure.axes``.
+        matplotlib.figure.Figure: Figure containing two axes per map direction, ordered source then target. Access them through ``figure.axes``.
 
     Raises:
         TypeError: If ``interleaving`` is not an ``Interleave`` object.
@@ -431,33 +383,23 @@ def color_by_edge(interleaving, edge, *, direction="phi", key="0",
                   color="crimson", figsize=(16, 7), label_stations=False):
     """Highlight one mapper source edge and its mapped smoothed-target edge.
 
-    The selected source edge is drawn in ``color`` beside the edge selected
-    for it by the solved ILP map. Other graph edges remain in the neutral
-    background. The target is G^n for ``direction='phi'`` and F^n for
-    ``direction='psi'`` when ``key='0'``. This shows the ILP edge image in the
-    smoothed graph; it does not infer a path in the unsmoothed target graph.
+    The selected source edge is drawn in ``color`` beside the edge selected for it by the solved ILP map. Other graph edges remain in the neutral background. The target is G^n for ``direction='phi'`` and F^n for ``direction='psi'`` when ``key='0'``. This shows the ILP edge image in the smoothed graph; it does not infer a path in the unsmoothed target graph.
 
     Parameters:
         interleaving (Interleave): Fitted object containing a solved assignment.
-        edge (tuple): Directed source edge ``(u, v, key)``. ``(u, v)`` is also
-            accepted when no parallel edge has the same endpoints.
-        direction (str): ``'phi'`` for an edge of F or ``'psi'`` for an edge of
-            G. Defaults to ``'phi'``.
-        key (str): ``'0'`` for the main map, or ``'n'`` for an auxiliary map.
-            Defaults to ``'0'``.
-        color (str): Matplotlib color for the highlighted edge and strand.
-            Defaults to ``'crimson'``.
+        edge (tuple): Directed source edge ``(u, v, key)``. ``(u, v)`` is also accepted when no parallel edge has the same endpoints.
+        direction (str): ``'phi'`` for an edge of F or ``'psi'`` for an edge of G. Defaults to ``'phi'``.
+        key (str): ``'0'`` for the main map, or ``'n'`` for an auxiliary map. Defaults to ``'0'``.
+        color (str): Matplotlib color for the highlighted edge and strand. Defaults to ``'crimson'``.
         figsize (tuple[float, float]): Figure size in inches.
-        label_stations (bool): Whether to show all vertex correspondences at
-            target stations. Defaults to ``False`` for a focused edge view.
+        label_stations (bool): Whether to show all vertex correspondences at target stations. Defaults to ``False`` for a focused edge view.
 
     Returns:
         matplotlib.figure.Figure: Two-panel source and target figure.
 
     Raises:
         TypeError: If ``interleaving`` is not an ``Interleave`` object.
-        ValueError: If the object is unfitted, the direction or key is invalid,
-            the edge is missing or ambiguous, or it has no selected ILP image.
+        ValueError: If the object is unfitted, the direction or key is invalid, the edge is missing or ambiguous, or it has no selected ILP image.
     """
     assignment = _validated_assignment(interleaving, direction, key)
     source_family = assignment.F if direction == "phi" else assignment.G
@@ -477,33 +419,23 @@ def color_by_branch(interleaving, branch, *, direction="phi", key="0",
                     color="crimson", figsize=(16, 7), label_stations=False):
     """Highlight one source branch and all its ILP-selected target strands.
 
-    A branch is a maximal directed edge path between graph endpoints or
-    junctions, as returned by ``_branches``. Choose it by its zero-based
-    branch number (the ``B0``, ``B1``, ... legend labels) or by any source
-    edge within it. Each edge keeps its own ILP assignment; this function
-    colors their union and does not compute a branch-level map.
+    A branch is a maximal directed edge path between graph endpoints or junctions, as returned by ``_branches``. Choose it by its zero-based branch number (the ``B0``, ``B1``, ... legend labels) or by any source edge within it. Each edge keeps its own ILP assignment; this function colors their union and does not compute a branch-level map.
 
     Parameters:
         interleaving (Interleave): Fitted object containing a solved assignment.
-        branch (int or tuple): Zero-based branch number or a directed source
-            edge ``(u, v, key)`` within the branch. ``(u, v)`` works when no
-            parallel edge has the same endpoints.
-        direction (str): ``'phi'`` selects a branch of F; ``'psi'`` selects
-            a branch of G. Defaults to ``'phi'``.
-        key (str): ``'0'`` for the main map or ``'n'`` for an auxiliary map.
-            Defaults to ``'0'``.
+        branch (int or tuple): Zero-based branch number or a directed source edge ``(u, v, key)`` within the branch. ``(u, v)`` works when no parallel edge has the same endpoints.
+        direction (str): ``'phi'`` selects a branch of F; ``'psi'`` selects a branch of G. Defaults to ``'phi'``.
+        key (str): ``'0'`` for the main map or ``'n'`` for an auxiliary map. Defaults to ``'0'``.
         color (str): Matplotlib highlight color. Defaults to ``'crimson'``.
         figsize (tuple[float, float]): Figure size in inches.
-        label_stations (bool): Show all vertex correspondences at target
-            stations. Defaults to ``False``.
+        label_stations (bool): Show all vertex correspondences at target stations. Defaults to ``False``.
 
     Returns:
         matplotlib.figure.Figure: Two-panel source and target figure.
 
     Raises:
         TypeError: If ``interleaving`` is not an ``Interleave`` object.
-        ValueError: If the object is unfitted, an option or branch is invalid,
-            or a branch edge has no selected ILP image.
+        ValueError: If the object is unfitted, an option or branch is invalid, or a branch edge has no selected ILP image.
     """
     assignment = _validated_assignment(interleaving, direction, key)
     source_family = assignment.F if direction == "phi" else assignment.G
