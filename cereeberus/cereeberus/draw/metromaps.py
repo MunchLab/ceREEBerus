@@ -102,19 +102,21 @@ def _pairs(matrix, *, allow_empty=False):
 
 
 def _position(graph, vertex):
-    """Get a vertex's two-dimensional drawing position.
+    """Read a vertex's position from the graph's own drawing layout.
 
     Parameters:
-        graph (MapperGraph): Graph containing the vertex.
+        graph (MapperGraph): Graph containing the vertex and its ``pos_f``
+            drawing positions, as used by ``ReebGraph.draw``.
         vertex (hashable): Vertex identifier in ``graph``.
 
     Returns:
-        numpy.ndarray: ``[x, y]`` position from ``graph.pos_f`` if present;
-        otherwise ``[0, graph.f[vertex] * graph.delta]``.
+        numpy.ndarray: ``[x, y]`` position from ``graph.pos_f``.
+
+    Raises:
+        KeyError: If the vertex has no drawing position. Call
+            ``graph.set_pos_from_f()`` to refresh the graph layout.
     """
-    if vertex in getattr(graph, "pos_f", {}):
-        return np.asarray(graph.pos_f[vertex], dtype=float)
-    return np.asarray((0, graph.f[vertex] * getattr(graph, "delta", 1)), dtype=float)
+    return np.asarray(graph.pos_f[vertex], dtype=float)
 
 
 def _curve(graph, edge):
