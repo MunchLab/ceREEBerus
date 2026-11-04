@@ -23,7 +23,7 @@ colors appear in parallel lanes. Many shared routes can still crowd a panel.
 ```python
 from cereeberus import Interleave
 from cereeberus.data.ex_mappergraphs import line, torus
-from cereeberus.draw.metromaps import color_by_edge, draw_metromaps
+from cereeberus.draw.metromaps import color_by_branch, color_by_edge, draw_metromaps
 
 F = torus(0, 2, 10, 12, delta=1, seed=17)
 G = line(0, 12, seed=5)
@@ -32,9 +32,9 @@ result.fit()
 
 figure = draw_metromaps(result)                     # both map directions
 phi_figure = draw_metromaps(result, direction="phi") # F beside G^n
-edge_figure = draw_metromaps(result, color_by="edge", color_scheme="hsv")
 selected = next(iter(F.edges(keys=True)))
-selected_figure = color_by_edge(result, selected, direction="phi")
+branch_figure = color_by_branch(result, selected, direction="phi")
+edge_figure = color_by_edge(result, selected, direction="phi")
 ```
 
 Use `direction="psi"` for just $G$ beside $F^n$. Set `key="n"` to view the
@@ -46,11 +46,15 @@ to silence it or choose another Matplotlib `color_scheme`. The legend displays
 at most 16 groups by default (`max_legend=16`), even when more are colored.
 Continuous colormaps such as `hsv` spread colors over the displayed groups.
 
-`color_by_edge` accepts a fitted interleaving and one directed source edge. It
-colors only that edge and the ILP-selected edge strand in the smoothed target.
-Use `direction="psi"` to select an edge of G instead. Include the edge key in
-`(u, v, key)` when parallel edges share endpoints. This view does not infer a
-path through the original, unsmoothed target graph.
+`color_by_branch` accepts a branch number (`B0`, `B1`, ...) or any directed
+source edge within that branch. It highlights the whole source branch and every
+edge image selected by the ILP for that branch. These may split or overlap in
+the target; the highlight is the collection of edge assignments, not a new
+branch-level map. Use `direction="psi"` to select a branch of G. The separate
+`color_by_edge` function highlights one edge and its selected target strand.
+Include the edge key in `(u, v, key)` when parallel edges share endpoints.
+Neither focused view infers a path through the original, unsmoothed target
+graph.
 
 Each source edge remains a separate ILP assignment. Branch coloring only groups
 adjacent edges visually; it does not infer a branch-level interleaving or an

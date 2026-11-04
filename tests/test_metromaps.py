@@ -11,7 +11,8 @@ import networkx as nx
 from cereeberus import Interleave
 from cereeberus.data.ex_mappergraphs import line, torus
 from cereeberus.draw.metromaps import (
-    _branches, _group_colors, _resolve_edge, color_by_edge, draw_metromaps,
+    _branches, _group_colors, _resolve_edge, color_by_branch, color_by_edge,
+    draw_metromaps,
 )
 
 
@@ -43,6 +44,18 @@ class TestMetroMaps(unittest.TestCase):
             self.assertEqual(sum(to_rgba(line.get_color()) == to_rgba("magenta")
                                  for line in ax.lines), 1)
         plt.close(figure)
+        branch_edges = _branches(result.F)[0]
+        focused = color_by_branch(result, branch_edges[0], color="magenta")
+        self.assertEqual(len(focused.axes), 2)
+        for ax in focused.axes:
+            self.assertEqual(sum(to_rgba(line.get_color()) == to_rgba("magenta")
+                                 for line in ax.lines), len(branch_edges))
+        plt.close(focused)
+        focused = color_by_branch(result, 0)
+        self.assertIn("branch B0", focused._suptitle.get_text())
+        plt.close(focused)
+        with self.assertRaisesRegex(ValueError, "out of range"):
+            color_by_branch(result, 99)
         reverse_edge = next(iter(result.G.edges(keys=True)))
         figure = color_by_edge(result, reverse_edge, direction="psi")
         self.assertEqual(len(figure.axes), 2)

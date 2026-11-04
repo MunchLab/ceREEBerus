@@ -19,7 +19,7 @@ from cereeberus import Interleave
 
 from .draw import _format_node_label
 
-__all__ = ["draw_metromaps", "color_by_edge"]
+__all__ = ["draw_metromaps", "color_by_branch", "color_by_edge"]
 
 
 def _label(node):
@@ -224,8 +224,8 @@ def _resolve_edge(graph, edge):
 
 
 def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
-               warn_color_reuse, label_stations, max_legend, selected_edge=None,
-               highlight_color="crimson"):
+               warn_color_reuse, label_stations, max_legend, selected_edges=None,
+               selected_label=None, highlight_color="crimson"):
     """Draw one source graph beside the target of one interleaving map.
 
     This helper reads both vertex and edge ILP maps, overlays colored source
@@ -244,9 +244,10 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
         label_stations (bool): Whether to annotate mapped source vertices
             beside target stations.
         max_legend (int): Maximum number of colored groups in the legend.
-        selected_edge (tuple or None): If given, color only this keyed source
-            edge and its selected target strand.
-        highlight_color (str): Matplotlib color used for ``selected_edge``.
+        selected_edges (set[tuple] or None): If given, color only these keyed
+            source edges and their selected target strands.
+        selected_label (str or None): Legend heading for a focused view.
+        highlight_color (str): Matplotlib color for selected edges and strands.
 
     Returns:
         None: The supplied axes are modified in place.
@@ -261,20 +262,22 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
     vertex_pairs = _pairs(getattr(assignment, direction)(key, "V"), allow_empty=key == "n")
     styles = _styles(source, edge_pairs, color_by)
     colors = (_group_colors(styles, color_scheme, warn_color_reuse)
-              if selected_edge is None else {})
-    if selected_edge is not None and selected_edge not in {edge for edge, _ in edge_pairs}:
-        raise ValueError(f"Source edge {selected_edge!r} has no selected ILP image.")
+              if selected_edges is None else {})
+    if selected_edges is not None:
+        missing = selected_edges - {edge for edge, _ in edge_pairs}
+        if missing:
+            raise ValueError(f"Source edges {missing!r} have no selected ILP image.")
     source_ax, target_ax = axes
 
     source.draw(ax=source_ax, with_labels=True, node_size=360)
     for i, (edge, _) in enumerate(edge_pairs):
-        if selected_edge is not None and edge != selected_edge:
+        if selected_edges is not None and edge not in selected_edges:
             continue
         xy = _edge_segment(source, edge)
-        color = highlight_color if selected_edge is not None else colors[styles[i][0]]
+        color = highlight_color if selected_edges is not None else colors[styles[i][0]]
         source_ax.plot(xy[:, 0], xy[:, 1], color=color,
-                       linewidth=5 if selected_edge is not None else 3,
-                       zorder=4 if selected_edge is not None else 1)
+                       linewidth=3.5 if selected_edges is not None else 3,
+                       zorder=4 if selected_edges is not None else 1)
 
     for edge in target.edges(keys=True):
         xy = _edge_segment(target, edge)
@@ -296,11 +299,11 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
         if norm:
             normal /= norm
         for lane, i in enumerate(indices):
-            if selected_edge is not None and edge_pairs[i][0] != selected_edge:
+            if selected_edges is not None and edge_pairs[i][0] not in selected_edges:
                 continue
             group, label = styles[i]
             xy = base + (lane - (len(indices) - 1) / 2) * gap * normal
-            color = highlight_color if selected_edge is not None else colors[group]
+            color = highlight_color if selected_edges is not None else colors[group]
             target_ax.plot(xy[:, 0], xy[:, 1], color=color, linewidth=2.6, zorder=3)
             if group not in seen and len(handles) < max_legend:
                 handles.append(Line2D([], [], color=color, linewidth=3, label=label))
@@ -331,7 +334,7 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
         ax.margins(.16)
         ax.set_ylabel("Function value" if ax is source_ax else "")
     if handles:
-        target_ax.legend(handles=handles, title=("Selected edge" if selected_edge is not None
+        target_ax.legend(handles=handles, title=(selected_label if selected_edges is not None
                                                  else f"Source {'branches' if color_by == 'branch' else 'edges'}"),
                          loc="best", fontsize=7, title_fontsize=8, framealpha=.9)
 
@@ -406,7 +409,7 @@ def draw_metromaps(interleaving, *, direction="both", key="0", color_by="branch"
 
 def color_by_edge(interleaving, edge, *, direction="phi", key="0",
                   color="crimson", figsize=(16, 7), label_stations=False):
-    """Highlight one ILP source edge and its mapped smoothed-target strand.
+    """Highlight one mapper source edge and its mapped smoothed-target edge.
 
     The selected source edge is drawn in ``color`` beside the edge selected
     for it by the solved ILP map. Other graph edges remain in the neutral
@@ -452,6 +455,70 @@ def color_by_edge(interleaving, edge, *, direction="phi", key="0",
     _draw_pair(interleaving.assignment, direction, key, axes,
                color_by="edge", color_scheme="tab20", warn_color_reuse=False,
                label_stations=label_stations, max_legend=1,
-               selected_edge=selected_edge, highlight_color=color)
+               selected_edges={selected_edge}, selected_label="Selected edge",
+               highlight_color=color)
     fig.suptitle(f"{direction}: selected edge and ILP image")
+    return fig
+
+
+def color_by_branch(interleaving, branch, *, direction="phi", key="0",
+                    color="crimson", figsize=(16, 7), label_stations=False):
+    """Highlight one source branch and all its ILP-selected target strands.
+
+    A branch is a maximal directed edge path between graph endpoints or
+    junctions, as returned by ``_branches``. Choose it by its zero-based
+    branch number (the ``B0``, ``B1``, ... legend labels) or by any source
+    edge within it. Each edge keeps its own ILP assignment; this function
+    colors their union and does not compute a branch-level map.
+
+    Parameters:
+        interleaving (Interleave): Fitted object containing a solved assignment.
+        branch (int or tuple): Zero-based branch number or a directed source
+            edge ``(u, v, key)`` within the branch. ``(u, v)`` works when no
+            parallel edge has the same endpoints.
+        direction (str): ``'phi'`` selects a branch of F; ``'psi'`` selects
+            a branch of G. Defaults to ``'phi'``.
+        key (str): ``'0'`` for the main map or ``'n'`` for an auxiliary map.
+            Defaults to ``'0'``.
+        color (str): Matplotlib highlight color. Defaults to ``'crimson'``.
+        figsize (tuple[float, float]): Figure size in inches.
+        label_stations (bool): Show all vertex correspondences at target
+            stations. Defaults to ``False``.
+
+    Returns:
+        matplotlib.figure.Figure: Two-panel source and target figure.
+
+    Raises:
+        TypeError: If ``interleaving`` is not an ``Interleave`` object.
+        ValueError: If the object is unfitted, an option or branch is invalid,
+            or a branch edge has no selected ILP image.
+    """
+    if not isinstance(interleaving, Interleave):
+        raise TypeError("Pass an Interleave object.")
+    if interleaving.assignment is None:
+        raise ValueError("Call interleaving.fit() before drawing its maps.")
+    if direction not in ("phi", "psi"):
+        raise ValueError("direction must be 'phi' or 'psi'.")
+    if key not in ("0", "n"):
+        raise ValueError("key must be '0' or 'n'.")
+    source_family = (interleaving.assignment.F if direction == "phi"
+                     else interleaving.assignment.G)
+    source = source_family(key)
+    branches = _branches(source)
+    if isinstance(branch, int) and not isinstance(branch, bool):
+        branch_index = branch
+        if not 0 <= branch_index < len(branches):
+            raise ValueError(f"Branch number {branch_index} is out of range.")
+    else:
+        edge = _resolve_edge(source, branch)
+        branch_index = next(i for i, path in enumerate(branches) if edge in path)
+    selected_edges = set(branches[branch_index])
+    fig, axes = plt.subplots(1, 2, figsize=figsize, sharey=True,
+                             constrained_layout=True)
+    _draw_pair(interleaving.assignment, direction, key, axes,
+               color_by="branch", color_scheme="tab20", warn_color_reuse=False,
+               label_stations=label_stations, max_legend=1,
+               selected_edges=selected_edges, selected_label=f"Selected branch B{branch_index}",
+               highlight_color=color)
+    fig.suptitle(f"{direction}: branch B{branch_index} and ILP edge images")
     return fig
