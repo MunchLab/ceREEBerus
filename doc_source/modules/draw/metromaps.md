@@ -16,7 +16,7 @@ vertices. Node labels follow `ReebGraph.draw()` (`s0`, `r0`, and so on).
 ```python
 from cereeberus import Interleave
 from cereeberus.data.ex_mappergraphs import line, torus
-from cereeberus.draw.metromaps import draw_metromaps
+from cereeberus.draw.metromaps import color_by_edge, draw_metromaps
 
 F = torus(0, 2, 10, 12, delta=1, seed=17)
 G = line(0, 12, seed=5)
@@ -25,12 +25,25 @@ result.fit()
 
 figure = draw_metromaps(result)                     # both map directions
 phi_figure = draw_metromaps(result, direction="phi") # F beside G^n
-edge_figure = draw_metromaps(result, color_by="edge")
+edge_figure = draw_metromaps(result, color_by="edge", color_scheme="hsv")
+selected = next(iter(F.edges(keys=True)))
+selected_figure = color_by_edge(result, selected, direction="phi")
 ```
 
 Use `direction="psi"` for just $G$ beside $F^n$. Set `key="n"` to view the
 auxiliary maps $F^n\to G^{2n}$ and $G^n\to F^{2n}$. The function returns the
-figure; its panels are available through `figure.axes`.
+figure; its panels are available through `figure.axes`. The default
+`tab20` scheme has 20 colors and repeats them when a direction has more than 20
+source branches or edges. A warning calls this out; set `warn_color_reuse=False`
+to silence it or choose another Matplotlib `color_scheme`. The legend displays
+at most 16 groups by default (`max_legend=16`), even when more are colored.
+Continuous colormaps such as `hsv` spread colors over the displayed groups.
+
+`color_by_edge` accepts a fitted interleaving and one directed source edge. It
+colors only that edge and the ILP-selected edge strand in the smoothed target.
+Use `direction="psi"` to select an edge of G instead. Include the edge key in
+`(u, v, key)` when parallel edges share endpoints. This view does not infer a
+path through the original, unsmoothed target graph.
 
 Each source edge remains a separate ILP assignment. Branch coloring only groups
 adjacent edges visually; it does not infer a branch-level interleaving or an
