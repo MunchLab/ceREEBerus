@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
 
+from cereeberus import Interleave
+
 from .draw import _format_node_label
 
 __all__ = ["draw_metromaps"]
@@ -292,8 +294,6 @@ def draw_metromaps(interleaving, *, direction="both", key="0", color_by="branch"
         TypeError: If ``interleaving`` is not an ``Interleave`` object.
         ValueError: If the object has not been fitted or an option is invalid.
     """
-    from ..distance.interleave import Interleave
-
     if not isinstance(interleaving, Interleave):
         raise TypeError("Pass an Interleave object.")
     if interleaving.assignment is None:
