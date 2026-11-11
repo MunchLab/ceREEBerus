@@ -7,5 +7,5 @@ The ``draw`` module has helper code used throughout the package.
    :maxdepth: 2
 
     Draw <compute_draw.rst>
-    Metro interleaving maps <metromaps.md>
+    Metro interleaving maps <metromaps.rst>
 ```
