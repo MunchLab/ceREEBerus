@@ -1,10 +1,4 @@
-"""Draw the maps stored in a fitted Mapper graph interleaving.
-
-The ``draw_metromaps`` function reads the original and smoothed graphs
-and the solved vertex and edge map matrices from an ``Interleave`` object. It
-places each source graph beside its target and uses matching colors to trace
-source edges or branches through the map. The metro-map style is used for better visualization.
-"""
+"""Draw fitted interleaving maps with matching source and target colors."""
 
 from collections import defaultdict
 import warnings
@@ -12,72 +6,51 @@ import warnings
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
-from matplotlib.colors import ListedColormap
+from matplotlib.colors import ListedColormap, Normalize
 
 from cereeberus import Interleave
 
 from .draw import _format_node_label
 
-__all__ = ["draw_metromaps", "color_by_branch", "color_by_edge"]
+__all__ = ["draw_metromaps", "color_by_arc", "color_by_edge"]
 
 
 def _label(node):
-    """Format a graph node using the labels shown by ``ReebGraph.draw``.
-
-    Parameters:
-        node (hashable): A Mapper graph node identifier. Internal tuple identifiers such as ``("mapper_subd", 3)`` are shortened.
-
-    Returns:
-        str: The displayed node label, such as ``"s3"``.
-    """
+    """Format a node using the same labels as ReebGraph.draw."""
     return str(_format_node_label(node))
 
 
-def _branches(graph):
-    """Partition source edges into directed branches for coloring.
+def _arcs(graph):
+    """Partition keyed edges into maximal directed arcs.
 
-    A branch continues through each vertex with exactly one incoming and one outgoing edge. It ends at a leaf or junction. Edge keys preserve distinct parallel routes, and sorting gives stable branch numbers for a fixed graph.
-
-    Parameters:
-        graph (MapperGraph): Source graph with directed, keyed edges and a function-value dictionary ``graph.f``.
-
-    Returns:
-        list[list[tuple]]: Maximal branches, each containing its directed ``(source, target, key)`` edges in traversal order. Every edge occurs in exactly one branch.
+    Continue through vertices with one incoming and one outgoing edge.
+    Sorting makes arc numbers stable for a fixed graph.
     """
     edges = list(graph.edges(keys=True))
     regular = {v for v in graph if graph.in_degree(v) == graph.out_degree(v) == 1}
     outgoing = {v: next(iter(graph.out_edges(v, keys=True))) for v in regular}
     order = lambda e: (graph.f[e[0]], _label(e[0]), graph.f[e[1]], _label(e[1]), str(e[2]))
     starts = sorted((e for e in edges if e[0] not in regular), key=order)
-    branches, seen = [], set()
+    arcs, seen = [], set()
     for start in starts + sorted(edges, key=order):
         if start in seen:
             continue
-        branch, edge = [], start
+        arc, edge = [], start
         while edge not in seen:
-            branch.append(edge)
+            arc.append(edge)
             seen.add(edge)
             if edge[1] not in regular:
                 break
             edge = outgoing[edge[1]]
-        branches.append(branch)
-    return branches
+        arcs.append(arc)
+    return arcs
 
 
 def _pairs(matrix, *, allow_empty=False):
-    """Extract source-to-target assignments from a solved ILP map matrix.
+    """Read (source, target) pairs from the selected matrix rows.
 
-    Each source object is a column in one function-value block. Its selected row identifies the target object. A column with multiple selected rows, or no selected row when ``allow_empty`` is false, is rejected.
-
-    Parameters:
-        matrix (LabeledBlockMatrix): A vertex or edge map returned by ``Assignment.phi`` or ``Assignment.psi``.
-        allow_empty (bool): Skip zero columns in auxiliary ``key='n'`` maps. Defaults to ``False``.
-
-    Returns:
-        list[tuple]: ``(source, target)`` pairs in block and column order.
-
-    Raises:
-        ValueError: If a required column has anything other than one selected target.
+    Require one selected row per column, except for empty auxiliary columns
+    when allow_empty is True.
     """
     pairs = []
     for level in matrix.get_all_block_indices():
@@ -93,67 +66,28 @@ def _pairs(matrix, *, allow_empty=False):
     return pairs
 
 
-def _position(graph, vertex):
-    """Read a vertex's position from the graph's own drawing layout.
-
-    Parameters:
-        graph (MapperGraph): Graph containing the vertex and its ``pos_f`` drawing positions, as used by ``ReebGraph.draw``.
-        vertex (hashable): Vertex identifier in ``graph``.
-
-    Returns:
-        numpy.ndarray: ``[x, y]`` position from ``graph.pos_f``.
-
-    Raises:
-        KeyError: If the vertex has no drawing position. Call ``graph.set_pos_from_f()`` to refresh the graph layout.
-    """
-    return np.asarray(graph.pos_f[vertex], dtype=float)
-
-
 def _edge_segment(graph, edge):
-    """Return the two endpoint positions of an edge for plotting.
-
-    Parameters:
-        graph (MapperGraph): Graph containing the edge.
-        edge (tuple): Directed edge ``(source, target, key)``. Only its first two entries are used for the geometry.
-
-    Returns:
-        numpy.ndarray: Array of shape ``(2, 2)`` containing the source and target drawing positions.
-    """
-    return np.vstack((_position(graph, edge[0]), _position(graph, edge[1])))
+    """Read the two endpoint positions of a keyed edge from graph.pos_f."""
+    return np.asarray([graph.pos_f[v] for v in edge[:2]], dtype=float)
 
 
 def _styles(graph, edge_pairs, color_by):
-    """Choose the color group and legend label for each source edge.
-
-    Parameters:
-        graph (MapperGraph): Source graph used to identify branches.
-        edge_pairs (list[tuple]): ``(source_edge, target_edge)`` assignments extracted from the ILP edge map.
-        color_by (str): ``'branch'`` to share colors along maximal branches, or ``'edge'`` to color each source edge separately.
-
-    Returns:
-        list[tuple[int, str]]: Color-group number and legend label for each edge pair, in the same order as ``edge_pairs``.
-    """
+    """Return a color-group number and legend label for each source edge."""
     if color_by == "edge":
         return [(i, f"{_label(e[0])}→{_label(e[1])}" +
              (f" ({e[2]})" if len(e) > 2 and e[2] != 0 else ""))
             for i, (e, _) in enumerate(edge_pairs)]
-    branches = _branches(graph)
-    lookup = {edge: i for i, branch in enumerate(branches) for edge in branch}
-    labels = [f"B{i}: {_label(path[0][0])}→{_label(path[-1][1])}"
-              for i, path in enumerate(branches)]
+    arcs = _arcs(graph)
+    lookup = {edge: i for i, arc in enumerate(arcs) for edge in arc}
+    labels = [f"A{i}: {_label(path[0][0])}→{_label(path[-1][1])}"
+              for i, path in enumerate(arcs)]
     return [(lookup[edge], labels[lookup[edge]]) for edge, _ in edge_pairs]
 
 
 def _group_colors(styles, color_scheme, warn_color_reuse):
-    """Assign colors to the source groups shown in one map direction.
+    """Assign colors to groups, cycling listed palettes when necessary.
 
-    Parameters:
-        styles (list[tuple[int, str]]): Group number and label for each mapped source edge.
-        color_scheme (str): Name of a Matplotlib colormap.
-        warn_color_reuse (bool): Warn when a listed palette has fewer colors than the number of displayed groups.
-
-    Returns:
-        dict[int, tuple]: RGBA color keyed by source group number. Listed palettes cycle after their final color; continuous palettes sample evenly across their range.
+    Continuous palettes are sampled evenly across the displayed groups.
     """
     palette = plt.get_cmap(color_scheme)
     groups = sorted({group for group, _ in styles})
@@ -162,7 +96,7 @@ def _group_colors(styles, color_scheme, warn_color_reuse):
             warnings.warn(
                 f"Color scheme {palette.name!r} has {palette.N} colors for "
                 f"{len(groups)} source groups; colors will repeat. Choose a "
-                "different color_scheme or use color_by='branch'.",
+                "different color_scheme or use color_by='arc'.",
                 UserWarning,
                 stacklevel=3,
             )
@@ -172,18 +106,7 @@ def _group_colors(styles, color_scheme, warn_color_reuse):
 
 
 def _resolve_edge(graph, edge):
-    """Resolve a requested source edge to its keyed graph edge.
-
-    Parameters:
-        graph (MapperGraph): Source graph for one map direction.
-        edge (tuple): ``(u, v, key)`` or ``(u, v)`` when exactly one edge joins the two vertices.
-
-    Returns:
-        tuple: Keyed ``(u, v, key)`` edge in ``graph``.
-
-    Raises:
-        ValueError: If the edge is missing or an unkeyed pair is ambiguous.
-    """
+    """Resolve a source edge, requiring its key when parallel edges exist."""
     if not isinstance(edge, tuple) or len(edge) not in (2, 3):
         raise ValueError("edge must be (source, target) or (source, target, key).")
     if len(edge) == 3:
@@ -200,19 +123,7 @@ def _resolve_edge(graph, edge):
 
 
 def _validated_assignment(interleaving, direction, key, *, allow_both=False):
-    """Validate a map request and return the fitted ILP assignment.
-
-    Parameters:
-        interleaving (Interleave): Object with a solved ``assignment``.
-        direction (str): ``'phi'``, ``'psi'``, or ``'both'`` if allowed.
-        key (str): Map level, ``'0'`` or ``'n'``.
-        allow_both (bool): Permit the two-direction view.
-    Returns:
-        Assignment: Graphs and solved maps to draw.
-    Raises:
-        TypeError: If the object is not an ``Interleave``.
-        ValueError: If it is unfitted or an option is invalid.
-    """
+    """Validate the fitted interleaving, map direction, and smoothing level."""
     if not isinstance(interleaving, Interleave):
         raise TypeError("Pass an Interleave object.")
     if interleaving.assignment is None:
@@ -227,45 +138,16 @@ def _validated_assignment(interleaving, direction, key, *, allow_both=False):
 
 
 def _graph_title(assignment, which, exponent=None):
-    """Format an original or smoothed graph name for an axis title.
-
-    Parameters:
-        assignment (Assignment): Fitted graphs and smoothing parameter.
-        which (str): ``'F'`` or ``'G'`` original graph.
-        exponent (int or None): Smoothing amount, omitted for the original graph.
-
-    Returns:
-        str: Input graph name (or ``F``/``G``) with a numeric smoothing exponent when requested.
-    """
+    """Use the input graph name (or F/G) and numeric smoothing exponent."""
     graph = (assignment.F if which == "F" else assignment.G)("0")
     name = str(graph.name or which)
     return name if exponent is None else f"{name}^{exponent}"
 
 
 def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
-               warn_color_reuse, label_stations, max_legend, selected_edges=None,
+               warn_color_reuse, show_vert_maps, max_legend, level_set_colors=False, selected_edges=None,
                selected_label=None, highlight_color="crimson"):
-    """Draw one source graph beside the target of one interleaving map.
-
-    This helper reads both vertex and edge ILP maps, overlays colored source edges and mapped target strands, and labels destination stations.
-
-    Parameters:
-        assignment (Assignment): Solved assignment stored by a fitted ``Interleave`` object.
-        direction (str): ``'phi'`` for F to G, or ``'psi'`` for G to F.
-        key (str): ``'0'`` for the main map or ``'n'`` for the auxiliary map.
-        axes (sequence[matplotlib.axes.Axes]): Two axes in source, target order. The helper draws into these axes.
-        color_by (str): ``'branch'`` or ``'edge'`` source coloring.
-        color_scheme (str): Matplotlib colormap name for the source groups.
-        warn_color_reuse (bool): Warn if a listed palette repeats colors.
-        label_stations (bool): Whether to annotate mapped source vertices beside target stations.
-        max_legend (int): Maximum number of colored groups in the legend.
-        selected_edges (set[tuple] or None): If given, color only these keyed source edges and their selected target strands.
-        selected_label (str or None): Legend heading for a focused view.
-        highlight_color (str): Matplotlib color for selected edges and strands.
-
-    Returns:
-        None: The supplied axes are modified in place.
-    """
+    """Draw source edges and their selected target images into two axes."""
     source_name, target_name = ("F", "G") if direction == "phi" else ("G", "F")
     source_family = assignment.F if direction == "phi" else assignment.G
     target_family = assignment.G if direction == "phi" else assignment.F
@@ -282,8 +164,23 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
         if missing:
             raise ValueError(f"Source edges {missing!r} have no selected ILP image.")
     source_ax, target_ax = axes
+    heights = [xy[1] for graph in (source, target) for xy in graph.pos_f.values()]
+    height_norm = Normalize(min(heights), max(heights))
 
-    source.draw(ax=source_ax, with_labels=True, node_size=360)
+    def vertex_color(height):
+        return plt.get_cmap("viridis")(height_norm(height)) if level_set_colors else "white"
+
+    source.draw(ax=source_ax, with_labels=True, node_size=240)
+    for line in source_ax.lines:
+        line.set_color("#222222")
+    for text in source_ax.texts:
+        text.set_fontsize(8)
+        text.set_zorder(6)
+    for collection in source_ax.collections:
+        collection.set_zorder(5)
+        collection.set_array(None)
+        collection.set_facecolor([vertex_color(source.pos_f[v][1]) for v in source])
+        collection.set_edgecolor("#222222")
     for i, (edge, _) in enumerate(edge_pairs):
         if selected_edges is not None and edge not in selected_edges:
             continue
@@ -295,30 +192,30 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
 
     for edge in target.edges(keys=True):
         xy = _edge_segment(target, edge)
-        target_ax.plot(xy[:, 0], xy[:, 1], color="#9ca3af", linewidth=1.5, zorder=1)
+        target_ax.plot(xy[:, 0], xy[:, 1], color="#222222", linewidth=1.5, zorder=1)
 
     grouped = defaultdict(list)
     for i, (source_edge, target_edge) in enumerate(edge_pairs):
-        if not target.has_edge(target_edge[0], target_edge[1]):
+        if not target.has_edge(*target_edge):
             raise ValueError(f"Mapped edge {target_edge!r} is absent from the target graph.")
         grouped[target_edge].append(i)
-    x_values = [_position(target, v)[0] for v in target]
-    gap = max((max(x_values) - min(x_values)) * .025, .025) if x_values else .025
+    x_values = [target.pos_f[v][0] for v in target]
+    gap = max((max(x_values) - min(x_values)) * .006, .006) if x_values else .006
     handles, seen = [], set()
     for target_edge, indices in grouped.items():
         base = _edge_segment(target, target_edge)
         vector = base[-1] - base[0]
-        normal = np.array((-vector[1], vector[0]))
-        norm = np.linalg.norm(normal)
-        if norm:
-            normal /= norm
         for lane, i in enumerate(indices):
             if selected_edges is not None and edge_pairs[i][0] not in selected_edges:
                 continue
             group, label = styles[i]
-            xy = base + (lane - (len(indices) - 1) / 2) * gap * normal
+            offset = np.array([(lane - (len(indices) - 1) / 2) * gap, 0])
+            # Separate shared tracks horizontally and join them at stations.
+            xy = np.vstack((base[0], base[0] + 0.15 * vector + offset,
+                            base[1] - 0.15 * vector + offset, base[1]))
             color = highlight_color if selected_edges is not None else colors[group]
-            target_ax.plot(xy[:, 0], xy[:, 1], color=color, linewidth=2.6, zorder=3)
+            target_ax.plot(xy[:, 0], xy[:, 1], color=color, linewidth=2.6, zorder=3,
+                           solid_capstyle="round", solid_joinstyle="round")
             if group not in seen and len(handles) < max_legend:
                 handles.append(Line2D([], [], color=color, linewidth=3, label=label))
                 seen.add(group)
@@ -328,16 +225,14 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
         if target_vertex not in target:
             raise ValueError(f"Mapped vertex {target_vertex!r} is absent from the target graph.")
         mapped_vertices[target_vertex].append(source_vertex)
-    values = list(target.f.values())
-    low, span = min(values), max(1, max(values) - min(values))
     for vertex in target:
-        x, y = _position(target, vertex)
+        x, y = np.asarray(target.pos_f[vertex], dtype=float)
         mapped = mapped_vertices[vertex]
-        target_ax.scatter([x], [y], s=360,
-                          color=plt.get_cmap("viridis")((target.f[vertex] - low) / span),
-                          edgecolor="#172554" if mapped else "#94a3b8", zorder=5)
-        target_ax.annotate(_label(vertex), (x, y), ha="center", va="center", fontsize=9, zorder=6)
-        if mapped and label_stations:
+        target_ax.scatter([x], [y], s=240,
+                          color=vertex_color(y),
+                          edgecolor="#222222", zorder=5)
+        target_ax.annotate(_label(vertex), (x, y), ha="center", va="center", fontsize=8, zorder=6)
+        if mapped and show_vert_maps:
             target_ax.annotate("← " + ", ".join(map(_label, mapped)), (x, y),
                                xytext=(9, 8), textcoords="offset points", fontsize=7)
 
@@ -347,128 +242,164 @@ def _draw_pair(assignment, direction, key, axes, *, color_by, color_scheme,
                                      assignment.n if key == "0" else 2 * assignment.n))
     for ax in axes:
         ax.set_xticks([])
-        ax.margins(.16)
-        ax.set_ylabel("Function value" if ax is source_ax else "")
+        ax.margins(x=0.08, y=0.05)
+        ax.set_ylabel("Function value")
     if handles:
         target_ax.legend(handles=handles, title=(selected_label if selected_edges is not None
-                                                 else f"Source {'branches' if color_by == 'branch' else 'edges'}"),
+                                                 else f"Source {'arcs' if color_by == 'arc' else 'edges'}"),
                          loc="best", fontsize=7, title_fontsize=8, framealpha=.9)
 
 
-def draw_metromaps(interleaving, *, direction="both", key="0", color_by="branch",
-                   color_scheme="tab20", warn_color_reuse=True, figsize=None,
-                   label_stations=True, max_legend=16):
-    """Draw a fitted interleaving as paired source and target graphs.
+def draw_metromaps(interleaving, *, direction="both", key="0", color_by="arc",
+                   color_scheme="tab10", warn_color_reuse=True, figsize=None,
+                   show_vert_maps=True, max_legend=16, level_set_colors=False, sharey=True):
+    """Draw the maps of a fitted interleaving as paired graphs.
 
-    Each row places a colored source Mapper graph next to its smoothed target. Colored strands on the target show the selected ILP edge images; target stations indicate the selected vertex images. The function only reads the fitted result and does not solve or modify the interleaving.
+    Source edges and their selected target images share a color. Several
+    images on one target edge are drawn as parallel tracks joined at stations.
+    This uses the graphs' saved positions and does not solve or change the
+    interleaving. Vertices have white fills and dark outlines by default.
+    Set level_set_colors=True to
+    color them by height, using the same color scale within each pair.
 
     Parameters:
-        interleaving (Interleave): An ``Interleave(F, G)`` object after a successful ``fit()`` call. Its ``assignment`` supplies the graphs and solved vertex and edge maps.
-        direction (str): ``'both'`` (default) makes two rows, F beside G^n and G beside F^n. ``'phi'`` or ``'psi'`` makes one corresponding row.
-        key (str): ``'0'`` (default) shows the main maps F→G^n and G→F^n. ``'n'`` shows the auxiliary maps F^n→G^2n and G^n→F^2n.
-        color_by (str): ``'branch'`` (default) gives each maximal source path between leaves or junctions one color. ``'edge'`` gives each source edge its own color. This affects only the display.
-        color_scheme (str): Matplotlib colormap name for source groups. Defaults to ``'tab20'``, whose 20 colors repeat when more than 20 branches or edges are shown in one map direction. A continuous colormap such as ``'hsv'`` samples colors across its range.
-        warn_color_reuse (bool): Emit a ``UserWarning`` when a listed color scheme has fewer colors than source groups. Defaults to ``True``.
-        figsize (tuple[float, float] or None): Matplotlib figure size in inches. If ``None``, uses ``(16, 7)`` for one row or ``(16, 14)`` for both rows.
-        label_stations (bool): Whether to annotate target vertices with the source vertices mapped there. Defaults to ``True``.
-        max_legend (int): Maximum number of source color groups displayed in each target-panel legend. Defaults to 16; groups beyond this limit are still drawn.
+        interleaving (Interleave): Object after a successful fit() call.
+        direction (str): 'both', 'phi' (F to G^n), or 'psi' (G to F^n).
+            Default is 'both'.
+        key (str): '0' for the main maps, or 'n' for the auxiliary maps
+            F^n to G^2n and G^n to F^2n. Default is '0'.
+        color_by (str): 'arc' groups edges between leaves or junctions;
+            'edge' colors each edge separately. Default is 'arc'.
+        color_scheme (str): Matplotlib colormap. Default is 'tab10'. Listed
+            palettes repeat colors; continuous palettes spread them evenly.
+        warn_color_reuse (bool): Warn when a listed palette repeats colors.
+            Default is True.
+        figsize (tuple or None): Figure size in inches. Default is (16, 9)
+            per row, with one row for each direction.
+        show_vert_maps (bool): Annotate target nodes with their mapped
+            source nodes. Default is True.
+        max_legend (int): Maximum legend entries per row. Default is 16.
+        level_set_colors (bool): Color vertices by function height instead
+            of using neutral fills. Default is False.
+        sharey (bool): Align the source and target y-axis ranges. If False,
+            each panel uses its own range. Default is True.
 
     Returns:
-        matplotlib.figure.Figure: Figure containing two axes per map direction, ordered source then target. Access them through ``figure.axes``.
+        matplotlib.figure.Figure: Two axes per direction, source then target.
 
     Raises:
-        TypeError: If ``interleaving`` is not an ``Interleave`` object.
-        ValueError: If the object has not been fitted or an option is invalid.
+        TypeError: If interleaving is not an Interleave object.
+        ValueError: If the maps are unfitted or the options are invalid.
     """
     assignment = _validated_assignment(interleaving, direction, key, allow_both=True)
-    if color_by not in ("branch", "edge"):
-        raise ValueError("color_by must be 'branch' or 'edge'.")
+    if color_by not in ("arc", "edge"):
+        raise ValueError("color_by must be 'arc' or 'edge'.")
     directions = ("phi", "psi") if direction == "both" else (direction,)
-    fig, axes = plt.subplots(len(directions), 2, figsize=figsize or (16, 7 * len(directions)),
-                             squeeze=False, sharey="row", constrained_layout=True)
+    fig, axes = plt.subplots(len(directions), 2, figsize=figsize or (16, 9 * len(directions)),
+                             squeeze=False, sharey="row" if sharey else False, constrained_layout=True)
     for row, map_name in enumerate(directions):
         _draw_pair(assignment, map_name, key, axes[row],
                    color_by=color_by, color_scheme=color_scheme,
                    warn_color_reuse=warn_color_reuse,
-                   label_stations=label_stations,
-                   max_legend=max_legend)
+                   show_vert_maps=show_vert_maps,
+                   max_legend=max_legend, level_set_colors=level_set_colors)
+    return fig
+
+
+def _draw_selected(assignment, direction, key, edges, label, color, figsize,
+                   show_vert_maps, level_set_colors=False, sharey=True, color_by="edge"):
+    """Draw selected source edges and their target images."""
+    fig, axes = plt.subplots(1, 2, figsize=figsize, sharey=sharey,
+                             constrained_layout=True)
+    _draw_pair(
+        assignment, direction, key, axes, color_by=color_by,
+        color_scheme="tab10", warn_color_reuse=False,
+        show_vert_maps=show_vert_maps, max_legend=1, level_set_colors=level_set_colors,
+        selected_edges=edges, selected_label=label, highlight_color=color,
+    )
     return fig
 
 
 def color_by_edge(interleaving, edge, *, direction="phi", key="0",
-                  color="crimson", figsize=(16, 7), label_stations=False):
-    """Highlight one mapper source edge and its mapped smoothed-target edge.
-
-    The selected source edge is drawn in ``color`` beside the edge selected for it by the solved ILP map. Other graph edges remain in the neutral background. The target is G^n for ``direction='phi'`` and F^n for ``direction='psi'`` when ``key='0'``. This shows the ILP edge image in the smoothed graph; it does not infer a path in the unsmoothed target graph.
+                  color="crimson", figsize=(16, 9), show_vert_maps=False,
+                  level_set_colors=False, sharey=True):
+    """Highlight one source edge and its selected target image.
 
     Parameters:
-        interleaving (Interleave): Fitted object containing a solved assignment.
-        edge (tuple): Directed source edge ``(u, v, key)``. ``(u, v)`` is also accepted when no parallel edge has the same endpoints.
-        direction (str): ``'phi'`` for an edge of F or ``'psi'`` for an edge of G. Defaults to ``'phi'``.
-        key (str): ``'0'`` for the main map, or ``'n'`` for an auxiliary map. Defaults to ``'0'``.
-        color (str): Matplotlib color for the highlighted edge and strand. Defaults to ``'crimson'``.
-        figsize (tuple[float, float]): Figure size in inches.
-        label_stations (bool): Whether to show all vertex correspondences at target stations. Defaults to ``False`` for a focused edge view.
+        interleaving (Interleave): Object after a successful fit() call.
+        edge (tuple): Directed (u, v, key) edge. A pair (u, v) is accepted
+            when there is only one edge between those nodes.
+        direction (str): 'phi' selects an edge of F; 'psi' selects an edge
+            of G. Default is 'phi'.
+        key (str): '0' for the main map or 'n' for an auxiliary map.
+            Default is '0'.
+        color (str): Highlight color. Default is 'crimson'.
+        figsize (tuple): Figure size in inches. Default is (16, 9).
+        show_vert_maps (bool): Show target-node correspondences.
+            Default is False.
+        level_set_colors (bool): Color vertices by height. Default is False.
+        sharey (bool): Align source and target y-axis ranges. Default is True.
 
     Returns:
-        matplotlib.figure.Figure: Two-panel source and target figure.
+        matplotlib.figure.Figure: Source and smoothed target panels.
 
     Raises:
-        TypeError: If ``interleaving`` is not an ``Interleave`` object.
-        ValueError: If the object is unfitted, the direction or key is invalid, the edge is missing or ambiguous, or it has no selected ILP image.
+        TypeError: If interleaving is not an Interleave object.
+        ValueError: If options are invalid or the edge has no selected image.
     """
     assignment = _validated_assignment(interleaving, direction, key)
     source_family = assignment.F if direction == "phi" else assignment.G
     selected_edge = _resolve_edge(source_family(key), edge)
-    fig, axes = plt.subplots(1, 2, figsize=figsize, sharey=True,
-                             constrained_layout=True)
-    _draw_pair(assignment, direction, key, axes,
-               color_by="edge", color_scheme="tab20", warn_color_reuse=False,
-               label_stations=label_stations, max_legend=1,
-               selected_edges={selected_edge}, selected_label="Selected edge",
-               highlight_color=color)
-    return fig
+    return _draw_selected(
+        assignment, direction, key, {selected_edge}, "Selected edge",
+        color, figsize, show_vert_maps, level_set_colors, sharey,
+    )
 
 
-def color_by_branch(interleaving, branch, *, direction="phi", key="0",
-                    color="crimson", figsize=(16, 7), label_stations=False):
-    """Highlight one source branch and all its ILP-selected target strands.
+def color_by_arc(interleaving, arc, *, direction="phi", key="0",
+                 color="crimson", figsize=(16, 9), show_vert_maps=False,
+                 level_set_colors=False, sharey=True):
+    """Highlight a source arc and all its selected target images.
 
-    A branch is a maximal directed edge path between graph endpoints or junctions, as returned by ``_branches``. Choose it by its zero-based branch number (the ``B0``, ``B1``, ... legend labels) or by any source edge within it. Each edge keeps its own ILP assignment; this function colors their union and does not compute a branch-level map.
+    Arc coloring groups individual edge assignments; it does not compute
+    an arc-level map or a path in the unsmoothed target graph.
 
     Parameters:
-        interleaving (Interleave): Fitted object containing a solved assignment.
-        branch (int or tuple): Zero-based branch number or a directed source edge ``(u, v, key)`` within the branch. ``(u, v)`` works when no parallel edge has the same endpoints.
-        direction (str): ``'phi'`` selects a branch of F; ``'psi'`` selects a branch of G. Defaults to ``'phi'``.
-        key (str): ``'0'`` for the main map or ``'n'`` for an auxiliary map. Defaults to ``'0'``.
-        color (str): Matplotlib highlight color. Defaults to ``'crimson'``.
-        figsize (tuple[float, float]): Figure size in inches.
-        label_stations (bool): Show all vertex correspondences at target stations. Defaults to ``False``.
+        interleaving (Interleave): Object after a successful fit() call.
+        arc (int or tuple): Zero-based arc number (0 for A0), or a
+            directed edge in the arc. Include its key for parallel edges.
+        direction (str): 'phi' selects an arc of F; 'psi' selects an arc
+            of G. Default is 'phi'.
+        key (str): '0' for the main map or 'n' for an auxiliary map.
+            Default is '0'.
+        color (str): Highlight color. Default is 'crimson'.
+        figsize (tuple): Figure size in inches. Default is (16, 9).
+        show_vert_maps (bool): Show target-node correspondences.
+            Default is False.
+        level_set_colors (bool): Color vertices by height. Default is False.
+        sharey (bool): Align source and target y-axis ranges. Default is True.
 
     Returns:
-        matplotlib.figure.Figure: Two-panel source and target figure.
+        matplotlib.figure.Figure: Source and smoothed target panels.
 
     Raises:
-        TypeError: If ``interleaving`` is not an ``Interleave`` object.
-        ValueError: If the object is unfitted, an option or branch is invalid, or a branch edge has no selected ILP image.
+        TypeError: If interleaving is not an Interleave object.
+        ValueError: If options are invalid or an arc edge has no image.
     """
     assignment = _validated_assignment(interleaving, direction, key)
     source_family = assignment.F if direction == "phi" else assignment.G
     source = source_family(key)
-    branches = _branches(source)
-    if isinstance(branch, int) and not isinstance(branch, bool):
-        branch_index = branch
-        if not 0 <= branch_index < len(branches):
-            raise ValueError(f"Branch number {branch_index} is out of range.")
+    arcs = _arcs(source)
+    if isinstance(arc, int) and not isinstance(arc, bool):
+        arc_index = arc
+        if not 0 <= arc_index < len(arcs):
+            raise ValueError(f"Arc number {arc_index} is out of range.")
     else:
-        edge = _resolve_edge(source, branch)
-        branch_index = next(i for i, path in enumerate(branches) if edge in path)
-    selected_edges = set(branches[branch_index])
-    fig, axes = plt.subplots(1, 2, figsize=figsize, sharey=True,
-                             constrained_layout=True)
-    _draw_pair(assignment, direction, key, axes,
-               color_by="branch", color_scheme="tab20", warn_color_reuse=False,
-               label_stations=label_stations, max_legend=1,
-               selected_edges=selected_edges, selected_label=f"Selected branch B{branch_index}",
-               highlight_color=color)
-    return fig
+        edge = _resolve_edge(source, arc)
+        arc_index = next(i for i, path in enumerate(arcs) if edge in path)
+    return _draw_selected(
+        assignment, direction, key, set(arcs[arc_index]),
+        f"Selected arc A{arc_index}", color, figsize, show_vert_maps,
+        level_set_colors, sharey,
+        color_by="arc",
+    )
