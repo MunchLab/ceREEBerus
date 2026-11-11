@@ -12,6 +12,26 @@ from cereeberus import Assignment, Interleave, MapperGraph
 
 
 class TestInterleaving(unittest.TestCase):
+    def test_phi_psi_axis_labels(self):
+        from matplotlib.figure import Figure
+
+        assignment = Assignment(line(0, 2), line(0, 3), n=1)
+        cases = [
+            ("phi", "0", "F", "G_n"),
+            ("phi", "n", "F_n", "G_2n"),
+            ("psi", "0", "G", "F_n"),
+            ("psi", "n", "G_n", "F_2n"),
+        ]
+        for map_name, key, source, target in cases:
+            for obj_type in ("V", "E"):
+                with self.subTest(map=map_name, key=key, obj_type=obj_type):
+                    ax = Figure().subplots()
+                    getattr(assignment, f"draw_{map_name}")(
+                        key=key, obj_type=obj_type, ax=ax
+                    )
+                    self.assertEqual(ax.get_xlabel(), f"{obj_type}({source})")
+                    self.assertEqual(ax.get_ylabel(), f"{obj_type}({target})")
+
     def test_torus_line(self):
         T = torus(0, 2, 10, 12, delta = 1, seed = 17)
         L = line(0, 12)

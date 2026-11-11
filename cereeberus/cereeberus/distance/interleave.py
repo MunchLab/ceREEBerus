@@ -1414,14 +1414,14 @@ class Assignment:
         self.phi(key=key, obj_type=obj_type).draw(ax=ax, **kwargs)
 
         if key == "0":
-            G_key = ""
-            F_key = "_n"
-        elif key == "n":
+            F_key = ""
             G_key = "_n"
-            F_key = "_2n"
+        elif key == "n":
+            F_key = "_n"
+            G_key = "_2n"
 
-        ax.set_ylabel(f"{obj_type}(G{F_key})")
-        ax.set_xlabel(f"{obj_type}(F{G_key})")
+        ax.set_ylabel(f"{obj_type}(G{G_key})")
+        ax.set_xlabel(f"{obj_type}(F{F_key})")
 
         return ax
 
@@ -1444,14 +1444,14 @@ class Assignment:
 
         self.psi(key=key, obj_type=obj_type).draw(ax=ax, **kwargs)
         if key == "0":
-            F_key = ""
-            G_key = "_n"
-        elif key == "n":
+            G_key = ""
             F_key = "_n"
-            G_key = "_2n"
+        elif key == "n":
+            G_key = "_n"
+            F_key = "_2n"
 
-        ax.set_ylabel(f"{obj_type}(G{G_key})")
-        ax.set_xlabel(f"{obj_type}(F{F_key})")
+        ax.set_ylabel(f"{obj_type}(F{F_key})")
+        ax.set_xlabel(f"{obj_type}(G{G_key})")
 
         return ax
 
