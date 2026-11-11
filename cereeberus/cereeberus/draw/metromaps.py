@@ -3,8 +3,7 @@
 The ``draw_metromaps`` function reads the original and smoothed graphs
 and the solved vertex and edge map matrices from an ``Interleave`` object. It
 places each source graph beside its target and uses matching colors to trace
-source edges or branches through the map. The metro-map style is a visual
-metaphor; this module does not run a MetroSets layout algorithm or fit the ILP.
+source edges or branches through the map. The metro-map style is used for better visualization.
 """
 
 from collections import defaultdict
