@@ -13,6 +13,7 @@ This section is for adding example jupyter notebooks.
    mapper_basics.ipynb
    example_graphs.ipynb
    interleaving_basics.ipynb
+   gromov_wasserstein_basics.ipynb
    compute_reeb.ipynb
    compute_mapper.ipynb
    branch_decomp_basics.ipynb
