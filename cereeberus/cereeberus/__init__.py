@@ -9,6 +9,8 @@ __all__ = [
     "EmbeddedGraph",
     "Interleave",
     "Assignment",
+    "GromovWasserstein",
+    "gromov_wasserstein_distance",
     "data",
     "reeb",
     "compute",
@@ -20,6 +22,10 @@ from .reeb.merge import MergeTree
 from .reeb.mapper import MapperGraph
 from .reeb.embeddedgraph import EmbeddedGraph
 from .distance.interleave import Interleave, Assignment
+from .distance.gromov_wasserstein import (
+    GromovWasserstein,
+    gromov_wasserstein_distance,
+)
 from .reeb.lowerstar import LowerStar
 from .compute.computereeb import computeReeb
 from .compute.computemapper import computeMapper

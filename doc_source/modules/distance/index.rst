@@ -9,4 +9,5 @@ The module `cereeberus.distance` contains classes computing distances between gr
 
     interleave.rst
     labeled_blocks.rst
+    gromov_wasserstein.rst
     

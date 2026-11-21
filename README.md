@@ -9,6 +9,7 @@ ceREEBerus is a Python package that allows you to perform various operations and
 - Perform topological analysis on Reeb graphs
 - Extract critical points and features from Reeb graphs
 - Apply various algorithms and techniques to analyze Reeb graphs
+- Compare Reeb graphs with the interleaving distance or the Gromov-Wasserstein distance
 
 ## Installation
 

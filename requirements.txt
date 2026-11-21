@@ -6,6 +6,7 @@ scipy
 pulp
 highspy; python_version >= "3.12"
 gudhi
+pot
 sphinx
 nbsphinx
 myst-parser

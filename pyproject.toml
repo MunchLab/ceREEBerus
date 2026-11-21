@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cereeberus"
-version = "0.2.0"
+version = "0.2.1"
 authors = [
   { name="Liz Munch", email="muncheli@msu.edu" },
 ]
@@ -23,6 +23,7 @@ dependencies = ["numpy",
             "pulp",
             "highspy<1.14; python_version >= '3.12'",
             "gudhi",
+            "pot",
             "scikit-learn"
             ]
 
